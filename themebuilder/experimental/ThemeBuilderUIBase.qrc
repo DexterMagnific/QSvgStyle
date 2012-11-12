@@ -1,0 +1,39 @@
+<RCC>
+  <qresource prefix="icon">
+    <file>listview.png</file>
+    <file>resourceeditortool.png</file>
+    <file>plaintextedit.png</file>
+    <file>wizard.png</file>
+    <file>edithlayout.png</file>
+    <file>lineedit.png</file>
+    <file>spinbox.png</file>
+    <file>dial.png</file>
+    <file>hslider.png</file>
+    <file>vslider.png</file>
+    <file>hscrollbar.png</file>
+    <file>vscrollbar.png</file>
+    <file>progress.png</file>
+    <file>pushbutton.png</file>
+    <file>toolbutton.png</file>
+    <file>radiobutton.png</file>
+    <file>checkbox.png</file>
+    <file>groupbox.png</file>
+    <file>toolbox.png</file>
+    <file>tabwidget.png</file>
+    <file>frame.png</file>
+    <file>widget.png</file>
+    <file>dockwidget.png</file>
+    <file>combobox.png</file>
+    <file>optimize.png</file>
+    <file>openrecent.png</file>
+    <file>saveas.png</file>
+    <file>next.png</file>
+    <file>prev.png</file>
+    <file>open.png</file>
+    <file>save.png</file>
+    <file>quit.png</file>
+    <file>new.png</file>
+    <file>welcome.png</file>
+    <file>new.png</file>
+  </qresource>
+</RCC>

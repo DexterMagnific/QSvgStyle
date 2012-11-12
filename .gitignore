@@ -10,3 +10,17 @@
 *.lai
 *.la
 *.a
+
+# Qt Meta Object files
+*.moc
+
+# KDevelop files
+*kdev*
+
+# Misc
+*~
+*.backup
+*.log
+*.aux
+*.dvi
+*.toc

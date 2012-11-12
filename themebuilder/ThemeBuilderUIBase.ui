@@ -1,0 +1,2129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <author>Saïd Lankri</author>
+ <class>ThemeBuilderUIBase</class>
+ <widget class="QWidget" name="ThemeBuilderUIBase">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>664</width>
+    <height>483</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Quantum Style Theme Builder</string>
+  </property>
+  <layout class="QGridLayout" name="gridLayout_18">
+   <item row="0" column="0">
+    <widget class="QFrame" name="frame">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Raised</enum>
+     </property>
+     <layout class="QGridLayout" name="gridLayout_3">
+      <item row="0" column="0">
+       <widget class="QLabel" name="themeLabel">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>14</pointsize>
+          <weight>75</weight>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="text">
+         <string>No Theme Loaded</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="2">
+       <widget class="QPushButton" name="loadButton">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string>Load</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="3">
+       <widget class="QPushButton" name="quitButton">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string>Quit</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QPushButton" name="newButton">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string>New</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="1" column="0">
+    <widget class="QTabWidget" name="mainTab">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
+     <property name="currentIndex">
+      <number>1</number>
+     </property>
+     <widget class="QWidget" name="tabWidget_4Page1">
+      <attribute name="title">
+       <string>General Theme Settings</string>
+      </attribute>
+      <layout class="QGridLayout" name="gridLayout_25">
+       <item row="0" column="0" colspan="3">
+        <layout class="QGridLayout" name="gridLayout_26">
+         <item row="0" column="0">
+          <widget class="QLabel" name="label_39">
+           <property name="text">
+            <string>Author</string>
+           </property>
+           <property name="buddy">
+            <cstring>authorLineEdit</cstring>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="QLineEdit" name="authorLineEdit"/>
+         </item>
+         <item row="1" column="0">
+          <widget class="QLabel" name="label_40">
+           <property name="text">
+            <string>Comment</string>
+           </property>
+           <property name="buddy">
+            <cstring>commentLineEdit</cstring>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="1">
+          <widget class="QLineEdit" name="commentLineEdit"/>
+         </item>
+        </layout>
+       </item>
+       <item row="1" column="0" colspan="3">
+        <widget class="QGroupBox" name="animateThemeCb">
+         <property name="title">
+          <string>Theme is animated</string>
+         </property>
+         <property name="flat">
+          <bool>false</bool>
+         </property>
+         <property name="checkable">
+          <bool>true</bool>
+         </property>
+         <layout class="QGridLayout" name="gridLayout_16">
+          <item row="0" column="0">
+           <widget class="QLabel" name="label_38">
+            <property name="text">
+             <string>Step duration (in msecs)</string>
+            </property>
+            <property name="buddy">
+             <cstring>stepSb</cstring>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QSpinBox" name="stepSb">
+            <property name="minimum">
+             <number>100</number>
+            </property>
+            <property name="maximum">
+             <number>5000</number>
+            </property>
+            <property name="singleStep">
+             <number>10</number>
+            </property>
+            <property name="value">
+             <number>250</number>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="0" colspan="2">
+           <layout class="QVBoxLayout" name="verticalLayout_16">
+            <item>
+             <widget class="QCheckBox" name="loopAnimationCb">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="text">
+               <string>Loop animations (NYI, Always YES)</string>
+              </property>
+              <property name="checkable">
+               <bool>true</bool>
+              </property>
+              <property name="checked">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QCheckBox" name="checkBox_2">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="text">
+               <string>Allow NORMAL status animation (NOT RECOMMENDED) (NYI)</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QCheckBox" name="checkBox_3">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="text">
+               <string>Allow animation of containers (tab widgets, frames, ...) (NOT RECOMMENDED) (NYI)</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item row="1" column="1">
+           <spacer name="horizontalSpacer">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item row="3" column="0" rowspan="2" colspan="3">
+        <widget class="QCheckBox" name="filemonitorCb">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <property name="text">
+          <string>Enable SVG and qsconfig file watch (Redraw on file change) (NYI)</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="0">
+        <widget class="QCheckBox" name="capsuleCb">
+         <property name="toolTip">
+          <string>Allows &lt;b&gt;Capsule&lt;/b&gt; grouping of widgets like in Mac OSX</string>
+         </property>
+         <property name="text">
+          <string>Allow Capsule grouping for widgets that support it</string>
+         </property>
+        </widget>
+       </item>
+       <item row="6" column="0" colspan="3">
+        <spacer name="verticalSpacer_10">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>0</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tab_7">
+      <attribute name="title">
+       <string>Theme Element Settings</string>
+      </attribute>
+      <layout class="QGridLayout" name="gridLayout_24">
+       <item row="0" column="0" rowspan="2">
+        <layout class="QGridLayout" name="gridLayout_10">
+         <item row="2" column="0" colspan="2">
+          <widget class="QListWidget" name="elementList">
+           <property name="alternatingRowColors">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="0" colspan="2">
+          <widget class="QLabel" name="label_34">
+           <property name="text">
+            <string>&lt;b&gt;Element list&lt;/b&gt;</string>
+           </property>
+           <property name="buddy">
+            <cstring>elementList</cstring>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item row="0" column="1">
+        <widget class="QLabel" name="infoLabel">
+         <property name="text">
+          <string>Select an element to get information</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="1">
+        <layout class="QGridLayout" name="gridLayout_17">
+         <item row="1" column="0">
+          <widget class="QLabel" name="label_2">
+           <property name="text">
+            <string>Changes are immediately written to config file</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="0">
+          <widget class="QTabWidget" name="settingsTab">
+           <property name="currentIndex">
+            <number>0</number>
+           </property>
+           <widget class="QWidget" name="tab">
+            <attribute name="title">
+             <string>General</string>
+            </attribute>
+            <layout class="QGridLayout" name="gridLayout_19">
+             <item row="0" column="0">
+              <widget class="QCheckBox" name="inheritElementCb">
+               <property name="text">
+                <string>Inherit element settings from element</string>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="0" colspan="2">
+              <layout class="QHBoxLayout" name="horizontalLayout_2">
+               <item>
+                <widget class="QGroupBox" name="forceWidthCb">
+                 <property name="toolTip">
+                  <string>Force the widget to have a minimum or a fixed width or height</string>
+                 </property>
+                 <property name="title">
+                  <string>Force Width</string>
+                 </property>
+                 <property name="checkable">
+                  <bool>true</bool>
+                 </property>
+                 <property name="checked">
+                  <bool>false</bool>
+                 </property>
+                 <layout class="QGridLayout" name="gridLayout_6">
+                  <item row="0" column="0">
+                   <layout class="QGridLayout" name="gridLayout_7">
+                    <property name="spacing">
+                     <number>2</number>
+                    </property>
+                    <item row="0" column="0">
+                     <widget class="QRadioButton" name="minWidthRadio">
+                      <property name="text">
+                       <string>Minimum width</string>
+                      </property>
+                      <property name="checked">
+                       <bool>true</bool>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="0" column="1" rowspan="2">
+                     <widget class="QSpinBox" name="widthSb">
+                      <property name="toolTip">
+                       <string>minimum or fixed width</string>
+                      </property>
+                      <property name="minimum">
+                       <number>-9999</number>
+                      </property>
+                      <property name="value">
+                       <number>0</number>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="1" column="0">
+                     <widget class="QRadioButton" name="fixedWidthRadio">
+                      <property name="text">
+                       <string>Fixed width</string>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                 </layout>
+                </widget>
+               </item>
+               <item>
+                <widget class="QGroupBox" name="forceHeightCb">
+                 <property name="toolTip">
+                  <string>force the widget to have a minimum or a fixed height</string>
+                 </property>
+                 <property name="title">
+                  <string>Force Height</string>
+                 </property>
+                 <property name="checkable">
+                  <bool>true</bool>
+                 </property>
+                 <property name="checked">
+                  <bool>false</bool>
+                 </property>
+                 <layout class="QGridLayout" name="gridLayout_5">
+                  <item row="0" column="0">
+                   <layout class="QGridLayout" name="gridLayout_4">
+                    <property name="spacing">
+                     <number>2</number>
+                    </property>
+                    <item row="0" column="0">
+                     <widget class="QRadioButton" name="minHeightRadio">
+                      <property name="text">
+                       <string>Minimum height</string>
+                      </property>
+                      <property name="checked">
+                       <bool>true</bool>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="0" column="1" rowspan="2">
+                     <widget class="QSpinBox" name="heightSb">
+                      <property name="toolTip">
+                       <string>minimum or fixed height</string>
+                      </property>
+                      <property name="minimum">
+                       <number>-9999</number>
+                      </property>
+                      <property name="value">
+                       <number>0</number>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="1" column="0">
+                     <widget class="QRadioButton" name="fixedHeightRadio">
+                      <property name="text">
+                       <string>Fixed height</string>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                 </layout>
+                </widget>
+               </item>
+              </layout>
+             </item>
+             <item row="3" column="0" colspan="2">
+              <spacer name="verticalSpacer_7">
+               <property name="orientation">
+                <enum>Qt::Vertical</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>20</width>
+                 <height>0</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item row="0" column="1">
+              <widget class="QComboBox" name="inheritElementCombo">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+           <widget class="QWidget" name="tab_2">
+            <attribute name="title">
+             <string>Frame</string>
+            </attribute>
+            <layout class="QGridLayout" name="gridLayout_21">
+             <item row="0" column="0">
+              <widget class="QGroupBox" name="frameCb">
+               <property name="toolTip">
+                <string>Set whether the widget has a frame</string>
+               </property>
+               <property name="title">
+                <string>Element has Frame</string>
+               </property>
+               <property name="checkable">
+                <bool>true</bool>
+               </property>
+               <layout class="QGridLayout" name="gridLayout_20">
+                <item row="0" column="0" colspan="4">
+                 <layout class="QGridLayout" name="gridLayout_2">
+                  <property name="verticalSpacing">
+                   <number>0</number>
+                  </property>
+                  <item row="0" column="0">
+                   <widget class="QCheckBox" name="inheritFrameCb">
+                    <property name="toolTip">
+                     <string>Check if the frame inherits its settings from another element</string>
+                    </property>
+                    <property name="text">
+                     <string>Inherit frame settings from element</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="0" column="1">
+                   <widget class="QLabel" name="label_45">
+                    <property name="text">
+                     <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'DejaVu Sans'; font-size:7pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;SVG element basename&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                    </property>
+                    <property name="buddy">
+                     <cstring>frameSvgCombo</cstring>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="1" column="0">
+                   <widget class="QComboBox" name="inheritFrameCombo">
+                    <property name="enabled">
+                     <bool>false</bool>
+                    </property>
+                    <property name="toolTip">
+                     <string>Element whose settings are inherited</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="1" column="1">
+                   <widget class="QComboBox" name="frameSvgCombo">
+                    <property name="toolTip">
+                     <string>Set the SVG basename of the frame</string>
+                    </property>
+                    <property name="editable">
+                     <bool>true</bool>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </item>
+                <item row="1" column="0">
+                 <layout class="QVBoxLayout" name="verticalLayout_7">
+                  <property name="spacing">
+                   <number>0</number>
+                  </property>
+                  <item>
+                   <widget class="QCheckBox" name="frameTopCb">
+                    <property name="toolTip">
+                     <string>If checked, value will be forced
+ otherwise inherited or default value will be taken</string>
+                    </property>
+                    <property name="text">
+                     <string>Top</string>
+                    </property>
+                    <property name="checked">
+                     <bool>true</bool>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QSpinBox" name="frameTopSb">
+                    <property name="toolTip">
+                     <string>top frame height</string>
+                    </property>
+                    <property name="minimum">
+                     <number>-9999</number>
+                    </property>
+                    <property name="value">
+                     <number>0</number>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </item>
+                <item row="1" column="1">
+                 <layout class="QVBoxLayout" name="verticalLayout_5">
+                  <property name="spacing">
+                   <number>0</number>
+                  </property>
+                  <item>
+                   <widget class="QCheckBox" name="frameBottomCb">
+                    <property name="toolTip">
+                     <string>If checked, value will be forced
+ otherwise inherited or default value will be taken</string>
+                    </property>
+                    <property name="text">
+                     <string>Bottom</string>
+                    </property>
+                    <property name="checked">
+                     <bool>true</bool>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QSpinBox" name="frameBottomSb">
+                    <property name="toolTip">
+                     <string>bottom frame height</string>
+                    </property>
+                    <property name="minimum">
+                     <number>-9999</number>
+                    </property>
+                    <property name="value">
+                     <number>0</number>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </item>
+                <item row="1" column="2">
+                 <layout class="QVBoxLayout" name="verticalLayout_8">
+                  <property name="spacing">
+                   <number>0</number>
+                  </property>
+                  <item>
+                   <widget class="QCheckBox" name="frameLeftCb">
+                    <property name="toolTip">
+                     <string>If checked, value will be forced
+ otherwise inherited or default value will be taken</string>
+                    </property>
+                    <property name="text">
+                     <string>Left</string>
+                    </property>
+                    <property name="checked">
+                     <bool>true</bool>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QSpinBox" name="frameLeftSb">
+                    <property name="toolTip">
+                     <string>left frame width</string>
+                    </property>
+                    <property name="minimum">
+                     <number>-9999</number>
+                    </property>
+                    <property name="value">
+                     <number>0</number>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </item>
+                <item row="1" column="3">
+                 <layout class="QVBoxLayout" name="verticalLayout_6">
+                  <property name="spacing">
+                   <number>0</number>
+                  </property>
+                  <item>
+                   <widget class="QCheckBox" name="frameRightCb">
+                    <property name="toolTip">
+                     <string>If checked, value will be forced
+ otherwise inherited or default value will be taken</string>
+                    </property>
+                    <property name="text">
+                     <string>Right</string>
+                    </property>
+                    <property name="checked">
+                     <bool>true</bool>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QSpinBox" name="frameRightSb">
+                    <property name="toolTip">
+                     <string>right frame width</string>
+                    </property>
+                    <property name="minimum">
+                     <number>-9999</number>
+                    </property>
+                    <property name="value">
+                     <number>0</number>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </item>
+                <item row="3" column="0" colspan="4">
+                 <widget class="QGroupBox" name="frameAnimateCb">
+                  <property name="toolTip">
+                   <string>Check if the frame is animated</string>
+                  </property>
+                  <property name="title">
+                   <string>Frame is animated</string>
+                  </property>
+                  <property name="checkable">
+                   <bool>true</bool>
+                  </property>
+                  <property name="checked">
+                   <bool>false</bool>
+                  </property>
+                  <layout class="QGridLayout" name="gridLayout_8">
+                   <item row="0" column="1" rowspan="2">
+                    <spacer name="horizontalSpacer_2">
+                     <property name="orientation">
+                      <enum>Qt::Horizontal</enum>
+                     </property>
+                     <property name="sizeHint" stdset="0">
+                      <size>
+                       <width>367</width>
+                       <height>20</height>
+                      </size>
+                     </property>
+                    </spacer>
+                   </item>
+                   <item row="1" column="0">
+                    <widget class="QSpinBox" name="frameFramesSb">
+                     <property name="toolTip">
+                      <string>The number of frames in animation</string>
+                     </property>
+                     <property name="minimum">
+                      <number>-9999</number>
+                     </property>
+                     <property name="value">
+                      <number>0</number>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="0" column="0">
+                    <widget class="QCheckBox" name="frameFramesCb">
+                     <property name="toolTip">
+                      <string>If checked, value will be forced
+ otherwise inherited or default value will be taken</string>
+                     </property>
+                     <property name="text">
+                      <string>N Frames</string>
+                     </property>
+                     <property name="checked">
+                      <bool>true</bool>
+                     </property>
+                    </widget>
+                   </item>
+                  </layout>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+             </item>
+             <item row="1" column="0">
+              <spacer name="verticalSpacer_2">
+               <property name="orientation">
+                <enum>Qt::Vertical</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>20</width>
+                 <height>0</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+            </layout>
+           </widget>
+           <widget class="QWidget" name="tab_3">
+            <attribute name="title">
+             <string>Interior</string>
+            </attribute>
+            <layout class="QGridLayout" name="gridLayout_22">
+             <item row="0" column="0">
+              <widget class="QGroupBox" name="interiorCb">
+               <property name="toolTip">
+                <string>Check if the element has an interior</string>
+               </property>
+               <property name="title">
+                <string>Element has Interior</string>
+               </property>
+               <property name="checkable">
+                <bool>true</bool>
+               </property>
+               <layout class="QGridLayout" name="gridLayout_23">
+                <item row="0" column="0" colspan="2">
+                 <layout class="QGridLayout" name="gridLayout_9">
+                  <property name="verticalSpacing">
+                   <number>0</number>
+                  </property>
+                  <item row="0" column="0">
+                   <widget class="QCheckBox" name="inheritInteriorCb">
+                    <property name="toolTip">
+                     <string>Check if the interior inherits its settings from another element</string>
+                    </property>
+                    <property name="text">
+                     <string>Inherit frame settings from element</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="0" column="1">
+                   <widget class="QLabel" name="label_46">
+                    <property name="text">
+                     <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'DejaVu Sans'; font-size:7pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;SVG element basename&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                    </property>
+                    <property name="buddy">
+                     <cstring>interiorSvgCombo</cstring>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="1" column="0">
+                   <widget class="QComboBox" name="inheritInteriorCombo">
+                    <property name="enabled">
+                     <bool>false</bool>
+                    </property>
+                    <property name="toolTip">
+                     <string>Element whose settings are inherited</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="1" column="1">
+                   <widget class="QComboBox" name="interiorSvgCombo">
+                    <property name="toolTip">
+                     <string>Set the SVG basename of the interior</string>
+                    </property>
+                    <property name="editable">
+                     <bool>true</bool>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </item>
+                <item row="1" column="0">
+                 <layout class="QVBoxLayout" name="verticalLayout_11">
+                  <property name="spacing">
+                   <number>0</number>
+                  </property>
+                  <item>
+                   <widget class="QCheckBox" name="interiorRxCb">
+                    <property name="toolTip">
+                     <string>If checked, value will be forced
+ otherwise inherited or default value will be taken</string>
+                    </property>
+                    <property name="text">
+                     <string>X pattern</string>
+                    </property>
+                    <property name="checked">
+                     <bool>true</bool>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QSpinBox" name="interiorRxSb">
+                    <property name="toolTip">
+                     <string>If the element is a pattern, set its width here</string>
+                    </property>
+                    <property name="minimum">
+                     <number>-9999</number>
+                    </property>
+                    <property name="value">
+                     <number>0</number>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </item>
+                <item row="1" column="1">
+                 <layout class="QVBoxLayout" name="verticalLayout_10">
+                  <property name="spacing">
+                   <number>0</number>
+                  </property>
+                  <item>
+                   <widget class="QCheckBox" name="interiorRyCb">
+                    <property name="toolTip">
+                     <string>If checked, value will be forced
+ otherwise inherited or default value will be taken</string>
+                    </property>
+                    <property name="text">
+                     <string>Y pattern</string>
+                    </property>
+                    <property name="checked">
+                     <bool>true</bool>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QSpinBox" name="interiorRySb">
+                    <property name="toolTip">
+                     <string>If the element is a pattern, set its height here</string>
+                    </property>
+                    <property name="minimum">
+                     <number>-9999</number>
+                    </property>
+                    <property name="value">
+                     <number>0</number>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </item>
+                <item row="3" column="0" colspan="2">
+                 <widget class="QGroupBox" name="interiorAnimateCb">
+                  <property name="toolTip">
+                   <string>Check if the interior is animated</string>
+                  </property>
+                  <property name="title">
+                   <string>Interior is animated</string>
+                  </property>
+                  <property name="checkable">
+                   <bool>true</bool>
+                  </property>
+                  <property name="checked">
+                   <bool>false</bool>
+                  </property>
+                  <layout class="QGridLayout" name="gridLayout_11">
+                   <item row="0" column="1" rowspan="2">
+                    <spacer name="horizontalSpacer_3">
+                     <property name="orientation">
+                      <enum>Qt::Horizontal</enum>
+                     </property>
+                     <property name="sizeHint" stdset="0">
+                      <size>
+                       <width>367</width>
+                       <height>20</height>
+                      </size>
+                     </property>
+                    </spacer>
+                   </item>
+                   <item row="1" column="0">
+                    <widget class="QSpinBox" name="interiorFramesSb">
+                     <property name="toolTip">
+                      <string>The number of frames in interior animation</string>
+                     </property>
+                     <property name="minimum">
+                      <number>-9999</number>
+                     </property>
+                     <property name="value">
+                      <number>0</number>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="0" column="0">
+                    <widget class="QCheckBox" name="interiorFramesCb">
+                     <property name="toolTip">
+                      <string>If checked, value will be forced
+ otherwise inherited or default value will be taken</string>
+                     </property>
+                     <property name="text">
+                      <string>N Frames</string>
+                     </property>
+                     <property name="checked">
+                      <bool>true</bool>
+                     </property>
+                    </widget>
+                   </item>
+                  </layout>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+             </item>
+             <item row="1" column="0">
+              <spacer name="verticalSpacer">
+               <property name="orientation">
+                <enum>Qt::Vertical</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>20</width>
+                 <height>0</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+            </layout>
+           </widget>
+           <widget class="QWidget" name="tab_4">
+            <attribute name="title">
+             <string>Indicator</string>
+            </attribute>
+            <layout class="QGridLayout" name="gridLayout_28">
+             <item row="0" column="0">
+              <widget class="QLabel" name="label_17">
+               <property name="text">
+                <string>Used only on widgets that display indicators</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="0">
+              <layout class="QGridLayout" name="gridLayout_14">
+               <property name="verticalSpacing">
+                <number>0</number>
+               </property>
+               <item row="0" column="0">
+                <widget class="QCheckBox" name="inheritIndicatorCb">
+                 <property name="toolTip">
+                  <string>Check if the indicator inherits its settings from another element</string>
+                 </property>
+                 <property name="text">
+                  <string>Inherit frame settings from element</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="1">
+                <widget class="QLabel" name="label_48">
+                 <property name="text">
+                  <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'DejaVu Sans'; font-size:7pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;SVG element basename&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                 </property>
+                 <property name="buddy">
+                  <cstring>indicatorSvgCombo</cstring>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="1">
+                <widget class="QComboBox" name="indicatorSvgCombo">
+                 <property name="toolTip">
+                  <string>SVG basename for the indicator</string>
+                 </property>
+                 <property name="editable">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="0">
+                <widget class="QComboBox" name="inheritIndicatorCombo">
+                 <property name="enabled">
+                  <bool>false</bool>
+                 </property>
+                 <property name="toolTip">
+                  <string>Element whose settings are inherited</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+             <item row="1" column="1">
+              <layout class="QVBoxLayout" name="verticalLayout_25">
+               <property name="spacing">
+                <number>0</number>
+               </property>
+               <item>
+                <widget class="QCheckBox" name="indicatorSizeCb">
+                 <property name="toolTip">
+                  <string>If checked, value will be forced
+ otherwise inherited or default value will be taken</string>
+                 </property>
+                 <property name="text">
+                  <string>Indicator size</string>
+                 </property>
+                 <property name="checked">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QSpinBox" name="indicatorSizeSb">
+                 <property name="toolTip">
+                  <string>Set the indicator size</string>
+                 </property>
+                 <property name="minimum">
+                  <number>-9999</number>
+                 </property>
+                 <property name="value">
+                  <number>10</number>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+             <item row="2" column="0" colspan="2">
+              <widget class="QGroupBox" name="indicatorAnimateCb">
+               <property name="toolTip">
+                <string>Check if the indicator is animated</string>
+               </property>
+               <property name="title">
+                <string>Indicator is animated</string>
+               </property>
+               <property name="checkable">
+                <bool>true</bool>
+               </property>
+               <property name="checked">
+                <bool>false</bool>
+               </property>
+               <layout class="QGridLayout" name="gridLayout_27">
+                <item row="0" column="1" rowspan="2">
+                 <spacer name="horizontalSpacer_4">
+                  <property name="orientation">
+                   <enum>Qt::Horizontal</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>367</width>
+                    <height>20</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+                <item row="1" column="0">
+                 <widget class="QSpinBox" name="indicatorFramesSb">
+                  <property name="toolTip">
+                   <string>The number of animations frames for the indicator</string>
+                  </property>
+                  <property name="minimum">
+                   <number>-9999</number>
+                  </property>
+                  <property name="value">
+                   <number>0</number>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="0">
+                 <widget class="QCheckBox" name="indicatorFramesCb">
+                  <property name="toolTip">
+                   <string>If checked, value will be forced
+ otherwise inherited or default value will be taken</string>
+                  </property>
+                  <property name="text">
+                   <string>N Frames</string>
+                  </property>
+                  <property name="checked">
+                   <bool>true</bool>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+             </item>
+             <item row="3" column="0" colspan="2">
+              <spacer name="verticalSpacer_4">
+               <property name="orientation">
+                <enum>Qt::Vertical</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>20</width>
+                 <height>0</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+            </layout>
+           </widget>
+           <widget class="QWidget" name="tab_5">
+            <attribute name="title">
+             <string>Label</string>
+            </attribute>
+            <layout class="QGridLayout" name="gridLayout_15">
+             <item row="0" column="0" colspan="2">
+              <widget class="QLabel" name="label_30">
+               <property name="text">
+                <string>Used only in widgets that display text and/or icons</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="0" colspan="2">
+              <widget class="QGroupBox" name="shadowCb">
+               <property name="toolTip">
+                <string>Check if the text label has a shadow</string>
+               </property>
+               <property name="title">
+                <string>Text Label has Shadow</string>
+               </property>
+               <property name="checkable">
+                <bool>true</bool>
+               </property>
+               <property name="checked">
+                <bool>false</bool>
+               </property>
+               <layout class="QGridLayout" name="gridLayout_12">
+                <item row="0" column="0">
+                 <layout class="QVBoxLayout" name="verticalLayout_18">
+                  <property name="spacing">
+                   <number>0</number>
+                  </property>
+                  <item>
+                   <widget class="QCheckBox" name="labelShadowXCb">
+                    <property name="toolTip">
+                     <string>If checked, value will be forced
+ otherwise inherited or default value will be taken</string>
+                    </property>
+                    <property name="text">
+                     <string>X Shift</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QSpinBox" name="labelShadowXSb">
+                    <property name="toolTip">
+                     <string>The shadow is shifted horizontally by that amount</string>
+                    </property>
+                    <property name="value">
+                     <number>1</number>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </item>
+                <item row="0" column="1">
+                 <layout class="QVBoxLayout" name="verticalLayout_19">
+                  <property name="spacing">
+                   <number>0</number>
+                  </property>
+                  <item>
+                   <widget class="QCheckBox" name="labelShadowYCb">
+                    <property name="toolTip">
+                     <string>If checked, value will be forced
+ otherwise inherited or default value will be taken</string>
+                    </property>
+                    <property name="text">
+                     <string>Y Shift</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QSpinBox" name="labelShadowYSb">
+                    <property name="toolTip">
+                     <string>The shadow is shifted vertically by that amount</string>
+                    </property>
+                    <property name="value">
+                     <number>1</number>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </item>
+                <item row="0" column="2">
+                 <layout class="QVBoxLayout" name="verticalLayout_20">
+                  <property name="spacing">
+                   <number>0</number>
+                  </property>
+                  <item>
+                   <widget class="QCheckBox" name="labelShadowDepthCb">
+                    <property name="toolTip">
+                     <string>If checked, value will be forced
+ otherwise inherited or default value will be taken</string>
+                    </property>
+                    <property name="text">
+                     <string>Depth</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QSpinBox" name="labelShadowDepthSb">
+                    <property name="toolTip">
+                     <string>The depth of the shadow</string>
+                    </property>
+                    <property name="value">
+                     <number>1</number>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </item>
+                <item row="1" column="0" colspan="2">
+                 <widget class="QLabel" name="label_21">
+                  <property name="text">
+                   <string>&lt;b&gt;Shadow Color&lt;/&gt;</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="2" column="0">
+                 <layout class="QVBoxLayout" name="verticalLayout_21">
+                  <property name="spacing">
+                   <number>0</number>
+                  </property>
+                  <item>
+                   <widget class="QCheckBox" name="labelShadowRedCb">
+                    <property name="text">
+                     <string>Red</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QSpinBox" name="labelShadowRedSb">
+                    <property name="maximum">
+                     <number>255</number>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </item>
+                <item row="2" column="1">
+                 <layout class="QVBoxLayout" name="verticalLayout_22">
+                  <property name="spacing">
+                   <number>0</number>
+                  </property>
+                  <item>
+                   <widget class="QCheckBox" name="labelShadowGreenCb">
+                    <property name="text">
+                     <string>Green</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QSpinBox" name="labelShadowGreenSb">
+                    <property name="maximum">
+                     <number>255</number>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </item>
+                <item row="2" column="2">
+                 <layout class="QVBoxLayout" name="verticalLayout_23">
+                  <property name="spacing">
+                   <number>0</number>
+                  </property>
+                  <item>
+                   <widget class="QCheckBox" name="labelShadowBlueCb">
+                    <property name="text">
+                     <string>Blue</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QSpinBox" name="labelShadowBlueSb">
+                    <property name="maximum">
+                     <number>255</number>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </item>
+                <item row="2" column="3">
+                 <layout class="QVBoxLayout" name="verticalLayout_24">
+                  <property name="spacing">
+                   <number>0</number>
+                  </property>
+                  <item>
+                   <widget class="QCheckBox" name="labelShadowAlphaCb">
+                    <property name="text">
+                     <string>Alpha</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QSpinBox" name="labelShadowAlphaSb">
+                    <property name="maximum">
+                     <number>255</number>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </item>
+               </layout>
+              </widget>
+             </item>
+             <item row="1" column="2" rowspan="3">
+              <layout class="QVBoxLayout" name="verticalLayout">
+               <property name="spacing">
+                <number>0</number>
+               </property>
+               <item>
+                <widget class="QCheckBox" name="labelTextIconSpacingCb">
+                 <property name="toolTip">
+                  <string>If checked, value will be forced
+ otherwise inherited or default value will be taken</string>
+                 </property>
+                 <property name="text">
+                  <string>Text-Icon spacing</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QSpinBox" name="labelTextIconSpacingSb">
+                 <property name="toolTip">
+                  <string>Spacing between the icon and the text</string>
+                 </property>
+                 <property name="minimum">
+                  <number>-99</number>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <spacer name="verticalSpacer_3">
+                 <property name="orientation">
+                  <enum>Qt::Vertical</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>20</width>
+                   <height>40</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+              </layout>
+             </item>
+             <item row="4" column="0" colspan="3">
+              <spacer name="verticalSpacer_5">
+               <property name="orientation">
+                <enum>Qt::Vertical</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>20</width>
+                 <height>40</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item row="2" column="0" rowspan="2" colspan="2">
+              <widget class="QGroupBox" name="textMarginCb">
+               <property name="toolTip">
+                <string>Check if the label should be drawn with margins from the interior</string>
+               </property>
+               <property name="title">
+                <string>Label has Margins</string>
+               </property>
+               <property name="checkable">
+                <bool>true</bool>
+               </property>
+               <property name="checked">
+                <bool>false</bool>
+               </property>
+               <layout class="QGridLayout" name="gridLayout_13">
+                <item row="0" column="0">
+                 <layout class="QVBoxLayout" name="verticalLayout_27">
+                  <property name="spacing">
+                   <number>0</number>
+                  </property>
+                  <item>
+                   <widget class="QCheckBox" name="labelTextTopCb">
+                    <property name="toolTip">
+                     <string>If checked, value will be forced
+ otherwise inherited or default value will be taken</string>
+                    </property>
+                    <property name="text">
+                     <string>Top</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QSpinBox" name="labelTextTopSb">
+                    <property name="toolTip">
+                     <string>top margin height</string>
+                    </property>
+                    <property name="minimum">
+                     <number>-99</number>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </item>
+                <item row="0" column="1">
+                 <layout class="QVBoxLayout" name="verticalLayout_28">
+                  <property name="spacing">
+                   <number>0</number>
+                  </property>
+                  <item>
+                   <widget class="QCheckBox" name="labelTextBottomCb">
+                    <property name="toolTip">
+                     <string>If checked, value will be forced
+ otherwise inherited or default value will be taken</string>
+                    </property>
+                    <property name="text">
+                     <string>Bottom</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QSpinBox" name="labelTextBottomSb">
+                    <property name="toolTip">
+                     <string>bottom margin height</string>
+                    </property>
+                    <property name="minimum">
+                     <number>-99</number>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </item>
+                <item row="0" column="2">
+                 <layout class="QVBoxLayout" name="verticalLayout_29">
+                  <property name="spacing">
+                   <number>0</number>
+                  </property>
+                  <item>
+                   <widget class="QCheckBox" name="labelTextLeftCb">
+                    <property name="toolTip">
+                     <string>If checked, value will be forced
+ otherwise inherited or default value will be taken</string>
+                    </property>
+                    <property name="text">
+                     <string>Left</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QSpinBox" name="labelTextLeftSb">
+                    <property name="toolTip">
+                     <string>left margin width</string>
+                    </property>
+                    <property name="minimum">
+                     <number>-99</number>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </item>
+                <item row="0" column="3">
+                 <layout class="QVBoxLayout" name="verticalLayout_30">
+                  <property name="spacing">
+                   <number>0</number>
+                  </property>
+                  <item>
+                   <widget class="QCheckBox" name="labelTextRightCb">
+                    <property name="toolTip">
+                     <string>If checked, value will be forced
+ otherwise inherited or default value will be taken</string>
+                    </property>
+                    <property name="text">
+                     <string>Right</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QSpinBox" name="labelTextRightSb">
+                    <property name="toolTip">
+                     <string>right margin width</string>
+                    </property>
+                    <property name="minimum">
+                     <number>-99</number>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </item>
+                <item row="1" column="0" colspan="4">
+                 <widget class="QCheckBox" name="textMarginOnlyTextCb">
+                  <property name="enabled">
+                   <bool>false</bool>
+                  </property>
+                  <property name="text">
+                   <string>Only when widget contains text (NYI)</string>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </widget>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tab_6">
+      <attribute name="title">
+       <string>About</string>
+      </attribute>
+      <layout class="QGridLayout" name="gridLayout_29">
+       <item row="0" column="0">
+        <widget class="QLabel" name="label_31">
+         <property name="text">
+          <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Bitstream Vera Sans'; font-size:8pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;qsThemeBuilder&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;by&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Saïd Lankri&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Under the GNU GPL License 3&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Made using &lt;span style=&quot; font-weight:600;&quot;&gt;Qt&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;said.lankri@gmail.com&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+         <property name="wordWrap">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <tabstops>
+  <tabstop>newButton</tabstop>
+  <tabstop>loadButton</tabstop>
+  <tabstop>quitButton</tabstop>
+  <tabstop>mainTab</tabstop>
+  <tabstop>authorLineEdit</tabstop>
+  <tabstop>commentLineEdit</tabstop>
+  <tabstop>animateThemeCb</tabstop>
+  <tabstop>stepSb</tabstop>
+  <tabstop>loopAnimationCb</tabstop>
+  <tabstop>checkBox_2</tabstop>
+  <tabstop>checkBox_3</tabstop>
+  <tabstop>capsuleCb</tabstop>
+  <tabstop>filemonitorCb</tabstop>
+  <tabstop>elementList</tabstop>
+  <tabstop>settingsTab</tabstop>
+  <tabstop>inheritElementCb</tabstop>
+  <tabstop>inheritElementCombo</tabstop>
+  <tabstop>forceWidthCb</tabstop>
+  <tabstop>minWidthRadio</tabstop>
+  <tabstop>fixedWidthRadio</tabstop>
+  <tabstop>widthSb</tabstop>
+  <tabstop>forceHeightCb</tabstop>
+  <tabstop>minHeightRadio</tabstop>
+  <tabstop>fixedHeightRadio</tabstop>
+  <tabstop>heightSb</tabstop>
+  <tabstop>frameCb</tabstop>
+  <tabstop>inheritFrameCb</tabstop>
+  <tabstop>inheritFrameCombo</tabstop>
+  <tabstop>frameSvgCombo</tabstop>
+  <tabstop>frameTopSb</tabstop>
+  <tabstop>frameBottomSb</tabstop>
+  <tabstop>frameLeftSb</tabstop>
+  <tabstop>frameRightSb</tabstop>
+  <tabstop>interiorCb</tabstop>
+  <tabstop>inheritInteriorCb</tabstop>
+  <tabstop>inheritInteriorCombo</tabstop>
+  <tabstop>interiorSvgCombo</tabstop>
+  <tabstop>interiorRxSb</tabstop>
+  <tabstop>interiorRySb</tabstop>
+  <tabstop>inheritIndicatorCb</tabstop>
+  <tabstop>inheritIndicatorCombo</tabstop>
+  <tabstop>indicatorSvgCombo</tabstop>
+  <tabstop>indicatorSizeSb</tabstop>
+  <tabstop>shadowCb</tabstop>
+  <tabstop>labelShadowXSb</tabstop>
+  <tabstop>labelShadowYSb</tabstop>
+  <tabstop>labelShadowDepthSb</tabstop>
+  <tabstop>labelShadowRedSb</tabstop>
+  <tabstop>labelShadowGreenSb</tabstop>
+  <tabstop>labelShadowBlueSb</tabstop>
+  <tabstop>labelShadowAlphaSb</tabstop>
+  <tabstop>labelTextTopSb</tabstop>
+  <tabstop>labelTextBottomSb</tabstop>
+  <tabstop>labelTextLeftSb</tabstop>
+  <tabstop>labelTextRightSb</tabstop>
+  <tabstop>textMarginOnlyTextCb</tabstop>
+ </tabstops>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>inheritElementCb</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>inheritElementCombo</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>403</x>
+     <y>149</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>640</x>
+     <y>151</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>inheritFrameCb</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>inheritFrameCombo</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>267</x>
+     <y>160</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>276</x>
+     <y>192</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>inheritInteriorCb</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>inheritInteriorCombo</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>267</x>
+     <y>160</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>276</x>
+     <y>192</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>inheritIndicatorCb</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>inheritIndicatorCombo</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>241</x>
+     <y>154</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>268</x>
+     <y>190</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>inheritIndicatorCb</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>inheritIndicatorCombo</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>267</x>
+     <y>165</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>268</x>
+     <y>190</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>inheritFrameCb</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>frameSvgCombo</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>267</x>
+     <y>160</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>488</x>
+     <y>192</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>inheritInteriorCb</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>interiorSvgCombo</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>267</x>
+     <y>160</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>488</x>
+     <y>192</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>inheritIndicatorCb</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>indicatorSvgCombo</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>267</x>
+     <y>165</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>479</x>
+     <y>190</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>frameTopCb</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>frameTopSb</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>276</x>
+     <y>218</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>276</x>
+     <y>237</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>frameBottomCb</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>frameBottomSb</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>392</x>
+     <y>218</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>392</x>
+     <y>237</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>frameLeftCb</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>frameLeftSb</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>508</x>
+     <y>218</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>508</x>
+     <y>237</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>frameRightCb</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>frameRightSb</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>623</x>
+     <y>218</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>623</x>
+     <y>237</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>frameFramesCb</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>frameFramesSb</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>259</x>
+     <y>321</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>259</x>
+     <y>346</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>interiorRxCb</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>interiorRxSb</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>276</x>
+     <y>218</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>276</x>
+     <y>237</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>interiorRyCb</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>interiorRySb</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>508</x>
+     <y>218</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>508</x>
+     <y>237</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>interiorFramesCb</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>interiorFramesSb</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>259</x>
+     <y>359</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>259</x>
+     <y>384</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>indicatorSizeCb</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>indicatorSizeSb</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>639</x>
+     <y>169</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>639</x>
+     <y>188</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>indicatorFramesCb</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>indicatorFramesSb</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>251</x>
+     <y>237</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>251</x>
+     <y>262</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>labelShadowRedCb</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>labelShadowRedSb</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>210</x>
+     <y>248</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>206</x>
+     <y>269</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>labelShadowGreenCb</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>labelShadowGreenSb</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>278</x>
+     <y>248</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>276</x>
+     <y>269</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>labelShadowBlueCb</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>labelShadowBlueSb</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>366</x>
+     <y>246</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>361</x>
+     <y>267</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>labelShadowAlphaCb</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>labelShadowAlphaSb</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>439</x>
+     <y>245</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>434</x>
+     <y>268</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>labelShadowXCb</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>labelShadowXSb</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>226</x>
+     <y>181</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>218</x>
+     <y>206</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>labelShadowYCb</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>labelShadowYSb</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>302</x>
+     <y>184</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>300</x>
+     <y>202</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>labelShadowDepthCb</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>labelShadowDepthSb</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>345</x>
+     <y>189</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>345</x>
+     <y>205</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>labelTextIconSpacingCb</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>labelTextIconSpacingSb</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>579</x>
+     <y>163</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>559</x>
+     <y>183</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>labelTextTopCb</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>labelTextTopSb</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>189</x>
+     <y>331</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>188</x>
+     <y>345</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>labelTextBottomCb</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>labelTextBottomSb</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>309</x>
+     <y>324</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>299</x>
+     <y>343</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>labelTextLeftCb</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>labelTextLeftSb</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>381</x>
+     <y>323</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>377</x>
+     <y>344</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>labelTextRightCb</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>labelTextRightSb</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>452</x>
+     <y>329</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>452</x>
+     <y>343</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <designerdata>
+  <property name="gridDeltaX">
+   <number>10</number>
+  </property>
+  <property name="gridDeltaY">
+   <number>10</number>
+  </property>
+  <property name="gridSnapX">
+   <bool>true</bool>
+  </property>
+  <property name="gridSnapY">
+   <bool>true</bool>
+  </property>
+  <property name="gridVisible">
+   <bool>true</bool>
+  </property>
+ </designerdata>
+ <slots>
+  <slot>slot_save()</slot>
+ </slots>
+</ui>

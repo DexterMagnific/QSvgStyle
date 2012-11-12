@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<inkscape-extension xmlns="http://www.inkscape.org/namespace/inkscape/extension">
+  <_name>Copy interior set and change basename</_name>
+  <id>qs.copyinterior</id>
+  <dependency type="executable" location="extensions">copy_interior.py</dependency>
+  <dependency type="executable" location="extensions">inkex.py</dependency>
+  
+  <param name="basename"    type="string"               _gui-text="Existing Basename">Basename</param>
+  <param name="newbasename" type="string"               _gui-text="New Basename">New basename</param>
+  
+  <param name="normal"      type="boolean"              _gui-text="Copy Normal">false</param>
+  <param name="focused"     type="boolean"              _gui-text="Copy Focused">false</param>
+  <param name="pressed"     type="boolean"              _gui-text="Copy Pressed">false</param>
+  <param name="toggled"     type="boolean"              _gui-text="Copy Toggled">false</param>
+  <param name="disabled"    type="boolean"              _gui-text="Copy Disabled">false</param>
+
+  <effect>
+    <object-type>all</object-type>
+    <effects-menu>
+      <submenu _name="QuantumStyle"/>
+    </effects-menu>
+  </effect>
+  <script>
+    <command reldir="extensions" interpreter="python">copy_interior.py</command>
+  </script>
+</inkscape-extension>
