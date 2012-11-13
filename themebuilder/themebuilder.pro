@@ -6,6 +6,7 @@ TEMPLATE = app
 TARGET = qsvgthemebuilder
 DEPENDPATH += .
 INCLUDEPATH += .
+DESTDIR = bin
 
 # Input
 HEADERS += ThemeBuilderUI.h ../themeconfig/ThemeConfig.h ../themeconfig/specs.h

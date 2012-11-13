@@ -4,7 +4,7 @@ CONFIG += warn_on \
  dll \
  plugin
 TARGET = qsvgstyle
-DESTDIR = 
+DESTDIR = plugins
 TEMPLATE = lib
 
 VERSION = 0.1

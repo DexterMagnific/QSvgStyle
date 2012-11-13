@@ -2,6 +2,7 @@
 *.slo
 *.lo
 *.o
+bin/
 
 # Compiled Dynamic libraries
 *.so
@@ -11,8 +12,12 @@
 *.la
 *.a
 
-# Qt Meta Object files
+# Qt Meta Object files/Qt Build System files
 *.moc
+moc_*
+qrc_*
+Makefile
+ui_*
 
 # KDevelop files
 *kdev*

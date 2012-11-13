@@ -6,6 +6,7 @@ TEMPLATE = app
 TARGET = qsvgthemeviewer
 DEPENDPATH += .
 INCLUDEPATH += .
+DESTDIR = bin
 
 # Input
 HEADERS += ThemePreviewUI.h
