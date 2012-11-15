@@ -1,4 +1,7 @@
 Teknik Theme by Said LANKRI, dark version
 
 teknik-dark.inkscape.svg is the original SVG theme file
-teknik-dark.svf is the optimized SVG file
+teknik-dark.svg is the optimized SVG file using:
+
+$ scour -i teknik-dark.inkscape.svg -o teknik-dark.svg --shorten-ids
+--protect-ids-noninkscape --quiet
