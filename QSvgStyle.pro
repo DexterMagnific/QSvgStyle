@@ -1,7 +1,8 @@
 SUBDIRS += style \
  themebuilder \
- themeviewer
-TEMPLATE = subdirs 
+ themeviewer \
+ experimental
+TEMPLATE = subdirs
 CONFIG += warn_on \
           qt \
           thread \

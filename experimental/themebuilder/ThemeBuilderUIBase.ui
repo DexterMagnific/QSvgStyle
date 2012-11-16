@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>MainWindow</class>
- <widget class="QMainWindow" name="MainWindow">
+ <class>ThemeBuilderUIBase</class>
+ <widget class="QMainWindow" name="ThemeBuilderUIBase">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>659</width>
-    <height>516</height>
+    <width>589</width>
+    <height>563</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -187,8 +187,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>187</width>
-             <height>151</height>
+             <width>117</width>
+             <height>198</height>
             </rect>
            </property>
            <attribute name="label">
@@ -248,8 +248,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>187</width>
-             <height>151</height>
+             <width>96</width>
+             <height>28</height>
             </rect>
            </property>
            <attribute name="label">
@@ -327,8 +327,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>187</width>
-             <height>151</height>
+             <width>96</width>
+             <height>28</height>
             </rect>
            </property>
            <attribute name="label">
@@ -370,8 +370,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>187</width>
-             <height>151</height>
+             <width>96</width>
+             <height>28</height>
             </rect>
            </property>
            <attribute name="label">
@@ -436,6 +436,20 @@
                 <string>Tool Bar</string>
                </property>
               </item>
+              <item>
+               <property name="text">
+                <string>Menu Bar</string>
+               </property>
+               <property name="icon">
+                <iconset resource="ThemeBuilderUIBase.qrc">
+                 <normaloff>:/icon/menubar.png</normaloff>:/icon/menubar.png</iconset>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Menu</string>
+               </property>
+              </item>
              </widget>
             </item>
            </layout>
@@ -445,8 +459,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>187</width>
-             <height>151</height>
+             <width>96</width>
+             <height>26</height>
             </rect>
            </property>
            <attribute name="label">
@@ -575,7 +589,7 @@
                </property>
                <property name="icon">
                 <iconset resource="ThemeBuilderUIBase.qrc">
-                 <normaloff>:/icon/listview.png</normaloff>:/icon/listview.png</iconset>
+                 <normaloff>:/icon/insertimage.png</normaloff>:/icon/insertimage.png</iconset>
                </property>
                <property name="checkable">
                 <bool>true</bool>
@@ -593,7 +607,7 @@
            <item row="1" column="0">
             <widget class="QStackedWidget" name="stackedWidget">
              <property name="currentIndex">
-              <number>3</number>
+              <number>0</number>
              </property>
              <widget class="QWidget" name="page">
               <layout class="QGridLayout" name="gridLayout_15">
@@ -1101,19 +1115,6 @@
                  </item>
                 </layout>
                </item>
-               <item row="2" column="0" colspan="2">
-                <spacer name="verticalSpacer_6">
-                 <property name="orientation">
-                  <enum>Qt::Vertical</enum>
-                 </property>
-                 <property name="sizeHint" stdset="0">
-                  <size>
-                   <width>20</width>
-                   <height>40</height>
-                  </size>
-                 </property>
-                </spacer>
-               </item>
                <item row="0" column="0" colspan="2">
                 <spacer name="verticalSpacer_7">
                  <property name="orientation">
@@ -1126,6 +1127,19 @@
                   <size>
                    <width>20</width>
                    <height>20</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+               <item row="2" column="0" colspan="2">
+                <spacer name="verticalSpacer_6">
+                 <property name="orientation">
+                  <enum>Qt::Vertical</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>20</width>
+                   <height>40</height>
                   </size>
                  </property>
                 </spacer>
@@ -1740,6 +1754,20 @@
              </widget>
             </widget>
            </item>
+           <item row="2" column="0">
+            <widget class="QToolButton" name="toolButton">
+             <property name="text">
+              <string>Computed values</string>
+             </property>
+             <property name="icon">
+              <iconset resource="ThemeBuilderUIBase.qrc">
+               <normaloff>:/icon/hint.png</normaloff>:/icon/hint.png</iconset>
+             </property>
+             <property name="toolButtonStyle">
+              <enum>Qt::ToolButtonTextUnderIcon</enum>
+             </property>
+            </widget>
+           </item>
           </layout>
          </widget>
         </widget>
@@ -1868,6 +1896,9 @@
       <layout class="QGridLayout" name="gridLayout_14">
        <item row="0" column="0">
         <layout class="QGridLayout" name="gridLayout_12">
+         <property name="horizontalSpacing">
+          <number>20</number>
+         </property>
          <item row="0" column="0">
           <widget class="QLabel" name="label_4">
            <property name="text">

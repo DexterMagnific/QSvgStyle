@@ -4,11 +4,12 @@
 
 TEMPLATE = app
 TARGET = qsvgthemebuilder
-DEPENDPATH += .
-INCLUDEPATH += .
+DEPENDPATH += . ..
+INCLUDEPATH += . ..
 DESTDIR = bin
 
 # Input
 HEADERS += ThemeBuilderUI.h ../themeconfig/ThemeConfig.h ../themeconfig/specs.h
 FORMS += ThemeBuilderUIBase.ui
 SOURCES += main.cpp ThemeBuilderUI.cpp ../themeconfig/ThemeConfig.cpp
+RESOURCES += ThemeBuilderUIBase.qrc ../themeconfig/defaulttheme.qrc

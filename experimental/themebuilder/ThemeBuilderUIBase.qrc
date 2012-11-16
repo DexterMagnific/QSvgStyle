@@ -1,6 +1,8 @@
 <RCC>
   <qresource prefix="icon">
-    <file>listview.png</file>
+    <file>hint.png</file>
+    <file>menubar.png</file>
+    <file>insertimage.png</file>
     <file>resourceeditortool.png</file>
     <file>plaintextedit.png</file>
     <file>wizard.png</file>
@@ -34,6 +36,5 @@
     <file>quit.png</file>
     <file>new.png</file>
     <file>welcome.png</file>
-    <file>new.png</file>
   </qresource>
 </RCC>
