@@ -29,14 +29,14 @@
      objecttolerance="10"
      borderopacity="1"
      inkscape:current-layer="svg2"
-     inkscape:cx="229.9"
-     inkscape:cy="1158"
+     inkscape:cx="169.7"
+     inkscape:cy="211"
      inkscape:window-y="0"
-     inkscape:window-x="0"
-     inkscape:window-width="1272"
+     inkscape:window-x="1600"
+     inkscape:window-width="1676"
      showgrid="true"
      inkscape:pageopacity="0.3294"
-     inkscape:window-height="738"
+     inkscape:window-height="990"
      showguides="true"
      inkscape:guide-bbox="true">
     <inkscape:grid
@@ -62,6 +62,14 @@
   </metadata>
   <defs
      id="defs5">
+    <linearGradient
+       id="linearGradient4646"
+       osb:paint="solid">
+      <stop
+         style="stop-color:#222b00;stop-opacity:1;"
+         offset="0"
+         id="stop4648" />
+    </linearGradient>
     <linearGradient
        id="linearGradient4607"
        osb:paint="solid">
@@ -103,7 +111,7 @@
        osb:paint="solid"
        gradientTransform="matrix(0.0624,0,0,0.0629,71.09,411.7)">
       <stop
-         style="stop-color:#66ff00;stop-opacity:1;"
+         style="stop-color:#ffcc43;stop-opacity:1;"
          offset="0"
          id="stop4769" />
     </linearGradient>
@@ -752,6 +760,33 @@
          offset="0"
          id="stop4831-9-3-4" />
     </linearGradient>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient4646"
+       id="linearGradient4650"
+       x1="-59"
+       y1="35.86"
+       x2="-44"
+       y2="35.86"
+       gradientUnits="userSpaceOnUse" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient4646"
+       id="linearGradient4652"
+       x1="-59"
+       y1="35.86"
+       x2="-44"
+       y2="35.86"
+       gradientUnits="userSpaceOnUse" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient4646"
+       id="linearGradient4654"
+       x1="-59"
+       y1="35.86"
+       x2="-44"
+       y2="35.86"
+       gradientUnits="userSpaceOnUse" />
   </defs>
   <text
      id="text6990"
@@ -2018,7 +2053,7 @@
        x="-420.6"
        style="fill:#222222;fill-opacity:1" />
     <rect
-       style="fill:#00ff00;fill-opacity:1;stroke:none"
+       style="fill:url(#linearGradient4767);fill-opacity:1;stroke:none"
        id="rect4890"
        width="8"
        height="0.8277"
@@ -2026,7 +2061,7 @@
        y="188.2"
        transform="matrix(0,-1,1,0,0,0)" />
     <rect
-       style="fill:#00ff00;fill-opacity:1;stroke:none"
+       style="fill:url(#linearGradient4767);fill-opacity:1;stroke:none"
        id="rect4890-8"
        width="8"
        height="0.8276"
@@ -2239,7 +2274,7 @@
        y="28.36"
        x="-59"
        fill="url(#linearGradient8485)"
-       style="fill:url(#linearGradient4829);opacity:1;fill-opacity:1" />
+       style="fill:url(#linearGradient4650);opacity:1;fill-opacity:1" />
   </g>
   <g
      id="radio-normal"
@@ -3502,7 +3537,7 @@
        width="3.75"
        y="25.02"
        x="191.2"
-       style="fill:#66ff00;fill-opacity:1" />
+       style="fill:url(#linearGradient4767);fill-opacity:1" />
     <rect
        style="opacity:0;fill:#ffffff;fill-opacity:0.6902"
        id="rect7903-3-0-7"
@@ -3677,7 +3712,7 @@
        id="path7642-0"
        d="m 79.84,462.1 15,0 0.1,-14.9 -3.8,0 0,11.1 -11.3,0 z"
        inkscape:connector-curvature="0"
-       style="fill:#66ff00;fill-opacity:1"
+       style="fill:url(#linearGradient4767);fill-opacity:1"
        sodipodi:nodetypes="ccccccc" />
   </g>
   <g
@@ -3687,7 +3722,7 @@
        id="path7642-7-8-3"
        d="m 79.94,462.3 15,0 0,-14.9 -3.8,0 0,11.1 -11.2,0 z"
        inkscape:connector-curvature="0"
-       style="fill:#66ff00;fill-opacity:1"
+       style="fill:url(#linearGradient4767);fill-opacity:1"
        sodipodi:nodetypes="ccccccc" />
   </g>
   <g
@@ -3901,7 +3936,7 @@
        y="28.36"
        x="-59"
        fill="url(#linearGradient8485)"
-       style="fill:url(#linearGradient4829);opacity:1;fill-opacity:1" />
+       style="fill:url(#linearGradient4652);opacity:1;fill-opacity:1" />
   </g>
   <g
      id="menuitem-pressed"
@@ -3916,7 +3951,7 @@
        y="28.36"
        x="-59"
        fill="url(#linearGradient8485)"
-       style="fill:url(#linearGradient4829);opacity:1;fill-opacity:1" />
+       style="fill:url(#linearGradient4654);opacity:1;fill-opacity:1" />
   </g>
   <g
      id="arrow-up-pressed"
@@ -4590,7 +4625,7 @@
        width="3.75"
        y="-40.11"
        x="-194.9"
-       style="fill:#66ff00;fill-opacity:1"
+       style="fill:url(#linearGradient4767);fill-opacity:1"
        transform="scale(-1,-1)" />
   </g>
   <g
@@ -4725,7 +4760,7 @@
        width="3.75"
        y="23.21"
        x="180.9"
-       style="fill:#66ff00;fill-opacity:1" />
+       style="fill:url(#linearGradient4767);fill-opacity:1" />
   </g>
   <g
      id="common-normal"
@@ -4783,7 +4818,7 @@
        width="3.75"
        y="-40.21"
        x="-195.9"
-       style="fill:#66ff00;fill-opacity:1"
+       style="fill:url(#linearGradient4767);fill-opacity:1"
        transform="scale(-1,-1)" />
   </g>
   <g
@@ -4918,7 +4953,7 @@
        width="3.75"
        y="23.21"
        x="179.9"
-       style="fill:#66ff00;fill-opacity:1" />
+       style="fill:url(#linearGradient4767);fill-opacity:1" />
   </g>
   <g
      id="toolbar-normal"

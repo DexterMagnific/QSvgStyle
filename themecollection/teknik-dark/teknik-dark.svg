@@ -11,6 +11,9 @@
   </rdf:RDF>
  </metadata>
  <defs id="defs5">
+  <linearGradient id="l" osb:paint="solid">
+   <stop id="stop4648" stop-color="#222b00" offset="0"/>
+  </linearGradient>
   <linearGradient id="g" osb:paint="solid">
    <stop id="stop4609" stop-color="#9bac59" offset="0"/>
   </linearGradient>
@@ -18,8 +21,8 @@
    <stop id="stop3827" stop-color="#1c0000" offset="0"/>
    <stop id="stop3829" stop-color="#798200" stop-opacity="0" offset="1"/>
   </linearGradient>
-  <linearGradient id="d" gradientTransform="matrix(.0624 0 0 .0629 71.09 411.7)" osb:paint="solid">
-   <stop id="stop4769" stop-color="#6f0" offset="0"/>
+  <linearGradient id="c" gradientTransform="matrix(.0624 0 0 .0629 71.09 411.7)" osb:paint="solid">
+   <stop id="stop4769" stop-color="#ffcc43" offset="0"/>
   </linearGradient>
   <linearGradient id="b" gradientTransform="matrix(.2506 0 0 1 56.83 0)" osb:paint="solid">
    <stop id="stop4843" stop-color="#f0f" offset="0"/>
@@ -27,56 +30,57 @@
   <linearGradient id="a" gradientTransform="matrix(0,1,-1,0,430.7,342)" osb:paint="solid">
    <stop id="stop4837" stop-color="#6c5d53" offset="0"/>
   </linearGradient>
-  <linearGradient id="c" gradientTransform="matrix(1.002 0 0 1 -.8296 .0213)" osb:paint="solid">
+  <linearGradient id="d" gradientTransform="matrix(1.002 0 0 1 -.8296 .0213)" osb:paint="solid">
    <stop id="stop4831" stop-color="#1a1a1a" offset="0"/>
   </linearGradient>
   <linearGradient id="f" osb:paint="solid">
    <stop id="stop4825" stop-color="#0d0e10" offset="0"/>
   </linearGradient>
-  <linearGradient id="j" gradientTransform="translate(-.2 .0182)">
+  <linearGradient id="k" gradientTransform="translate(-.2 .0182)">
    <stop id="stop4825-9" stop-color="#0d0e10" offset="0"/>
   </linearGradient>
-  <linearGradient id="at" y2="31.13" xlink:href="#e" gradientUnits="userSpaceOnUse" x2="195.8" y1="31.12" x1="164"/>
-  <linearGradient id="al" y2="436" xlink:href="#e" gradientUnits="userSpaceOnUse" x2="96.77" y1="436" x1="64.97"/>
-  <linearGradient id="ad" y2="463.2" xlink:href="#e" gradientUnits="userSpaceOnUse" x2="70.57" y1="431.3" x1="70.57"/>
-  <linearGradient id="v" y2="194.9" xlink:href="#e" gradientUnits="userSpaceOnUse" x2="-33.93" y1="163" x1="-33.93"/>
-  <linearGradient id="n" y2="32.08" xlink:href="#e" gradientUnits="userSpaceOnUse" y1="12.4" gradientTransform="translate(-99,426.4)" x2="191.1" x1="171.4"/>
-  <linearGradient id="u" y2="194.9" xlink:href="#e" gradientUnits="userSpaceOnUse" x2="-33.93" gradientTransform="translate(1.361 .9296)" y1="163" x1="-33.93"/>
-  <linearGradient id="aa" y2="463.2" xlink:href="#e" gradientUnits="userSpaceOnUse" x2="70.57" gradientTransform="translate(.1109 .0076)" y1="431.3" x1="70.57"/>
-  <linearGradient id="ak" y2="436" xlink:href="#e" gradientUnits="userSpaceOnUse" x2="96.77" gradientTransform="translate(.1109 .0076)" y1="436" x1="64.97"/>
-  <linearGradient id="l" y2="32.08" xlink:href="#e" gradientUnits="userSpaceOnUse" y1="12.4" gradientTransform="translate(-98.89,426.4)" x2="191.1" x1="171.4"/>
-  <linearGradient id="ar" y2="31.13" xlink:href="#e" gradientUnits="userSpaceOnUse" x2="195.8" gradientTransform="translate(1.867 -.476)" y1="31.12" x1="164"/>
-  <linearGradient id="t" y2="194.9" xlink:href="#e" gradientUnits="userSpaceOnUse" x2="-33.93" gradientTransform="translate(1.358,1.012)" y1="163" x1="-33.93"/>
-  <linearGradient id="z" y2="463.2" xlink:href="#e" gradientUnits="userSpaceOnUse" x2="70.57" gradientTransform="translate(1.045 -.0316)" y1="431.3" x1="70.57"/>
-  <linearGradient id="aj" y2="436" xlink:href="#e" gradientUnits="userSpaceOnUse" x2="96.77" gradientTransform="translate(1.045 -.0316)" y1="436" x1="64.97"/>
-  <linearGradient id="h" y2="32.08" xlink:href="#e" gradientUnits="userSpaceOnUse" y1="12.4" gradientTransform="translate(-97.95,426.4)" x2="191.1" x1="171.4"/>
-  <linearGradient id="aq" y2="31.13" xlink:href="#e" gradientUnits="userSpaceOnUse" x2="195.8" gradientTransform="translate(2.772 -.2828)" y1="31.12" x1="164"/>
-  <linearGradient id="s" y2="194.9" xlink:href="#e" gradientUnits="userSpaceOnUse" x2="-33.93" gradientTransform="translate(1.362,1.188)" y1="163" x1="-33.93"/>
-  <linearGradient id="y" y2="463.2" xlink:href="#e" gradientUnits="userSpaceOnUse" x2="70.57" gradientTransform="translate(1.047 -.1316)" y1="431.3" x1="70.57"/>
-  <linearGradient id="ai" y2="436" xlink:href="#e" gradientUnits="userSpaceOnUse" x2="96.77" gradientTransform="translate(1.047 -.1316)" y1="436" x1="64.97"/>
-  <linearGradient id="ap" y2="31.13" gradientUnits="userSpaceOnUse" x2="195.8" gradientTransform="translate(2.809 -.1898)" y1="31.12" x1="164">
+  <linearGradient id="av" y2="31.13" xlink:href="#e" gradientUnits="userSpaceOnUse" x2="195.8" y1="31.12" x1="164"/>
+  <linearGradient id="an" y2="436" xlink:href="#e" gradientUnits="userSpaceOnUse" x2="96.77" y1="436" x1="64.97"/>
+  <linearGradient id="af" y2="463.2" xlink:href="#e" gradientUnits="userSpaceOnUse" x2="70.57" y1="431.3" x1="70.57"/>
+  <linearGradient id="x" y2="194.9" xlink:href="#e" gradientUnits="userSpaceOnUse" x2="-33.93" y1="163" x1="-33.93"/>
+  <linearGradient id="p" y2="32.08" xlink:href="#e" gradientUnits="userSpaceOnUse" y1="12.4" gradientTransform="translate(-99,426.4)" x2="191.1" x1="171.4"/>
+  <linearGradient id="w" y2="194.9" xlink:href="#e" gradientUnits="userSpaceOnUse" x2="-33.93" gradientTransform="translate(1.361 .9296)" y1="163" x1="-33.93"/>
+  <linearGradient id="ac" y2="463.2" xlink:href="#e" gradientUnits="userSpaceOnUse" x2="70.57" gradientTransform="translate(.1109 .0076)" y1="431.3" x1="70.57"/>
+  <linearGradient id="am" y2="436" xlink:href="#e" gradientUnits="userSpaceOnUse" x2="96.77" gradientTransform="translate(.1109 .0076)" y1="436" x1="64.97"/>
+  <linearGradient id="n" y2="32.08" xlink:href="#e" gradientUnits="userSpaceOnUse" y1="12.4" gradientTransform="translate(-98.89,426.4)" x2="191.1" x1="171.4"/>
+  <linearGradient id="at" y2="31.13" xlink:href="#e" gradientUnits="userSpaceOnUse" x2="195.8" gradientTransform="translate(1.867 -.476)" y1="31.12" x1="164"/>
+  <linearGradient id="v" y2="194.9" xlink:href="#e" gradientUnits="userSpaceOnUse" x2="-33.93" gradientTransform="translate(1.358,1.012)" y1="163" x1="-33.93"/>
+  <linearGradient id="ab" y2="463.2" xlink:href="#e" gradientUnits="userSpaceOnUse" x2="70.57" gradientTransform="translate(1.045 -.0316)" y1="431.3" x1="70.57"/>
+  <linearGradient id="al" y2="436" xlink:href="#e" gradientUnits="userSpaceOnUse" x2="96.77" gradientTransform="translate(1.045 -.0316)" y1="436" x1="64.97"/>
+  <linearGradient id="i" y2="32.08" xlink:href="#e" gradientUnits="userSpaceOnUse" y1="12.4" gradientTransform="translate(-97.95,426.4)" x2="191.1" x1="171.4"/>
+  <linearGradient id="as" y2="31.13" xlink:href="#e" gradientUnits="userSpaceOnUse" x2="195.8" gradientTransform="translate(2.772 -.2828)" y1="31.12" x1="164"/>
+  <linearGradient id="u" y2="194.9" xlink:href="#e" gradientUnits="userSpaceOnUse" x2="-33.93" gradientTransform="translate(1.362,1.188)" y1="163" x1="-33.93"/>
+  <linearGradient id="aa" y2="463.2" xlink:href="#e" gradientUnits="userSpaceOnUse" x2="70.57" gradientTransform="translate(1.047 -.1316)" y1="431.3" x1="70.57"/>
+  <linearGradient id="ak" y2="436" xlink:href="#e" gradientUnits="userSpaceOnUse" x2="96.77" gradientTransform="translate(1.047 -.1316)" y1="436" x1="64.97"/>
+  <linearGradient id="ar" y2="31.13" gradientUnits="userSpaceOnUse" x2="195.8" gradientTransform="translate(2.809 -.1898)" y1="31.12" x1="164">
    <stop id="stop3827-7" stop-color="#200000" offset="0"/>
    <stop id="stop3829-1" stop-color="#ff5e2d" stop-opacity="0" offset="1"/>
   </linearGradient>
-  <linearGradient id="r" y2="194.9" xlink:href="#e" gradientUnits="userSpaceOnUse" x2="-33.93" gradientTransform="translate(-.4187 .0331)" y1="163" x1="-33.93"/>
-  <linearGradient id="p" y2="194.9" xlink:href="#e" gradientUnits="userSpaceOnUse" x2="-33.93" gradientTransform="translate(-1.454 .8458)" y1="163" x1="-33.93"/>
-  <linearGradient id="o" y2="194.9" xlink:href="#e" gradientUnits="userSpaceOnUse" x2="-33.93" gradientTransform="translate(-2.485 .9335)" y1="163" x1="-33.93"/>
-  <linearGradient id="q" y2="194.9" xlink:href="#e" gradientUnits="userSpaceOnUse" x2="-33.93" gradientTransform="translate(-2.385 .966)" y1="163" x1="-33.93"/>
-  <linearGradient id="x" y2="463.2" xlink:href="#e" gradientUnits="userSpaceOnUse" x2="70.57" gradientTransform="translate(-.92 -.0296)" y1="431.3" x1="70.57"/>
-  <linearGradient id="af" y2="436" xlink:href="#e" gradientUnits="userSpaceOnUse" x2="96.77" gradientTransform="translate(-.92 -.0296)" y1="436" x1="64.97"/>
-  <linearGradient id="m" y2="32.08" xlink:href="#e" gradientUnits="userSpaceOnUse" y1="12.4" gradientTransform="translate(-99.89,426.4)" x2="191.1" x1="171.4"/>
-  <linearGradient id="ac" y2="463.2" xlink:href="#e" gradientUnits="userSpaceOnUse" x2="70.57" gradientTransform="translate(-6.449,4.471)" y1="431.3" x1="70.57"/>
-  <linearGradient id="ae" y2="436" xlink:href="#e" gradientUnits="userSpaceOnUse" x2="96.77" gradientTransform="translate(-6.449,4.471)" y1="436" x1="64.97"/>
-  <linearGradient id="k" y2="32.08" xlink:href="#e" gradientUnits="userSpaceOnUse" y1="12.4" gradientTransform="translate(-105.4,430.9)" x2="191.1" x1="171.4"/>
-  <linearGradient id="ab" y2="463.2" xlink:href="#e" gradientUnits="userSpaceOnUse" x2="70.57" gradientTransform="translate(-3.637 -.17)" y1="431.3" x1="70.57"/>
-  <linearGradient id="ag" y2="436" xlink:href="#e" gradientUnits="userSpaceOnUse" x2="96.77" gradientTransform="translate(-3.637 -.17)" y1="436" x1="64.97"/>
-  <linearGradient id="i" y2="32.08" xlink:href="#e" gradientUnits="userSpaceOnUse" y1="12.4" gradientTransform="translate(-102.6,426.2)" x2="191.1" x1="171.4"/>
-  <linearGradient id="w" y2="463.2" xlink:href="#e" gradientUnits="userSpaceOnUse" x2="70.57" gradientTransform="translate(-3.638 -.232)" y1="431.3" x1="70.57"/>
-  <linearGradient id="ah" y2="436" xlink:href="#e" gradientUnits="userSpaceOnUse" x2="96.77" gradientTransform="translate(-3.638 -.232)" y1="436" x1="64.97"/>
-  <linearGradient id="an" y2="31.13" xlink:href="#e" gradientUnits="userSpaceOnUse" x2="195.8" gradientTransform="translate(10.46 -.4796)" y1="31.12" x1="164"/>
-  <linearGradient id="as" y2="31.13" xlink:href="#e" gradientUnits="userSpaceOnUse" x2="195.8" gradientTransform="translate(-.859 -.5726)" y1="31.12" x1="164"/>
-  <linearGradient id="ao" y2="31.13" xlink:href="#e" gradientUnits="userSpaceOnUse" x2="195.8" gradientTransform="translate(-1.914 -.4853)" y1="31.12" x1="164"/>
-  <linearGradient id="am" y2="31.13" xlink:href="#e" gradientUnits="userSpaceOnUse" x2="195.8" gradientTransform="translate(-1.914 -.3855)" y1="31.12" x1="164"/>
+  <linearGradient id="t" y2="194.9" xlink:href="#e" gradientUnits="userSpaceOnUse" x2="-33.93" gradientTransform="translate(-.4187 .0331)" y1="163" x1="-33.93"/>
+  <linearGradient id="r" y2="194.9" xlink:href="#e" gradientUnits="userSpaceOnUse" x2="-33.93" gradientTransform="translate(-1.454 .8458)" y1="163" x1="-33.93"/>
+  <linearGradient id="q" y2="194.9" xlink:href="#e" gradientUnits="userSpaceOnUse" x2="-33.93" gradientTransform="translate(-2.485 .9335)" y1="163" x1="-33.93"/>
+  <linearGradient id="s" y2="194.9" xlink:href="#e" gradientUnits="userSpaceOnUse" x2="-33.93" gradientTransform="translate(-2.385 .966)" y1="163" x1="-33.93"/>
+  <linearGradient id="z" y2="463.2" xlink:href="#e" gradientUnits="userSpaceOnUse" x2="70.57" gradientTransform="translate(-.92 -.0296)" y1="431.3" x1="70.57"/>
+  <linearGradient id="ah" y2="436" xlink:href="#e" gradientUnits="userSpaceOnUse" x2="96.77" gradientTransform="translate(-.92 -.0296)" y1="436" x1="64.97"/>
+  <linearGradient id="o" y2="32.08" xlink:href="#e" gradientUnits="userSpaceOnUse" y1="12.4" gradientTransform="translate(-99.89,426.4)" x2="191.1" x1="171.4"/>
+  <linearGradient id="ae" y2="463.2" xlink:href="#e" gradientUnits="userSpaceOnUse" x2="70.57" gradientTransform="translate(-6.449,4.471)" y1="431.3" x1="70.57"/>
+  <linearGradient id="ag" y2="436" xlink:href="#e" gradientUnits="userSpaceOnUse" x2="96.77" gradientTransform="translate(-6.449,4.471)" y1="436" x1="64.97"/>
+  <linearGradient id="m" y2="32.08" xlink:href="#e" gradientUnits="userSpaceOnUse" y1="12.4" gradientTransform="translate(-105.4,430.9)" x2="191.1" x1="171.4"/>
+  <linearGradient id="ad" y2="463.2" xlink:href="#e" gradientUnits="userSpaceOnUse" x2="70.57" gradientTransform="translate(-3.637 -.17)" y1="431.3" x1="70.57"/>
+  <linearGradient id="ai" y2="436" xlink:href="#e" gradientUnits="userSpaceOnUse" x2="96.77" gradientTransform="translate(-3.637 -.17)" y1="436" x1="64.97"/>
+  <linearGradient id="j" y2="32.08" xlink:href="#e" gradientUnits="userSpaceOnUse" y1="12.4" gradientTransform="translate(-102.6,426.2)" x2="191.1" x1="171.4"/>
+  <linearGradient id="y" y2="463.2" xlink:href="#e" gradientUnits="userSpaceOnUse" x2="70.57" gradientTransform="translate(-3.638 -.232)" y1="431.3" x1="70.57"/>
+  <linearGradient id="aj" y2="436" xlink:href="#e" gradientUnits="userSpaceOnUse" x2="96.77" gradientTransform="translate(-3.638 -.232)" y1="436" x1="64.97"/>
+  <linearGradient id="ap" y2="31.13" xlink:href="#e" gradientUnits="userSpaceOnUse" x2="195.8" gradientTransform="translate(10.46 -.4796)" y1="31.12" x1="164"/>
+  <linearGradient id="au" y2="31.13" xlink:href="#e" gradientUnits="userSpaceOnUse" x2="195.8" gradientTransform="translate(-.859 -.5726)" y1="31.12" x1="164"/>
+  <linearGradient id="aq" y2="31.13" xlink:href="#e" gradientUnits="userSpaceOnUse" x2="195.8" gradientTransform="translate(-1.914 -.4853)" y1="31.12" x1="164"/>
+  <linearGradient id="ao" y2="31.13" xlink:href="#e" gradientUnits="userSpaceOnUse" x2="195.8" gradientTransform="translate(-1.914 -.3855)" y1="31.12" x1="164"/>
+  <linearGradient id="h" y2="35.86" xlink:href="#l" gradientUnits="userSpaceOnUse" x2="-44" y1="35.86" x1="-59"/>
  </defs>
  <text id="text6990" style="text-align:justify" font-weight="bold" xml:space="preserve" font-size="14px" line-height="125%" y="288.55786" x="51" font-family="Gill Sans" fill="#000000"><tspan id="tspan6992" y="288.55786" x="51"/></text>
  <text id="text3561" style="block-progression:tb;text-indent:0;color:#000000;text-transform:none" font-family="cmr10" xml:space="preserve" font-size="10px" line-height="normal" y="376.91992" x="90" fill="#000000"><tspan id="tspan3563" y="376.91992" x="90">RadioButton</tspan></text>
@@ -89,8 +93,8 @@
  <text id="text4659" style="block-progression:tb;text-indent:0;color:#000000;text-transform:none" font-family="cmr10" xml:space="preserve" font-size="10px" line-height="normal" y="1455.0802" x="95" fill="#000000"><tspan id="tspan4661" y="1455.0802" x="95">SizeGrip</tspan></text>
  <text id="text3943" style="block-progression:tb;text-indent:0;color:#000000;text-transform:none" font-family="cmr10" xml:space="preserve" font-size="10px" line-height="normal" y="1510" x="95" fill="#000000"><tspan id="tspan3945" y="1510" x="95">MdiControls</tspan></text>
  <text id="text3947" style="block-progression:tb;text-indent:0;color:#000000;text-transform:none" font-family="cmr10" xml:space="preserve" font-size="10px" line-height="normal" y="1495" x="182.5" fill="#000000"><tspan id="tspan3949" y="1495" x="182.5">Maximize</tspan></text>
- <g id="mdi-maximize-normal" transform="translate(36.81,873.3)" stroke="#000" fill="url(#d)">
-  <g id="g6161" fill="url(#d)" transform="matrix(.7071 .7071 -.7071 .7071 510.6 72.76)">
+ <g id="mdi-maximize-normal" transform="translate(36.81,873.3)" stroke="#000" fill="url(#c)">
+  <g id="g6161" fill="url(#c)" transform="matrix(.7071 .7071 -.7071 .7071 510.6 72.76)">
    <path id="path8055-6" d="m161.3 639.1-3-3 6.2-6.2 3-2.9 3 2.9 6.1 6.2-2.9 3-6.2-6.1z"/>
    <path id="path8055-6-1" d="m161.3 666.3-3 3 6.2 6.2 3 2.9 3-2.9 6.1-6.2-2.9-3-6.2 6.1-6.2-6.1z"/>
    <path id="path8055-6-1-1" d="m181 658.9 3 3 6.2-6.2 3-3-3-3-6.2-6.2-3 3 6.2 6.2z"/>
@@ -104,7 +108,7 @@
  <text id="text4016" style="block-progression:tb;text-indent:0;color:#000000;text-transform:none" font-family="cmr10" xml:space="preserve" font-size="10px" line-height="normal" y="1495" x="232.4032" fill="#000000"><tspan id="tspan4018" y="1495" x="232.4032">Minimize</tspan></text>
  <g id="mdi-minimize-normal" stroke="#000" transform="translate(83.74,874.4)">
   <rect id="rect6389" opacity="0" height="36.47" width="36.43" y="632.4" x="155.5" fill="none"/>
-  <g id="g6161-0" stroke="#000" fill="url(#d)" transform="matrix(.7071 .7071 -.7071 .7071 516.9 70.69)">
+  <g id="g6161-0" stroke="#000" fill="url(#c)" transform="matrix(.7071 .7071 -.7071 .7071 516.9 70.69)">
    <path id="path8055-6-1-7" d="m161.3 666.3-3 3 6.2 6.2 3 2.9 3-2.9 14.6-14.7-3-3-14.6 14.6z"/>
    <path id="path8055-6-1-1-5" d="m181 658.9 3 3 6.2-6.2 3-3-3-3-6.2-6.2-3 3 6.2 6.2z"/>
   </g>
@@ -112,7 +116,7 @@
  <text id="text4072" style="block-progression:tb;text-indent:0;color:#000000;text-transform:none" font-family="cmr10" xml:space="preserve" font-size="10px" line-height="normal" y="1495" x="279.96191" fill="#000000"><tspan id="tspan4074" y="1495" x="279.96191">Close</tspan></text>
  <g id="mdi-close-normal" stroke="#000" transform="matrix(0,1,-1,0,894.3,1289)">
   <rect id="rect6389-7" opacity="0" transform="rotate(-90)" height="36.47" width="36.43" y="218.1" x="-606.3" fill="none"/>
-  <g id="g6161-5" stroke="#000" fill="url(#d)" transform="matrix(.7071 .7071 -.7071 .7071 588.5 -4.934)">
+  <g id="g6161-5" stroke="#000" fill="url(#c)" transform="matrix(.7071 .7071 -.7071 .7071 588.5 -4.934)">
    <rect id="rect6003-1-1" height="5" width="36.73" y="665.9" x="151.9"/>
    <rect id="rect6003-1-3-0-6" transform="rotate(-90)" height="5" width="36.43" y="167.8" x="-686.6"/>
   </g>
@@ -121,7 +125,7 @@
   <rect id="rect9960-2" d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9" fill-opacity="0" transform="rotate(-90)" height="4.414" width="3.2" y="188.9" x="-423.9"/>
   <rect id="rect9960-2-1" d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9" fill-opacity="0" transform="scale(-1)" height="12.6" width="1.103" y="-420.9" x="-186.6"/>
   <rect id="rect9960-2-1-2" d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9" fill-opacity="0" transform="scale(-1)" height="12.6" width="1.103" y="-421" x="-194.5"/>
-  <rect id="rect7069-0" d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9" transform="rotate(-90)" height="6.611" width="4.001" y="186.7" x="-416" fill="url(#c)"/>
+  <rect id="rect7069-0" d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9" transform="rotate(-90)" height="6.611" width="4.001" y="186.7" x="-416" fill="url(#d)"/>
   <rect id="rect7067-5" d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9" transform="rotate(-90)" height="6.611" width="4.001" y="186.7" x="-419.9" fill="url(#a)"/>
  </g>
  <g id="sizegrip-disabled" stroke="#808080" transform="matrix(-.7071 .7071 -.7071 -.7071 683.6 1377)">
@@ -141,7 +145,7 @@
  </g>
  <text id="text3206" style="block-progression:tb;text-indent:0;color:#000000;text-transform:none" font-family="cmr10" xml:space="preserve" font-size="10px" line-height="normal" y="1140" x="97.5" fill="#000000"><tspan id="tspan3208" y="1140" x="97.5">Separator</tspan></text>
  <g id="menu-separator" fill-rule="evenodd" transform="matrix(4.8,0,0,-1.614,70,2011)">
-  <path id="path3266" fill="url(#c)" d="m30 540.9h-5v2.5h5v-2.5z"/>
+  <path id="path3266" fill="url(#d)" d="m30 540.9h-5v2.5h5v-2.5z"/>
   <path id="path3268" fill="url(#a)" d="m30 538.4h-5v2.5h5v-2.5z"/>
  </g>
  <text id="text3637" style="block-progression:tb;text-indent:0;color:#000000;text-transform:none" font-family="cmr10" xml:space="preserve" font-size="10px" line-height="normal" y="1402.58" x="95" fill="#000000"><tspan id="tspan3641" y="1402.58" x="95">Focus Interior</tspan></text>
@@ -159,7 +163,7 @@
  <text id="text5845-0" style="letter-spacing:0px;block-progression:tb;text-indent:0;word-spacing:0px;color:#000000;text-transform:none" font-family="umr10" xml:space="preserve" font-size="10px" line-height="125%" y="510" x="99.99897" fill="#000000"><tspan id="tspan5847-6" y="510" x="99.99897">Unchecked</tspan></text>
  <g id="checkbox-tristate-normal" transform="translate(87,162.6)">
   <path id="rect9092-7" d="m187.3 603c-4.1 0-5.3 1.2-5.3 5.2v29.6c0 4 1.2 5.2 5.3 5.2h29.4c4.1 0 5.3-1.2 5.3-5.2v-29.6c0-4-1.2-5.2-5.3-5.2zm0.9 2h27.6c2.4 0 4.2 1.8 4.2 4.1v27.8c0 2.3-1.8 4.1-4.2 4.1h-27.6c-2.4 0-4.2-1.8-4.2-4.1v-27.8c0-2.3 1.8-4.1 4.2-4.1z" transform="translate(-87,-162.6)" fill="url(#a)"/>
-  <path id="rect8876-6-5" d="m112 445.4v12h-12v6h12v12h6v-12h12v-6h-12v-12z" fill="url(#d)"/>
+  <path id="rect8876-6-5" d="m112 445.4v12h-12v6h12v12h6v-12h12v-6h-12v-12z" fill="url(#c)"/>
  </g>
  <g id="arrow-plus-normal" fill-rule="evenodd" fill="url(#a)" transform="matrix(1.256,1.256,-1.256,1.256,315.6,841.4)">
   <rect id="rect4530-1-3-5-3" transform="matrix(.7071 .7071 -.7071 .7071 0 0)" height="12.5" width="2.5" y="57.29" x="-6.651"/>
@@ -169,15 +173,15 @@
   <rect id="rect4530-1-3-5-3-3" transform="matrix(.7071 .7071 -.7071 .7071 0 0)" height="12.5" width="2.5" y="57.29" x="-6.651"/>
   <rect id="rect4532-0-2-4-8-1" transform="matrix(.7071 .7071 -.7071 .7071 0 0)" height="2.5" width="12.5" y="62.29" x="-11.65"/>
  </g>
- <g id="arrow-plus-pressed" fill-rule="evenodd" fill="url(#d)" transform="matrix(1.256,1.256,-1.256,1.256,415.6,841.4)">
+ <g id="arrow-plus-pressed" fill-rule="evenodd" fill="url(#c)" transform="matrix(1.256,1.256,-1.256,1.256,415.6,841.4)">
   <rect id="rect4530-1-3-5-3-0" transform="matrix(.7071 .7071 -.7071 .7071 0 0)" height="12.5" width="2.5" y="57.29" x="-6.651"/>
   <rect id="rect4532-0-2-4-8-5" transform="matrix(.7071 .7071 -.7071 .7071 0 0)" height="2.5" width="12.5" y="62.29" x="-11.65"/>
  </g>
- <g id="arrow-plus-toggled" fill-rule="evenodd" fill="url(#d)" transform="matrix(1.256,1.256,-1.256,1.256,465.1,841.4)">
+ <g id="arrow-plus-toggled" fill-rule="evenodd" fill="url(#c)" transform="matrix(1.256,1.256,-1.256,1.256,465.1,841.4)">
   <rect id="rect4530-1-3-5-3-31" transform="matrix(.7071 .7071 -.7071 .7071 0 0)" height="12.5" width="2.5" y="57.29" x="-6.651"/>
   <rect id="rect4532-0-2-4-8-8" transform="matrix(.7071 .7071 -.7071 .7071 0 0)" height="2.5" width="12.5" y="62.29" x="-11.65"/>
  </g>
- <g id="arrow-plus-disabled" fill-rule="evenodd" fill="url(#c)" transform="matrix(1.256,1.256,-1.256,1.256,520.1,841.4)">
+ <g id="arrow-plus-disabled" fill-rule="evenodd" fill="url(#d)" transform="matrix(1.256,1.256,-1.256,1.256,520.1,841.4)">
   <rect id="rect4530-1-3-5-3-1" transform="matrix(.7071 .7071 -.7071 .7071 0 0)" height="12.5" width="2.5" y="57.29" x="-6.651"/>
   <rect id="rect4532-0-2-4-8-7" transform="matrix(.7071 .7071 -.7071 .7071 0 0)" height="2.5" width="12.5" y="62.29" x="-11.65"/>
  </g>
@@ -190,23 +194,23 @@
   <rect id="rect4532-0-2-4-8-1-4" opacity="0" transform="matrix(.7071 .7071 -.7071 .7071 0 0)" height="2.5" width="12.5" y="62.29" x="-11.65"/>
  </g>
  <g id="arrow-minus-pressed" transform="matrix(1.256,1.256,-1.256,1.256,415.6,873.6)">
-  <rect id="rect4530-1-3-5-3-0-4" fill-rule="evenodd" transform="matrix(.7071 .7071 -.7071 .7071 0 0)" height="12.5" width="2.5" y="57.29" x="-6.651" fill="url(#d)"/>
+  <rect id="rect4530-1-3-5-3-0-4" fill-rule="evenodd" transform="matrix(.7071 .7071 -.7071 .7071 0 0)" height="12.5" width="2.5" y="57.29" x="-6.651" fill="url(#c)"/>
   <rect id="rect4532-0-2-4-8-5-6" opacity="0" transform="matrix(.7071 .7071 -.7071 .7071 0 0)" height="2.5" width="12.5" y="62.29" x="-11.65"/>
  </g>
  <g id="arrow-minus-toggled" transform="matrix(1.256,1.256,-1.256,1.256,465.1,873.6)">
-  <rect id="rect4530-1-3-5-3-31-2" fill-rule="evenodd" transform="matrix(.7071 .7071 -.7071 .7071 0 0)" height="12.5" width="2.5" y="57.29" x="-6.651" fill="url(#d)"/>
+  <rect id="rect4530-1-3-5-3-31-2" fill-rule="evenodd" transform="matrix(.7071 .7071 -.7071 .7071 0 0)" height="12.5" width="2.5" y="57.29" x="-6.651" fill="url(#c)"/>
   <rect id="rect4532-0-2-4-8-8-9" opacity="0" transform="matrix(.7071 .7071 -.7071 .7071 0 0)" height="2.5" width="12.5" y="62.29" x="-11.65"/>
  </g>
  <g id="arrow-minus-disabled" fill="#808080" transform="matrix(1.256,1.256,-1.256,1.256,520.1,873.6)">
-  <rect id="rect4530-1-3-5-3-1-3" fill-rule="evenodd" transform="matrix(.7071 .7071 -.7071 .7071 0 0)" height="12.5" width="2.5" y="57.29" x="-6.651" fill="url(#c)"/>
+  <rect id="rect4530-1-3-5-3-1-3" fill-rule="evenodd" transform="matrix(.7071 .7071 -.7071 .7071 0 0)" height="12.5" width="2.5" y="57.29" x="-6.651" fill="url(#d)"/>
   <rect id="rect4532-0-2-4-8-7-0" opacity="0" transform="matrix(.7071 .7071 -.7071 .7071 0 0)" height="2.5" width="12.5" y="62.29" x="-11.65"/>
  </g>
  <text id="text3561-1-8-7" style="block-progression:tb;text-indent:0;color:#000000;text-transform:none" font-family="cmr10" xml:space="preserve" font-size="10px" line-height="normal" y="625" x="100" fill="#000000"><tspan id="tspan5841-2-3" y="625" x="100">Tristate</tspan></text>
  <g id="checkbox-tristate-focused" transform="translate(134,389.6)">
   <path id="rect28971-3" d="m237.3 603c-4.1 0-5.3 1.2-5.3 5.2v29.6c0 4 1.2 5.2 5.3 5.2h29.4c4.1 0 5.3-1.2 5.3-5.2v-29.6c0-4-1.2-5.2-5.3-5.2zm0.9 2h27.6c2.4 0 4.2 1.8 4.2 4.1v27.8c0 2.3-1.8 4.1-4.2 4.1h-27.6c-2.4 0-4.2-1.8-4.2-4.1v-27.8c0-2.3 1.8-4.1 4.2-4.1z" transform="translate(-134,-389.6)" fill="url(#g)"/>
-  <path id="rect8876-6-5-7" d="m115 218.4v12h-12v6h12v12h6v-12h12v-6h-12v-12z" fill="url(#d)"/>
+  <path id="rect8876-6-5-7" d="m115 218.4v12h-12v6h12v12h6v-12h12v-6h-12v-12z" fill="url(#c)"/>
  </g>
- <g id="checkbox-tristate-disabled" fill="url(#c)" transform="translate(1)">
+ <g id="checkbox-tristate-disabled" fill="url(#d)" transform="translate(1)">
   <path id="rect71170-9" d="m389.3 598c-4.1 0-5.3 1.2-5.3 5.2v29.6c0 4 1.2 5.2 5.3 5.2h29.4c4.1 0 5.3-1.2 5.3-5.2v-29.6c0-4-1.2-5.2-5.3-5.2zm0.9 2h27.6c2.4 0 4.2 1.8 4.2 4.1v27.8c0 2.3-1.8 4.1-4.2 4.1h-27.6c-2.4 0-4.2-1.8-4.2-4.1v-27.8c0-2.3 1.8-4.1 4.2-4.1z" transform="translate(-1)" stroke-width="2.4"/>
   <path id="rect8876-6-5-7-2" d="m400 603v12h-12v6h12v12h6v-12h12v-6h-12v-12z"/>
  </g>
@@ -215,8 +219,8 @@
  <text id="text5363-2-2" style="letter-spacing:0px;block-progression:tb;text-indent:0;word-spacing:0px;color:#000000;text-transform:none" font-family="umr10" xml:space="preserve" font-size="10px" line-height="125%" y="391.91992" x="340" fill="#000000"><tspan id="tspan5365-5-0" y="391.91992" x="340">Unused</tspan></text>
  <text id="text3561-2-6" style="block-progression:tb;text-indent:0;color:#000000;text-transform:none" font-family="cmr10" xml:space="preserve" font-size="10px" line-height="normal" y="666.91992" x="89.99897" fill="#000000"><tspan id="tspan3563-1-8" y="666.91992" x="89.99897">Arrows</tspan></text>
  <text id="text3561-2-6-3" style="block-progression:tb;text-indent:0;color:#000000;text-transform:none" font-family="cmr10" xml:space="preserve" font-size="10px" line-height="normal" y="890" x="90" fill="#000000"><tspan id="tspan3563-1-8-3" y="890" x="90">DropDown Button</tspan></text>
- <g id="common-toggled" fill="url(#c)" transform="translate(418,170.6)">
-  <rect id="rect3975-4-7-11-1" fill-rule="evenodd" height="15" width="15" y="28.36" x="-59" fill="url(#c)"/>
+ <g id="common-toggled" fill="url(#d)" transform="translate(418,170.6)">
+  <rect id="rect3975-4-7-11-1" fill-rule="evenodd" height="15" width="15" y="28.36" x="-59" fill="url(#d)"/>
  </g>
  <text id="text4502" style="letter-spacing:0px;block-progression:tb;text-indent:0;word-spacing:0px;color:#000000;text-transform:none" font-family="umr10" xml:space="preserve" font-size="10px" line-height="125%" y="1242.5" x="97.5" fill="#000000"><tspan id="tspan4504" y="1242.5" x="97.5">Handle</tspan></text>
  <text id="text3206-6" style="block-progression:tb;text-indent:0;color:#000000;text-transform:none" font-family="cmr10" xml:space="preserve" font-size="10px" line-height="normal" y="1167.5" x="97.5" fill="#000000"><tspan id="tspan3208-3" y="1167.5" x="97.5">Tearoff</tspan></text>
@@ -229,13 +233,13 @@
   <rect id="rect9960-2-9" d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9" fill-opacity="0" transform="rotate(-90)" height="4.414" width="3.2" y="190.7" x="-421.9"/>
   <rect id="rect9960-2-1-6" d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9" fill-opacity="0" transform="scale(-1)" height="12.6" width="1.103" y="-418.9" x="-188.4"/>
   <rect id="rect9960-2-1-2-2" d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9" fill-opacity="0" transform="scale(-1)" height="12.6" width="1.103" y="-419" x="-196.3"/>
-  <rect id="rect7069-0-9" d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9" transform="rotate(-90)" height="6.61" width="4.001" y="188.5" x="-414" fill="url(#c)"/>
+  <rect id="rect7069-0-9" d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9" transform="rotate(-90)" height="6.61" width="4.001" y="188.5" x="-414" fill="url(#d)"/>
   <rect id="rect7067-5-8" d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9" transform="rotate(-90)" height="6.61" width="4.001" y="188.5" x="-417.9" fill="url(#a)"/>
  </g>
  <g id="menu-tearoff" fill-rule="evenodd" transform="matrix(0,3.625,-1,0,609.6,479.7)">
   <rect id="rect10824-6" transform="matrix(0,-1,-1,0,0,0)" height="3.448" width="26" y="-190.4" x="-420.6" fill="#222"/>
-  <rect id="rect4890" transform="rotate(-90)" height=".8277" width="8" y="188.2" x="-416.6" fill="#0f0"/>
-  <rect id="rect4890-8" transform="rotate(-90)" height=".8276" width="8" y="188.2" x="-403.6" fill="#0f0"/>
+  <rect id="rect4890" transform="rotate(-90)" height=".8277" width="8" y="188.2" x="-416.6" fill="url(#c)"/>
+  <rect id="rect4890-8" transform="rotate(-90)" height=".8276" width="8" y="188.2" x="-403.6" fill="url(#c)"/>
  </g>
  <g id="tab-tear-normal" fill-rule="evenodd" transform="matrix(0,3.625,-1,0,643.4,597.2)">
   <rect id="rect4145-9" transform="rotate(-90)" height="2.759" width="7.5" y="189.7" x="-420.9" fill="#ef2929"/>
@@ -251,11 +255,11 @@
  </g>
  <g id="progress-pattern-focused" transform="matrix(.16 0 0 .5333 230.2 98.29)">
   <rect id="rect5450" d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9" height="30" width="100" y="447.6" x="98.73" fill="url(#a)"/>
-  <rect id="rect41391-7-3" d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9" height="30" width="12.45" y="447.6" x="198.8" fill="url(#j)"/>
+  <rect id="rect41391-7-3" d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9" height="30" width="12.45" y="447.6" x="198.8" fill="url(#k)"/>
  </g>
  <g id="checkbox-checked-normal" transform="matrix(1.042,0,0,1.021,325.8,272.4)">
   <path id="rect9092" d="m187.2 541.9c-4 0-5.3 1.2-5.3 5.2v29.7c0 3.9 1.3 5.1 5.3 5.1h29.4c4.1 0 5.3-1.2 5.3-5.1v-29.7c0-4-1.2-5.2-5.3-5.2zm0.9 2h27.6c2.3 0 4.2 1.8 4.2 4.1v27.8c0 2.2-1.9 4.1-4.2 4.1h-27.6c-2.3 0-4.2-1.9-4.2-4.1v-27.8c0-2.3 1.9-4.1 4.2-4.1z" transform="matrix(.9597 0 0 .9794 -312.7 -266.8)" fill="url(#a)"/>
-  <path id="rect8876-6" d="m-107.7 266.9-14.6 20.2-7.9-6.5-3.2 2.7 11.1 13 17.8-24.7z" stroke-width="0" fill="url(#d)"/>
+  <path id="rect8876-6" d="m-107.7 266.9-14.6 20.2-7.9-6.5-3.2 2.7 11.1 13 17.8-24.7z" stroke-width="0" fill="url(#c)"/>
  </g>
  <rect id="menu-normal" fill-rule="evenodd" height="8" width="8" y="1114" x="190" fill="#100000"/>
  <rect id="menu-normal-left" fill-rule="evenodd" height="8" width="4" y="1114" x="184" fill="#100000"/>
@@ -265,23 +269,23 @@
  <rect id="menu-normal-bottomleft" fill-rule="evenodd" height="4" width="4" y="1124" x="184" fill="#100000"/>
  <rect id="menu-normal-topleft" fill-rule="evenodd" height="4" width="4" y="1108" x="184" fill="#100000"/>
  <g id="menu-toggled" transform="matrix(2 0 0 .5333 453 1104)" fill="#222b00">
-  <rect id="rect8483" fill-rule="evenodd" height="15" width="15" y="28.36" x="-59" fill="url(#c)"/>
+  <rect id="rect8483" fill-rule="evenodd" height="15" width="15" y="28.36" x="-59" fill="url(#h)"/>
  </g>
  <g id="radio-normal" transform="matrix(1.089,0,0,1.069,160.3,-67.03)">
   <path id="path9321" d="m60 425c0 11-8.95 20-20 20s-20-9-20-20 8.95-20 20-20 20 9 20 20z" transform="matrix(.9186 0 0 .9355 1.597 28.1)" stroke="url(#a)" stroke-width="2.3995" fill="none"/>
  </g>
  <g id="radio-checked-normal" transform="matrix(1.089,0,0,1.069,160.3,-9.034)">
   <path id="path7527" d="m60 425c0 11-8.95 20-20 20s-20-9-20-20 8.95-20 20-20 20 9 20 20z" transform="matrix(.9186 0 0 .9355 1.597 28.1)" stroke="url(#a)" stroke-width="2.3995" fill="none"/>
-  <path id="path11954-7" d="m-160 350c0 5.5-4.5 10-10 10s-10-4.5-10-10 4.5-10 10-10 10 4.5 10 10z" transform="matrix(.9186 0 0 .9355 194.5 98.26)" stroke-width="0" fill="url(#d)"/>
+  <path id="path11954-7" d="m-160 350c0 5.5-4.5 10-10 10s-10-4.5-10-10 4.5-10 10-10 10 4.5 10 10z" transform="matrix(.9186 0 0 .9355 194.5 98.26)" stroke-width="0" fill="url(#c)"/>
  </g>
  <g id="checkbox-normal" transform="matrix(1.042,0,0,1.021,325.8,220.4)">
   <path id="rect7559" d="m187.2 489.9c-4 0-5.3 1.2-5.3 5.2v29.7c0 3.9 1.3 5.1 5.3 5.1h29.4c4.1 0 5.3-1.2 5.3-5.1v-29.7c0-4-1.2-5.2-5.3-5.2zm0.9 2h27.6c2.3 0 4.2 1.8 4.2 4.1v27.8c0 2.2-1.9 4.1-4.2 4.1h-27.6c-2.3 0-4.2-1.9-4.2-4.1v-27.8c0-2.3 1.9-4.1 4.2-4.1z" transform="matrix(.9597 0 0 .9794 -312.7 -215.9)" fill="url(#a)"/>
  </g>
  <g id="slidercursor-normal" transform="matrix(1.089,0,0,1.069,160.3,503)">
-  <path id="path7815" d="m60 425c0 11-8.95 20-20 20s-20-9-20-20 8.95-20 20-20 20 9 20 20z" transform="matrix(.9186 0 0 .9355 1.597 28.1)" stroke="url(#d)" stroke-width="2.3995" fill="url(#f)"/>
+  <path id="path7815" d="m60 425c0 11-8.95 20-20 20s-20-9-20-20 8.95-20 20-20 20 9 20 20z" transform="matrix(.9186 0 0 .9355 1.597 28.1)" stroke="url(#c)" stroke-width="2.3995" fill="url(#f)"/>
  </g>
  <g id="lineedit-normal" transform="matrix(.16 0 0 .5333 176.2 -102.7)">
-  <rect id="rect7827" d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9" transform="scale(1,-1)" height="30" width="100" y="-477.6" x="98.73" fill="url(#c)"/>
+  <rect id="rect7827" d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9" transform="scale(1,-1)" height="30" width="100" y="-477.6" x="98.73" fill="url(#d)"/>
  </g>
  <g id="lineedit-normal-left" opacity="0" transform="matrix(1.067,0,0,1.067,-17.01,109.3)" fill="url(#b)">
   <rect id="rect7833" d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9" height="15" width="7.5" y="25" x="187.5"/>
@@ -371,7 +375,7 @@
  </g>
  <g id="commonframe-normal-right" transform="matrix(1.067,0,0,1.067,19.04,170.8)">
   <rect id="rect7903-6-9-4-1" d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9" transform="scale(1,-1)" height="15" width="3.75" y="-40.49" x="180.8" fill="url(#a)"/>
-  <rect id="rect3782-9-8" height="15" width="11.25" y="25.49" x="184.6" fill="url(#at)"/>
+  <rect id="rect3782-9-8" height="15" width="11.25" y="25.49" x="184.6" fill="url(#av)"/>
  </g>
  <g id="commonframe-normal-topleft" transform="matrix(1.067,0,0,1.067,112.9,-273.7)">
   <path id="path7642-4-2-9-5" d="m74.09 436.5v3.7h-3.8v-3.7z" fill="url(#a)"/>
@@ -386,13 +390,13 @@
  </g>
  <g id="commonframe-normal-bottomright" transform="matrix(1.067,0,0,1.067,124.7,-261.2)">
   <path id="path7642-8-8-7" d="m81.82 451.9h3.8v-3.7h-3.8z" fill="url(#a)"/>
-  <rect id="rect3780-7" height="11.27" width="3.747" y="451.9" x="81.82" fill="url(#ad)"/>
-  <rect id="rect3782-5" height="3.749" width="11.19" y="448.2" x="85.62" fill="url(#al)"/>
-  <rect id="rect3782-9-8-9" height="11.27" width="11.24" y="451.9" x="85.57" fill="url(#n)"/>
+  <rect id="rect3780-7" height="11.27" width="3.747" y="451.9" x="81.82" fill="url(#af)"/>
+  <rect id="rect3782-5" height="3.749" width="11.19" y="448.2" x="85.62" fill="url(#an)"/>
+  <rect id="rect3782-9-8-9" height="11.27" width="11.24" y="451.9" x="85.57" fill="url(#p)"/>
  </g>
  <g id="commonframe-normal-bottom" transform="matrix(0,1.067,-1.067,0,236.2,25.03)">
   <rect id="rect7903-9-4-7" d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9" height="15" width="3.75" y="24.55" x="179.9" fill="url(#a)"/>
-  <rect id="rect3778-9" transform="rotate(-90)" height="11.23" width="15" y="183.7" x="-39.55" fill="url(#v)"/>
+  <rect id="rect3778-9" transform="rotate(-90)" height="11.23" width="15" y="183.7" x="-39.55" fill="url(#x)"/>
  </g>
  <g id="commonframe-normal-top" transform="matrix(0,-1.067,-1.06,0,235,387)">
   <rect id="rect7903-45" d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9" height="15.09" width="3.75" y="23.58" x="179" fill="url(#a)"/>
@@ -406,7 +410,7 @@
  </g>
  <g id="commonframe-focused-right" transform="matrix(1.067,0,0,1.067,71.05,171.3)">
   <rect id="rect7903-6-9-4-1-4" d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9" transform="scale(1,-1)" height="15" width="3.75" y="-40.02" x="182.7" fill="url(#g)"/>
-  <rect id="rect3782-9-8-7" height="15" width="11.25" y="25.02" x="186.5" fill="url(#ar)"/>
+  <rect id="rect3782-9-8-7" height="15" width="11.25" y="25.02" x="186.5" fill="url(#at)"/>
  </g>
  <g id="commonframe-focused-topleft" transform="matrix(1.067,0,0,1.067,165.1,-273.7)">
   <path id="path7642-4-2-9-7-55" d="m75.87 436.4v3.8h-3.8v-3.8z" fill="url(#g)"/>
@@ -421,13 +425,13 @@
  </g>
  <g id="commonframe-focused-bottomright" transform="matrix(1.067,0,0,1.067,178.6,-261.2)">
   <path id="path7642-8-8-7-7" d="m81.91 451.9h3.8v-3.7h-3.8z" fill="url(#g)"/>
-  <rect id="rect3780-7-7" height="11.27" width="3.747" y="451.9" x="81.91" fill="url(#aa)"/>
-  <rect id="rect3782-5-4" height="3.749" width="11.19" y="448.2" x="85.71" fill="url(#ak)"/>
-  <rect id="rect3782-9-8-9-7" height="11.27" width="11.24" y="451.9" x="85.71" fill="url(#l)"/>
+  <rect id="rect3780-7-7" height="11.27" width="3.747" y="451.9" x="81.91" fill="url(#ac)"/>
+  <rect id="rect3782-5-4" height="3.749" width="11.19" y="448.2" x="85.71" fill="url(#am)"/>
+  <rect id="rect3782-9-8-9-7" height="11.27" width="11.24" y="451.9" x="85.71" fill="url(#n)"/>
  </g>
  <g id="commonframe-focused-bottom" transform="matrix(0,1.067,-1.067,0,288.8,24.01)">
   <rect id="rect7903-9-4-7-6" d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9" height="15" width="3.75" y="23.24" x="180.9" fill="url(#g)"/>
-  <rect id="rect3778-9-3" transform="rotate(-90)" height="11.23" width="15" y="184.7" x="-38.24" fill="url(#u)"/>
+  <rect id="rect3778-9-3" transform="rotate(-90)" height="11.23" width="15" y="184.7" x="-38.24" fill="url(#w)"/>
  </g>
  <g id="commonframe-focused-top" transform="matrix(0,-1.067,-1.06,0,288.6,388)">
   <rect id="rect7903-45-7" d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9" height="15.09" width="3.75" y="23.21" x="179.9" fill="url(#g)"/>
@@ -454,14 +458,14 @@
  </g>
  <g id="radio-checked-focused" transform="matrix(1.089,0,0,1.069,210.3,-9.034)">
   <path id="path20299" d="m60 425c0 11-8.95 20-20 20s-20-9-20-20 8.95-20 20-20 20 9 20 20z" transform="matrix(.9186 0 0 .9355 1.597 28.1)" stroke="url(#g)" stroke-width="2.3995" fill="none"/>
-  <path id="path20301" d="m-160 350c0 5.5-4.5 10-10 10s-10-4.5-10-10 4.5-10 10-10 10 4.5 10 10z" transform="matrix(.9186 0 0 .9355 194.5 98.26)" stroke-width="0" fill="url(#d)"/>
+  <path id="path20301" d="m-160 350c0 5.5-4.5 10-10 10s-10-4.5-10-10 4.5-10 10-10 10 4.5 10 10z" transform="matrix(.9186 0 0 .9355 194.5 98.26)" stroke-width="0" fill="url(#c)"/>
  </g>
  <g id="checkbox-focused" transform="matrix(1.042,0,0,1.021,375.8,220.4)">
   <path id="rect24653" d="m237.2 489.9c-4 0-5.3 1.2-5.3 5.2v29.7c0 3.9 1.3 5.1 5.3 5.1h29.4c4.1 0 5.3-1.2 5.3-5.1v-29.7c0-4-1.2-5.2-5.3-5.2zm0.9 2h27.6c2.3 0 4.2 1.8 4.2 4.1v27.8c0 2.2-1.9 4.1-4.2 4.1h-27.6c-2.3 0-4.2-1.9-4.2-4.1v-27.8c0-2.3 1.9-4.1 4.2-4.1z" transform="matrix(.9597 0 0 .9794 -360.7 -215.9)" fill="url(#g)"/>
  </g>
  <g id="checkbox-checked-focused" transform="matrix(1.042,0,0,1.021,375.8,272.4)">
   <path id="rect28971" d="m-132.8 263.9c-3.8 0-5.1 1.2-5.1 5.1v29.1c0 3.8 1.3 5 5.1 5h28.2c4 0 5.13-1.2 5.13-5v-29.1c0-3.9-1.13-5.1-5.13-5.1zm0.9 2h26.5c2.2 0 4 1.8 4 4v27.2c0 2.2-1.8 4.1-4 4.1h-26.5c-2.2 0-4-1.9-4-4.1v-27.2c0-2.2 1.8-4 4-4z" fill="url(#g)"/>
-  <path id="rect8876-6-9" d="m-107.4 266.9-14.5 20.2-8-6.5-3.2 2.7 11.2 13 17.7-24.7z" stroke-width="0" fill="url(#d)"/>
+  <path id="rect8876-6-9" d="m-107.4 266.9-14.5 20.2-8-6.5-3.2 2.7 11.2 13 17.7-24.7z" stroke-width="0" fill="url(#c)"/>
  </g>
  <g id="tab-tear-toggled" fill-rule="evenodd" transform="matrix(0,3.625,-1,0,743.4,597.2)">
   <rect id="rect21025" transform="rotate(-90)" height="2.759" width="7.5" y="189.7" x="-420.9" fill="#ef2929"/>
@@ -519,7 +523,7 @@
   <rect id="rect12624" d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9" height="15.09" width="3.75" y="25" x="180"/>
  </g>
  <g id="lineedit-pressed-bottom" transform="matrix(0,1.067,-1.067,0,344.6,-37.88)">
-  <rect id="rect7903-4-7" d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9" height="15" width="3.75" y="25.02" x="191.2" fill="#6f0"/>
+  <rect id="rect7903-4-7" d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9" height="15" width="3.75" y="25.02" x="191.2" fill="url(#c)"/>
   <rect id="rect7903-3-0-7" opacity="0" d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9" height="10.3" width="2.855" y="27.92" x="179.9"/>
  </g>
  <g id="lineedit-pressed-left" opacity="0" transform="matrix(1.067,0,0,1.067,92.99,109.4)">
@@ -550,116 +554,116 @@
   <path id="path12679" d="m123 272.9c0-26.8 25.5-48.5 57-48.5v48.5z" fill="url(#b)" transform="matrix(0 .0658 -.0773 0 101.1 428.5)"/>
  </g>
  <g id="lineedit-pressed-bottomleft" transform="matrix(-1.067,0,0,1.067,386.2,-323.1)">
-  <path id="path7642-0" d="m79.84 462.1h15l0.1-14.9h-3.8v11.1h-11.3z" fill="#6f0"/>
+  <path id="path7642-0" d="m79.84 462.1h15l0.1-14.9h-3.8v11.1h-11.3z" fill="url(#c)"/>
  </g>
  <g id="lineedit-pressed-bottomright" transform="matrix(1.067,0,0,1.067,233.6,-323.1)">
-  <path id="path7642-7-8-3" d="m79.94 462.3h15v-14.9h-3.8v11.1h-11.2z" fill="#6f0"/>
+  <path id="path7642-7-8-3" d="m79.94 462.3h15v-14.9h-3.8v11.1h-11.2z" fill="url(#c)"/>
  </g>
  <g id="lineedit-focused" transform="matrix(.16 0 0 .5333 231.1 -102.8)">
-  <rect id="rect17593" d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9" transform="scale(1,-1)" height="30" width="100" y="-477.6" x="98.73" fill="url(#c)"/>
+  <rect id="rect17593" d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9" transform="scale(1,-1)" height="30" width="100" y="-477.6" x="98.73" fill="url(#d)"/>
  </g>
  <g id="lineedit-pressed" transform="matrix(.16 0 0 .5333 286.1 -102.6)">
-  <rect id="rect17596" d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9" transform="scale(1,-1)" height="30" width="100" y="-477.6" x="98.73" fill="url(#c)"/>
+  <rect id="rect17596" d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9" transform="scale(1,-1)" height="30" width="100" y="-477.6" x="98.73" fill="url(#d)"/>
  </g>
  <g id="dropdownbutton-pressed" transform="translate(100)">
-  <path id="path25760" d="m195 900.5-3 3 9 9 3 3 3-3 9-9-3-3-9 9-9-9z" fill="url(#d)"/>
+  <path id="path25760" d="m195 900.5-3 3 9 9 3 3 3-3 9-9-3-3-9 9-9-9z" fill="url(#c)"/>
   <rect id="rect25762" fill-opacity="0" height="24" width="24" y="896" x="192"/>
  </g>
  <g id="dropdownbutton-toggled" transform="translate(148)">
-  <path id="path25766" fill="url(#d)" d="m195 900.5-3 3 9 9 3 3 3-3 9-9-3-3-9 9-9-9z"/>
+  <path id="path25766" fill="url(#c)" d="m195 900.5-3 3 9 9 3 3 3-3 9-9-3-3-9 9-9-9z"/>
   <rect id="rect25768" fill-opacity="0" height="24" width="24" y="896" x="192"/>
  </g>
  <g id="dropdownbutton-disabled" transform="translate(204)">
-  <path id="path25772" d="m195 900.5-3 3 9 9 3 3 3-3 9-9-3-3-9 9-9-9z" fill="url(#c)"/>
+  <path id="path25772" d="m195 900.5-3 3 9 9 3 3 3-3 9-9-3-3-9 9-9-9z" fill="url(#d)"/>
   <rect id="rect25774" fill-opacity="0" height="24" width="24" y="896" x="192"/>
  </g>
  <g id="slidercursor-focused" transform="matrix(1.089,0,0,1.069,210.3,503)">
   <path id="path38820" d="m60 425c0 11-8.95 20-20 20s-20-9-20-20 8.95-20 20-20 20 9 20 20z" transform="matrix(.9186 0 0 .9355 1.597 28.1)" stroke="url(#g)" stroke-width="2.3995" fill="url(#f)"/>
  </g>
  <g id="slidercursor-pressed" transform="matrix(1.089,0,0,1.069,260.3,503)">
-  <path id="path38827" d="m60 425c0 11-8.95 20-20 20s-20-9-20-20 8.95-20 20-20 20 9 20 20z" transform="matrix(.9186 0 0 .9355 1.597 28.1)" stroke="url(#d)" stroke-width="2.3995" fill="url(#f)"/>
+  <path id="path38827" d="m60 425c0 11-8.95 20-20 20s-20-9-20-20 8.95-20 20-20 20 9 20 20z" transform="matrix(.9186 0 0 .9355 1.597 28.1)" stroke="url(#c)" stroke-width="2.3995" fill="url(#f)"/>
  </g>
  <g id="slidercursor-disabled" transform="matrix(1.089,0,0,1.069,360.3,503)">
-  <path id="path38834" d="m60 425c0 11-8.95 20-20 20s-20-9-20-20 8.95-20 20-20 20 9 20 20z" transform="matrix(.9186 0 0 .9355 1.597 28.1)" stroke="url(#c)" stroke-width="2.3995" fill="url(#c)"/>
+  <path id="path38834" d="m60 425c0 11-8.95 20-20 20s-20-9-20-20 8.95-20 20-20 20 9 20 20z" transform="matrix(.9186 0 0 .9355 1.597 28.1)" stroke="url(#d)" stroke-width="2.3995" fill="url(#d)"/>
  </g>
  <g id="progress-pattern-normal" transform="matrix(.16 0 0 .5333 181.2 97.3)">
   <rect id="rect41391" d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9" height="30" width="100" y="447.6" x="98.73" fill="url(#a)"/>
   <rect id="rect41391-7" d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9" height="30" width="12.45" y="447.6" x="198.8" fill="url(#f)"/>
  </g>
  <g id="arrow-left-disabled" transform="matrix(0,1,-1,0,1316,592)">
-  <path id="path6462" fill="url(#c)" d="m195 900.5-3 3 9 9 3 3 3-3 9-9-3-3-9 9-9-9z"/>
+  <path id="path6462" fill="url(#d)" d="m195 900.5-3 3 9 9 3 3 3-3 9-9-3-3-9 9-9-9z"/>
   <rect id="rect6464" fill-opacity="0" height="24" width="24" y="896" x="192"/>
  </g>
  <g id="arrow-right-disabled" transform="matrix(0,-1,1,0,-500,960)">
-  <path id="path6468" fill="url(#c)" d="m195 900.5-3 3 9 9 3 3 3-3 9-9-3-3-9 9-9-9z"/>
+  <path id="path6468" fill="url(#d)" d="m195 900.5-3 3 9 9 3 3 3-3 9-9-3-3-9 9-9-9z"/>
   <rect id="rect6470" fill-opacity="0" height="24" width="24" y="896" x="192"/>
  </g>
  <g id="arrow-down-disabled" transform="translate(204,-190)">
-  <path id="path6474" d="m195 900.5-3 3 9 9 3 3 3-3 9-9-3-3-9 9-9-9z" fill="url(#c)"/>
+  <path id="path6474" d="m195 900.5-3 3 9 9 3 3 3-3 9-9-3-3-9 9-9-9z" fill="url(#d)"/>
   <rect id="rect6476" fill-opacity="0" height="24" width="24" y="896" x="192"/>
  </g>
  <g id="arrow-up-disabled" transform="matrix(1,0,0,-1,204,1588)">
-  <path id="path6480" fill="url(#c)" d="m195 900.5-3 3 9 9 3 3 3-3 9-9-3-3-9 9-9-9z"/>
+  <path id="path6480" fill="url(#d)" d="m195 900.5-3 3 9 9 3 3 3-3 9-9-3-3-9 9-9-9z"/>
   <rect id="rect6482" fill-opacity="0" height="24" width="24" y="896" x="192"/>
  </g>
  <g id="menuitem-toggled" transform="matrix(2 0 0 .5333 453 1094)" fill="#222b00">
-  <rect id="rect10818" fill-rule="evenodd" height="15" width="15" y="28.36" x="-59" fill="url(#c)"/>
+  <rect id="rect10818" fill-rule="evenodd" height="15" width="15" y="28.36" x="-59" fill="url(#h)"/>
  </g>
  <g id="menuitem-pressed" fill="#222b00" transform="matrix(2 0 0 .5333 405 1094)">
-  <rect id="rect10824" fill-rule="evenodd" height="15" width="15" y="28.36" x="-59" fill="url(#c)"/>
+  <rect id="rect10824" fill-rule="evenodd" height="15" width="15" y="28.36" x="-59" fill="url(#h)"/>
  </g>
  <g id="arrow-up-pressed" transform="matrix(1,0,0,-1,100,1588)">
-  <path id="path49458" fill="url(#d)" d="m195 900.5-3 3 9 9 3 3 3-3 9-9-3-3-9 9-9-9z"/>
+  <path id="path49458" fill="url(#c)" d="m195 900.5-3 3 9 9 3 3 3-3 9-9-3-3-9 9-9-9z"/>
   <rect id="rect49460" fill-opacity="0" height="24" width="24" y="896" x="192"/>
  </g>
  <g id="arrow-up-toggled" transform="matrix(1,0,0,-1,146,1588)">
-  <path id="path49463" fill="url(#d)" d="m195 900.5-3 3 9 9 3 3 3-3 9-9-3-3-9 9-9-9z"/>
+  <path id="path49463" fill="url(#c)" d="m195 900.5-3 3 9 9 3 3 3-3 9-9-3-3-9 9-9-9z"/>
   <rect id="rect49465" fill-opacity="0" height="24" width="24" y="896" x="192"/>
  </g>
  <g id="arrow-down-pressed" transform="translate(100,-190)">
-  <path id="path55625" d="m195 900.5-3 3 9 9 3 3 3-3 9-9-3-3-9 9-9-9z" fill="url(#d)"/>
+  <path id="path55625" d="m195 900.5-3 3 9 9 3 3 3-3 9-9-3-3-9 9-9-9z" fill="url(#c)"/>
   <rect id="rect55627" fill-opacity="0" height="24" width="24" y="896" x="192"/>
  </g>
  <g id="arrow-down-toggled" transform="translate(146,-190)">
-  <path id="path55630" d="m195 900.5-3 3 9 9 3 3 3-3 9-9-3-3-9 9-9-9z" fill="url(#d)"/>
+  <path id="path55630" d="m195 900.5-3 3 9 9 3 3 3-3 9-9-3-3-9 9-9-9z" fill="url(#c)"/>
   <rect id="rect55632" fill-opacity="0" height="24" width="24" y="896" x="192"/>
  </g>
  <g id="arrow-right-pressed" transform="matrix(0,-1,1,0,-604,960)">
-  <path id="path61804" fill="url(#d)" d="m195 900.5-3 3 9 9 3 3 3-3 9-9-3-3-9 9-9-9z"/>
+  <path id="path61804" fill="url(#c)" d="m195 900.5-3 3 9 9 3 3 3-3 9-9-3-3-9 9-9-9z"/>
   <rect id="rect61806" fill-opacity="0" height="24" width="24" y="896" x="192"/>
  </g>
  <g id="arrow-right-toggled" transform="matrix(0,-1,1,0,-558,960)">
-  <path id="path61809" fill="url(#d)" d="m195 900.5-3 3 9 9 3 3 3-3 9-9-3-3-9 9-9-9z"/>
+  <path id="path61809" fill="url(#c)" d="m195 900.5-3 3 9 9 3 3 3-3 9-9-3-3-9 9-9-9z"/>
   <rect id="rect61811" fill-opacity="0" height="24" width="24" y="896" x="192"/>
  </g>
  <g id="arrow-left-pressed" transform="matrix(0,1,-1,0,1210,592)">
-  <path id="path67995" fill="url(#d)" d="m195 900.5-3 3 9 9 3 3 3-3 9-9-3-3-9 9-9-9z"/>
+  <path id="path67995" fill="url(#c)" d="m195 900.5-3 3 9 9 3 3 3-3 9-9-3-3-9 9-9-9z"/>
   <rect id="rect67997" fill-opacity="0" height="24" width="24" y="896" x="192"/>
  </g>
  <g id="arrow-left-toggled" transform="matrix(0,1,-1,0,1256,592)">
-  <path id="path68000" fill="url(#d)" d="m195 900.5-3 3 9 9 3 3 3-3 9-9-3-3-9 9-9-9z"/>
+  <path id="path68000" fill="url(#c)" d="m195 900.5-3 3 9 9 3 3 3-3 9-9-3-3-9 9-9-9z"/>
   <rect id="rect68002" fill-opacity="0" height="24" width="24" y="896" x="192"/>
  </g>
  <g id="radio-disabled" transform="matrix(1.089,0,0,1.069,360.3,-67.03)">
-  <path id="path71108" d="m60 425c0 11-8.95 20-20 20s-20-9-20-20 8.95-20 20-20 20 9 20 20z" transform="matrix(.9186 0 0 .9355 1.597 28.1)" stroke="url(#c)" stroke-width="2.3995" fill="none"/>
+  <path id="path71108" d="m60 425c0 11-8.95 20-20 20s-20-9-20-20 8.95-20 20-20 20 9 20 20z" transform="matrix(.9186 0 0 .9355 1.597 28.1)" stroke="url(#d)" stroke-width="2.3995" fill="none"/>
  </g>
  <g id="radio-checked-disabled" transform="matrix(1.089,0,0,1.069,360.3,-9.034)">
-  <path id="path71128" d="m60 425c0 11-8.95 20-20 20s-20-9-20-20 8.95-20 20-20 20 9 20 20z" transform="matrix(.9186 0 0 .9355 1.597 28.1)" stroke="url(#c)" stroke-width="2.3995" fill="none"/>
-  <path id="path71130" d="m-160 350c0 5.5-4.5 10-10 10s-10-4.5-10-10 4.5-10 10-10 10 4.5 10 10z" transform="matrix(.9186 0 0 .9355 194.5 98.26)" stroke-width="0" fill="url(#c)"/>
+  <path id="path71128" d="m60 425c0 11-8.95 20-20 20s-20-9-20-20 8.95-20 20-20 20 9 20 20z" transform="matrix(.9186 0 0 .9355 1.597 28.1)" stroke="url(#d)" stroke-width="2.3995" fill="none"/>
+  <path id="path71130" d="m-160 350c0 5.5-4.5 10-10 10s-10-4.5-10-10 4.5-10 10-10 10 4.5 10 10z" transform="matrix(.9186 0 0 .9355 194.5 98.26)" stroke-width="0" fill="url(#d)"/>
  </g>
- <g id="checkbox-checked-disabled" fill="url(#c)" transform="matrix(1.042,0,0,1.021,527.8,272.4)">
+ <g id="checkbox-checked-disabled" fill="url(#d)" transform="matrix(1.042,0,0,1.021,527.8,272.4)">
   <path id="rect71170" d="m389.2 541.9c-4 0-5.3 1.2-5.3 5.2v29.7c0 3.9 1.3 5.1 5.3 5.1h29.4c4.1 0 5.3-1.2 5.3-5.1v-29.7c0-4-1.2-5.2-5.3-5.2zm0.9 2h27.6c2.3 0 4.2 1.8 4.2 4.1v27.8c0 2.2-1.9 4.1-4.2 4.1h-27.6c-2.3 0-4.2-1.9-4.2-4.1v-27.8c0-2.3 1.9-4.1 4.2-4.1z" transform="matrix(.9597 0 0 .9794 -506.5 -266.8)" stroke-width="2.3268"/>
   <path id="path71174" d="m-103.8 263-18.4 24.1-7.9-10.4-5.1 6.6 7.9 10.3 5.1 6.6 5-6.6 18.48-24-5.08-6.6z" stroke-width="0"/>
  </g>
  <g id="checkbox-disabled" transform="matrix(1.042,0,0,1.021,527.8,220.4)">
-  <path id="rect71182" d="m389.2 489.9c-4 0-5.3 1.2-5.3 5.2v29.7c0 3.9 1.3 5.1 5.3 5.1h29.4c4.1 0 5.3-1.2 5.3-5.1v-29.7c0-4-1.2-5.2-5.3-5.2zm0.9 2h27.6c2.3 0 4.2 1.8 4.2 4.1v27.8c0 2.2-1.9 4.1-4.2 4.1h-27.6c-2.3 0-4.2-1.9-4.2-4.1v-27.8c0-2.3 1.9-4.1 4.2-4.1z" transform="matrix(.9597 0 0 .9794 -506.5 -215.9)" stroke-width="2.4" fill="url(#c)"/>
+  <path id="rect71182" d="m389.2 489.9c-4 0-5.3 1.2-5.3 5.2v29.7c0 3.9 1.3 5.1 5.3 5.1h29.4c4.1 0 5.3-1.2 5.3-5.1v-29.7c0-4-1.2-5.2-5.3-5.2zm0.9 2h27.6c2.3 0 4.2 1.8 4.2 4.1v27.8c0 2.2-1.9 4.1-4.2 4.1h-27.6c-2.3 0-4.2-1.9-4.2-4.1v-27.8c0-2.3 1.9-4.1 4.2-4.1z" transform="matrix(.9597 0 0 .9794 -506.5 -215.9)" stroke-width="2.4" fill="url(#d)"/>
  </g>
  <g id="progress-pattern-disabled" fill="#1a1a1a" transform="matrix(.16 0 0 .5333 384.7 98.3)">
-  <rect id="rect71202" d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9" height="30" width="100" y="447.6" x="98.73" fill="url(#c)"/>
+  <rect id="rect71202" d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9" height="30" width="100" y="447.6" x="98.73" fill="url(#d)"/>
  </g>
  <rect id="menuitem-disabled" fill-rule="evenodd" height="8" width="30" y="1112" x="385" fill="#0d0e10"/>
  <g id="toolbar-handle-normal" transform="matrix(1.099,0,0,1,-21.86,818.1)">
-  <rect id="rect41391-8" d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9" height="16" width="4.414" y="410.9" x="188.4" fill="url(#c)"/>
+  <rect id="rect41391-8" d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9" height="16" width="4.414" y="410.9" x="188.4" fill="url(#d)"/>
   <rect id="rect41391-8-4" d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9" height="16" width="4.414" y="410.9" x="192.8" fill="none"/>
  </g>
  <g id="toolbar-handle-focused" transform="matrix(0,3.625,-1,0,660.9,547.2)">
@@ -667,12 +671,12 @@
   <rect id="rect41391-8-4-6" d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9" transform="rotate(-90)" height="4.414" width="4.851" y="188.1" x="-417" fill="none"/>
  </g>
  <g id="dial-empty" transform="matrix(1.089,0,0,1.069,160.3,871)">
-  <path id="path13157" d="m60 425c0 11-8.95 20-20 20s-20-9-20-20 8.95-20 20-20 20 9 20 20z" transform="matrix(.9186 0 0 .9355 1.597 28.1)" stroke="url(#d)" stroke-width="4" fill="url(#f)"/>
+  <path id="path13157" d="m60 425c0 11-8.95 20-20 20s-20-9-20-20 8.95-20 20-20 20 9 20 20z" transform="matrix(.9186 0 0 .9355 1.597 28.1)" stroke="url(#c)" stroke-width="4" fill="url(#f)"/>
  </g>
  <text id="text4072-0" style="block-progression:tb;text-indent:0;color:#000000;text-transform:none" font-family="cmr10" xml:space="preserve" font-size="10px" line-height="normal" y="1495" x="340" fill="#000000"><tspan id="tspan4074-0" y="1495" x="340">Restore</tspan></text>
  <g id="mdi-restore-normal" stroke="#000" transform="translate(175.7,874.2)">
   <rect id="rect6389-1" opacity="0" height="36.47" width="36.43" y="632" x="163.8" fill="none"/>
-  <g id="g6161-8" stroke="#000" fill="url(#d)" transform="matrix(.7071 .7071 -.7071 .7071 524.1 71.32)">
+  <g id="g6161-8" stroke="#000" fill="url(#c)" transform="matrix(.7071 .7071 -.7071 .7071 524.1 71.32)">
    <path id="path8055-6-7" d="m173.7 636 3 3-6.2 6.1-3 3-3-3-6.2-6.1 3-3 6.2 6.1z"/>
    <path id="path8055-6-1-4" d="m173.7 666.6 3-3-6.2-6.2-3-3-3 3-6.2 6.2 3 3 6.2-6.2 6.2 6.2z"/>
    <path id="path8055-6-1-1-56" d="m182.8 645.1-3-3-6.2 6.2-3 3 3 2.9v0.1l6.2 6.1 3-3-6.2-6.1z"/>
@@ -681,7 +685,7 @@
  </g>
  <text id="text4072-0-4" style="block-progression:tb;text-indent:0;color:#000000;text-transform:none" font-family="cmr10" xml:space="preserve" font-size="10px" line-height="normal" y="1495" x="400" fill="#000000"><tspan id="tspan4074-0-9" y="1495" x="400">Menu</tspan></text>
  <g id="mdi-menu-normal" stroke="#000" transform="translate(246.9,877.6)" fill="none">
-  <g id="g6161-6" stroke="#000" transform="matrix(.7071 .7071 -.7071 .7071 508 66.76)" fill="url(#d)">
+  <g id="g6161-6" stroke="#000" transform="matrix(.7071 .7071 -.7071 .7071 508 66.76)" fill="url(#c)">
    <path id="path8055-6-4" d="m161.3 639.1-3-3 6.2-6.2 3-2.9 3 2.9 14.6 14.7-3 3-14.6-14.6z"/>
    <path id="path8055-6-1-6" d="m152.7 657.8-3 3 14.7 14.7 3 2.9 3-2.9 6.1-6.2-2.9-3-6.2 6.1-6.2-6.1z"/>
    <path id="path8055-6-1-1-565" d="m172.5 667.4 3 2.9 14.7-14.6 3-3-3-3-6.2-6.2-3 3 6.2 6.2z"/>
@@ -702,18 +706,18 @@
  </g>
  <g id="splitter-pressed" transform="matrix(.16 0 0 .5333 279.2 1581)">
   <path id="rect10824-6-6-6" d="m105 489.5h162.5v-31h-162.5v31z" fill="url(#f)"/>
-  <rect id="rect4890-1-0" height="5.625" width="50" y="470.7" x="130" fill="url(#d)"/>
-  <rect id="rect4890-8-4-06" height="5.625" width="50" y="470.7" x="211" fill="url(#d)"/>
+  <rect id="rect4890-1-0" height="5.625" width="50" y="470.7" x="130" fill="url(#c)"/>
+  <rect id="rect4890-8-4-06" height="5.625" width="50" y="470.7" x="211" fill="url(#c)"/>
  </g>
  <g id="splitter-toggled" transform="matrix(.16 0 0 -.5333 329.2 2074)">
   <path id="rect10824-6-6-1" d="m73.75 435h162.45v31h-162.45v-31z" fill="url(#f)"/>
-  <rect id="rect4890-1-3" transform="scale(1,-1)" height="5.625" width="50" y="-453.8" x="99.75" fill="url(#d)"/>
-  <rect id="rect4890-8-4-5" transform="scale(1,-1)" height="5.625" width="50" y="-453.8" x="180.8" fill="url(#d)"/>
+  <rect id="rect4890-1-3" transform="scale(1,-1)" height="5.625" width="50" y="-453.8" x="99.75" fill="url(#c)"/>
+  <rect id="rect4890-8-4-5" transform="scale(1,-1)" height="5.625" width="50" y="-453.8" x="180.8" fill="url(#c)"/>
  </g>
  <g id="splitter-focused" transform="matrix(.16 0 0 .5333 229.2 1585)">
   <path id="rect10824-6-6-3" d="m42.5 482h162.5v-31h-162.5v31z" fill="url(#f)"/>
-  <rect id="rect4890-1-8" height="5.625" width="50" y="463.2" x="66.5" fill="url(#d)"/>
-  <rect id="rect4890-8-4-0" height="5.625" width="50" y="463.2" x="148.5" fill="url(#d)"/>
+  <rect id="rect4890-1-8" height="5.625" width="50" y="463.2" x="66.5" fill="url(#c)"/>
+  <rect id="rect4890-8-4-0" height="5.625" width="50" y="463.2" x="148.5" fill="url(#c)"/>
  </g>
  <text id="text8257" style="block-progression:tb;color:#000000;text-indent:0;text-transform:none" font-family="cmr10" xml:space="preserve" font-size="10px" line-height="normal" y="1090" x="90" fill="#000000"><tspan id="tspan8259" y="1090" x="90">Scrollbar cursor</tspan></text>
  <rect id="scrollbarslider-normal" height="16" width="16" y="1080" x="196" fill="#222"/>
@@ -738,75 +742,75 @@
   <rect id="menuitem-normal-4-7" fill-rule="evenodd" height="15" width="50" y="472.5" x="136.2" fill="#1b1b1b"/>
  </g>
  <g id="commonframe-pressed-left" transform="matrix(1.067,0,0,1.067,93.04,171.2)">
-  <rect id="rect7903-6-5-5" d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9" transform="scale(-1)" height="15" width="3.75" y="-40.11" x="-194.9" fill="#6f0"/>
+  <rect id="rect7903-6-5-5" d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9" transform="scale(-1)" height="15" width="3.75" y="-40.11" x="-194.9" fill="url(#c)"/>
  </g>
  <g id="commonframe-pressed-right" transform="matrix(1.067,0,0,1.067,126.1,171.2)">
-  <rect id="rect7903-6-9-4-1-4-5" d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9" transform="scale(1,-1)" height="15" width="3.75" y="-40.12" x="183.6" fill="url(#d)"/>
-  <rect id="rect3782-9-8-7-2" height="15" width="11.25" y="25.22" x="187.4" fill="url(#aq)"/>
+  <rect id="rect7903-6-9-4-1-4-5" d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9" transform="scale(1,-1)" height="15" width="3.75" y="-40.12" x="183.6" fill="url(#c)"/>
+  <rect id="rect3782-9-8-7-2" height="15" width="11.25" y="25.22" x="187.4" fill="url(#as)"/>
  </g>
  <g id="commonframe-pressed-topleft" transform="matrix(1.067,0,0,1.067,220.1,-273.7)">
-  <path id="path7642-4-2-9-7-5-1" d="m75.87 435.6v3.7h-3.8v-3.7z" fill="url(#d)"/>
+  <path id="path7642-4-2-9-7-5-1" d="m75.87 435.6v3.7h-3.8v-3.7z" fill="url(#c)"/>
  </g>
  <g id="commonframe-pressed-topright" transform="matrix(1.067,0,0,1.067,232.8,-272.9)">
-  <path id="path7642-4-2-9-7-5" d="m87.4 434.8v3.7h-3.8v-3.7z" fill="url(#d)"/>
+  <path id="path7642-4-2-9-7-5" d="m87.4 434.8v3.7h-3.8v-3.7z" fill="url(#c)"/>
   <rect id="rect3782-9-4-1-7-3" opacity="0" height="3.73" width="11.25" y="434.8" x="87.4"/>
  </g>
  <g id="commonframe-pressed-bottomleft" transform="matrix(1.067,0,0,1.067,220.1,-261.2)">
-  <path id="path7642-5-7-2-6-5" d="m75.82 452h-3.75v-3.8h3.75z" fill="url(#d)"/>
+  <path id="path7642-5-7-2-6-5" d="m75.82 452h-3.75v-3.8h3.75z" fill="url(#c)"/>
   <rect id="rect3778-0-9-7-3" opacity="0" height="11.25" width="3.749" y="451.9" x="72.07"/>
  </g>
  <g id="commonframe-pressed-bottomright" transform="matrix(1.067,0,0,1.067,233.6,-261.2)">
-  <path id="path7642-8-8-7-7-6" d="m82.85 451.9h3.8v-3.7h-3.8z" fill="url(#d)"/>
-  <rect id="rect3780-7-7-6" height="11.27" width="3.747" y="451.9" x="82.85" fill="url(#z)"/>
-  <rect id="rect3782-5-4-5" height="3.749" width="11.19" y="448.2" x="86.65" fill="url(#aj)"/>
-  <rect id="rect3782-9-8-9-7-1" height="11.27" width="11.24" y="451.9" x="86.65" fill="url(#h)"/>
+  <path id="path7642-8-8-7-7-6" d="m82.85 451.9h3.8v-3.7h-3.8z" fill="url(#c)"/>
+  <rect id="rect3780-7-7-6" height="11.27" width="3.747" y="451.9" x="82.85" fill="url(#ab)"/>
+  <rect id="rect3782-5-4-5" height="3.749" width="11.19" y="448.2" x="86.65" fill="url(#al)"/>
+  <rect id="rect3782-9-8-9-7-1" height="11.27" width="11.24" y="451.9" x="86.65" fill="url(#i)"/>
  </g>
  <g id="commonframe-pressed-bottom" transform="matrix(0,1.067,-1.067,0,343.8,23.94)">
-  <rect id="rect7903-9-4-7-6-9" d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9" height="15" width="3.75" y="23.24" x="180.9" fill="url(#d)"/>
-  <rect id="rect3778-9-3-4" transform="rotate(-90)" height="11.23" width="15" y="184.7" x="-38.24" fill="url(#t)"/>
+  <rect id="rect7903-9-4-7-6-9" d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9" height="15" width="3.75" y="23.24" x="180.9" fill="url(#c)"/>
+  <rect id="rect3778-9-3-4" transform="rotate(-90)" height="11.23" width="15" y="184.7" x="-38.24" fill="url(#v)"/>
  </g>
  <g id="commonframe-pressed-top" transform="matrix(0,-1.067,-1.06,0,343.6,388)">
-  <rect id="rect7903-45-7-6" d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9" height="15.09" width="3.75" y="23.21" x="180.9" fill="#6f0"/>
+  <rect id="rect7903-45-7-6" d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9" height="15.09" width="3.75" y="23.21" x="180.9" fill="url(#c)"/>
  </g>
  <g id="common-normal" fill="url(#f)" transform="matrix(.16 0 0 .5333 178.2 -40.71)">
   <rect id="rect7827-5" d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9" transform="scale(1,-1)" height="30" width="100" y="-477.6" x="98.73" fill="url(#f)"/>
  </g>
- <g id="common-focused" fill="url(#c)" transform="matrix(.16 0 0 .5333 232.2 -40.7)">
-  <rect id="rect7827-1" d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9" transform="scale(1,-1)" height="30" width="100" y="-477.6" x="98.73" fill="url(#c)"/>
+ <g id="common-focused" fill="url(#d)" transform="matrix(.16 0 0 .5333 232.2 -40.7)">
+  <rect id="rect7827-1" d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9" transform="scale(1,-1)" height="30" width="100" y="-477.6" x="98.73" fill="url(#d)"/>
  </g>
- <g id="common-pressed" fill="url(#c)" transform="matrix(.16 0 0 .5333 287.2 -40.71)">
-  <rect id="rect7827-2" d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9" transform="scale(1,-1)" height="30" width="100" y="-477.6" x="98.73" fill="url(#c)"/>
+ <g id="common-pressed" fill="url(#d)" transform="matrix(.16 0 0 .5333 287.2 -40.71)">
+  <rect id="rect7827-2" d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9" transform="scale(1,-1)" height="30" width="100" y="-477.6" x="98.73" fill="url(#d)"/>
  </g>
  <g id="commonframe-toggled-left" transform="matrix(1.067,0,0,1.067,147,171.1)">
-  <rect id="rect7903-6-5-5-9" d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9" transform="scale(-1)" height="15" width="3.75" y="-40.21" x="-195.9" fill="#6f0"/>
+  <rect id="rect7903-6-5-5-9" d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9" transform="scale(-1)" height="15" width="3.75" y="-40.21" x="-195.9" fill="url(#c)"/>
  </g>
  <g id="commonframe-toggled-right" transform="matrix(1.067,0,0,1.067,181.1,171.1)">
-  <rect id="rect7903-6-9-4-1-4-5-1" d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9" transform="scale(1,-1)" height="15" width="3.75" y="-40.21" x="183.6" fill="url(#d)"/>
-  <rect id="rect3782-9-8-7-2-3" height="15" width="11.25" y="25.31" x="187.4" fill="url(#ap)"/>
+  <rect id="rect7903-6-9-4-1-4-5-1" d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9" transform="scale(1,-1)" height="15" width="3.75" y="-40.21" x="183.6" fill="url(#c)"/>
+  <rect id="rect3782-9-8-7-2-3" height="15" width="11.25" y="25.31" x="187.4" fill="url(#ar)"/>
  </g>
  <g id="commonframe-toggled-topleft" transform="matrix(1.067,0,0,1.067,275.1,-273.7)">
-  <path id="path7642-4-2-9-7-5-90" d="m75.87 436.5v3.7h-3.8v-3.7z" fill="url(#d)"/>
+  <path id="path7642-4-2-9-7-5-90" d="m75.87 436.5v3.7h-3.8v-3.7z" fill="url(#c)"/>
  </g>
  <g id="commonframe-toggled-topright" transform="matrix(1.067,0,0,1.067,287.8,-272.9)">
-  <path id="path7642-4-2-9-7-5-9" d="m87.4 435.7v3.8h-3.8v-3.8z" fill="url(#d)"/>
+  <path id="path7642-4-2-9-7-5-9" d="m87.4 435.7v3.8h-3.8v-3.8z" fill="url(#c)"/>
   <rect id="rect3782-9-4-1-7-3-5" opacity="0" height="3.792" width="11.25" y="435.7" x="87.4"/>
  </g>
  <g id="commonframe-toggled-bottomleft" transform="matrix(1.067,0,0,1.067,275.1,-261.2)">
-  <path id="path7642-5-7-2-6-5-3" d="m75.82 452h-3.75v-3.8h3.75z" fill="url(#d)"/>
+  <path id="path7642-5-7-2-6-5-3" d="m75.82 452h-3.75v-3.8h3.75z" fill="url(#c)"/>
   <rect id="rect3778-0-9-7-3-5" opacity="0" height="11.25" width="3.749" y="451.9" x="72.07"/>
  </g>
  <g id="commonframe-toggled-bottomright" transform="matrix(1.067,0,0,1.067,288.6,-261.2)">
-  <path id="path7642-8-8-7-7-6-4" d="m82.85 451.9h3.8v-3.7h-3.8z" fill="url(#d)"/>
-  <rect id="rect3780-7-7-6-9" height="11.27" width="3.747" y="451.9" x="82.85" fill="url(#y)"/>
-  <rect id="rect3782-5-4-5-2" height="3.749" width="11.19" y="448.2" x="86.65" fill="url(#ai)"/>
-  <rect id="rect3782-9-8-9-7-1-8" height="11.27" width="11.24" y="451.9" x="86.65" fill="url(#h)"/>
+  <path id="path7642-8-8-7-7-6-4" d="m82.85 451.9h3.8v-3.7h-3.8z" fill="url(#c)"/>
+  <rect id="rect3780-7-7-6-9" height="11.27" width="3.747" y="451.9" x="82.85" fill="url(#aa)"/>
+  <rect id="rect3782-5-4-5-2" height="3.749" width="11.19" y="448.2" x="86.65" fill="url(#ak)"/>
+  <rect id="rect3782-9-8-9-7-1-8" height="11.27" width="11.24" y="451.9" x="86.65" fill="url(#i)"/>
  </g>
  <g id="commonframe-toggled-bottom" transform="matrix(0,1.067,-1.067,0,398.8,23.84)">
-  <rect id="rect7903-9-4-7-6-9-1" d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9" height="15" width="3.75" y="23.24" x="181" fill="url(#d)"/>
-  <rect id="rect3778-9-3-4-5" transform="rotate(-90)" height="11.23" width="15" y="184.8" x="-38.24" fill="url(#s)"/>
+  <rect id="rect7903-9-4-7-6-9-1" d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9" height="15" width="3.75" y="23.24" x="181" fill="url(#c)"/>
+  <rect id="rect3778-9-3-4-5" transform="rotate(-90)" height="11.23" width="15" y="184.8" x="-38.24" fill="url(#u)"/>
  </g>
  <g id="commonframe-toggled-top" transform="matrix(0,-1.067,-1.06,0,398.6,388)">
-  <rect id="rect7903-45-7-6-0" d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9" height="15.09" width="3.75" y="23.21" x="179.9" fill="#6f0"/>
+  <rect id="rect7903-45-7-6-0" d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9" height="15.09" width="3.75" y="23.21" x="179.9" fill="url(#c)"/>
  </g>
  <g id="toolbar-normal" fill="#0d0e10" transform="matrix(.16 0 0 .5333 178.2 68.3)">
   <rect id="rect7827-5-1" d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9" transform="scale(1,-1)" height="30" width="100" y="-477.6" x="98.73" fill="url(#f)"/>
@@ -819,31 +823,31 @@
   <rect id="rect3975-4-7-11-1-4" fill-rule="evenodd" height="15" width="15" y="28.36" x="-59" fill="url(#b)"/>
  </g>
  <g id="commonframe-disabled-left" transform="matrix(1.067,0,0,1.067,201.9,171)">
-  <rect id="rect7903-6-5-5-9-0" d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9" transform="scale(-1)" height="15" width="3.75" y="-40.5" x="-184.6" fill="url(#c)"/>
+  <rect id="rect7903-6-5-5-9-0" d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9" transform="scale(-1)" height="15" width="3.75" y="-40.5" x="-184.6" fill="url(#d)"/>
   <rect id="rect7903-3-4-5-6-7-1" opacity="0" d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9" transform="scale(-1)" height="10.3" width="2.855" y="-37.7" x="-195.9"/>
  </g>
  <g id="commonframe-disabled-right" transform="matrix(1.067,0,0,1.067,236,171)">
-  <rect id="rect7903-6-2-9-2-7" d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9" transform="scale(1,-1)" height="15" width="3.75" y="-40.18" x="191" fill="url(#c)"/>
+  <rect id="rect7903-6-2-9-2-7" d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9" transform="scale(1,-1)" height="15" width="3.75" y="-40.18" x="191" fill="url(#d)"/>
   <rect id="rect7903-3-4-1-7-6-0" opacity="0" d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9" transform="scale(1,-1)" height="10.3" width="2.855" y="-37.38" x="179.7"/>
  </g>
  <g id="commonframe-disabled-topleft" transform="matrix(1.067,0,0,1.067,330.1,-273.7)">
-  <path id="path7642-2-3-0-0-5" d="m75.97 425.2h-15.1v14.9h3.8v-11.1h11.3z" fill="url(#c)"/>
+  <path id="path7642-2-3-0-0-5" d="m75.97 425.2h-15.1v14.9h3.8v-11.1h11.3z" fill="url(#d)"/>
  </g>
  <g id="commonframe-disabled-topright" transform="matrix(1.067,0,0,1.067,342.8,-272.9)">
-  <path id="path7642-2-8-5-5-6" d="m79.84 424.3h15.1v14.9h-3.8v-11.1h-11.3z" fill="url(#c)"/>
+  <path id="path7642-2-8-5-5-6" d="m79.84 424.3h15.1v14.9h-3.8v-11.1h-11.3z" fill="url(#d)"/>
  </g>
  <g id="commonframe-disabled-bottomleft" transform="matrix(1.067,0,0,1.067,330.1,-261.2)">
-  <path id="path7642-2-1-8-8-1" d="m75.97 463.2h-15.1v-14.9h3.8v11.1h11.3z" fill="url(#c)"/>
+  <path id="path7642-2-1-8-8-1" d="m75.97 463.2h-15.1v-14.9h3.8v11.1h11.3z" fill="url(#d)"/>
  </g>
  <g id="commonframe-disabled-bottomright" transform="matrix(1.067,0,0,1.067,343.6,-261.2)">
-  <path id="path7642-2-0-7-8-7" d="m78.95 463.2h15.1v-14.9h-3.8v11.1h-11.3z" fill="url(#c)"/>
+  <path id="path7642-2-0-7-8-7" d="m78.95 463.2h15.1v-14.9h-3.8v11.1h-11.3z" fill="url(#d)"/>
  </g>
  <g id="commonframe-disabled-bottom" transform="matrix(0,1.067,-1.067,0,453.8,23.78)">
-  <rect id="rect7903-9-1-5-3-2" d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9" height="15" width="3.75" y="24.76" x="192.1" fill="url(#c)"/>
+  <rect id="rect7903-9-1-5-3-2" d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9" height="15" width="3.75" y="24.76" x="192.1" fill="url(#d)"/>
   <rect id="rect7903-3-9-1-1-8-1" opacity="0" d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9" height="10.3" width="2.855" y="27.56" x="180.8"/>
  </g>
  <g id="commonframe-disabled-top" transform="matrix(0,-1.067,-1.06,0,453.6,388)">
-  <rect id="rect7903-45-7-6-0-1" d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9" height="15.09" width="3.75" y="24.52" x="191.3" fill="url(#c)"/>
+  <rect id="rect7903-45-7-6-0-1" d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9" height="15.09" width="3.75" y="24.52" x="191.3" fill="url(#d)"/>
   <rect id="rect7903-3-7-8-9-1-3" opacity="0" d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9" height="10.37" width="2.855" y="27.42" x="180"/>
  </g>
  <g id="lineedit-disabled-top" opacity="0" transform="matrix(0,-1.067,-1.06,0,454.4,326.1)" fill="url(#b)">
@@ -853,7 +857,7 @@
   <rect id="rect12624-4" d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9" height="15.09" width="3.75" y="25" x="180"/>
  </g>
  <g id="lineedit-disabled-bottom" transform="matrix(0,1.067,-1.067,0,454.6,-37.81)">
-  <rect id="rect7903-4-7-4" d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9" height="15" width="3.75" y="25.02" x="191.2" fill="url(#c)"/>
+  <rect id="rect7903-4-7-4" d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9" height="15" width="3.75" y="25.02" x="191.2" fill="url(#d)"/>
   <rect id="rect7903-3-0-7-4" opacity="0" d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9" height="10.3" width="2.855" y="27.92" x="179.9"/>
  </g>
  <g id="lineedit-disabled-left" opacity="0" transform="matrix(1.067,0,0,1.067,202.9,109.5)">
@@ -884,10 +888,10 @@
   <path id="path12679-9" d="m123 272.9c0-26.8 25.5-48.5 57-48.5v48.5z" transform="matrix(0 .0658 -.0773 0 101.1 428.5)" fill="url(#b)"/>
  </g>
  <g id="lineedit-disabled-bottomleft" transform="matrix(-1.067,0,0,1.067,496.2,-323.1)">
-  <path id="path7642-0-5" d="m79.84 462.1h15l0.1-14.9h-3.8v11.1h-11.3z" fill="url(#c)"/>
+  <path id="path7642-0-5" d="m79.84 462.1h15l0.1-14.9h-3.8v11.1h-11.3z" fill="url(#d)"/>
  </g>
  <g id="lineedit-disabled-bottomright" transform="matrix(1.067,0,0,1.067,343.6,-323.1)">
-  <path id="path7642-7-8-3-9" d="m79.94 462.3h15v-14.9h-3.8v11.1h-11.2z" fill="url(#c)"/>
+  <path id="path7642-7-8-3-9" d="m79.94 462.3h15v-14.9h-3.8v11.1h-11.2z" fill="url(#d)"/>
  </g>
  <g id="lineedit-disabled" opacity="0" transform="matrix(.16 0 0 .5333 396.1 -102.6)">
   <rect id="rect17596-1" d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9" transform="scale(1,-1)" height="30" width="100" y="-477.6" x="98.73" fill="url(#b)"/>
@@ -899,7 +903,7 @@
  </g>
  <g id="commonframe2-normal-right" transform="matrix(1.067,0,0,1.067,6.99,231.3)">
   <rect id="rect7903-6-9-4-1-8" d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9" transform="scale(1,-1)" height="15" width="3.75" y="-40.02" x="191.2" fill="url(#a)"/>
-  <rect id="rect3782-9-8-1" height="15" width="11.25" y="25.02" x="195" fill="url(#an)"/>
+  <rect id="rect3782-9-8-1" height="15" width="11.25" y="25.02" x="195" fill="url(#ap)"/>
  </g>
  <g id="commonframe2-normal-topleft" transform="matrix(1.067,0,0,1.067,112,-213.5)">
   <path id="path7642-4-2-9-5-0" d="m74.09 436.3v3.7h-3.8v-3.7z" fill="url(#a)"/>
@@ -914,13 +918,13 @@
  </g>
  <g id="commonframe2-normal-bottomright" transform="matrix(1.067,0,0,1.067,124.7,-201.2)">
   <path id="path7642-8-8-7-9" d="m80.88 451.9h3.8v-3.7h-3.8z" fill="url(#a)"/>
-  <rect id="rect3780-7-4" height="11.27" width="3.747" y="451.9" x="80.88" fill="url(#x)"/>
-  <rect id="rect3782-5-2" height="3.749" width="11.19" y="448.2" x="84.68" fill="url(#af)"/>
-  <rect id="rect3782-9-8-9-73" height="11.27" width="11.24" y="451.9" x="84.68" fill="url(#m)"/>
+  <rect id="rect3780-7-4" height="11.27" width="3.747" y="451.9" x="80.88" fill="url(#z)"/>
+  <rect id="rect3782-5-2" height="3.749" width="11.19" y="448.2" x="84.68" fill="url(#ah)"/>
+  <rect id="rect3782-9-8-9-73" height="11.27" width="11.24" y="451.9" x="84.68" fill="url(#o)"/>
  </g>
  <g id="commonframe2-normal-bottom" transform="matrix(0,1.067,-1.067,0,235.7,84.99)">
   <rect id="rect7903-9-4-7-1" d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9" height="15" width="3.75" y="25.02" x="180" fill="url(#a)"/>
-  <rect id="rect3778-9-7" transform="rotate(-90)" height="11.23" width="15" y="183.8" x="-40.02" fill="url(#r)"/>
+  <rect id="rect3778-9-7" transform="rotate(-90)" height="11.23" width="15" y="183.8" x="-40.02" fill="url(#t)"/>
  </g>
  <g id="commonframe2-normal-top" transform="matrix(0,-1.067,-1.06,0,235,447.2)">
   <rect id="rect7903-45-4" d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9" height="15.09" width="3.75" y="24.53" x="179.2" fill="url(#a)"/>
@@ -930,7 +934,7 @@
  </g>
  <g id="commonframe2-focused-right" transform="matrix(1.067,0,0,1.067,71.05,231.4)">
   <rect id="rect7903-6-9-4-1-2" d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9" transform="scale(1,-1)" height="15" width="3.75" y="-39.93" x="179.9" fill="url(#a)"/>
-  <rect id="rect3782-9-8-2" height="15" width="11.25" y="24.93" x="183.7" fill="url(#as)"/>
+  <rect id="rect3782-9-8-2" height="15" width="11.25" y="24.93" x="183.7" fill="url(#au)"/>
  </g>
  <g id="commonframe2-focused-topleft" transform="matrix(1.067,0,0,1.067,165.1,-213.5)">
   <path id="path7642-4-2-9-5-3" d="m73.06 436.3v3.7h-3.8v-3.7z" fill="url(#a)"/>
@@ -945,13 +949,13 @@
  </g>
  <g id="commonframe2-focused-bottomright" transform="matrix(1.067,0,0,1.067,182.5,-206)">
   <path id="path7642-8-8-7-2" d="m75.35 456.4h3.8v-3.7h-3.8z" fill="url(#a)"/>
-  <rect id="rect3780-7-3" height="11.27" width="3.747" y="456.4" x="75.35" fill="url(#ac)"/>
-  <rect id="rect3782-5-9" height="3.749" width="11.19" y="452.7" x="79.15" fill="url(#ae)"/>
-  <rect id="rect3782-9-8-9-8" height="11.27" width="11.24" y="456.4" x="79.15" fill="url(#k)"/>
+  <rect id="rect3780-7-3" height="11.27" width="3.747" y="456.4" x="75.35" fill="url(#ae)"/>
+  <rect id="rect3782-5-9" height="3.749" width="11.19" y="452.7" x="79.15" fill="url(#ag)"/>
+  <rect id="rect3782-9-8-9-8" height="11.27" width="11.24" y="456.4" x="79.15" fill="url(#m)"/>
  </g>
  <g id="commonframe2-focused-bottom" transform="matrix(0,1.067,-1.067,0,288.8,84.14)">
   <rect id="rect7903-9-4-7-3" d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9" height="15" width="3.75" y="26.05" x="180.7" fill="url(#a)"/>
-  <rect id="rect3778-9-0" transform="rotate(-90)" height="11.23" width="15" y="184.5" x="-41.05" fill="url(#p)"/>
+  <rect id="rect3778-9-0" transform="rotate(-90)" height="11.23" width="15" y="184.5" x="-41.05" fill="url(#r)"/>
  </g>
  <g id="commonframe2-focused-top" transform="matrix(0,-1.067,-1.06,0,288.6,448.2)">
   <rect id="rect7903-45-7-1" d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9" height="15.09" width="3.75" y="26.04" x="180.1" fill="url(#a)"/>
@@ -961,7 +965,7 @@
  </g>
  <g id="commonframe2-pressed-right" transform="matrix(1.067,0,0,1.067,126.1,231.3)">
   <rect id="rect7903-6-9-4-1-0" d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9" transform="scale(1,-1)" height="15" width="3.75" y="-40.02" x="178.9" fill="url(#a)"/>
-  <rect id="rect3782-9-8-21" height="15" width="11.25" y="25.02" x="182.7" fill="url(#ao)"/>
+  <rect id="rect3782-9-8-21" height="15" width="11.25" y="25.02" x="182.7" fill="url(#aq)"/>
  </g>
  <g id="commonframe2-pressed-topleft" transform="matrix(1.067,0,0,1.067,220.1,-213.5)">
   <path id="path7642-4-2-9-5-37" d="m72.12 436.3v3.7h-3.8v-3.7z" fill="url(#a)"/>
@@ -976,13 +980,13 @@
  </g>
  <g id="commonframe2-pressed-bottomright" transform="matrix(1.067,0,0,1.067,233.6,-201)">
   <path id="path7642-8-8-7-8" d="m78.16 451.7h3.8v-3.7h-3.8z" fill="url(#a)"/>
-  <rect id="rect3780-7-9" height="11.27" width="3.747" y="451.7" x="78.16" fill="url(#ab)"/>
-  <rect id="rect3782-5-5" height="3.749" width="11.19" y="448" x="81.96" fill="url(#ag)"/>
-  <rect id="rect3782-9-8-9-3" height="11.27" width="11.24" y="451.7" x="81.86" fill="url(#i)"/>
+  <rect id="rect3780-7-9" height="11.27" width="3.747" y="451.7" x="78.16" fill="url(#ad)"/>
+  <rect id="rect3782-5-5" height="3.749" width="11.19" y="448" x="81.96" fill="url(#ai)"/>
+  <rect id="rect3782-9-8-9-3" height="11.27" width="11.24" y="451.7" x="81.86" fill="url(#j)"/>
  </g>
  <g id="commonframe2-pressed-bottom" transform="matrix(0,1.067,-1.067,0,343.8,84.04)">
   <rect id="rect7903-9-4-7-33" d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9" height="15" width="3.75" y="26.99" x="180.8" fill="url(#a)"/>
-  <rect id="rect3778-9-4" transform="rotate(-90)" height="11.23" width="15" y="184.6" x="-41.99" fill="url(#o)"/>
+  <rect id="rect3778-9-4" transform="rotate(-90)" height="11.23" width="15" y="184.6" x="-41.99" fill="url(#q)"/>
  </g>
  <g id="commonframe2-pressed-top" transform="matrix(0,-1.067,-1.06,0,343.6,448.2)">
   <rect id="rect7903-45-7-6-8" d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9" height="15.09" width="3.75" y="26.98" x="180.1" fill="url(#a)"/>
@@ -992,7 +996,7 @@
  </g>
  <g id="commonframe2-toggled-right" transform="matrix(1.067,0,0,1.067,181.1,231.2)">
   <rect id="rect7903-6-9-4-1-44" d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9" transform="scale(1,-1)" height="15" width="3.75" y="-40.11" x="178.9" fill="url(#a)"/>
-  <rect id="rect3782-9-8-99" height="15" width="11.25" y="25.11" x="182.7" fill="url(#am)"/>
+  <rect id="rect3782-9-8-99" height="15" width="11.25" y="25.11" x="182.7" fill="url(#ao)"/>
  </g>
  <g id="commonframe2-toggled-topleft" transform="matrix(1.067,0,0,1.067,275.1,-213.5)">
   <path id="path7642-4-2-9-5-2" d="m72.12 436.3v3.7h-3.8v-3.7z" fill="url(#a)"/>
@@ -1007,43 +1011,43 @@
  </g>
  <g id="commonframe2-toggled-bottomright" transform="matrix(1.067,0,0,1.067,288.6,-201)">
   <path id="path7642-8-8-7-6" d="m78.16 451.7h3.8v-3.7h-3.8z" fill="url(#a)"/>
-  <rect id="rect3780-7-34" height="11.27" width="3.747" y="451.7" x="78.16" fill="url(#w)"/>
-  <rect id="rect3782-5-0" height="3.749" width="11.19" y="448" x="81.96" fill="url(#ah)"/>
-  <rect id="rect3782-9-8-9-1" height="11.27" width="11.24" y="451.7" x="81.96" fill="url(#i)"/>
+  <rect id="rect3780-7-34" height="11.27" width="3.747" y="451.7" x="78.16" fill="url(#y)"/>
+  <rect id="rect3782-5-0" height="3.749" width="11.19" y="448" x="81.96" fill="url(#aj)"/>
+  <rect id="rect3782-9-8-9-1" height="11.27" width="11.24" y="451.7" x="81.96" fill="url(#j)"/>
  </g>
  <g id="commonframe2-toggled-bottom" transform="matrix(0,1.067,-1.067,0,398.8,83.94)">
   <rect id="rect7903-9-4-7-9" d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9" height="15" width="3.75" y="26.99" x="180.9" fill="url(#a)"/>
-  <rect id="rect3778-9-1" transform="rotate(-90)" height="11.23" width="15" y="184.7" x="-41.99" fill="url(#q)"/>
+  <rect id="rect3778-9-1" transform="rotate(-90)" height="11.23" width="15" y="184.7" x="-41.99" fill="url(#s)"/>
  </g>
  <g id="commonframe2-toggled-top" transform="matrix(0,-1.067,-1.06,0,398.6,448.2)">
   <rect id="rect7903-45-7-6-0-2" d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9" height="15.09" width="3.75" y="26.98" x="180.1" fill="url(#a)"/>
  </g>
  <g id="commonframe2-disabled-left" transform="matrix(1.067,0,0,1.067,201.9,231.1)">
-  <rect id="rect7903-6-5-5-9-0-8" d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9" transform="scale(-1)" height="15" width="3.75" y="-40.5" x="-184.6" fill="url(#c)"/>
+  <rect id="rect7903-6-5-5-9-0-8" d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9" transform="scale(-1)" height="15" width="3.75" y="-40.5" x="-184.6" fill="url(#d)"/>
   <rect id="rect7903-3-4-5-6-7-1-4" opacity="0" d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9" transform="scale(-1)" height="10.3" width="2.855" y="-37.7" x="-195.9"/>
  </g>
  <g id="commonframe2-disabled-right" transform="matrix(1.067,0,0,1.067,236,231.1)">
-  <rect id="rect7903-6-2-9-2-7-8" d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9" transform="scale(1,-1)" height="15" width="3.75" y="-40.18" x="191" fill="url(#c)"/>
+  <rect id="rect7903-6-2-9-2-7-8" d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9" transform="scale(1,-1)" height="15" width="3.75" y="-40.18" x="191" fill="url(#d)"/>
   <rect id="rect7903-3-4-1-7-6-0-6" opacity="0" d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9" transform="scale(1,-1)" height="10.3" width="2.855" y="-37.38" x="179.7"/>
  </g>
  <g id="commonframe2-disabled-topleft" transform="matrix(1.067,0,0,1.067,330.1,-213.5)">
-  <path id="path7642-2-3-0-0-5-5" d="m75.97 425.2h-15.1v14.9h3.8v-11.1h11.3z" fill="url(#c)"/>
+  <path id="path7642-2-3-0-0-5-5" d="m75.97 425.2h-15.1v14.9h3.8v-11.1h11.3z" fill="url(#d)"/>
  </g>
  <g id="commonframe2-disabled-topright" transform="matrix(1.067,0,0,1.067,342.8,-212.7)">
-  <path id="path7642-2-8-5-5-6-9" d="m79.84 424.3h15.1v14.9h-3.8v-11.1h-11.3z" fill="url(#c)"/>
+  <path id="path7642-2-8-5-5-6-9" d="m79.84 424.3h15.1v14.9h-3.8v-11.1h-11.3z" fill="url(#d)"/>
  </g>
  <g id="commonframe2-disabled-bottomleft" transform="matrix(1.067,0,0,1.067,330.1,-201)">
-  <path id="path7642-2-1-8-8-1-3" d="m75.97 463.2h-15.1v-14.9h3.8v11.1h11.3z" fill="url(#c)"/>
+  <path id="path7642-2-1-8-8-1-3" d="m75.97 463.2h-15.1v-14.9h3.8v11.1h11.3z" fill="url(#d)"/>
  </g>
  <g id="commonframe2-disabled-bottomright" transform="matrix(1.067,0,0,1.067,343.6,-201)">
-  <path id="path7642-2-0-7-8-7-0" d="m78.95 463.2h15.1v-14.9h-3.8v11.1h-11.3z" fill="url(#c)"/>
+  <path id="path7642-2-0-7-8-7-0" d="m78.95 463.2h15.1v-14.9h-3.8v11.1h-11.3z" fill="url(#d)"/>
  </g>
  <g id="commonframe2-disabled-bottom" transform="matrix(0,1.067,-1.067,0,453.8,83.94)">
-  <rect id="rect7903-9-1-5-3-2-3" d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9" height="15" width="3.75" y="24.76" x="192.1" fill="url(#c)"/>
+  <rect id="rect7903-9-1-5-3-2-3" d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9" height="15" width="3.75" y="24.76" x="192.1" fill="url(#d)"/>
   <rect id="rect7903-3-9-1-1-8-1-8" opacity="0" d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9" height="10.3" width="2.855" y="27.56" x="180.8"/>
  </g>
  <g id="commonframe2-disabled-top" transform="matrix(0,-1.067,-1.06,0,453.6,448.2)">
-  <rect id="rect7903-45-7-6-0-1-3" d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9" height="15.09" width="3.75" y="24.52" x="191.3" fill="url(#c)"/>
+  <rect id="rect7903-45-7-6-0-1-3" d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9" height="15.09" width="3.75" y="24.52" x="191.3" fill="url(#d)"/>
   <rect id="rect7903-3-7-8-9-1-3-3" opacity="0" d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9" height="10.37" width="2.855" y="27.42" x="180"/>
  </g>
 </svg>
