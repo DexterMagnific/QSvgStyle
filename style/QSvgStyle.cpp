@@ -865,9 +865,8 @@ void QSvgStyle::drawPrimitive(PrimitiveElement element, const QStyleOption * opt
       const QString group = "LineEdit";
 
       frame_spec_t fspec = getFrameSpec(group);
-      const QStyleOptionSpinBox *opt =
-        qstyleoption_cast<const QStyleOptionSpinBox *>(option);
-      if (opt) {
+      if ( widget && qobject_cast<const QSpinBox *>(widget) ) {
+        qDebug() <<"*********************";
         fspec.hasCapsule = true;
         fspec.capsuleH = -1;
         fspec.capsuleV = 2;
@@ -1493,7 +1492,7 @@ void QSvgStyle::drawControl(ControlElement element, const QStyleOption * option,
 
         __print_group();
 
-        renderLabel(painter,option->rect,fspec,ispec,lspec,Qt::AlignLeft | Qt::TextShowMnemonic,opt->text,!(option->state & State_Enabled),opt->icon.pixmap(pixelMetric(PM_TabBarIconSize),iconmode,iconstate));
+        renderLabel(painter,option->rect,fspec,ispec,lspec,Qt::AlignLeft | Qt::AlignVCenter | Qt::TextShowMnemonic,opt->text,!(option->state & State_Enabled),opt->icon.pixmap(pixelMetric(PM_TabBarIconSize),iconmode,iconstate));
       }
 
       break;
@@ -1906,7 +1905,9 @@ void QSvgStyle::drawComplexControl(ComplexControl control, const QStyleOptionCom
 
         o.rect = subControlRect(CC_SpinBox,opt,SC_SpinBoxEditField,widget);
         drawPrimitive(PE_FrameLineEdit,&o,painter,widget);
-        drawPrimitive(PE_PanelLineEdit,&o,painter,widget);
+        /* The QSpinBox widget will itself invoke the drawing of a PanelLineEdit,
+         * so this is not needed */
+        //drawPrimitive(PE_PanelLineEdit,&o,painter,widget);
 
         if (opt->buttonSymbols == QAbstractSpinBox::UpDownArrows) {
           o.rect = subControlRect(CC_SpinBox,opt,SC_SpinBoxUp,widget);
@@ -3591,6 +3592,11 @@ void QSvgStyle::renderInterior(QPainter *painter,
                    ispec.px,ispec.py,orientation,animationcount%ispec.animationFrames);
   }
 
+  painter->save();
+  painter->setCompositionMode(QPainter::CompositionMode_Overlay);
+  painter->fillRect(bounds,QBrush(QColor(255,0,0,50)));
+  painter->restore();
+  
   #ifdef __DEBUG__
   painter->save();
   painter->setPen(QPen(Qt::red));

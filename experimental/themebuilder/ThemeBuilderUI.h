@@ -21,6 +21,7 @@
 #define THEMEBUILDERUI_H
 
 #include <QStringList>
+#include <QMenu>
 
 #include "ui_ThemeBuilderUIBase.h"
 
@@ -34,6 +35,7 @@ class ThemeBuilderUI : public QMainWindow, private Ui::ThemeBuilderUIBase {
     ~ThemeBuilderUI();
 
   public slots:
+    void slot_debugMenuTriggered(QAction *action);
     void slot_loadTheme(const QString &theme);
     void slot_open();
     void slot_save(const QString &widget);
@@ -47,6 +49,7 @@ class ThemeBuilderUI : public QMainWindow, private Ui::ThemeBuilderUIBase {
     QString filename;
     QStringList svgElements;
     QString lastElement;
+    QMenu *debugMenu;
 };
 
 #endif // THEMEBUILDERUI_H
