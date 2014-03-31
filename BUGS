@@ -1,0 +1,23 @@
+
+* improve groupbox title drawing
+* add HasMenu option for push  buttons
+* dock widget title size is wrong
+* fix drawing of single line frame (hline and vline)
+* rtl support. visual rects and capsule positions
+* fix drawing of normal sliders (painter not active, ...)
+* interioRect() should
+
+* widget specific settings (layout, pixelmetric)
+* preview in themebuilder 
+* RTL support 
+* disabled line edit text should be grey
+* fix MDI buttons
+* fix knob drawing
+* fix sizegrip drawing
+
+* fix inheritence resolution limited to 1 level before searching parenta
+* Capsule drawing is still incorrect : use painter clipping instead of performing capsule related calculation (warning : eval impact on performance ?)
+* fix animated widgets crash (in advance())
+* Idea : loop animations. If yes, loop, if no animate on 'enter' and 'leave' widget
+* fix cache theme settings instead of reading them
+* add list of animatable widgets
