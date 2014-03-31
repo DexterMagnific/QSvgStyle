@@ -477,7 +477,7 @@ void QSvgStyle::drawPrimitive(PrimitiveElement element, const QStyleOption * opt
         capsulePosition(widget,fspec.hasCapsule,fspec.capsuleH,fspec.capsuleV);
 
 
-      //renderInterior(painter,option->rect,fspec,ispec,ispec.element+"-"+status);
+      renderInterior(painter,option->rect,fspec,ispec,ispec.element+"-"+status);
       //renderFrame(painter,option->rect,fspec,fspec.element+"-"+status);
 
       break;
@@ -626,6 +626,7 @@ void QSvgStyle::drawPrimitive(PrimitiveElement element, const QStyleOption * opt
     }
 
     case PE_IndicatorViewItemCheck :
+      qDebug() << "PE_IndicatorViewItemCheck";
     case PE_IndicatorCheckBox : {
       const QString group = "CheckBox";
 
@@ -633,6 +634,7 @@ void QSvgStyle::drawPrimitive(PrimitiveElement element, const QStyleOption * opt
       const interior_spec_t ispec = getInteriorSpec(group);
 
       __print_group();
+      qDebug() << "PE_IndicatorCheckBox";
 
       if (option->state & State_Enabled)
         if (option->state & State_MouseOver)
@@ -2433,25 +2435,26 @@ QSize QSvgStyle::sizeFromContents ( ContentsType type, const QStyleOption * opti
         const size_spec_t sspec = getSizeSpec(group);
 
         QString text = opt->currentText; // longest text
-//
-//         if (widget) {
-//           const QComboBox *w = qobject_cast<const QComboBox *>(widget);
-//
-//           if (w) {
-//             for (int i=0; i < w->count(); i++)
-//               if (w->itemText(i).length() > text.length())
-//                 text = w->itemText(i);
-//           }
-//         }
-//
-//         if ( text.isEmpty() )
-//           text = "W";
 
-        if (text.isNull() || text.isEmpty())
-          text = "W";
+        s = sizeFromContents(f,fspec,ispec,lspec,sspec,"W",QPixmap());
 
-        s = sizeFromContents(f,fspec,ispec,lspec,sspec,text,opt->currentIcon.pixmap(opt->iconSize));
-        s = QSize(MIN(contentsSize.width(),s.width()),s.height())+QSize(20,0);
+        if (widget && !opt->editable) {
+          const QComboBox *w = qobject_cast<const QComboBox *>(widget);
+
+          if (w) {
+            for (int i=0; i < w->count(); i++) {
+              QSize _s = sizeFromContents(f,fspec,ispec,lspec,sspec,w->itemText(i),w->itemIcon(i).pixmap(w->iconSize()));
+              s = QSize(MAX(s.width(),_s.width()),MAX(s.height(),_s.height()));
+            }
+          }
+        }
+
+        if (s.width() < contentsSize.width())
+          s.setWidth(contentsSize.width());
+        if (s.height() < contentsSize.height())
+          s.setHeight(contentsSize.height());
+
+        s += QSize(20,0); // drop down button
       }
 
       break;
