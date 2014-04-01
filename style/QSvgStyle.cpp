@@ -1800,20 +1800,25 @@ void QSvgStyle::drawControl(ControlElement element, const QStyleOption * option,
         else
           renderLabel(painter,option->rect.adjusted(dspec.size+lspec.tispace,0,0,0),fspec,ispec,lspec,Qt::AlignCenter | Qt::TextShowMnemonic,opt->text,!(option->state & State_Enabled),opt->icon.pixmap(opt->iconSize,iconmode,iconstate),opt->toolButtonStyle);
 
+	// alignement of arrow
+	Qt::AlignmentFlag hAlign = Qt::AlignLeft;
+	if ( opt->text.isEmpty() && opt->icon.isNull() )
+	  hAlign = Qt::AlignCenter;
+	
         switch (opt->arrowType) {
           case Qt::NoArrow :
             break;
           case Qt::UpArrow :
-            renderIndicator(painter,labelRect(option->rect,fspec,ispec,lspec),fspec,ispec,dspec,dspec.element+"-up-"+status,Qt::AlignLeft | Qt::AlignVCenter);
+            renderIndicator(painter,option->rect,fspec,ispec,dspec,dspec.element+"-up-"+status,hAlign | Qt::AlignVCenter);
             break;
           case Qt::DownArrow :
-            renderIndicator(painter,labelRect(option->rect,fspec,ispec,lspec),fspec,ispec,dspec,dspec.element+"-down-"+status,Qt::AlignLeft | Qt::AlignVCenter);
+            renderIndicator(painter,option->rect,fspec,ispec,dspec,dspec.element+"-down-"+status,hAlign | Qt::AlignVCenter);
             break;
           case Qt::LeftArrow :
-            renderIndicator(painter,labelRect(option->rect,fspec,ispec,lspec),fspec,ispec,dspec,dspec.element+"-left-"+status,Qt::AlignLeft | Qt::AlignVCenter);
+            renderIndicator(painter,option->rect,fspec,ispec,dspec,dspec.element+"-left-"+status,hAlign | Qt::AlignVCenter);
             break;
           case Qt::RightArrow :
-            renderIndicator(painter,labelRect(option->rect,fspec,ispec,lspec),fspec,ispec,dspec,dspec.element+"-right-"+status,Qt::AlignLeft | Qt::AlignVCenter);
+            renderIndicator(painter,option->rect,fspec,ispec,dspec,dspec.element+"-right-"+status,hAlign | Qt::AlignVCenter);
             break;
         }
       }
@@ -2489,7 +2494,7 @@ QSize QSvgStyle::sizeFromContents ( ContentsType type, const QStyleOption * opti
 
         __print_group();
 
-        s = sizeFromContents(f,fspec,ispec,lspec,sspec,opt->text,opt->icon.pixmap(opt->iconSize));
+        s = sizeFromContents(f,fspec,ispec,lspec,sspec,(opt->text.isEmpty() && opt->icon.isNull()) ? "W" : opt->text,opt->icon.pixmap(opt->iconSize));
       }
 
       break;
@@ -2637,10 +2642,26 @@ QSize QSvgStyle::sizeFromContents ( ContentsType type, const QStyleOption * opti
         const indicator_spec_t dspec = getIndicatorSpec(group);
         const size_spec_t sspec = getSizeSpec(group);
 
-        if (opt->arrowType == Qt::NoArrow)
-          s = sizeFromContents(f,fspec,ispec,lspec,sspec,opt->text,opt->icon.pixmap(opt->iconSize),opt->toolButtonStyle);
-        else
-          s = sizeFromContents(f,fspec,ispec,lspec,sspec,opt->text,opt->icon.pixmap(opt->iconSize),opt->toolButtonStyle)+QSize(lspec.tispace+dspec.size,0);
+	// minimum size
+	QSize ms;
+	if ( opt->text.isEmpty() && (opt->toolButtonStyle == Qt::ToolButtonTextOnly) )
+	  ms = sizeFromContents(f,fspec,ispec,lspec,sspec,"W",opt->icon.pixmap(opt->iconSize),Qt::ToolButtonTextOnly);
+	if ( opt->icon.isNull() && (opt->toolButtonStyle == Qt::ToolButtonIconOnly) )
+	  ms = sizeFromContents(f,fspec,ispec,lspec,sspec,"W",opt->icon.pixmap(opt->iconSize),Qt::ToolButtonTextOnly);
+	if ( opt->text.isEmpty() && opt->icon.isNull() )
+	  ms = sizeFromContents(f,fspec,ispec,lspec,sspec,"W",opt->icon.pixmap(opt->iconSize),Qt::ToolButtonTextOnly);
+	
+	s = sizeFromContents(f,fspec,ispec,lspec,sspec,opt->text,opt->icon.pixmap(opt->iconSize),opt->toolButtonStyle);
+	
+        if (opt->arrowType != Qt::NoArrow) {
+          s = sizeFromContents(f,fspec,ispec,lspec,sspec,opt->text,opt->icon.pixmap(opt->iconSize),opt->toolButtonStyle)+QSize(dspec.size,0);
+	  if ( (opt->toolButtonStyle != Qt::ToolButtonIconOnly) && !opt->text.isEmpty() )
+	    s = s + QSize(lspec.tispace,0);
+	  else if ( (opt->toolButtonStyle != Qt::ToolButtonTextOnly) && !opt->icon.isNull() )
+	    s = s + QSize(lspec.tispace,0);
+	  
+	  ms = ms+QSize(lspec.tispace+dspec.size,0);
+	}
 
         if (widget) {
           const QToolButton * w = qobject_cast<const QToolButton *>(widget);
@@ -2654,6 +2675,8 @@ QSize QSvgStyle::sizeFromContents ( ContentsType type, const QStyleOption * opti
               s.rwidth() += lspec.tispace+dspec.size;
           }
         }
+        
+        s = s.expandedTo(ms);
       }
 
       break;
@@ -3628,16 +3651,17 @@ void QSvgStyle::renderIndicator(QPainter *painter,
 
   const QRect interior = squaredRect(interiorRect(bounds,fspec,ispec));
   //const QRect interior = squaredRect(frameRect(bounds,fspec));
+  //const QRect interior = interiorRect(bounds,fspec,ispec);
   int s = (interior.width() > dspec.size) ? dspec.size : interior.width();
 
   renderElement(painter,element,
-                alignedRect(QApplication::layoutDirection(),alignment,QSize(s,s),bounds),
+                alignedRect(QApplication::layoutDirection(),alignment,QSize(s,s),interiorRect(bounds,fspec,ispec)),
                 0,0,Qt::Horizontal,animationcount%dspec.animationFrames);
 
   #ifdef __DEBUG__
   painter->save();
   painter->setPen(QPen(Qt::blue));
-  drawRealRect(painter, alignedRect(QApplication::layoutDirection(),alignment,QSize(s,s),bounds));
+  drawRealRect(painter, alignedRect(QApplication::layoutDirection(),alignment,QSize(s,s),interiorRect(bounds,fspec,ispec)));
   painter->restore();
   #endif
 
