@@ -2512,6 +2512,7 @@ QSize QSvgStyle::sizeFromContents ( ContentsType type, const QStyleOption * opti
         const size_spec_t sspec = getSizeSpec(group);
 
         s = sizeFromContents(f,fspec,ispec,lspec,sspec,opt->text,opt->icon.pixmap(opt->iconSize))+QSize(pixelMetric(PM_CheckBoxLabelSpacing)+pixelMetric(PM_IndicatorWidth),0);
+	s = s.expandedTo(QSize(pixelMetric(PM_IndicatorWidth),pixelMetric(PM_IndicatorWidth))); // minimal checkbox size is size of indicator
       }
 
       break;
@@ -2534,6 +2535,7 @@ QSize QSvgStyle::sizeFromContents ( ContentsType type, const QStyleOption * opti
         const size_spec_t sspec = getSizeSpec(group);
 
         s = sizeFromContents(f,fspec,ispec,lspec,sspec,opt->text,opt->icon.pixmap(opt->iconSize))+QSize(pixelMetric(PM_CheckBoxLabelSpacing)+pixelMetric(PM_IndicatorWidth),0);
+	s = s.expandedTo(QSize(pixelMetric(PM_IndicatorWidth),pixelMetric(PM_IndicatorWidth))); // minimal checkbox size is size of indicator
       }
 
       break;
