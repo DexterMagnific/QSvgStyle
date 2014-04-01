@@ -1231,6 +1231,12 @@ void QSvgStyle::drawControl(ControlElement element, const QStyleOption * option,
       (option->state & State_On) ? QIcon::On : QIcon::Off;
 
   switch (element) {
+    case CE_PushButtonBevel : {
+      drawPrimitive(PE_FrameButtonBevel,option,painter,widget);
+      drawPrimitive(PE_PanelButtonCommand,option,painter,widget);
+      
+      break;
+    }
     case CE_MenuTearoff : {
       const QStyleOptionMenuItem *opt =
           qstyleoption_cast<const QStyleOptionMenuItem *>(option);
@@ -1745,8 +1751,7 @@ void QSvgStyle::drawControl(ControlElement element, const QStyleOption * option,
     }
 
     case CE_PushButton : {
-      drawPrimitive(PE_FrameButtonBevel,option,painter,widget);
-      drawPrimitive(PE_PanelButtonCommand,option,painter,widget);
+      drawControl(CE_PushButtonBevel,option,painter,widget);
       drawControl(CE_PushButtonLabel,option,painter,widget);
 
       break;
@@ -2835,8 +2840,7 @@ QRect QSvgStyle::subElementRect(SubElement element, const QStyleOption * option,
       const frame_spec_t fspec = getFrameSpec(group);
       const interior_spec_t ispec = getInteriorSpec(group);
 
-      // FIXME why do we have to augment the rect ?
-      return option->rect.adjusted(-1,-1,+1,+1);
+      return interiorRect(option->rect,fspec,ispec);
     }
     case SE_ItemViewItemFocusRect : return QRect();
 
