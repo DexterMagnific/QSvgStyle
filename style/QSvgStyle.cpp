@@ -1765,6 +1765,7 @@ void QSvgStyle::drawControl(ControlElement element, const QStyleOption * option,
         const QString group = "PanelButtonCommand";
         const frame_spec_t fspec = getFrameSpec(group);
         const interior_spec_t ispec = getInteriorSpec(group);
+	const indicator_spec_t dspec = getIndicatorSpec(group);
         const label_spec_t lspec = getLabelSpec(group);
 
         __print_group();
@@ -1776,7 +1777,14 @@ void QSvgStyle::drawControl(ControlElement element, const QStyleOption * option,
           painter->setFont(f);
         }
 
-        renderLabel(painter,option->rect,fspec,ispec,lspec,Qt::AlignCenter | Qt::AlignVCenter | Qt::TextShowMnemonic,opt->text,!(option->state & State_Enabled),opt->icon.pixmap(opt->iconSize,iconmode,iconstate));
+        if ( opt->features & QStyleOptionButton::HasMenu ) {
+	  QStyleOptionButton o(*opt);
+	  renderLabel(painter,option->rect.adjusted(0,0,-dspec.size-lspec.tispace,0),fspec,ispec,lspec,Qt::AlignCenter | Qt::AlignVCenter | Qt::TextShowMnemonic,opt->text,!(option->state & State_Enabled),opt->icon.pixmap(opt->iconSize,iconmode,iconstate));
+	  o.rect = QRect(x+option->rect.width()-lspec.tispace-dspec.size-fspec.right,y,dspec.size,h);
+          drawPrimitive(PE_IndicatorArrowDown,&o,painter,widget);
+	} else {
+	  renderLabel(painter,option->rect,fspec,ispec,lspec,Qt::AlignCenter | Qt::AlignVCenter | Qt::TextShowMnemonic,opt->text,!(option->state & State_Enabled),opt->icon.pixmap(opt->iconSize,iconmode,iconstate));
+	}
       }
 
       break;
@@ -2490,11 +2498,16 @@ QSize QSvgStyle::sizeFromContents ( ContentsType type, const QStyleOption * opti
         const frame_spec_t fspec = getFrameSpec(group);
         const interior_spec_t ispec = getInteriorSpec(group);
         const label_spec_t lspec = getLabelSpec(group);
+	const indicator_spec_t dspec = getIndicatorSpec(group);
         const size_spec_t sspec = getSizeSpec(group);
 
         __print_group();
 
         s = sizeFromContents(f,fspec,ispec,lspec,sspec,(opt->text.isEmpty() && opt->icon.isNull()) ? "W" : opt->text,opt->icon.pixmap(opt->iconSize));
+	
+	if ( opt->features & QStyleOptionButton::HasMenu ) {
+	  s.rwidth() += lspec.tispace+dspec.size;
+	}
       }
 
       break;
