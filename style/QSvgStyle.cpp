@@ -2230,7 +2230,6 @@ void QSvgStyle::drawComplexControl(ComplexControl control, const QStyleOptionCom
         frame_spec_t fspec = getFrameSpec(group);
         interior_spec_t ispec = getInteriorSpec(group);
         label_spec_t lspec = getLabelSpec(group);
-        default_label_spec(lspec);
 
         QRect r1,r2;
 
@@ -2816,7 +2815,6 @@ QSize QSvgStyle::sizeFromContents ( ContentsType type, const QStyleOption * opti
         const frame_spec_t fspec = getFrameSpec(group);
         const interior_spec_t ispec = getInteriorSpec(group);
         label_spec_t lspec = getLabelSpec(group);
-        default_label_spec(lspec);
 	const indicator_spec_t dspec = getIndicatorSpec(group);
         const size_spec_t sspec = getSizeSpec(group);
 
@@ -2828,7 +2826,7 @@ QSize QSvgStyle::sizeFromContents ( ContentsType type, const QStyleOption * opti
 
 	if ( w && w->isCheckable() )
           st = sizeFromContents(f,fspec,ispec,lspec,sspec,opt->text,QPixmap())+QSize(pixelMetric(PM_CheckBoxLabelSpacing)+pixelMetric(PM_IndicatorWidth),0);
-	else
+        else
 	  st = sizeFromContents(f,fspec,ispec,lspec,sspec,opt->text,QPixmap());
 
         // add contents to st, 30 is title shift (left and right)
@@ -3254,7 +3252,6 @@ QRect QSvgStyle::subControlRect(ComplexControl control, const QStyleOptionComple
       frame_spec_t fspec = getFrameSpec(group);
       interior_spec_t ispec = getInteriorSpec(group);
       label_spec_t lspec = getLabelSpec(group);
-      default_label_spec(lspec);
       size_spec_t sspec = getSizeSpec(group);
 
       const QStyleOptionGroupBox *opt =
@@ -3281,7 +3278,7 @@ QRect QSvgStyle::subControlRect(ComplexControl control, const QStyleOptionComple
         case SC_GroupBoxCheckBox : {
 	  return alignedRect(QApplication::layoutDirection(),Qt::AlignLeft | Qt::AlignVCenter,
 			     QSize(pixelMetric(PM_IndicatorWidth),pixelMetric(PM_IndicatorHeight)),
-			     QRect(option->rect.x()+fspec.left+30,option->rect.y()+fspec.top,stitle.width()-fspec.left-fspec.right,stitle.height()-fspec.top-fspec.bottom));
+			     QRect(option->rect.x()+fspec.left+30+lspec.left,option->rect.y()+fspec.top,stitle.width()-fspec.left-fspec.right,stitle.height()-fspec.top-fspec.bottom));
         }
         case SC_GroupBoxLabel : {
 	  if ( w && w->isCheckable() )
