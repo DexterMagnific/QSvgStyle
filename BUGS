@@ -1,6 +1,5 @@
 QSvgStyle
 ---------
-* improve groupbox title drawing
 * dock widget title size is wrong
 * fix drawing of single line frame (hline and vline)
 * fix drawing of normal sliders (painter not active, ...)

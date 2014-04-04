@@ -626,7 +626,6 @@ void QSvgStyle::drawPrimitive(PrimitiveElement element, const QStyleOption * opt
     }
 
     case PE_IndicatorViewItemCheck :
-      qDebug() << "PE_IndicatorViewItemCheck";
     case PE_IndicatorCheckBox : {
       const QString group = "CheckBox";
 
@@ -634,7 +633,6 @@ void QSvgStyle::drawPrimitive(PrimitiveElement element, const QStyleOption * opt
       const interior_spec_t ispec = getInteriorSpec(group);
 
       __print_group();
-      qDebug() << "PE_IndicatorCheckBox";
 
       if (option->state & State_Enabled)
         if (option->state & State_MouseOver)
@@ -1234,7 +1232,7 @@ void QSvgStyle::drawControl(ControlElement element, const QStyleOption * option,
     case CE_PushButtonBevel : {
       drawPrimitive(PE_FrameButtonBevel,option,painter,widget);
       drawPrimitive(PE_PanelButtonCommand,option,painter,widget);
-      
+
       break;
     }
     case CE_MenuTearoff : {
@@ -1812,7 +1810,7 @@ void QSvgStyle::drawControl(ControlElement element, const QStyleOption * option,
 	Qt::AlignmentFlag hAlign = Qt::AlignLeft;
 	if ( opt->text.isEmpty() && opt->icon.isNull() )
 	  hAlign = Qt::AlignCenter;
-	
+
         switch (opt->arrowType) {
           case Qt::NoArrow :
             break;
@@ -2218,6 +2216,55 @@ void QSvgStyle::drawComplexControl(ComplexControl control, const QStyleOptionCom
       break;
     }
 
+    case CC_GroupBox : {
+      const QStyleOptionGroupBox *opt =
+	qstyleoption_cast<const QStyleOptionGroupBox *>(option);
+
+      const QGroupBox *w = qobject_cast<const QGroupBox *>(widget);
+
+      if (opt) {
+        QStyleOptionGroupBox o(*opt);
+
+        QString group = "GroupBox";
+
+        frame_spec_t fspec = getFrameSpec(group);
+        interior_spec_t ispec = getInteriorSpec(group);
+        label_spec_t lspec = getLabelSpec(group);
+        default_label_spec(lspec);
+
+        QRect r1,r2;
+
+        r1 = subControlRect(CC_GroupBox,&o,SC_GroupBoxFrame,widget);
+        r2 = subControlRect(CC_GroupBox,&o,SC_GroupBoxLabel,widget);
+
+        // Draw frame and interior around contents
+        renderFrame(painter,r1,fspec,fspec.element+"-"+status);
+        renderInterior(painter,r1,fspec,ispec,ispec.element+"-"+status);
+
+        // Draw frame and interior around title
+        fspec.hasCapsule = true;
+        fspec.capsuleH = 2;
+        fspec.capsuleV = -1; // FIXME bottom titles
+        renderFrame(painter,r2,fspec,fspec.element+"-"+status);
+        renderInterior(painter,r2,fspec,ispec,ispec.element+"-"+status);
+
+        // Draw title
+        fspec.hasCapsule = false;
+        r2 = subControlRect(CC_GroupBox,&o,SC_GroupBoxLabel,widget);
+        if ( w && w->isCheckable() ) {
+          renderLabel(painter,r2.adjusted(pixelMetric(PM_IndicatorWidth)+pixelMetric(PM_CheckBoxLabelSpacing),0,0,0),fspec,ispec,lspec,opt->textAlignment | Qt::TextShowMnemonic,opt->text,!opt->state & State_Enabled);
+          QStyleOption oo;
+          oo.initFrom(w);
+          if ( w->isChecked() )
+            oo.state |= State_On;
+          oo.rect = subControlRect(CC_GroupBox,&o,SC_GroupBoxCheckBox,widget);
+          drawPrimitive(PE_IndicatorCheckBox,&oo,painter,NULL);
+        } else
+          renderLabel(painter,r2,fspec,ispec,lspec,opt->textAlignment | Qt::TextShowMnemonic,opt->text,!opt->state & State_Enabled);
+      }
+      break;
+    }
+
     // case CC_MdiControls : {
 
     //   break;
@@ -2504,7 +2551,7 @@ QSize QSvgStyle::sizeFromContents ( ContentsType type, const QStyleOption * opti
         __print_group();
 
         s = sizeFromContents(f,fspec,ispec,lspec,sspec,(opt->text.isEmpty() && opt->icon.isNull()) ? "W" : opt->text,opt->icon.pixmap(opt->iconSize));
-	
+
 	if ( opt->features & QStyleOptionButton::HasMenu ) {
 	  s.rwidth() += lspec.tispace+dspec.size;
 	}
@@ -2663,16 +2710,16 @@ QSize QSvgStyle::sizeFromContents ( ContentsType type, const QStyleOption * opti
 	  ms = sizeFromContents(f,fspec,ispec,lspec,sspec,"W",opt->icon.pixmap(opt->iconSize),Qt::ToolButtonTextOnly);
 	if ( opt->text.isEmpty() && opt->icon.isNull() )
 	  ms = sizeFromContents(f,fspec,ispec,lspec,sspec,"W",opt->icon.pixmap(opt->iconSize),Qt::ToolButtonTextOnly);
-	
+
 	s = sizeFromContents(f,fspec,ispec,lspec,sspec,opt->text,opt->icon.pixmap(opt->iconSize),opt->toolButtonStyle);
-	
+
         if (opt->arrowType != Qt::NoArrow) {
           s = sizeFromContents(f,fspec,ispec,lspec,sspec,opt->text,opt->icon.pixmap(opt->iconSize),opt->toolButtonStyle)+QSize(dspec.size,0);
 	  if ( (opt->toolButtonStyle != Qt::ToolButtonIconOnly) && !opt->text.isEmpty() )
 	    s = s + QSize(lspec.tispace,0);
 	  else if ( (opt->toolButtonStyle != Qt::ToolButtonTextOnly) && !opt->icon.isNull() )
 	    s = s + QSize(lspec.tispace,0);
-	  
+
 	  ms = ms+QSize(lspec.tispace+dspec.size,0);
 	}
 
@@ -2688,7 +2735,7 @@ QSize QSvgStyle::sizeFromContents ( ContentsType type, const QStyleOption * opti
               s.rwidth() += lspec.tispace+dspec.size;
           }
         }
-        
+
         s = s.expandedTo(ms);
       }
 
@@ -2750,6 +2797,43 @@ QSize QSvgStyle::sizeFromContents ( ContentsType type, const QStyleOption * opti
         s = QSize(dw,pixelMetric(PM_SliderControlThickness,option,widget)+2); // +2 for frame
       else
         s = QSize(pixelMetric(PM_SliderControlThickness,option,widget),dh+2);
+
+      break;
+    }
+
+    case CT_GroupBox : {
+      const QStyleOptionGroupBox *opt =
+        qstyleoption_cast<const QStyleOptionGroupBox *>(option);
+
+      if (opt) {
+
+        QFont f = QApplication::font();
+        if (widget)
+          f = widget->font();
+
+        const QString group = "GroupBox";
+
+        const frame_spec_t fspec = getFrameSpec(group);
+        const interior_spec_t ispec = getInteriorSpec(group);
+        label_spec_t lspec = getLabelSpec(group);
+        default_label_spec(lspec);
+	const indicator_spec_t dspec = getIndicatorSpec(group);
+        const size_spec_t sspec = getSizeSpec(group);
+
+        __print_group();
+
+	// title size
+	const QGroupBox * w = qobject_cast<const QGroupBox *>(widget);
+	QSize st;
+
+	if ( w && w->isCheckable() )
+          st = sizeFromContents(f,fspec,ispec,lspec,sspec,opt->text,QPixmap())+QSize(pixelMetric(PM_CheckBoxLabelSpacing)+pixelMetric(PM_IndicatorWidth),0);
+	else
+	  st = sizeFromContents(f,fspec,ispec,lspec,sspec,opt->text,QPixmap());
+
+        // add contents to st, 30 is title shift (left and right)
+	s = QSize(MAX(st.width()+30+30,contentsSize.width()+fspec.left+fspec.right),contentsSize.height()+st.height()+fspec.top+fspec.bottom);
+      }
 
       break;
     }
@@ -3167,35 +3251,52 @@ QRect QSvgStyle::subControlRect(ComplexControl control, const QStyleOptionComple
     case CC_GroupBox : {
       const QString group = "GroupBox";
 
-      frame_spec_t fspec;
-      default_frame_spec(fspec);
-      interior_spec_t ispec;
-      default_interior_spec(ispec);
+      frame_spec_t fspec = getFrameSpec(group);
+      interior_spec_t ispec = getInteriorSpec(group);
       label_spec_t lspec = getLabelSpec(group);
-      size_spec_t sspec;
-      default_size_spec(sspec);
+      default_label_spec(lspec);
+      size_spec_t sspec = getSizeSpec(group);
 
       const QStyleOptionGroupBox *opt =
         qstyleoption_cast<const QStyleOptionGroupBox *>(option);
 
+      // title size
+      QSize stitle;
+      const QGroupBox  * w = qobject_cast<const QGroupBox *>(widget);
+      if (opt) {
+	if (w) {
+
+
+	  stitle = sizeFromContents(w->font(),fspec,ispec,lspec,sspec,opt->text,QPixmap());
+	  if ( w && w->isCheckable() ) {
+	    // ensure checkbox indicator fits within title interior
+	    stitle = stitle+QSize(pixelMetric(PM_IndicatorWidth)+pixelMetric(PM_CheckBoxLabelSpacing),0);
+	    stitle = stitle.expandedTo(QSize(0,fspec.top+fspec.bottom+pixelMetric(PM_IndicatorHeight)));
+	  }
+	}
+      }
+
       switch (subControl) {
+	// FIXME take into account label H and V alignment
         case SC_GroupBoxCheckBox : {
-          return QRect(option->rect.x()+30-pixelMetric(PM_CheckBoxLabelSpacing)-pixelMetric(PM_IndicatorWidth)+1,option->rect.y(),pixelMetric(PM_IndicatorWidth),pixelMetric(PM_IndicatorHeight));
+	  return alignedRect(QApplication::layoutDirection(),Qt::AlignLeft | Qt::AlignVCenter,
+			     QSize(pixelMetric(PM_IndicatorWidth),pixelMetric(PM_IndicatorHeight)),
+			     QRect(option->rect.x()+fspec.left+30,option->rect.y()+fspec.top,stitle.width()-fspec.left-fspec.right,stitle.height()-fspec.top-fspec.bottom));
         }
         case SC_GroupBoxLabel : {
-          if (opt) {
-            if (widget) {
-              const QGroupBox  * w = qobject_cast<const QGroupBox *>(widget);
-
-              // if checkable, don't use lspec.left, use PM_CheckBoxLabelSpacing for spacing
-              if (w->isCheckable())
-                lspec.left = 0;
-
-              QSize s = sizeFromContents(w->font(),fspec,ispec,lspec,sspec,opt->text,QPixmap());
-              return QRect(option->rect.x()+30,option->rect.y(),s.width(),s.height());
-            }
-          }
+	  if ( w && w->isCheckable() )
+            // Shift for checkbox will be done be drawComplexControl()
+            return QRect(option->rect.x()+30,option->rect.y(),stitle.width(),stitle.height());
+	  else
+	    return QRect(option->rect.x()+30,option->rect.y(),stitle.width(),stitle.height());
         }
+	case SC_GroupBoxFrame : {
+	  return QRect(option->rect.x(),option->rect.y()+stitle.height(),option->rect.width(),option->rect.height()-stitle.height());
+	}
+	case SC_GroupBoxContents : {
+	  return interiorRect(QRect(option->rect.x(),option->rect.y()+stitle.height(),option->rect.width(),option->rect.height()-stitle.height()),
+				     fspec,ispec);
+	}
 
         default : return QCommonStyle::subControlRect(control,option,subControl,widget);
       }
@@ -3641,7 +3742,7 @@ void QSvgStyle::renderInterior(QPainter *painter,
   painter->setCompositionMode(QPainter::CompositionMode_Overlay);
   painter->fillRect(bounds,QBrush(QColor(255,0,0,50)));
   painter->restore();
-  
+
   #ifdef __DEBUG__
   painter->save();
   painter->setPen(QPen(Qt::red));
