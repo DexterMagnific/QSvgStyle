@@ -439,6 +439,8 @@ void QSvgStyle::drawPrimitive(PrimitiveElement element, const QStyleOption * opt
 {
   __enter_func__();
 
+  emit(sig_drawPrimitive_begin(PE_str(element)));
+
   int x,y,h,w;
 
   option->rect.getRect(&x,&y,&w,&h);
@@ -1202,12 +1204,14 @@ void QSvgStyle::drawPrimitive(PrimitiveElement element, const QStyleOption * opt
       break;
   }
 
+  emit(sig_drawPrimitive_end(PE_str(element)));
   __exit_func();
 }
 
 void QSvgStyle::drawControl(ControlElement element, const QStyleOption * option, QPainter * painter, const QWidget * widget) const
 {
   __enter_func__();
+  emit(sig_drawControl_begin(CE_str(element)));
 
   int x,y,h,w;
   option->rect.getRect(&x,&y,&w,&h);
@@ -1863,12 +1867,14 @@ void QSvgStyle::drawControl(ControlElement element, const QStyleOption * option,
       QCommonStyle::drawControl(element,option,painter,widget);
   }
 
+  emit(sig_drawControl_end(CE_str(element)));
   __exit_func();
 }
 
 void QSvgStyle::drawComplexControl(ComplexControl control, const QStyleOptionComplex * option, QPainter * painter, const QWidget * widget) const
 {
   __enter_func__();
+  emit(sig_drawComplexControl_begin(CC_str(control)));
 
   int x,y,h,w;
   option->rect.getRect(&x,&y,&w,&h);
@@ -2274,6 +2280,7 @@ void QSvgStyle::drawComplexControl(ComplexControl control, const QStyleOptionCom
       QCommonStyle::drawComplexControl(control,option,painter,widget);
   }
 
+  emit(sig_drawComplexControl_end(CC_str(control)));
   __exit_func();
 }
 
@@ -2424,16 +2431,13 @@ QSize QSvgStyle::sizeFromContents ( ContentsType type, const QStyleOption * opti
   if (!option)
     return contentsSize;
 
+  emit(sig_sizeFromContents_begin(CT_str(type)));
+
   int x,y,w,h;
   option->rect.getRect(&x,&y,&w,&h);
 
-  int fh = 14; // font height
-
   int dw = contentsSize.width();
   int dh = contentsSize.height();
-
-  if (widget)
-    fh = QFontMetrics(widget->font()).height();
 
   QSize s;
 
@@ -2846,6 +2850,7 @@ QSize QSvgStyle::sizeFromContents ( ContentsType type, const QStyleOption * opti
 //   }
 #endif
 
+  emit(sig_sizeFromContents_end(CT_str(type)));
   return s;
 }
 
@@ -2883,7 +2888,7 @@ QSize QSvgStyle::sizeFromContents(const QFont &font,
       while ( i<t.size() ) {
         if ( t.at(i) == '&' ) {
           // see if next character is not a space
-          if ( (i+1<t.size()) && (t.at(i+1) != ' ') ) {
+          if ( (i+1<t.size()) && (!t.at(i+1).isSpace()) ) {
             t.remove(i,1);
             i++;
           }
@@ -3547,6 +3552,7 @@ void QSvgStyle::renderFrame(QPainter *painter,
     return;
 
   __enter_func__();
+  emit(sig_renderFrame_begin(element));
 
   int x0,y0,x1,y1,w,h;
   bounds.getRect(&x0,&y0,&w,&h);
@@ -3690,6 +3696,7 @@ void QSvgStyle::renderFrame(QPainter *painter,
   painter->restore();
   #endif
 
+  emit(sig_renderFrame_end(element));
   __exit_func();
 }
 
@@ -3704,6 +3711,7 @@ void QSvgStyle::renderInterior(QPainter *painter,
     return;
 
   __enter_func__();
+  emit(sig_renderInterior_begin(element));
 
   if (!fspec.hasCapsule) {
     renderElement(painter,element,interiorRect(bounds,fspec,ispec),ispec.px,ispec.py,orientation,animationcount%ispec.animationFrames);
@@ -3747,6 +3755,7 @@ void QSvgStyle::renderInterior(QPainter *painter,
   painter->restore();
   #endif
 
+  emit(sig_renderInterior_end(element));
   __exit_func();
 }
 
@@ -3759,6 +3768,7 @@ void QSvgStyle::renderIndicator(QPainter *painter,
                        Qt::Alignment alignment) const
 {
   __enter_func__();
+  emit(sig_renderIndicator_begin(element));
 
   const QRect interior = squaredRect(interiorRect(bounds,fspec,ispec));
   //const QRect interior = squaredRect(frameRect(bounds,fspec));
@@ -3776,6 +3786,7 @@ void QSvgStyle::renderIndicator(QPainter *painter,
   painter->restore();
   #endif
 
+  emit(sig_renderIndicator_end(element));
   __exit_func();
 }
 
@@ -3791,6 +3802,7 @@ void QSvgStyle::renderLabel(QPainter *painter,
                      /* text-icon alignment */ const Qt::ToolButtonStyle tialign) const
 {
   __enter_func__();
+  emit(sig_renderLabel_begin("text:"+text+"/icon:"+(icon.isNull() ? "yes":"no")));
 
   // compute text and icon rect
   QRect r(labelRect(bounds,fspec,ispec,lspec));
@@ -3861,6 +3873,7 @@ void QSvgStyle::renderLabel(QPainter *painter,
   if (disabled)
     painter->restore();
 
+  emit(sig_renderLabel_end("text:"+text+"/icon:"+(icon.isNull() ? "yes":"no")));
   __exit_func();
 }
 
@@ -4007,4 +4020,344 @@ void QSvgStyle::drawRealRect(QPainter* p, const QRect& r) const
   p->drawLine(x0,y0,x0,y1);
   p->drawLine(x1,y0,x1,y1);
   p->drawLine(x0,y1,x1,y1);
+}
+
+/* Auto generated */
+const QString QSvgStyle::PE_str(PrimitiveElement element)
+{
+  switch (element) {
+    case PE_Q3CheckListController : return "PE_Q3CheckListController";
+    case PE_Q3CheckListExclusiveIndicator : return "PE_Q3CheckListExclusiveIndicator";
+    case PE_Q3CheckListIndicator : return "PE_Q3CheckListIndicator";
+    case PE_Q3DockWindowSeparator : return "PE_Q3DockWindowSeparator";
+    case PE_Q3Separator : return "PE_Q3Separator";
+    case PE_Frame : return "PE_Frame";
+    case PE_FrameDefaultButton : return "PE_FrameDefaultButton";
+    case PE_FrameDockWidget : return "PE_FrameDockWidget";
+    case PE_FrameFocusRect : return "PE_FrameFocusRect";
+    case PE_FrameGroupBox : return "PE_FrameGroupBox";
+    case PE_FrameLineEdit : return "PE_FrameLineEdit";
+    case PE_FrameMenu : return "PE_FrameMenu";
+    case PE_FrameStatusBarItem : return "PE_FrameStatusBarItem (= PE_FrameStatusBar)";
+    case PE_FrameTabWidget : return "PE_FrameTabWidget";
+    case PE_FrameWindow : return "PE_FrameWindow";
+    case PE_FrameButtonBevel : return "PE_FrameButtonBevel";
+    case PE_FrameButtonTool : return "PE_FrameButtonTool";
+    case PE_FrameTabBarBase : return "PE_FrameTabBarBase";
+    case PE_PanelButtonCommand : return "PE_PanelButtonCommand";
+    case PE_PanelButtonBevel : return "PE_PanelButtonBevel";
+    case PE_PanelButtonTool : return "PE_PanelButtonTool";
+    case PE_PanelMenuBar : return "PE_PanelMenuBar";
+    case PE_PanelToolBar : return "PE_PanelToolBar";
+    case PE_PanelLineEdit : return "PE_PanelLineEdit";
+    case PE_IndicatorArrowDown : return "PE_IndicatorArrowDown";
+    case PE_IndicatorArrowLeft : return "PE_IndicatorArrowLeft";
+    case PE_IndicatorArrowRight : return "PE_IndicatorArrowRight";
+    case PE_IndicatorArrowUp : return "PE_IndicatorArrowUp";
+    case PE_IndicatorBranch : return "PE_IndicatorBranch";
+    case PE_IndicatorButtonDropDown : return "PE_IndicatorButtonDropDown";
+    case PE_IndicatorItemViewItemCheck : return "PE_IndicatorItemViewItemCheck (= PE_IndicatorViewItemCheck)";
+    case PE_IndicatorCheckBox : return "PE_IndicatorCheckBox";
+    case PE_IndicatorDockWidgetResizeHandle : return "PE_IndicatorDockWidgetResizeHandle";
+    case PE_IndicatorHeaderArrow : return "PE_IndicatorHeaderArrow";
+    case PE_IndicatorMenuCheckMark : return "PE_IndicatorMenuCheckMark";
+    case PE_IndicatorProgressChunk : return "PE_IndicatorProgressChunk";
+    case PE_IndicatorRadioButton : return "PE_IndicatorRadioButton";
+    case PE_IndicatorSpinDown : return "PE_IndicatorSpinDown";
+    case PE_IndicatorSpinMinus : return "PE_IndicatorSpinMinus";
+    case PE_IndicatorSpinPlus : return "PE_IndicatorSpinPlus";
+    case PE_IndicatorSpinUp : return "PE_IndicatorSpinUp";
+    case PE_IndicatorToolBarHandle : return "PE_IndicatorToolBarHandle";
+    case PE_IndicatorToolBarSeparator : return "PE_IndicatorToolBarSeparator";
+    case PE_PanelTipLabel : return "PE_PanelTipLabel";
+    case PE_IndicatorTabTear : return "PE_IndicatorTabTear";
+    case PE_PanelScrollAreaCorner : return "PE_PanelScrollAreaCorner";
+    case PE_Widget : return "PE_Widget";
+    case PE_IndicatorColumnViewArrow : return "PE_IndicatorColumnViewArrow";
+    case PE_IndicatorItemViewItemDrop : return "PE_IndicatorItemViewItemDrop";
+    case PE_PanelItemViewItem : return "PE_PanelItemViewItem";
+    case PE_PanelItemViewRow : return "PE_PanelItemViewRow";
+    case PE_PanelStatusBar : return "PE_PanelStatusBar";
+    case PE_IndicatorTabClose : return "PE_IndicatorTabClose";
+    case PE_PanelMenu : return "PE_PanelMenu";
+    case PE_CustomBase : return "PE_CustomBase";
+  }
+
+  return "PE_Unknown";
+}
+
+const QString QSvgStyle::CE_str(QStyle::ControlElement element)
+{
+  switch(element) {
+    case CE_PushButton : return "CE_PushButton";
+    case CE_PushButtonBevel : return "CE_PushButtonBevel";
+    case CE_PushButtonLabel : return "CE_PushButtonLabel";
+    case CE_CheckBox : return "CE_CheckBox";
+    case CE_CheckBoxLabel : return "CE_CheckBoxLabel";
+    case CE_RadioButton : return "CE_RadioButton";
+    case CE_RadioButtonLabel : return "CE_RadioButtonLabel";
+    case CE_TabBarTab : return "CE_TabBarTab";
+    case CE_TabBarTabShape : return "CE_TabBarTabShape";
+    case CE_TabBarTabLabel : return "CE_TabBarTabLabel";
+    case CE_ProgressBar : return "CE_ProgressBar";
+    case CE_ProgressBarGroove : return "CE_ProgressBarGroove";
+    case CE_ProgressBarContents : return "CE_ProgressBarContents";
+    case CE_ProgressBarLabel : return "CE_ProgressBarLabel";
+    case CE_MenuItem : return "CE_MenuItem";
+    case CE_MenuScroller : return "CE_MenuScroller";
+    case CE_MenuVMargin : return "CE_MenuVMargin";
+    case CE_MenuHMargin : return "CE_MenuHMargin";
+    case CE_MenuTearoff : return "CE_MenuTearoff";
+    case CE_MenuEmptyArea : return "CE_MenuEmptyArea";
+    case CE_MenuBarItem : return "CE_MenuBarItem";
+    case CE_MenuBarEmptyArea : return "CE_MenuBarEmptyArea";
+    case CE_ToolButtonLabel : return "CE_ToolButtonLabel";
+    case CE_Header : return "CE_Header";
+    case CE_HeaderSection : return "CE_HeaderSection";
+    case CE_HeaderLabel : return "CE_HeaderLabel";
+    case CE_Q3DockWindowEmptyArea : return "CE_Q3DockWindowEmptyArea";
+    case CE_ToolBoxTab : return "CE_ToolBoxTab";
+    case CE_SizeGrip : return "CE_SizeGrip";
+    case CE_Splitter : return "CE_Splitter";
+    case CE_RubberBand : return "CE_RubberBand";
+    case CE_DockWidgetTitle : return "CE_DockWidgetTitle";
+    case CE_ScrollBarAddLine : return "CE_ScrollBarAddLine";
+    case CE_ScrollBarSubLine : return "CE_ScrollBarSubLine";
+    case CE_ScrollBarAddPage : return "CE_ScrollBarAddPage";
+    case CE_ScrollBarSubPage : return "CE_ScrollBarSubPage";
+    case CE_ScrollBarSlider : return "CE_ScrollBarSlider";
+    case CE_ScrollBarFirst : return "CE_ScrollBarFirst";
+    case CE_ScrollBarLast : return "CE_ScrollBarLast";
+    case CE_FocusFrame : return "CE_FocusFrame";
+    case CE_ComboBoxLabel : return "CE_ComboBoxLabel";
+    case CE_ToolBar : return "CE_ToolBar";
+    case CE_ToolBoxTabShape : return "CE_ToolBoxTabShape";
+    case CE_ToolBoxTabLabel : return "CE_ToolBoxTabLabel";
+    case CE_HeaderEmptyArea : return "CE_HeaderEmptyArea";
+    case CE_ColumnViewGrip : return "CE_ColumnViewGrip";
+    case CE_ItemViewItem : return "CE_ItemViewItem";
+    case CE_ShapedFrame : return "CE_ShapedFrame";
+    case CE_CustomBase : return "CE_CustomBase";
+  }
+
+  return "CE_Unknown";
+}
+
+const QString QSvgStyle::SE_str(QStyle::SubElement element)
+{
+  switch(element) {
+    case SE_PushButtonContents : return "SE_PushButtonContents";
+    case SE_PushButtonFocusRect : return "SE_PushButtonFocusRect";
+    case SE_CheckBoxIndicator : return "SE_CheckBoxIndicator";
+    case SE_CheckBoxContents : return "SE_CheckBoxContents";
+    case SE_CheckBoxFocusRect : return "SE_CheckBoxFocusRect";
+    case SE_CheckBoxClickRect : return "SE_CheckBoxClickRect";
+    case SE_RadioButtonIndicator : return "SE_RadioButtonIndicator";
+    case SE_RadioButtonContents : return "SE_RadioButtonContents";
+    case SE_RadioButtonFocusRect : return "SE_RadioButtonFocusRect";
+    case SE_RadioButtonClickRect : return "SE_RadioButtonClickRect";
+    case SE_ComboBoxFocusRect : return "SE_ComboBoxFocusRect";
+    case SE_SliderFocusRect : return "SE_SliderFocusRect";
+    case SE_Q3DockWindowHandleRect : return "SE_Q3DockWindowHandleRect";
+    case SE_ProgressBarGroove : return "SE_ProgressBarGroove";
+    case SE_ProgressBarContents : return "SE_ProgressBarContents";
+    case SE_ProgressBarLabel : return "SE_ProgressBarLabel";
+    case SE_DialogButtonAccept : return "SE_DialogButtonAccept";
+    case SE_DialogButtonReject : return "SE_DialogButtonReject";
+    case SE_DialogButtonApply : return "SE_DialogButtonApply";
+    case SE_DialogButtonHelp : return "SE_DialogButtonHelp";
+    case SE_DialogButtonAll : return "SE_DialogButtonAll";
+    case SE_DialogButtonAbort : return "SE_DialogButtonAbort";
+    case SE_DialogButtonIgnore : return "SE_DialogButtonIgnore";
+    case SE_DialogButtonRetry : return "SE_DialogButtonRetry";
+    case SE_DialogButtonCustom : return "SE_DialogButtonCustom";
+    case SE_ToolBoxTabContents : return "SE_ToolBoxTabContents";
+    case SE_HeaderLabel : return "SE_HeaderLabel";
+    case SE_HeaderArrow : return "SE_HeaderArrow";
+    case SE_TabWidgetTabBar : return "SE_TabWidgetTabBar";
+    case SE_TabWidgetTabPane : return "SE_TabWidgetTabPane";
+    case SE_TabWidgetTabContents : return "SE_TabWidgetTabContents";
+    case SE_TabWidgetLeftCorner : return "SE_TabWidgetLeftCorner";
+    case SE_TabWidgetRightCorner : return "SE_TabWidgetRightCorner";
+    case SE_ItemViewItemCheckIndicator : return "SE_ItemViewItemCheckIndicator (= SE_ViewItemCheckIndicator)";
+    case SE_TabBarTearIndicator : return "SE_TabBarTearIndicator";
+    case SE_TreeViewDisclosureItem : return "SE_TreeViewDisclosureItem";
+    case SE_LineEditContents : return "SE_LineEditContents";
+    case SE_FrameContents : return "SE_FrameContents";
+    case SE_DockWidgetCloseButton : return "SE_DockWidgetCloseButton";
+    case SE_DockWidgetFloatButton : return "SE_DockWidgetFloatButton";
+    case SE_DockWidgetTitleBarText : return "SE_DockWidgetTitleBarText";
+    case SE_DockWidgetIcon : return "SE_DockWidgetIcon";
+    case SE_CheckBoxLayoutItem : return "SE_CheckBoxLayoutItem";
+    case SE_ComboBoxLayoutItem : return "SE_ComboBoxLayoutItem";
+    case SE_DateTimeEditLayoutItem : return "SE_DateTimeEditLayoutItem";
+    case SE_DialogButtonBoxLayoutItem : return "SE_DialogButtonBoxLayoutItem";
+    case SE_LabelLayoutItem : return "SE_LabelLayoutItem";
+    case SE_ProgressBarLayoutItem : return "SE_ProgressBarLayoutItem";
+    case SE_PushButtonLayoutItem : return "SE_PushButtonLayoutItem";
+    case SE_RadioButtonLayoutItem : return "SE_RadioButtonLayoutItem";
+    case SE_SliderLayoutItem : return "SE_SliderLayoutItem";
+    case SE_SpinBoxLayoutItem : return "SE_SpinBoxLayoutItem";
+    case SE_ToolButtonLayoutItem : return "SE_ToolButtonLayoutItem";
+    case SE_FrameLayoutItem : return "SE_FrameLayoutItem";
+    case SE_GroupBoxLayoutItem : return "SE_GroupBoxLayoutItem";
+    case SE_TabWidgetLayoutItem : return "SE_TabWidgetLayoutItem";
+    case SE_ItemViewItemDecoration : return "SE_ItemViewItemDecoration";
+    case SE_ItemViewItemText : return "SE_ItemViewItemText";
+    case SE_ItemViewItemFocusRect : return "SE_ItemViewItemFocusRect";
+    case SE_TabBarTabLeftButton : return "SE_TabBarTabLeftButton";
+    case SE_TabBarTabRightButton : return "SE_TabBarTabRightButton";
+    case SE_TabBarTabText : return "SE_TabBarTabText";
+    case SE_ShapedFrameContents : return "SE_ShapedFrameContents";
+    case SE_ToolBarHandle : return "SE_ToolBarHandle";
+    case SE_CustomBase : return "SE_CustomBase";
+  }
+
+  return "SE_Unknown";
+}
+
+const QString QSvgStyle::CC_str(QStyle::ComplexControl element)
+{
+  switch (element) {
+    case CC_SpinBox : return "CC_SpinBox";
+    case CC_ComboBox : return "CC_ComboBox";
+    case CC_ScrollBar : return "CC_ScrollBar";
+    case CC_Slider : return "CC_Slider";
+    case CC_ToolButton : return "CC_ToolButton";
+    case CC_TitleBar : return "CC_TitleBar";
+    case CC_Q3ListView : return "CC_Q3ListView";
+    case CC_Dial : return "CC_Dial";
+    case CC_GroupBox : return "CC_GroupBox";
+    case CC_MdiControls : return "CC_MdiControls";
+    case CC_CustomBase : return "CC_CustomBase";
+  }
+
+  return "CC_Unknown";
+}
+
+const QString QSvgStyle::SC_str(QStyle::ComplexControl control, QStyle::SubControl subControl)
+{
+  switch (control) {
+    case CC_SpinBox : switch (subControl) {
+      case SC_SpinBoxUp : return "SC_SpinBoxUp";
+      case SC_SpinBoxDown : return "SC_SpinBoxDown";
+      case SC_SpinBoxFrame : return "SC_SpinBoxFrame";
+      case SC_SpinBoxEditField : return "SC_SpinBoxEditField";
+      case SC_None : return "SC_None";
+      default : return "SC_Unknown";
+    }
+    case CC_ComboBox : switch (subControl) {
+      case SC_ComboBoxFrame : return "SC_ComboBoxFrame";
+      case SC_ComboBoxEditField : return "SC_ComboBoxEditField";
+      case SC_ComboBoxArrow : return "SC_ComboBoxArrow";
+      case SC_ComboBoxListBoxPopup : return "SC_ComboBoxListBoxPopup";
+      case SC_None : return "SC_None";
+      default : return "SC_Unknown";
+    }
+    case CC_ScrollBar : switch (subControl) {
+      case SC_ScrollBarAddLine : return "SC_ScrollBarAddLine";
+      case SC_ScrollBarSubLine : return "SC_ScrollBarSubLine";
+      case SC_ScrollBarAddPage : return "SC_ScrollBarAddPage";
+      case SC_ScrollBarSubPage : return "SC_ScrollBarSubPage";
+      case SC_ScrollBarFirst : return "SC_ScrollBarFirst";
+      case SC_ScrollBarLast : return "SC_ScrollBarLast";
+      case SC_ScrollBarSlider : return "SC_ScrollBarSlider";
+      case SC_ScrollBarGroove : return "SC_ScrollBarGroove";
+      case SC_None : return "SC_None";
+      default : return "SC_Unknown";
+    }
+    case CC_Slider : switch (subControl) {
+      case SC_SliderGroove : return "SC_SliderGroove";
+      case SC_SliderHandle : return "SC_SliderHandle";
+      case SC_SliderTickmarks : return "SC_SliderTickmarks";
+      case SC_None : return "SC_None";
+      default : return "SC_Unknown";
+    }
+    case CC_ToolButton : switch (subControl) {
+      case SC_ToolButton : return "SC_ToolButton";
+      case SC_ToolButtonMenu : return "SC_ToolButtonMenu";
+      case SC_None : return "SC_None";
+      default : return "SC_Unknown";
+    }
+    case CC_TitleBar : switch (subControl) {
+      case SC_TitleBarSysMenu : return "SC_TitleBarSysMenu";
+      case SC_TitleBarMinButton : return "SC_TitleBarMinButton";
+      case SC_TitleBarMaxButton : return "SC_TitleBarMaxButton";
+      case SC_TitleBarCloseButton : return "SC_TitleBarCloseButton";
+      case SC_TitleBarNormalButton : return "SC_TitleBarNormalButton";
+      case SC_TitleBarShadeButton : return "SC_TitleBarShadeButton";
+      case SC_TitleBarUnshadeButton : return "SC_TitleBarUnshadeButton";
+      case SC_TitleBarContextHelpButton : return "SC_TitleBarContextHelpButton";
+      case SC_TitleBarLabel : return "SC_TitleBarLabel";
+      case SC_None : return "SC_None";
+      default : return "SC_Unknown";
+    }
+    case CC_Q3ListView : switch (subControl) {
+      case SC_Q3ListView : return "SC_Q3ListView";
+      case SC_Q3ListViewBranch : return "SC_Q3ListViewBranch";
+      case SC_Q3ListViewExpand : return "SC_Q3ListViewExpand";
+      case SC_None : return "SC_None";
+      default : return "SC_Unknown";
+    }
+    case CC_Dial : switch (subControl) {
+      case SC_DialGroove : return "SC_DialGroove";
+      case SC_DialHandle : return "SC_DialHandle";
+      case SC_DialTickmarks : return "SC_DialTickmarks";
+      case SC_None : return "SC_None";
+      default : return "SC_Unknown";
+    }
+    case CC_GroupBox : switch (subControl) {
+      case SC_GroupBoxCheckBox : return "SC_GroupBoxCheckBox";
+      case SC_GroupBoxLabel : return "SC_GroupBoxLabel";
+      case SC_GroupBoxContents : return "SC_GroupBoxContents";
+      case SC_GroupBoxFrame : return "SC_GroupBoxFrame";
+      case SC_None : return "SC_None";
+      default : return "SC_Unknown";
+    }
+    case CC_MdiControls : switch (subControl) {
+      case SC_MdiMinButton : return "SC_MdiMinButton";
+      case SC_MdiNormalButton : return "SC_MdiNormalButton";
+      case SC_MdiCloseButton : return "SC_MdiCloseButton";
+      case SC_None : return "SC_None";
+      default : return "SC_Unknown";
+    };
+    default: return "SC_Unknown";
+  }
+
+  return "SC_Unknown";
+}
+
+const QString QSvgStyle::CT_str(QStyle::ContentsType type)
+{
+  switch (type) {
+    case CT_PushButton : return "CT_PushButton";
+    case CT_CheckBox : return "CT_CheckBox";
+    case CT_RadioButton : return "CT_RadioButton";
+    case CT_ToolButton : return "CT_ToolButton";
+    case CT_ComboBox : return "CT_ComboBox";
+    case CT_Splitter : return "CT_Splitter";
+    case CT_Q3DockWindow : return "CT_Q3DockWindow";
+    case CT_ProgressBar : return "CT_ProgressBar";
+    case CT_MenuItem : return "CT_MenuItem";
+    case CT_MenuBarItem : return "CT_MenuBarItem";
+    case CT_MenuBar : return "CT_MenuBar";
+    case CT_Menu : return "CT_Menu";
+    case CT_TabBarTab : return "CT_TabBarTab";
+    case CT_Slider : return "CT_Slider";
+    case CT_ScrollBar : return "CT_ScrollBar";
+    case CT_Q3Header : return "CT_Q3Header";
+    case CT_LineEdit : return "CT_LineEdit";
+    case CT_SpinBox : return "CT_SpinBox";
+    case CT_SizeGrip : return "CT_SizeGrip";
+    case CT_TabWidget : return "CT_TabWidget";
+    case CT_DialogButtons : return "CT_DialogButtons";
+    case CT_HeaderSection : return "CT_HeaderSection";
+    case CT_GroupBox : return "CT_GroupBox";
+    case CT_MdiControls : return "CT_MdiControls";
+    case CT_ItemViewItem : return "CT_ItemViewItem";
+    case CT_CustomBase : return "CT_CustomBase";
+    default: return "CT_Unknown";
+  }
+
+  return "CT_Unknown";
 }

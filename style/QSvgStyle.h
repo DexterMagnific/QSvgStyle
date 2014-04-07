@@ -82,6 +82,11 @@ class QSvgStyle : public QCommonStyle {
     void polish(QWidget *widget);
     void unpolish(QWidget *widget);
 
+    /**
+     * This is an event filter which is installed on animated
+     * widgets. It receives event widgets and performs appropriate
+     * animation steps
+     */
     virtual bool eventFilter(QObject * o, QEvent * e);
 
     virtual int pixelMetric ( PixelMetric metric, const QStyleOption * option = 0, const QWidget * widget = 0 ) const;
@@ -97,6 +102,41 @@ class QSvgStyle : public QCommonStyle {
 
   protected slots:
     QIcon standardIconImplementation ( StandardPixmap standardIcon, const QStyleOption * option = 0, const QWidget * widget = 0 ) const;
+
+  signals:
+    /**
+     * These signals are emitted on various QSvgStyle painting events
+     * They are mainly used by the QSvgThemeViewer application to monitor
+     * style actions
+     * FIXME signals/slots are a slow mechanism. Maybe replace with direct
+     * callback invocation
+     */
+    void sig_drawPrimitive_begin(const QString &) const;
+    void sig_drawPrimitive_end(const QString &) const;
+
+    void sig_drawControl_begin(const QString &) const;
+    void sig_drawControl_end(const QString &) const;
+
+    void sig_drawComplexControl_begin(const QString &) const;
+    void sig_drawComplexControl_end(const QString &) const;
+
+    void sig_renderFrame_begin(const QString &) const;
+    void sig_renderFrame_end(const QString &) const;
+
+    void sig_renderInterior_begin(const QString &) const;
+    void sig_renderInterior_end(const QString &) const;
+
+    void sig_renderIndicator_begin(const QString &) const;
+    void sig_renderIndicator_end(const QString &) const;
+
+    void sig_renderLabel_begin(const QString &) const;
+    void sig_renderLabel_end(const QString &) const;
+
+    void sig_renderElement_begin(const QString &) const;
+    void sig_renderElement_end(const QString &) const;
+
+    void sig_sizeFromContents_begin(const QString &) const;
+    void sig_sizeFromContents_end(const QString &) const;
 
   private:
     /** Render the @ref element from the SVG file into the given \ref bounds.
@@ -189,6 +229,14 @@ class QSvgStyle : public QCommonStyle {
 
     /** draw a rectangle. The painter->drawRect draws a rect that is 1 pixel too large */
     void drawRealRect(QPainter *p, const QRect &r) const;
+
+    /** Helper functions thata convert various enums to string */
+    static const QString PE_str(PrimitiveElement element);
+    static const QString CE_str(ControlElement element);
+    static const QString CC_str(ComplexControl element);
+    static const QString SE_str(SubElement element);
+    static const QString SC_str(ComplexControl control, SubControl subControl);
+    static const QString CT_str(ContentsType type);
 
   private slots:
     /** Slot called on timer timeout to advance in animations */
