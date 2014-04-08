@@ -2170,7 +2170,6 @@ void QSvgStyle::drawComplexControl(ComplexControl control, const QStyleOptionCom
 
         renderFrame(painter,o.rect,fspec,fspec.element+"-"+status);
         renderInterior(painter,o.rect,fspec,ispec,ispec.element+"-"+status);
-        renderIndicator(painter,o.rect,fspec,ispec,dspec,dspec.element+"-"+status);
       }
 
       break;
@@ -3437,6 +3436,9 @@ void QSvgStyle::renderElement(QPainter* painter, const QString& element, const Q
   int x,y,h,w;
   bounds.getRect(&x,&y,&w,&h);
 
+  if ( (x < 0) || (y < 0) || (w <= 0) || (h <= 0) )
+    return;
+
   QSvgRenderer *renderer = 0;
   QPainter *p = painter;
   QPainter *p2 = 0;
@@ -3738,8 +3740,13 @@ void QSvgStyle::renderInterior(QPainter *painter,
     if (fspec.capsuleV == 1) {
       top = fspec.top;
     }
+    QRect r = interiorRect(bounds,fspec,ispec).adjusted(-left,-top,right,bottom);
+    if ( r.width() < 0 )
+      r.setWidth(0);
+    if ( r.height() < 0 )
+      r.setHeight(0);
     renderElement(painter,element,
-                   interiorRect(bounds,fspec,ispec).adjusted(-left,-top,right,bottom),
+                   r,
                    ispec.px,ispec.py,orientation,animationcount%ispec.animationFrames);
   }
 

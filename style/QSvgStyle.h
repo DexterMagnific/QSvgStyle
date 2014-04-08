@@ -212,7 +212,7 @@ class QSvgStyle : public QCommonStyle {
     /** Returns a normalized rect, i.e. a square */
     QRect squaredRect(const QRect &r) const;
 
-    /** Returns a QRect for the given frame (without margins) */
+    /** Returns a QRect for the given frame spec */
     QRect frameRect(const QRect &bounds, frame_spec_t f) const {
       Q_UNUSED(f);
       return bounds;
@@ -220,11 +220,21 @@ class QSvgStyle : public QCommonStyle {
     /** Returns a QRect for the given frame and interior specs */
     QRect interiorRect(const QRect &bounds, frame_spec_t f,interior_spec_t i) const {
       Q_UNUSED(i);
-      return frameRect(bounds,f).adjusted(f.left,f.top,-f.right,-f.bottom);
+      QRect r = frameRect(bounds,f).adjusted(f.left,f.top,-f.right,-f.bottom);
+      if ( r.width() < 0 )
+        r.setWidth(0);
+      if ( r.height() < 0 )
+        r.setHeight(0);
+      return r;
     }
     /** Returns a QRect for the given frame, interior and text specs */
     QRect labelRect(const QRect &bounds, frame_spec_t f,interior_spec_t i,label_spec_t t) const {
-      return interiorRect(bounds,f,i).adjusted(t.left,t.top,-t.right,-t.bottom);
+      QRect r = interiorRect(bounds,f,i).adjusted(t.left,t.top,-t.right,-t.bottom);
+      if ( r.width() < 0 )
+        r.setWidth(0);
+      if ( r.height() < 0 )
+        r.setHeight(0);
+      return r;
     }
 
     /** draw a rectangle. The painter->drawRect draws a rect that is 1 pixel too large */
