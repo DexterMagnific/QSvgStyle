@@ -2,7 +2,6 @@ QSvgStyle
 ---------
 * dock widget title size is wrong
 * fix drawing of single line frame (hline and vline)
-* fix drawing of normal sliders (painter not active, ...)
 * disabled line edit text should be grey
 * fix MDI buttons
 * fix knob drawing

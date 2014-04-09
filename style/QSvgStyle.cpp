@@ -3277,19 +3277,22 @@ QRect QSvgStyle::subControlRect(ComplexControl control, const QStyleOptionComple
 	}
       }
 
+      QRect labelRect = alignedRect(QApplication::layoutDirection(), opt->textAlignment & ~Qt::AlignVertical_Mask,
+                                    stitle,
+                                    option->rect.adjusted(30,0,-30,0));
+
       switch (subControl) {
-	// FIXME take into account label H and V alignment
+	// FIXME take into account label V alignment
         case SC_GroupBoxCheckBox : {
-	  return alignedRect(QApplication::layoutDirection(),Qt::AlignLeft | Qt::AlignVCenter,
+          // align checkbopx inside label rect
+          return alignedRect(QApplication::layoutDirection(),Qt::AlignLeft | Qt::AlignVCenter,
 			     QSize(pixelMetric(PM_IndicatorWidth),pixelMetric(PM_IndicatorHeight)),
-			     QRect(option->rect.x()+fspec.left+30+lspec.left,option->rect.y()+fspec.top,stitle.width()-fspec.left-fspec.right,stitle.height()-fspec.top-fspec.bottom));
+                             labelRect.adjusted(fspec.left+lspec.left,fspec.top,-fspec.right-lspec.right,-fspec.bottom));
         }
         case SC_GroupBoxLabel : {
-	  if ( w && w->isCheckable() )
             // Shift for checkbox will be done be drawComplexControl()
-            return QRect(option->rect.x()+30,option->rect.y(),stitle.width(),stitle.height());
-	  else
-	    return QRect(option->rect.x()+30,option->rect.y(),stitle.width(),stitle.height());
+            return labelRect;
+            //return QRect(option->rect.x()+30,option->rect.y(),stitle.width(),stitle.height());
         }
 	case SC_GroupBoxFrame : {
 	  return QRect(option->rect.x(),option->rect.y()+stitle.height(),option->rect.width(),option->rect.height()-stitle.height());
@@ -3810,6 +3813,8 @@ void QSvgStyle::renderLabel(QPainter *painter,
 {
   __enter_func__();
   emit(sig_renderLabel_begin("text:"+text+"/icon:"+(icon.isNull() ? "yes":"no")));
+
+  // FIXME implement Right-to-Left
 
   // compute text and icon rect
   QRect r(labelRect(bounds,fspec,ispec,lspec));
