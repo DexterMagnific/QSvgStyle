@@ -760,7 +760,47 @@ void QSvgStyle::drawPrimitive(PrimitiveElement element, const QStyleOption * opt
     case PE_FrameTabBarBase :
       break;
 
-    case PE_Frame :
+    case PE_Frame : {
+      const QString group = "GenericFrame";
+
+      const frame_spec_t fspec = getFrameSpec(group);
+      const interior_spec_t ispec = getInteriorSpec(group);
+
+      __print_group();
+
+      // ignore hoered, pressed and toggled statuses
+      const QString status2 =
+      (option->state & State_Enabled) ? "normal" : "disabled";
+
+      const QStyleOptionFrameV3 *opt =
+        qstyleoption_cast<const QStyleOptionFrameV3 *>(option);
+
+      if ( opt && (opt->frameShape == QFrame::HLine) ) {
+        qDebug() << "HLine";
+        renderElement(painter,
+                      fspec.element+"-"+"hsep",
+                      alignedRect(option->direction,
+                                  Qt::AlignVCenter,
+                                  QSize(option->rect.width(),fspec.top),
+                                  option->rect),
+                      0,0,Qt::Horizontal,animationcount%fspec.animationFrames);
+      } else if ( opt && (opt->frameShape == QFrame::VLine) ) {
+        renderElement(painter,
+                      fspec.element+"-"+"vsep",
+                      alignedRect(option->direction,
+                                  Qt::AlignHCenter,
+                                  QSize(fspec.left,option->rect.height()),
+                                  option->rect),
+                      0,0,Qt::Horizontal,animationcount%fspec.animationFrames);
+      } else {
+        renderFrame(painter,option->rect,fspec,fspec.element+"-"+status2);
+        // FIXME should frames have an interior ?
+        renderInterior(painter,option->rect,fspec,ispec,ispec.element+"-"+status2);
+      }
+
+      break;
+    }
+
     case PE_FrameDockWidget :
     case PE_FrameStatusBar :
      {
