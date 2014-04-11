@@ -89,6 +89,7 @@ class QSvgStyle : public QCommonStyle {
      */
     virtual bool eventFilter(QObject * o, QEvent * e);
 
+    /** Reimplemented functions from QStyle */
     virtual int pixelMetric ( PixelMetric metric, const QStyleOption * option = 0, const QWidget * widget = 0 ) const;
     virtual QRect subElementRect ( SubElement element, const QStyleOption * option, const QWidget * widget = 0 ) const;
     virtual QRect subControlRect ( ComplexControl control, const QStyleOptionComplex * option, SubControl subControl, const QWidget * widget = 0 ) const;
@@ -139,6 +140,13 @@ class QSvgStyle : public QCommonStyle {
     void sig_sizeFromContents_end(const QString &) const;
 
   private:
+    /** Returns whether the given is a container widget (e.g. Frame, Tab, ...)
+     */
+    bool isContainerWidget(const QWidget * widget) const;
+    /** Returns whether QSvgStyle is able to anilmate the given widget
+     * */
+    bool isAnimatableWidget(const QWidget * widget) const;
+
     /** Render the @ref element from the SVG file into the given \ref bounds.
      * If \ref pattern is true, the element is taken as a pattern to repeat
      * either horizontally, vertically or both, depending of \ref h and \ref v
@@ -199,7 +207,7 @@ class QSvgStyle : public QCommonStyle {
                      /* icon */ const QPixmap &icon = 0,
                      /* text-icon alignment */ const Qt::ToolButtonStyle tialign = Qt::ToolButtonTextBesideIcon) const;
 
-    /** Generic method to compute the ideal (in quantumstyle : minimal and sufficient) size of a widget */
+    /** Generic method to compute the ideal (in QSvgStyle : minimal and strictly sufficient) size of a widget */
     QSize sizeFromContents(/* font to determine width/height */ const QFont &font,
                      /* frame spec */ const frame_spec_t &fspec,
                      /* interior spec */ const interior_spec_t &ispec,
@@ -240,13 +248,21 @@ class QSvgStyle : public QCommonStyle {
     /** draw a rectangle. The painter->drawRect draws a rect that is 1 pixel too large */
     void drawRealRect(QPainter *p, const QRect &r) const;
 
-    /** Helper functions thata convert various enums to string */
-    static const QString PE_str(PrimitiveElement element);
-    static const QString CE_str(ControlElement element);
-    static const QString CC_str(ComplexControl element);
-    static const QString SE_str(SubElement element);
-    static const QString SC_str(ComplexControl control, SubControl subControl);
-    static const QString CT_str(ContentsType type);
+    /** Helper functions that convert various enums to string */
+    const QString PE_str(PrimitiveElement element) const;
+    const QString CE_str(ControlElement element) const;
+    const QString CC_str(ComplexControl element) const;
+    const QString SE_str(SubElement element) const;
+    const QString SC_str(ComplexControl control, SubControl subControl) const;
+    const QString CT_str(ContentsType type) const;
+
+    /** Helper functions that determine the appriopriate QSvgStyle
+     * configuration group for a given element
+     * TODO implement
+     */
+    const QString PE_group(PrimitiveElement element);
+    const QString CE_group(ControlElement element);
+    const QString CC_group(ComplexControl element);
 
   private slots:
     /** Slot called on timer timeout to advance in animations */

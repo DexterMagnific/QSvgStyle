@@ -312,11 +312,41 @@ void QSvgStyle::setupThemeDeps()
     settings = defaultSettings;
 }
 
+bool QSvgStyle::isContainerWidget(const QWidget * widget) const
+{
+  return !widget || (widget && (
+    widget->inherits("QFrame") ||
+    widget->inherits("QGroupBox") ||
+    widget->inherits("QTabWidget") ||
+    widget->inherits("QDockWidget") ||
+    widget->inherits("QMainWindow") ||
+    widget->inherits("QDialog") ||
+    widget->inherits("QDesktopWidget") ||
+    (QString(widget->metaObject()->className()) == "QWidget")
+  ));
+}
+
+bool QSvgStyle::isAnimatableWidget(const QWidget * widget) const
+{
+  // NOTE should we test against direct inheritance instead ?
+  return widget && (
+    widget->inherits("QPushButton") ||
+    widget->inherits("QToolButton") ||
+    widget->inherits("QProgressBar") ||
+    widget->inherits("QLineEdit")
+  );
+}
+
 void QSvgStyle::polish(QWidget * widget)
 {
   if (widget) {
+    // set WA_Hover attribute for non container widgets,
+    // this way we will receive paint events when entering
+    // and leaving the widget
+    if ( !isContainerWidget(widget) ) {
+      qDebug() << "WA_Hover for widget" << widget->objectName() << "class" << widget->metaObject()->className();
       widget->setAttribute(Qt::WA_Hover, true);
-    //widget->setAttribute(Qt::WA_MouseTracking, true);
+    }
 
     QString group = QString::null;
 
@@ -444,26 +474,26 @@ void QSvgStyle::drawPrimitive(PrimitiveElement element, const QStyleOption * opt
   int x,y,h,w;
 
   option->rect.getRect(&x,&y,&w,&h);
-  const QString status =
-        (option->state & State_Enabled) ?
-          (option->state & State_On) ? "toggled" :
-          (option->state & State_Sunken) ? "pressed" :
-          (option->state & State_Selected) ? "toggled" :
-          ((option->state & State_MouseOver) || (option->state & State_HasFocus)) ? "focused" : "normal"
-        : "disabled";
+
+  QString status;
+
+  if ( !isContainerWidget(widget) ) {
+    status = (option->state & State_Enabled) ?
+               (option->state & State_On) ? "toggled" :
+               (option->state & State_Sunken) ? "pressed" :
+               (option->state & State_Selected) ? "toggled" :
+               ((option->state & State_MouseOver) || (option->state & State_HasFocus)) ? "focused" : "normal"
+             : "disabled";
+  } else {
+    // container widget will have only normal, selected and disabled status
+    status = (option->state & State_Enabled ) ?
+               (option->state & State_Selected) ? "toggled" : "normal"
+             : "disabled";
+  }
 
   switch(element) {
     case PE_Widget : {
-      const QString group = "Widget";
-
-      const frame_spec_t fspec = getFrameSpec(group);
-      const interior_spec_t ispec = getInteriorSpec(group);
-
-      __print_group();
-
-      renderFrame(painter,option->rect,fspec,fspec.element+"-"+status);
-      renderInterior(painter,option->rect,fspec,ispec,ispec.element+"-"+status);
-
+      // nothing
       break;
     }
 
@@ -768,35 +798,13 @@ void QSvgStyle::drawPrimitive(PrimitiveElement element, const QStyleOption * opt
 
       __print_group();
 
-      // ignore hoered, pressed and toggled statuses
+      // ignore hovered, pressed and toggled statuses
       const QString status2 =
-      (option->state & State_Enabled) ? "normal" : "disabled";
+        (option->state & State_Enabled) ? "normal" : "disabled";
 
-      const QStyleOptionFrameV3 *opt =
-        qstyleoption_cast<const QStyleOptionFrameV3 *>(option);
-
-      if ( opt && (opt->frameShape == QFrame::HLine) ) {
-        qDebug() << "HLine";
-        renderElement(painter,
-                      fspec.element+"-"+"hsep",
-                      alignedRect(option->direction,
-                                  Qt::AlignVCenter,
-                                  QSize(option->rect.width(),fspec.top),
-                                  option->rect),
-                      0,0,Qt::Horizontal,animationcount%fspec.animationFrames);
-      } else if ( opt && (opt->frameShape == QFrame::VLine) ) {
-        renderElement(painter,
-                      fspec.element+"-"+"vsep",
-                      alignedRect(option->direction,
-                                  Qt::AlignHCenter,
-                                  QSize(fspec.left,option->rect.height()),
-                                  option->rect),
-                      0,0,Qt::Horizontal,animationcount%fspec.animationFrames);
-      } else {
         renderFrame(painter,option->rect,fspec,fspec.element+"-"+status2);
         // FIXME should frames have an interior ?
         renderInterior(painter,option->rect,fspec,ispec,ispec.element+"-"+status2);
-      }
 
       break;
     }
@@ -1255,13 +1263,20 @@ void QSvgStyle::drawControl(ControlElement element, const QStyleOption * option,
 
   int x,y,h,w;
   option->rect.getRect(&x,&y,&w,&h);
-  const QString status =
-      (option->state & State_Enabled) ?
-        (option->state & State_On) ? "toggled" :
-        (option->state & State_Sunken) ? "pressed" :
-        (option->state & State_Selected) ? "toggled" :
-        ((option->state & State_MouseOver) || (option->state & State_HasFocus)) ? "focused" : "normal"
-      : "disabled";
+
+  QString status;
+
+  if ( !isContainerWidget(widget) ) {
+    status =
+        (option->state & State_Enabled) ?
+          (option->state & State_On) ? "toggled" :
+          (option->state & State_Sunken) ? "pressed" :
+          (option->state & State_Selected) ? "toggled" :
+          ((option->state & State_MouseOver) || (option->state & State_HasFocus)) ? "focused" : "normal"
+        : "disabled";
+  } else {
+    status = (option->state & State_Enabled) ? "normal" : "disabled";
+  }
 
   const QIcon::Mode iconmode =
         (option->state & State_Enabled) ?
@@ -1902,6 +1917,34 @@ void QSvgStyle::drawControl(ControlElement element, const QStyleOption * option,
       break;
     }
 
+    case CE_ShapedFrame : {
+      const QString group = "GenericFrame";
+
+      const frame_spec_t fspec = getFrameSpec(group);
+      const interior_spec_t ispec = getInteriorSpec(group);
+
+      __print_group();
+
+      const QStyleOptionFrameV3 *opt =
+        qstyleoption_cast<const QStyleOptionFrameV3 *>(option);
+
+      if ( opt && (opt->frameShape == QFrame::HLine) ) {
+        renderElement(painter,
+                      fspec.element+"-"+"hsep",
+                      option->rect,
+                      0,0,Qt::Horizontal,animationcount%fspec.animationFrames);
+      } else if (opt && (opt->frameShape == QFrame::VLine) ) {
+        renderElement(painter,
+                      fspec.element+"-"+"vsep",
+                      option->rect,
+                      0,0,Qt::Horizontal,animationcount%fspec.animationFrames);
+      } else if (opt && (opt->frameShape != QFrame::NoFrame) ) {
+        drawPrimitive(PE_Frame,opt,painter,widget);
+      }
+
+      break;
+    }
+
     default :
       //qDebug() << "[QSvgStyle] " << __func__ << ": Unhandled control " << element;
       QCommonStyle::drawControl(element,option,painter,widget);
@@ -1918,13 +1961,20 @@ void QSvgStyle::drawComplexControl(ComplexControl control, const QStyleOptionCom
 
   int x,y,h,w;
   option->rect.getRect(&x,&y,&w,&h);
-  const QString status =
-        (option->state & State_Enabled) ?
-          (option->state & State_On) ? "toggled" :
-          (option->state & State_Sunken) ? "pressed" :
-          (option->state & State_Selected) ? "toggled" :
-          ((option->state & State_MouseOver) || (option->state & State_HasFocus)) ? "focused" : "normal"
-        : "disabled";
+
+  QString status;
+
+  if ( !isContainerWidget(widget) ) {
+    status =
+    (option->state & State_Enabled) ?
+    (option->state & State_On) ? "toggled" :
+    (option->state & State_Sunken) ? "pressed" :
+    (option->state & State_Selected) ? "toggled" :
+    ((option->state & State_MouseOver) || (option->state & State_HasFocus)) ? "focused" : "normal"
+    : "disabled";
+  } else {
+    status = (option->state & State_Enabled) ? "normal" : "disabled";
+  }
 
   switch (control) {
     case CC_ToolButton : {
@@ -4075,7 +4125,7 @@ void QSvgStyle::drawRealRect(QPainter* p, const QRect& r) const
 }
 
 /* Auto generated */
-const QString QSvgStyle::PE_str(PrimitiveElement element)
+const QString QSvgStyle::PE_str(PrimitiveElement element) const
 {
   switch (element) {
     case PE_Q3CheckListController : return "PE_Q3CheckListController";
@@ -4138,7 +4188,7 @@ const QString QSvgStyle::PE_str(PrimitiveElement element)
   return "PE_Unknown";
 }
 
-const QString QSvgStyle::CE_str(QStyle::ControlElement element)
+const QString QSvgStyle::CE_str(QStyle::ControlElement element) const
 {
   switch(element) {
     case CE_PushButton : return "CE_PushButton";
@@ -4195,7 +4245,7 @@ const QString QSvgStyle::CE_str(QStyle::ControlElement element)
   return "CE_Unknown";
 }
 
-const QString QSvgStyle::SE_str(QStyle::SubElement element)
+const QString QSvgStyle::SE_str(QStyle::SubElement element) const
 {
   switch(element) {
     case SE_PushButtonContents : return "SE_PushButtonContents";
@@ -4268,7 +4318,7 @@ const QString QSvgStyle::SE_str(QStyle::SubElement element)
   return "SE_Unknown";
 }
 
-const QString QSvgStyle::CC_str(QStyle::ComplexControl element)
+const QString QSvgStyle::CC_str(QStyle::ComplexControl element) const
 {
   switch (element) {
     case CC_SpinBox : return "CC_SpinBox";
@@ -4287,7 +4337,7 @@ const QString QSvgStyle::CC_str(QStyle::ComplexControl element)
   return "CC_Unknown";
 }
 
-const QString QSvgStyle::SC_str(QStyle::ComplexControl control, QStyle::SubControl subControl)
+const QString QSvgStyle::SC_str(QStyle::ComplexControl control, QStyle::SubControl subControl) const
 {
   switch (control) {
     case CC_SpinBox : switch (subControl) {
@@ -4379,7 +4429,7 @@ const QString QSvgStyle::SC_str(QStyle::ComplexControl control, QStyle::SubContr
   return "SC_Unknown";
 }
 
-const QString QSvgStyle::CT_str(QStyle::ContentsType type)
+const QString QSvgStyle::CT_str(QStyle::ContentsType type) const
 {
   switch (type) {
     case CT_PushButton : return "CT_PushButton";

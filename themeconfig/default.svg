@@ -30,8 +30,8 @@
      id="namedview7581"
      showgrid="true"
      inkscape:zoom="3.87"
-     inkscape:cx="338.27298"
-     inkscape:cy="1183.0931"
+     inkscape:cx="277.99036"
+     inkscape:cy="1172.7572"
      inkscape:window-x="-2"
      inkscape:window-y="-3"
      inkscape:window-maximized="1"
@@ -1994,15 +1994,6 @@
        xlink:href="#a-2"
        inkscape:collect="always" />
     <linearGradient
-       id="at-0"
-       x1="184.5"
-       xlink:href="#by-7"
-       gradientUnits="userSpaceOnUse"
-       y1="25"
-       gradientTransform="matrix(1.25,0,0,1,-41.25,0)"
-       x2="184.5"
-       y2="40" />
-    <linearGradient
        id="by-7">
       <stop
          stop-color="#909090"
@@ -3063,224 +3054,6 @@
        fill="#CCC"
        id="rect3758" />
   </g>
-  <g
-     id="frameframe-pressed-topright"
-     transform="translate(355,169.6)"
-     fill-rule="evenodd">
-    <path
-       opacity=".8"
-       fill="#9dde67"
-       d="m-43 12.36v5c6 0 10 4 10 10h5c0-10-5-15-15-15z"
-       id="path3761" />
-    <path
-       opacity=".8"
-       fill="#ebe2d2"
-       d="m-43 20.36v7h7c0-5-2-7-7-7z"
-       id="path3763" />
-    <path
-       opacity=".8"
-       fill="#3a7c0e"
-       d="m-43 17.36v3c5 0 7 2 7 7h3c0-6-4-10-10-10z"
-       id="path3765" />
-  </g>
-  <g
-     id="frameframe-pressed-topleft"
-     transform="translate(355,169.6)"
-     fill-rule="evenodd">
-    <path
-       opacity=".8"
-       fill="#9dde67"
-       d="m-60 12.36v5c-6 0-10 4-10 10h-5c0-10 5-15 15-15z"
-       id="path3768" />
-    <path
-       opacity=".8"
-       fill="#ebe2d2"
-       d="m-60 20.36v7h-7c0-5 2-7 7-7z"
-       id="path3770" />
-    <path
-       opacity=".8"
-       fill="#3a7c0e"
-       d="m-60 17.36v3c-5 0-7 2-7 7h-3c0-6 4-10 10-10z"
-       id="path3772" />
-  </g>
-  <g
-     id="frameframe-pressed-bottomright"
-     transform="translate(355,169.6)"
-     fill-rule="evenodd">
-    <path
-       opacity=".8"
-       fill="#9dde67"
-       d="m-43 59.36v-5c6 0 10-4 10-10h5c0 10-5 15-15 15z"
-       id="path3775" />
-    <path
-       opacity=".8"
-       fill="#ebe2d2"
-       d="m-43 51.36v-7h7c0 5-2 7-7 7z"
-       id="path3777" />
-    <path
-       opacity=".8"
-       fill="#3a7c0e"
-       d="m-43 54.36v-3c5 0 7-2 7-7h3c0 6-4 10-10 10z"
-       id="path3779" />
-  </g>
-  <g
-     id="frameframe-pressed-bottomleft"
-     transform="translate(355,169.6)"
-     fill-rule="evenodd">
-    <path
-       opacity=".8"
-       fill="#9dde67"
-       d="m-60 59.36v-5c-6 0-10-4-10-10h-5c0 10 5 15 15 15z"
-       id="path3782" />
-    <path
-       opacity=".8"
-       fill="#ebe2d2"
-       d="m-60 51.36v-7h-7c0 5 2 7 7 7z"
-       id="path3784" />
-    <path
-       opacity=".8"
-       fill="#3a7c0e"
-       d="m-60 54.36v-3c-5 0-7-2-7-7h-3c0 6 4 10 10 10z"
-       id="path3786" />
-  </g>
-  <g
-     id="frameframe-pressed-top"
-     transform="translate(355,169.6)"
-     fill-rule="evenodd">
-    <rect
-       opacity=".8"
-       height="5"
-       width="15"
-       y="12.36"
-       x="-59"
-       fill="#9dde67"
-       id="rect3789" />
-    <rect
-       opacity=".8"
-       height="7"
-       width="15"
-       y="20.36"
-       x="-59"
-       fill="#ebe2d2"
-       id="rect3791" />
-    <rect
-       opacity=".8"
-       height="3"
-       width="15"
-       y="17.36"
-       x="-59"
-       fill="#3a7c0e"
-       id="rect3793" />
-  </g>
-  <g
-     id="frameframe-pressed-bottom"
-     transform="translate(355,169.6)"
-     fill-rule="evenodd">
-    <rect
-       opacity=".8"
-       transform="scale(1,-1)"
-       height="5"
-       width="15"
-       y="-59.36"
-       x="-59"
-       fill="#9dde67"
-       id="rect3796" />
-    <rect
-       opacity=".8"
-       transform="scale(1,-1)"
-       height="7"
-       width="15"
-       y="-51.36"
-       x="-59"
-       fill="#ebe2d2"
-       id="rect3798" />
-    <rect
-       opacity=".8"
-       transform="scale(1,-1)"
-       height="3"
-       width="15"
-       y="-54.36"
-       x="-59"
-       fill="#3a7c0e"
-       id="rect3800" />
-  </g>
-  <g
-     id="frameframe-pressed-left"
-     transform="translate(355,169.6)"
-     fill-rule="evenodd">
-    <rect
-       opacity=".8"
-       transform="rotate(-90)"
-       height="5"
-       width="15"
-       y="-75"
-       x="-43.36"
-       fill="#9dde67"
-       id="rect3803" />
-    <rect
-       opacity=".8"
-       transform="rotate(-90)"
-       height="7"
-       width="15"
-       y="-67"
-       x="-43.36"
-       fill="#ebe2d2"
-       id="rect3805" />
-    <rect
-       opacity=".8"
-       transform="rotate(-90)"
-       height="3"
-       width="15"
-       y="-70"
-       x="-43.36"
-       fill="#3a7c0e"
-       id="rect3807" />
-  </g>
-  <g
-     id="frameframe-pressed-right"
-     transform="translate(355,169.6)"
-     fill-rule="evenodd">
-    <rect
-       opacity=".8"
-       transform="matrix(0,-1,-1,0,0,0)"
-       height="5"
-       width="15"
-       y="28"
-       x="-43.36"
-       fill="#9dde67"
-       id="rect3810" />
-    <rect
-       opacity=".8"
-       transform="matrix(0,-1,-1,0,0,0)"
-       height="7"
-       width="15"
-       y="36"
-       x="-43.36"
-       fill="#ebe2d2"
-       id="rect3812" />
-    <rect
-       opacity=".8"
-       transform="matrix(0,-1,-1,0,0,0)"
-       height="3"
-       width="15"
-       y="33"
-       x="-43.36"
-       fill="#3a7c0e"
-       id="rect3814" />
-  </g>
-  <g
-     id="frame-pressed"
-     transform="translate(355,169.6)">
-    <rect
-       opacity=".8"
-       fill-rule="evenodd"
-       height="15"
-       width="15"
-       y="28.36"
-       x="-59"
-       fill="#ebe2d2"
-       id="rect3817" />
-  </g>
   <text
      style="block-progression:tb;text-indent:0;color:#000000;text-transform:none"
      line-height="normal"
@@ -3770,224 +3543,6 @@
        y="890"
        x="90"
        id="tspan3952">DropDown Button</tspan></text>
-  <g
-     id="frameframe-toggled-topright"
-     transform="translate(405,169.6)"
-     fill-rule="evenodd">
-    <path
-       opacity=".8"
-       fill="#ef2929"
-       d="m-43 12.36v5c6 0 10 4 10 10h5c0-10-5-15-15-15z"
-       id="path3955" />
-    <path
-       opacity=".8"
-       fill="#ebe2d2"
-       d="m-43 20.36v7h7c0-5-2-7-7-7z"
-       id="path3957" />
-    <path
-       opacity=".8"
-       fill="#3a7c0e"
-       d="m-43 17.36v3c5 0 7 2 7 7h3c0-6-4-10-10-10z"
-       id="path3959" />
-  </g>
-  <g
-     id="frameframe-toggled-topleft"
-     transform="translate(405,169.6)"
-     fill-rule="evenodd">
-    <path
-       opacity=".8"
-       fill="#ef2929"
-       d="m-60 12.36v5c-6 0-10 4-10 10h-5c0-10 5-15 15-15z"
-       id="path3962" />
-    <path
-       opacity=".8"
-       fill="#ebe2d2"
-       d="m-60 20.36v7h-7c0-5 2-7 7-7z"
-       id="path3964" />
-    <path
-       opacity=".8"
-       fill="#3a7c0e"
-       d="m-60 17.36v3c-5 0-7 2-7 7h-3c0-6 4-10 10-10z"
-       id="path3966" />
-  </g>
-  <g
-     id="frameframe-toggled-bottomright"
-     transform="translate(405,169.6)"
-     fill-rule="evenodd">
-    <path
-       opacity=".8"
-       fill="#ef2929"
-       d="m-43 59.36v-5c6 0 10-4 10-10h5c0 10-5 15-15 15z"
-       id="path3969" />
-    <path
-       opacity=".8"
-       fill="#ebe2d2"
-       d="m-43 51.36v-7h7c0 5-2 7-7 7z"
-       id="path3971" />
-    <path
-       opacity=".8"
-       fill="#3a7c0e"
-       d="m-43 54.36v-3c5 0 7-2 7-7h3c0 6-4 10-10 10z"
-       id="path3973" />
-  </g>
-  <g
-     id="frameframe-toggled-bottomleft"
-     transform="translate(405,169.6)"
-     fill-rule="evenodd">
-    <path
-       opacity=".8"
-       fill="#ef2929"
-       d="m-60 59.36v-5c-6 0-10-4-10-10h-5c0 10 5 15 15 15z"
-       id="path3976" />
-    <path
-       opacity=".8"
-       fill="#ebe2d2"
-       d="m-60 51.36v-7h-7c0 5 2 7 7 7z"
-       id="path3978" />
-    <path
-       opacity=".8"
-       fill="#3a7c0e"
-       d="m-60 54.36v-3c-5 0-7-2-7-7h-3c0 6 4 10 10 10z"
-       id="path3980" />
-  </g>
-  <g
-     id="frameframe-toggled-top"
-     transform="translate(405,169.6)"
-     fill-rule="evenodd">
-    <rect
-       opacity=".8"
-       height="5"
-       width="15"
-       y="12.36"
-       x="-59"
-       fill="#ef2929"
-       id="rect3983" />
-    <rect
-       opacity=".8"
-       height="7"
-       width="15"
-       y="20.36"
-       x="-59"
-       fill="#ebe2d2"
-       id="rect3985" />
-    <rect
-       opacity=".8"
-       height="3"
-       width="15"
-       y="17.36"
-       x="-59"
-       fill="#3a7c0e"
-       id="rect3987" />
-  </g>
-  <g
-     id="frameframe-toggled-bottom"
-     transform="translate(405,169.6)"
-     fill-rule="evenodd">
-    <rect
-       opacity=".8"
-       transform="scale(1,-1)"
-       height="5"
-       width="15"
-       y="-59.36"
-       x="-59"
-       fill="#ef2929"
-       id="rect3990" />
-    <rect
-       opacity=".8"
-       transform="scale(1,-1)"
-       height="7"
-       width="15"
-       y="-51.36"
-       x="-59"
-       fill="#ebe2d2"
-       id="rect3992" />
-    <rect
-       opacity=".8"
-       transform="scale(1,-1)"
-       height="3"
-       width="15"
-       y="-54.36"
-       x="-59"
-       fill="#3a7c0e"
-       id="rect3994" />
-  </g>
-  <g
-     id="frameframe-toggled-left"
-     transform="translate(405,169.6)"
-     fill-rule="evenodd">
-    <rect
-       opacity=".8"
-       transform="rotate(-90)"
-       height="5"
-       width="15"
-       y="-75"
-       x="-43.36"
-       fill="#ef2929"
-       id="rect3997" />
-    <rect
-       opacity=".8"
-       transform="rotate(-90)"
-       height="7"
-       width="15"
-       y="-67"
-       x="-43.36"
-       fill="#ebe2d2"
-       id="rect3999" />
-    <rect
-       opacity=".8"
-       transform="rotate(-90)"
-       height="3"
-       width="15"
-       y="-70"
-       x="-43.36"
-       fill="#3a7c0e"
-       id="rect4001" />
-  </g>
-  <g
-     id="frameframe-toggled-right"
-     transform="translate(405,169.6)"
-     fill-rule="evenodd">
-    <rect
-       opacity=".8"
-       transform="matrix(0,-1,-1,0,0,0)"
-       height="5"
-       width="15"
-       y="28"
-       x="-43.36"
-       fill="#ef2929"
-       id="rect4004" />
-    <rect
-       opacity=".8"
-       transform="matrix(0,-1,-1,0,0,0)"
-       height="7"
-       width="15"
-       y="36"
-       x="-43.36"
-       fill="#ebe2d2"
-       id="rect4006" />
-    <rect
-       opacity=".8"
-       transform="matrix(0,-1,-1,0,0,0)"
-       height="3"
-       width="15"
-       y="33"
-       x="-43.36"
-       fill="#3a7c0e"
-       id="rect4008" />
-  </g>
-  <g
-     id="frame-toggled"
-     transform="translate(405,169.6)">
-    <rect
-       opacity=".8"
-       fill-rule="evenodd"
-       height="15"
-       width="15"
-       y="28.36"
-       x="-59"
-       fill="#ebe2d2"
-       id="rect4011" />
-  </g>
   <text
      style="letter-spacing:0px;block-progression:tb;text-indent:0;word-spacing:0px;color:#000000;text-transform:none"
      xml:space="preserve"
@@ -4292,19 +3847,6 @@
        y="334.41992"
        x="89.99897"
        id="tspan4119">pattern</tspan></text>
-  <text
-     style="letter-spacing:0px;block-progression:tb;text-indent:0;word-spacing:0px;color:#000000;text-transform:none"
-     xml:space="preserve"
-     font-size="10px"
-     line-height="125%"
-     y="176.92017"
-     x="275"
-     font-family="umr10"
-     fill="#000000"
-     id="text4121"><tspan
-       y="176.92017"
-       x="275"
-       id="tspan4123">Unused frame</tspan></text>
   <text
      style="block-progression:tb;text-indent:0;color:#000000;text-transform:none"
      line-height="normal"
@@ -6877,259 +6419,6 @@
        x="102.5"
        fill="#d8d8d8"
        id="rect4847" />
-  </g>
-  <g
-     id="commonframe-focused"
-     transform="matrix(.16 0 0 .5333 231.2 -39.7)">
-    <rect
-       d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9"
-       transform="scale(1,-1)"
-       height="30"
-       width="100"
-       y="-477.6"
-       x="98.73"
-       fill="#d8d8d8"
-       id="rect4850" />
-  </g>
-  <g
-     id="commonframe-focused-left"
-     transform="matrix(1.067,0,0,1.067,38,172.3)">
-    <rect
-       d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9"
-       height="15"
-       width="7.5"
-       y="25"
-       x="187.5"
-       fill="#d8d8d8"
-       id="rect4853" />
-    <rect
-       d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9"
-       height="15"
-       width="3.75"
-       y="25"
-       x="187.5"
-       fill="url(#av)"
-       id="rect4855" />
-    <rect
-       d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9"
-       height="15"
-       width="3.75"
-       y="25"
-       x="183.8"
-       fill="url(#au)"
-       id="rect4857" />
-    <rect
-       d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9"
-       fill-opacity="0"
-       height="15"
-       width="3"
-       y="25"
-       x="180"
-       id="rect4859" />
-  </g>
-  <g
-     id="commonframe-focused-right"
-     transform="matrix(1.067,0,0,1.067,72,172.3)">
-    <rect
-       d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9"
-       height="15"
-       width="7.5"
-       y="25"
-       x="180"
-       fill="#d8d8d8"
-       id="rect4862" />
-    <rect
-       d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9"
-       fill-opacity="0"
-       height="15"
-       width="3"
-       y="25"
-       x="192"
-       id="rect4864" />
-    <rect
-       d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9"
-       fill-opacity=".1569"
-       height="15"
-       width="3.75"
-       y="25"
-       x="191.2"
-       id="rect4866" />
-    <rect
-       d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9"
-       height="15"
-       width="3.75"
-       y="25"
-       x="187.5"
-       fill="url(#at)"
-       id="rect4868" />
-  </g>
-  <g
-     id="commonframe-focused-topleft"
-     transform="matrix(1.067,0,0,1.067,166,-272.7)">
-    <path
-       fill-opacity="0"
-       transform="matrix(.2632 0 0 .3093 27.63 356)"
-       d="m123 272.9c0-26.8 25.5-48.5 57-48.5v48.5z"
-       id="path4871" />
-    <path
-       transform="matrix(.1974 0 0 .232 39.47 377.1)"
-       fill="#909090"
-       d="m123 272.9c0-26.8 25.5-48.5 57-48.5v48.5z"
-       id="path4873" />
-    <path
-       transform="matrix(.1316 0 0 .1546 51.32 398.2)"
-       fill="#ececec"
-       d="m123 272.9c0-26.8 25.5-48.5 57-48.5v48.5z"
-       id="path4875" />
-    <path
-       transform="matrix(.0658 0 0 .0773 63.16 419.3)"
-       fill="#d8d8d8"
-       d="m123 272.9c0-26.8 25.5-48.5 57-48.5v48.5z"
-       id="path4877" />
-  </g>
-  <g
-     id="commonframe-focused-topright"
-     transform="matrix(1.067,0,0,1.067,178.7,-272.7)">
-    <path
-       fill-opacity=".1569"
-       transform="matrix(0 .1316 -.232 0 147 416.7)"
-       d="m123 272.9c0-26.8 25.5-48.5 57-48.5v48.5z"
-       id="path4880" />
-    <path
-       fill-opacity="0"
-       transform="matrix(0 .2632 -.3093 0 164.4 393)"
-       d="m123 272.9c0-26.8 25.5-48.5 57-48.5v48.5z"
-       id="path4882" />
-    <path
-       transform="matrix(0 .1974 -.232 0 143.3 404.8)"
-       fill="#909090"
-       d="m123 272.9c0-26.8 25.5-48.5 57-48.5v48.5z"
-       id="path4884" />
-    <path
-       transform="matrix(0 .1316 -.1546 0 122.2 416.7)"
-       fill="#ececec"
-       d="m123 272.9c0-26.8 25.5-48.5 57-48.5v48.5z"
-       id="path4886" />
-    <path
-       transform="matrix(0 .0658 -.0773 0 101.1 428.5)"
-       fill="#d8d8d8"
-       d="m123 272.9c0-26.8 25.5-48.5 57-48.5v48.5z"
-       id="path4888" />
-  </g>
-  <g
-     id="commonframe-focused-bottomleft"
-     transform="matrix(1.067,0,0,1.067,166,-260.2)">
-    <path
-       fill-opacity=".1569"
-       transform="matrix(.1316 0 0 -.232 51.32 514.4)"
-       d="m123 272.9c0-26.8 25.5-48.5 57-48.5v48.5z"
-       id="path4891" />
-    <path
-       fill-opacity="0"
-       transform="matrix(.2632 0 0 -.3093 27.63 531.8)"
-       d="m123 272.9c0-26.8 25.5-48.5 57-48.5v48.5z"
-       id="path4893" />
-    <path
-       transform="matrix(.1974 0 0 -.232 39.47 510.7)"
-       fill="#747474"
-       d="m123 272.9c0-26.8 25.5-48.5 57-48.5v48.5z"
-       id="path4895" />
-    <path
-       transform="matrix(.1316 0 0 -.1546 51.32 489.6)"
-       fill="#d8d8d8"
-       d="m123 272.9c0-26.8 25.5-48.5 57-48.5v48.5z"
-       id="path4897" />
-  </g>
-  <g
-     id="commonframe-focused-bottomright"
-     transform="matrix(1.067,0,0,1.067,178.7,-260.2)">
-    <path
-       fill-opacity=".1569"
-       transform="matrix(0 -.2632 -.3093 0 164.4 494.7)"
-       d="m123 272.9c0-26.8 25.5-48.5 57-48.5v48.5z"
-       id="path4900" />
-    <path
-       transform="matrix(0 -.1974 -.232 0 143.3 482.9)"
-       fill="#747474"
-       d="m123 272.9c0-26.8 25.5-48.5 57-48.5v48.5z"
-       id="path4902" />
-    <path
-       transform="matrix(0 -.1316 -.1546 0 122.2 471)"
-       fill="#d8d8d8"
-       d="m123 272.9c0-26.8 25.5-48.5 57-48.5v48.5z"
-       id="path4904" />
-  </g>
-  <g
-     id="commonframe-focused-bottom"
-     transform="matrix(0,1.067,-1.067,0,289.7,25)">
-    <rect
-       d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9"
-       height="15"
-       width="7.5"
-       y="25"
-       x="180"
-       fill="#d8d8d8"
-       id="rect4907" />
-    <rect
-       d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9"
-       height="15"
-       width="3.75"
-       y="25"
-       x="187.5"
-       fill="#747474"
-       id="rect4909" />
-    <rect
-       d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9"
-       fill-opacity="0"
-       height="15"
-       width="3"
-       y="25"
-       x="192"
-       id="rect4911" />
-    <rect
-       d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9"
-       fill-opacity=".1569"
-       height="15"
-       width="3.75"
-       y="25"
-       x="191.2"
-       id="rect4913" />
-  </g>
-  <g
-     id="commonframe-focused-top"
-     transform="matrix(0,-1.067,-1.06,0,289.5,389)">
-    <rect
-       d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9"
-       height="15.09"
-       width="7.5"
-       y="25"
-       x="180"
-       fill="#ececec"
-       id="rect4916" />
-    <rect
-       d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9"
-       height="15.09"
-       width="3.75"
-       y="25"
-       x="187.5"
-       fill="#909090"
-       id="rect4918" />
-    <rect
-       d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9"
-       fill-opacity="0"
-       height="15"
-       width="3"
-       y="25"
-       x="192"
-       id="rect4920" />
-    <rect
-       d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9"
-       height="15.09"
-       width="3.75"
-       y="25"
-       x="180"
-       fill="#d8d8d8"
-       id="rect4922" />
   </g>
   <g
      id="button-pressed"
@@ -17139,4 +16428,40 @@
        x="191.2"
        id="rect4834-4" />
   </g>
+  <text
+     sodipodi:linespacing="125%"
+     style="font-size:10px;text-indent:0;line-height:125%;letter-spacing:0px;word-spacing:0px;text-transform:none;block-progression:tb;color:#000000;fill:#000000;font-family:umr10"
+     xml:space="preserve"
+     font-size="10px"
+     line-height="125%"
+     y="205"
+     x="235"
+     id="text3938-1"><tspan
+       y="205"
+       x="235"
+       id="tspan3940-5">Unused</tspan></text>
+  <text
+     sodipodi:linespacing="125%"
+     style="font-size:10px;text-indent:0;line-height:125%;letter-spacing:0px;word-spacing:0px;text-transform:none;block-progression:tb;color:#000000;fill:#000000;font-family:umr10"
+     xml:space="preserve"
+     font-size="10px"
+     line-height="125%"
+     y="205"
+     x="285"
+     id="text3938-4"><tspan
+       y="205"
+       x="285"
+       id="tspan3940-9">Unused</tspan></text>
+  <text
+     sodipodi:linespacing="125%"
+     style="font-size:10px;text-indent:0;line-height:125%;letter-spacing:0px;word-spacing:0px;text-transform:none;block-progression:tb;color:#000000;fill:#000000;font-family:umr10"
+     xml:space="preserve"
+     font-size="10px"
+     line-height="125%"
+     y="205"
+     x="335"
+     id="text3938-2"><tspan
+       y="205"
+       x="335"
+       id="tspan3940-8">Unused</tspan></text>
 </svg>
