@@ -99,9 +99,6 @@
 #define dspecStr(...)
 #endif
 
-#define MAX(X,Y) (X) > (Y) ? (X) : (Y)
-#define MIN(X,Y) (X) < (Y) ? (X) : (Y)
-
 #ifdef QS_INSTRUMENTATION
 static unsigned int level; /* indentation level */
 
@@ -137,46 +134,28 @@ static void unindent() { level--; }
 #endif
 
 QSvgStyle::QSvgStyle()
-  : QCommonStyle()
+  : QCommonStyle(),
+    cls(QString(this->metaObject()->className())),
+    defaultRndr(NULL),
+    themeRndr(NULL),
+    defaultSettings(NULL),
+    themeSettings(NULL),
+    settings(NULL),
+    timer(NULL),
+    progresstimer(NULL),
+    animationEnabled(false),
+    animationcount(0)
 {
   __enter_func__();
 
-  qDebug() << "[QSvgStyle] QApplication::applicationName() is" << QApplication::applicationName();
+  setBuiltinTheme();
+  setUserTheme();
 
   timer = new QTimer(this);
-  animationEnabled = true;
-  animationcount = 1;
-
   progresstimer = new QTimer(this);
 
-  settings = defaultSettings = themeSettings = appSettings = NULL;
-  defaultRndr = appRndr = themeRndr = NULL;
-  globalSettings = NULL;
-
-  char * _xdg_config_home = getenv("XDG_CONFIG_HOME");
-  if (!_xdg_config_home) {
-    char *home = getenv("HOME");
-    if (!home)
-      qDebug("CRITICAL : HOME environment variable not found ! You'll have problems !");
-
-    xdg_config_home = QString("%1/.config").arg(home);
-  } else
-    xdg_config_home = QString(_xdg_config_home);
-
-  // load global config file
-  if (QFile::exists(QString("%1/QSvgStyle/qsvgstyle.cfg").arg(xdg_config_home)))
-    globalSettings = new QSettings(QString("%1/QSvgStyle/qsvgstyle.cfg").arg(xdg_config_home),QSettings::NativeFormat);
-
-  QString theme;
-  if (globalSettings && globalSettings->contains("theme"))
-    theme = globalSettings->value("theme").toString();
-
-  restoreBuiltinDefaultTheme();
-  setApplicationTheme(QApplication::applicationName());
-  setUserTheme(theme);
-
-  connect(timer,SIGNAL(timeout()), this,SLOT(advance()));
-  connect(progresstimer,SIGNAL(timeout()), this,SLOT(advanceProgresses()));
+  connect(timer,SIGNAL(timeout()), this,SLOT(slot_animate()));
+  connect(progresstimer,SIGNAL(timeout()), this,SLOT(slot_animateProgressBars()));
 
   theme_spec_t tspec = settings->getThemeSpec();
   if (tspec.step.present)
@@ -191,125 +170,100 @@ QSvgStyle::~QSvgStyle()
 {
   delete defaultSettings;
   delete themeSettings;
-  delete appSettings;
 
   delete defaultRndr;
-  delete appRndr;
   delete themeRndr;
 }
 
-void QSvgStyle::restoreBuiltinDefaultTheme()
+void QSvgStyle::setBuiltinTheme()
 {
-  if (defaultSettings)
-  {
+  if (defaultSettings) {
     delete defaultSettings;
     defaultSettings = NULL;
   }
-  if (defaultRndr)
-  {
+  if (defaultRndr) {
     delete defaultRndr;
     defaultRndr = NULL;
+  }
+  if ( themeRndr ) {
+    delete themeRndr;
+    themeRndr = NULL;
+  }
+  if ( themeSettings ) {
+    delete themeSettings;
+    themeSettings = NULL;
   }
 
   defaultSettings = new ThemeConfig(":default.cfg");
   defaultRndr = new QSvgRenderer();
   defaultRndr->load(QString(":default.svg"));
+
+  settings = defaultSettings;
+
+  qDebug() << "["+cls+"]" << "Loaded built in theme";
 }
 
-void QSvgStyle::setUserTheme(const QString& themename)
+void QSvgStyle::setTheme(const QString& theme)
 {
-  if (themeSettings)
-  {
+  QString xdg_cfg;
+
+  // get $XDG_CONFIG_HOME value
+  char *_xdg_cfg = getenv("XDG_CONFIG_HOME");
+  if ( _xdg_cfg )
+    xdg_cfg = QString(_xdg_cfg);
+  else
+    return;
+
+  if ( !defaultSettings || !defaultRndr )
+    setBuiltinTheme();
+
+  if ( themeSettings ) {
     delete themeSettings;
     themeSettings = NULL;
   }
-  if (themeRndr)
-  {
+  if ( themeRndr ) {
     delete themeRndr;
     themeRndr = NULL;
   }
 
-  if (!themename.isNull() && !themename.isEmpty() && QFile::exists(QString("%1/QSvgStyle/%2/%2.cfg").arg(xdg_config_home).arg(themename)))
-    themeSettings = new ThemeConfig(QString("%1/QSvgStyle/%2/%2.cfg").arg(xdg_config_home).arg(themename));
-
-  if (QFile::exists(QString("%1/QSvgStyle/%2/%2.svg").arg(xdg_config_home).arg(themename)))
-  {
-    qDebug() << "using " << QString("%1/QSvgStyle/%2/%2.svg").arg(xdg_config_home).arg(themename) << " as a theme";
+  if ( !theme.isNull() &&
+       !theme.isEmpty() &&
+       QFile::exists(QString("%1/QSvgStyle/%2/%2.cfg").arg(xdg_cfg).arg(theme)) &&
+       QFile::exists(QString("%1/QSvgStyle/%2/%2.svg").arg(xdg_cfg).arg(theme))
+     ) {
+    themeSettings = new ThemeConfig(QString("%1/QSvgStyle/%2/%2.cfg").arg(xdg_cfg).arg(theme));
     themeRndr = new QSvgRenderer();
-    themeRndr->load(QString("%1/QSvgStyle/%2/%2.svg").arg(xdg_config_home).arg(themename));
-  }
+    themeRndr->load(QString("%1/QSvgStyle/%2/%2.svg").arg(xdg_cfg).arg(theme));
 
-  setupThemeDeps();
-}
-
-void QSvgStyle::setApplicationTheme(const QString& themename)
-{
-  if (appSettings)
-  {
-    delete appSettings;
-    appSettings = NULL;
-  }
-  if (appRndr)
-  {
-    delete appRndr;
-    appRndr = NULL;
-  }
-
-  if (!themename.isNull() && !themename.isEmpty() && QFile::exists(QString("%1/QSvgStyle/%2/%2.cfg").arg(xdg_config_home).arg(themename)))
-    appSettings = new ThemeConfig(QString("%1/QSvgStyle/%2/%2.cfg").arg(xdg_config_home).arg(themename));
-
-  if (QFile::exists(QString("%1/QSvgStyle/%2/%2.svg").arg(xdg_config_home).arg(themename)))
-  {
-    appRndr = new QSvgRenderer();
-    appRndr->load(QString("%1/QSvgStyle/%2/%2.svg").arg(xdg_config_home).arg(themename));
-  }
-
-  setupThemeDeps();
-}
-
-void QSvgStyle::setDefaultTheme(const QString& themename)
-{
-  if (defaultSettings)
-  {
-    delete defaultSettings;
-    defaultSettings = NULL;
-  }
-  if (defaultRndr)
-  {
-    delete defaultRndr;
-    defaultRndr = NULL;
-  }
-
-  if (!themename.isNull() && !themename.isEmpty() && QFile::exists(QString("%1/QSvgStyle/%2/%2.cfg").arg(xdg_config_home).arg(themename)))
-    defaultSettings = new ThemeConfig(QString("%1/QSvgStyle/%2/%2.cfg").arg(xdg_config_home).arg(themename));
-
-  if (QFile::exists(QString("%1/QSvgStyle/%2/%2.svg").arg(xdg_config_home).arg(themename)))
-  {
-    defaultRndr = new QSvgRenderer();
-    defaultRndr->load(QString("%1/QSvgStyle/%2/%2.svg").arg(xdg_config_home).arg(themename));
-  }
-
-  setupThemeDeps();
-}
-
-void QSvgStyle::setupThemeDeps()
-{
-  if (appSettings) {
-    if (themeSettings)
-      appSettings->setParent(themeSettings);
-    else
-      appSettings->setParent(defaultSettings);
-  }
-
-  if (themeSettings)
     themeSettings->setParent(defaultSettings);
-
-  if (appSettings)
-    settings = appSettings;
-  else if (themeSettings)
     settings = themeSettings;
+
+    qDebug() << "["+cls+"]" << "Loaded user theme " << theme;
+  }
+}
+
+void QSvgStyle::setUserTheme()
+{
+  QString theme;
+  QSettings *globalSettings;
+  QString xdg_cfg;
+
+  // get $XDG_CONFIG_HOME value
+  char *_xdg_cfg = getenv("XDG_CONFIG_HOME");
+  if ( _xdg_cfg )
+    xdg_cfg = QString(_xdg_cfg);
   else
-    settings = defaultSettings;
+    return;
+
+  // load global config file
+  if ( QFile::exists(QString("%1/QSvgStyle/qsvgstyle.cfg").arg(xdg_cfg)) ) {
+    globalSettings = new QSettings(QString("%1/QSvgStyle/qsvgstyle.cfg").arg(xdg_cfg),QSettings::NativeFormat);
+
+    if (globalSettings->contains("theme"))
+      setTheme(globalSettings->value("theme").toString());
+
+    delete globalSettings;
+  }
 }
 
 bool QSvgStyle::isContainerWidget(const QWidget * widget) const
@@ -339,49 +293,49 @@ bool QSvgStyle::isAnimatableWidget(const QWidget * widget) const
 
 void QSvgStyle::polish(QWidget * widget)
 {
-  if (widget) {
-    // set WA_Hover attribute for non container widgets,
-    // this way we will receive paint events when entering
-    // and leaving the widget
-    if ( !isContainerWidget(widget) ) {
-      qDebug() << "WA_Hover for widget" << widget->objectName() << "class" << widget->metaObject()->className();
-      widget->setAttribute(Qt::WA_Hover, true);
-    }
+  if ( !widget )
+    return;
 
-    QString group = QString::null;
+  // set WA_Hover attribute for non container widgets,
+  // this way we will receive paint events when entering
+  // and leaving the widget
+  if ( !isContainerWidget(widget) ) {
+    widget->setAttribute(Qt::WA_Hover, true);
+  }
 
-    if ( qobject_cast< const QPushButton* >(widget) )
-      group = "PanelButtonCommand";
+  QString group = QString::null;
 
-    if ( qobject_cast< const QToolButton* >(widget) )
-      group = "PanelButtonTool";
+  if ( qobject_cast< const QPushButton* >(widget) )
+    group = "PanelButtonCommand";
 
-    if ( qobject_cast< const QLineEdit* >(widget) )
-      group = "LineEdit";
+  if ( qobject_cast< const QToolButton* >(widget) )
+    group = "PanelButtonTool";
 
-    if ( qobject_cast< const QProgressBar* >(widget) ) {
-      group = "ProgressbarContents";
-      widget->installEventFilter(this);
-    }
+  if ( qobject_cast< const QLineEdit* >(widget) )
+    group = "LineEdit";
 
-    if ( qobject_cast< const QComboBox* >(widget) )
-      group = "ComboBox";
+  if ( qobject_cast< const QProgressBar* >(widget) ) {
+    group = "ProgressbarContents";
+    widget->installEventFilter(this);
+  }
 
-    if ( qobject_cast< QMenu* >(widget) ) {
-      (qobject_cast< QMenu* >(widget))->setTearOffEnabled(true);
-    }
+  if ( qobject_cast< const QComboBox* >(widget) )
+    group = "ComboBox";
+
+  if ( qobject_cast< QMenu* >(widget) ) {
+    (qobject_cast< QMenu* >(widget))->setTearOffEnabled(true);
+  }
 
 //     if ( qobject_cast< const QTabWidget* >(widget) )
 //       group = "Tab";
 
-    if ( !group.isNull() ) {
-      const frame_spec_t fspec = getFrameSpec(group);
-      const interior_spec_t ispec = getInteriorSpec(group);
-      const indicator_spec_t dspec = getIndicatorSpec(group);
+  if ( !group.isNull() ) {
+    const frame_spec_t fspec = getFrameSpec(group);
+    const interior_spec_t ispec = getInteriorSpec(group);
+    const indicator_spec_t dspec = getIndicatorSpec(group);
 
-      if ( (fspec.animationFrames > 1) || (ispec.animationFrames > 1) || (dspec.animationFrames > 1) ) {
-        animatedWidgets.append(widget);
-      }
+    if ( (fspec.animationFrames > 1) || (ispec.animationFrames > 1) || (dspec.animationFrames > 1) ) {
+      animatedWidgets.append(widget);
     }
   }
 }
@@ -400,7 +354,7 @@ void QSvgStyle::unpolish(QWidget * widget)
   }
 }
 
-void QSvgStyle::advance()
+void QSvgStyle::slot_animate()
 {
 #ifdef QS_INSTRUMENTATION
   printf("\n");
@@ -419,7 +373,7 @@ void QSvgStyle::advance()
   }
 }
 
-void QSvgStyle::advanceProgresses()
+void QSvgStyle::slot_animateProgressBars()
 {
   QMap<QWidget *,int>::iterator it;
   for (it=progressbars.begin(); it!=progressbars.end(); ++it) {
@@ -2385,7 +2339,7 @@ int QSvgStyle::pixelMetric(PixelMetric metric, const QStyleOption * option, cons
       QString group = "GenericFrame";
       const frame_spec_t fspec = getFrameSpec(group);
 
-      return MAX(MAX(fspec.top,fspec.bottom),MAX(fspec.left,fspec.right));
+      return qMax(qMax(fspec.top,fspec.bottom),qMax(fspec.left,fspec.right));
     }
 
     case PM_SpinBoxFrameWidth :
@@ -2415,9 +2369,9 @@ int QSvgStyle::pixelMetric(PixelMetric metric, const QStyleOption * option, cons
       const frame_spec_t fspec = getFrameSpec(group);
       const interior_spec_t ispec = getInteriorSpec(group);
 
-      int v = MAX(fspec.top,fspec.bottom);
-      int h = MAX(fspec.left,fspec.right);
-      return MAX(v,h);
+      int v = qMax(fspec.top,fspec.bottom);
+      int h = qMax(fspec.left,fspec.right);
+      return qMax(v,h);
     }
 
     case PM_ToolBarFrameWidth : return 0;
@@ -2440,9 +2394,9 @@ int QSvgStyle::pixelMetric(PixelMetric metric, const QStyleOption * option, cons
       const frame_spec_t fspec = getFrameSpec(group);
       const interior_spec_t ispec = getInteriorSpec(group);
 
-      int v = MAX(fspec.top,fspec.bottom);
-      int h = MAX(fspec.left,fspec.right);
-      return MAX(v,h);
+      int v = qMax(fspec.top,fspec.bottom);
+      int h = qMax(fspec.left,fspec.right);
+      return qMax(v,h);
     }
 
     case PM_TabBarIconSize : return 16;
@@ -2473,9 +2427,9 @@ int QSvgStyle::pixelMetric(PixelMetric metric, const QStyleOption * option, cons
       const interior_spec_t ispec = getInteriorSpec(group);
       const label_spec_t lspec = getLabelSpec(group);
 
-      int v = MAX(fspec.top+lspec.top,fspec.bottom+lspec.bottom);
-      int h = MAX(fspec.left+lspec.left,fspec.right+lspec.right);
-      return MAX(v,h);
+      int v = qMax(fspec.top+lspec.top,fspec.bottom+lspec.bottom);
+      int h = qMax(fspec.left+lspec.left,fspec.right+lspec.right);
+      return qMax(v,h);
     }
 
     case PM_DockWidgetTitleMargin : {
@@ -2484,9 +2438,9 @@ int QSvgStyle::pixelMetric(PixelMetric metric, const QStyleOption * option, cons
       const interior_spec_t ispec = getInteriorSpec(group);
       const label_spec_t lspec = getLabelSpec(group);
 
-      int v = MAX(lspec.top,lspec.bottom);
-      int h = MAX(lspec.left,lspec.right);
-      return MAX(v,h);
+      int v = qMax(lspec.top,lspec.bottom);
+      int h = qMax(lspec.left,lspec.right);
+      return qMax(v,h);
     }
 
     case PM_TextCursorWidth : return 1;
@@ -2601,7 +2555,7 @@ QSize QSvgStyle::sizeFromContents ( ContentsType type, const QStyleOption * opti
           if (w) {
             for (int i=0; i < w->count(); i++) {
               QSize _s = sizeFromContents(f,fspec,ispec,lspec,sspec,w->itemText(i),w->itemIcon(i).pixmap(w->iconSize()));
-              s = QSize(MAX(s.width(),_s.width()),MAX(s.height(),_s.height()));
+              s = QSize(qMax(s.width(),_s.width()),qMax(s.height(),_s.height()));
             }
           }
         }
@@ -2923,7 +2877,7 @@ QSize QSvgStyle::sizeFromContents ( ContentsType type, const QStyleOption * opti
 	  st = sizeFromContents(f,fspec,ispec,lspec,sspec,opt->text,QPixmap());
 
         // add contents to st, 30 is title shift (left and right)
-	s = QSize(MAX(st.width()+30+30,contentsSize.width()+fspec.left+fspec.right),contentsSize.height()+st.height()+fspec.top+fspec.bottom);
+	s = QSize(qMax(st.width()+30+30,contentsSize.width()+fspec.left+fspec.right),contentsSize.height()+st.height()+fspec.top+fspec.bottom);
       }
 
       break;
@@ -2991,7 +2945,7 @@ QSize QSvgStyle::sizeFromContents(const QFont &font,
 
     th = QFontMetrics(font).height()*(l.size());
     for (int i=0; i<l.size(); i++) {
-      tw = MAX(tw,QFontMetrics(font).width(l[i]));
+      tw = qMax(tw,QFontMetrics(font).width(l[i]));
     }
   }
 
@@ -3003,9 +2957,9 @@ QSize QSvgStyle::sizeFromContents(const QFont &font,
     s.rheight() += th;
   } else if (tialign == Qt::ToolButtonTextBesideIcon) {
     s.rwidth() += (icon.isNull() ? 0 : icon.width()) + (icon.isNull() ? 0 : (text.isEmpty() ? 0 : lspec.tispace)) + tw;
-    s.rheight() += MAX(icon.height(),th);
+    s.rheight() += qMax(icon.height(),th);
   } else if (tialign == Qt::ToolButtonTextUnderIcon) {
-    s.rwidth() += MAX(icon.width(),tw);
+    s.rwidth() += qMax(icon.width(),tw);
     s.rheight() += icon.height() + (icon.isNull() ? 0 : lspec.tispace) + th;
   }
 
@@ -3252,7 +3206,7 @@ QRect QSvgStyle::subControlRect(ComplexControl control, const QStyleOptionComple
     case CC_Dial : {
       const bool horiz = (option->state & State_Horizontal);
       switch(subControl) {
-        case SC_DialGroove : return alignedRect(QApplication::layoutDirection(), Qt::AlignHCenter | Qt::AlignVCenter, QSize(MIN(option->rect.width(),option->rect.height()),MIN(option->rect.width(),option->rect.height())), option->rect);
+        case SC_DialGroove : return alignedRect(QApplication::layoutDirection(), Qt::AlignHCenter | Qt::AlignVCenter, QSize(qMin(option->rect.width(),option->rect.height()),qMin(option->rect.width(),option->rect.height())), option->rect);
         case SC_DialHandle : {
           const QStyleOptionSlider *opt =
             qstyleoption_cast<const QStyleOptionSlider *>(option);
@@ -3356,8 +3310,6 @@ QRect QSvgStyle::subControlRect(ComplexControl control, const QStyleOptionComple
       const QGroupBox  * w = qobject_cast<const QGroupBox *>(widget);
       if (opt) {
 	if (w) {
-
-
 	  stitle = sizeFromContents(w->font(),fspec,ispec,lspec,sspec,opt->text,QPixmap());
 	  if ( w && w->isCheckable() ) {
 	    // ensure checkbox indicator fits within title interior
@@ -3388,8 +3340,10 @@ QRect QSvgStyle::subControlRect(ComplexControl control, const QStyleOptionComple
 	  return QRect(option->rect.x(),option->rect.y()+stitle.height(),option->rect.width(),option->rect.height()-stitle.height());
 	}
 	case SC_GroupBoxContents : {
-	  return interiorRect(QRect(option->rect.x(),option->rect.y()+stitle.height(),option->rect.width(),option->rect.height()-stitle.height()),
-				     fspec,ispec);
+          qDebug() << "SC_GroupBoxContents" << x << y << option->rect.width() << h;
+          qDebug() << "SC_GroupBoxContents" << stitle.height();
+          // here option->rect is not the whole groupbox rect
+	  return interiorRect(option->rect.adjusted(0,stitle.height(),0,-fspec.bottom /* ???? */),fspec,ispec);
 	}
 
         default : return QCommonStyle::subControlRect(control,option,subControl,widget);
@@ -3537,18 +3491,13 @@ void QSvgStyle::renderElement(QPainter* painter, const QString& element, const Q
   QPainter *p2 = 0;
   QPixmap pm2;
 
-  // Render application specific widget
-  if (appRndr && appRndr->isValid() && appRndr->elementExists(element)) {
-      renderer = appRndr;
+  // theme specific rendering
+  if (themeRndr && themeRndr->isValid() && themeRndr->elementExists(element)) {
+      renderer = themeRndr;
   } else {
-    // Fall back to theme specific rendering
-    if (themeRndr && themeRndr->isValid() && themeRndr->elementExists(element)) {
-        renderer = themeRndr;
-    } else {
-      // Fall back to default rendering
-      if (defaultRndr && defaultRndr->isValid() && defaultRndr->elementExists(element))
-        renderer = defaultRndr;
-    }
+    // Fall back to default rendering
+    if (defaultRndr && defaultRndr->isValid() && defaultRndr->elementExists(element))
+      renderer = defaultRndr;
   }
 
   QString _element = element;
@@ -3979,29 +3928,29 @@ void QSvgStyle::renderLabel(QPainter *painter,
   __exit_func();
 }
 
-inline frame_spec_t QSvgStyle::getFrameSpec(const QString &widgetName) const
+inline frame_spec_t QSvgStyle::getFrameSpec(const QString& group) const
 {
-  return settings->getFrameSpec(widgetName);
+  return settings->getFrameSpec(group);
 }
 
-inline interior_spec_t QSvgStyle::getInteriorSpec(const QString &widgetName) const
+inline interior_spec_t QSvgStyle::getInteriorSpec(const QString& group) const
 {
-  return settings->getInteriorSpec(widgetName);
+  return settings->getInteriorSpec(group);
 }
 
-inline indicator_spec_t QSvgStyle::getIndicatorSpec(const QString &widgetName) const
+inline indicator_spec_t QSvgStyle::getIndicatorSpec(const QString& group) const
 {
-  return settings->getIndicatorSpec(widgetName);
+  return settings->getIndicatorSpec(group);
 }
 
-inline label_spec_t QSvgStyle::getLabelSpec(const QString &widgetName) const
+inline label_spec_t QSvgStyle::getLabelSpec(const QString& group) const
 {
-  return settings->getLabelSpec(widgetName);
+  return settings->getLabelSpec(group);
 }
 
-inline size_spec_t QSvgStyle::getSizeSpec(const QString& widgetName) const
+inline size_spec_t QSvgStyle::getSizeSpec(const QString& group) const
 {
-  return settings->getSizeSpec(widgetName);
+  return settings->getSizeSpec(group);
 }
 
 void QSvgStyle::capsulePosition(const QWidget *widget, bool &capsule, int &h, int &v) const
@@ -4124,6 +4073,7 @@ void QSvgStyle::drawRealRect(QPainter* p, const QRect& r) const
   p->drawLine(x0,y1,x1,y1);
 }
 
+/* !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! */
 /* Auto generated */
 const QString QSvgStyle::PE_str(PrimitiveElement element) const
 {
