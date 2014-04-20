@@ -419,833 +419,372 @@ bool QSvgStyle::eventFilter(QObject* o, QEvent* e)
   return QObject::eventFilter(o,e);
 }
 
-void QSvgStyle::drawPrimitive(PrimitiveElement element, const QStyleOption * option, QPainter * painter, const QWidget * widget) const
+void QSvgStyle::drawPrimitive(PrimitiveElement e, const QStyleOption * option, QPainter * p, const QWidget * widget) const
 {
   __enter_func__();
+  emit(sig_drawPrimitive_begin(PE_str(e)));
 
-  emit(sig_drawPrimitive_begin(PE_str(element)));
+  // Copy some values into shorter variable names
+  int x,y,w,h;
+  QRect r = option->rect;
+  r.getRect(&x,&y,&w,&h);
+  QString st = state_str(option->state, widget);
+  Qt::LayoutDirection dir = option->direction;
+  bool focus = option->state & State_HasFocus;
 
-  int x,y,h,w;
+  Q_UNUSED(dir);
+  Q_UNUSED(focus);
 
-  option->rect.getRect(&x,&y,&w,&h);
+  // Get QSvgStyle configuration group used to render this element
+  QString g = PE_group(e);
 
-  QString status;
+  // Configuration for group g
+  frame_spec_t fs;
+  interior_spec_t is;
+  label_spec_t ls;
+  indicator_spec_t ds;
+  size_spec_t ss;
 
-  if ( !isContainerWidget(widget) ) {
-    status = (option->state & State_Enabled) ?
-               (option->state & State_On) ? "toggled" :
-               (option->state & State_Sunken) ? "pressed" :
-               (option->state & State_Selected) ? "toggled" :
-               ((option->state & State_MouseOver) || (option->state & State_HasFocus)) ? "focused" : "normal"
-             : "disabled";
-  } else {
-    // container widget will have only normal, selected and disabled status
-    status = (option->state & State_Enabled ) ?
-               (option->state & State_Selected) ? "toggled" : "normal"
-             : "disabled";
+  if ( g.isEmpty() ) {
+    // element not currently supported by QSvgStyle
+    QCommonStyle::drawPrimitive(e,option,p,widget);
+    goto end;
   }
 
-  switch(element) {
+  // Get configuration for group
+  fs = getFrameSpec(g);
+  is = getInteriorSpec(g);
+  ls = getLabelSpec(g);
+  ds = getIndicatorSpec(g);
+  ss = getSizeSpec(g);
+
+  __print_group();
+
+  // Draw
+  switch(e) {
     case PE_Widget : {
       // nothing
       break;
     }
-
+    case PE_PanelButtonBevel :
     case PE_PanelButtonCommand : {
-      const QString group = "PanelButtonCommand";
-
-      frame_spec_t fspec = getFrameSpec(group);
-      const interior_spec_t ispec = getInteriorSpec(group);
-
-      __print_group();
-
-      //if (fspec.hasCapsule)
-        capsulePosition(widget,fspec.hasCapsule,fspec.capsuleH,fspec.capsuleV);
-
-
-      renderInterior(painter,option->rect,fspec,ispec,ispec.element+"-"+status);
-      //renderFrame(painter,option->rect,fspec,fspec.element+"-"+status);
-
+      // Interior for push buttons
+      capsulePosition(widget,fs.hasCapsule,fs.capsuleH,fs.capsuleV);
+      renderInterior(p,r,fs,is,is.element+"-"+st);
       break;
     }
-
-    case PE_FrameDefaultButton :
+    case PE_FrameDefaultButton : {
+      // Frame for default buttons
+      // use "default" status
+      if ( option->state & State_On ) {
+        st = "default";
+        renderFrame(p,r,fs,fs.element+"-"+st);
+      }
+      break;
+    }
     case PE_FrameButtonBevel : {
-      const QString group = "PanelButtonCommand";
-
-      frame_spec_t fspec = getFrameSpec(group);
-      const interior_spec_t ispec = getInteriorSpec(group);
-
-      __print_group();
-
-      //if (fspec.hasCapsule)
-      capsulePosition(widget,fspec.hasCapsule,fspec.capsuleH,fspec.capsuleV);
-
-      renderFrame(painter,option->rect,fspec,fspec.element+"-"+status);
+      // Frame for push buttons
+      capsulePosition(widget,fs.hasCapsule,fs.capsuleH,fs.capsuleV);
+      renderFrame(p,r,fs,fs.element+"-"+st);
+      break;
     }
-
     case PE_PanelButtonTool : {
-      const QString group = "PanelButtonTool";
-
-      frame_spec_t fspec = getFrameSpec(group);
-      const interior_spec_t ispec = getInteriorSpec(group);
-      const indicator_spec_t dspec = getIndicatorSpec(group);
-      const label_spec_t lspec = getLabelSpec(group);
-
-      const QToolButton *w = qobject_cast<const QToolButton *>(widget);
-      const QStyleOptionToolButton *opt = qstyleoption_cast<const QStyleOptionToolButton *>(option);
-
-      __print_group();
-
-      if (fspec.hasCapsule)
-        capsulePosition(widget,fspec.hasCapsule,fspec.capsuleH,fspec.capsuleV);
-
-      QRect r = option->rect;
-
-      if (w) {
-        if ( w->popupMode() == QToolButton::MenuButtonPopup ) {
-          // merge with drop down button
-          if (!fspec.hasCapsule)
-            fspec.capsuleV = 2;
-          fspec.hasCapsule = true;
-          fspec.capsuleH = -1;
-        } else if (
-          (w->popupMode() == QToolButton::InstantPopup) ||
-          ((w->popupMode() == QToolButton::DelayedPopup) && (opt->features & QStyleOptionToolButton::HasMenu))
-        ) {
-          // enlarge to put drop down arrow
-          r.adjust(0,0,lspec.tispace+dspec.size,0);
-        }
-        if ( w->autoRaise() && ( (status == "normal") || (status == "disabled") ) ) {
-          ;
-        } else {
-          //renderFrame(painter,r,fspec,fspec.element+"-"+status);
-          renderInterior(painter,r,fspec,ispec,ispec.element+"-"+status);
-        }
-      } else {
-        //renderFrame(painter,r,fspec,fspec.element+"-"+status);
-        renderInterior(painter,r,fspec,ispec,ispec.element+"-"+status);
-      }
-
+      // Interior for tool buttons
+      capsulePosition(widget,fs.hasCapsule,fs.capsuleH,fs.capsuleV);
+      renderInterior(p,r,fs,is,is.element+"-"+st);
       break;
     }
-
     case PE_FrameButtonTool : {
-      const QString group = "PanelButtonTool";
-
-      frame_spec_t fspec = getFrameSpec(group);
-      const interior_spec_t ispec = getInteriorSpec(group);
-      const indicator_spec_t dspec = getIndicatorSpec(group);
-      const label_spec_t lspec = getLabelSpec(group);
-
-      const QToolButton *w = qobject_cast<const QToolButton *>(widget);
-      const QStyleOptionToolButton *opt = qstyleoption_cast<const QStyleOptionToolButton *>(option);
-
-      __print_group();
-
-      if (fspec.hasCapsule)
-        capsulePosition(widget,fspec.hasCapsule,fspec.capsuleH,fspec.capsuleV);
-
-      QRect r = option->rect;
-
-      if (w) {
-        if ( w->popupMode() == QToolButton::MenuButtonPopup ) {
-          // merge with drop down button
-          if (!fspec.hasCapsule)
-            fspec.capsuleV = 2;
-          fspec.hasCapsule = true;
-          fspec.capsuleH = -1;
-        } else if (
-          (w->popupMode() == QToolButton::InstantPopup) ||
-          ((w->popupMode() == QToolButton::DelayedPopup) && (opt->features & QStyleOptionToolButton::HasMenu))
-        ) {
-          // enlarge to put drop down arrow
-          r.adjust(0,0,lspec.tispace+dspec.size,0);
-        }
-        if ( w->autoRaise() && ( (status == "normal") || (status == "disabled") ) ) {
-          ;
-        } else {
-          renderFrame(painter,r,fspec,fspec.element+"-"+status);
-        }
-      } else {
-        renderFrame(painter,r,fspec,fspec.element+"-"+status);
-      }
-
+      // Frame for tool buttons
+      capsulePosition(widget,fs.hasCapsule,fs.capsuleH,fs.capsuleV);
+      renderFrame(p,r,fs,fs.element+"-"+st);
       break;
     }
-
     case PE_IndicatorRadioButton : {
-      const QString group = "RadioButton";
-
-      const frame_spec_t fspec = getFrameSpec(group);
-      const interior_spec_t ispec = getInteriorSpec(group);
-
-      __print_group();
-
-      if (option->state & State_Enabled)
-        if (option->state & State_MouseOver)
-          if (option->state & State_On) {
-            renderFrame(painter,option->rect,fspec,fspec.element+"-checked-focused");
-            renderInterior(painter,option->rect,fspec,ispec,ispec.element+"-checked-focused");
-          } else {
-            renderFrame(painter,option->rect,fspec,fspec.element+"-focused");
-            renderInterior(painter,option->rect,fspec,ispec,ispec.element+"-focused");
-          }
-        else
-          if (option->state & State_On) {
-            renderFrame(painter,option->rect,fspec,fspec.element+"-checked-normal");
-            renderInterior(painter,option->rect,fspec,ispec,ispec.element+"-checked-normal");
-          } else {
-            renderFrame(painter,option->rect,fspec,fspec.element+"-normal");
-            renderInterior(painter,option->rect,fspec,ispec,ispec.element+"-normal");
-          }
-      else
-        if (option->state & State_On) {
-          renderFrame(painter,option->rect,fspec,fspec.element+"-checked-disabled");
-          renderInterior(painter,option->rect,fspec,ispec,ispec.element+"-checked-disabled");
-        } else {
-          renderFrame(painter,option->rect,fspec,fspec.element+"-disabled");
-          renderInterior(painter,option->rect,fspec,ispec,ispec.element+"-disabled");
-        }
-
+      // a radio button (exclusive choice)
+      // QSvgStyle: no pressed or toggled status for radio buttons
+      st = (option->state & State_Enabled) ?
+          (option->state & State_MouseOver) ? "hovered" : "normal"
+        : "disabled";
+      if ( option->state & State_On )
+        st = "checked-"+st;
+      renderInterior(p,r,fs,is,is.element+"-"+st);
       break;
     }
-
     case PE_IndicatorViewItemCheck :
+      // a check box inside view items
     case PE_IndicatorCheckBox : {
-      const QString group = "CheckBox";
-
-      const frame_spec_t fspec = getFrameSpec(group);
-      const interior_spec_t ispec = getInteriorSpec(group);
-
-      __print_group();
-
-      if (option->state & State_Enabled)
-        if (option->state & State_MouseOver)
-          if (option->state & State_On) {
-            renderFrame(painter,option->rect,fspec,fspec.element+"-checked-focused");
-            renderInterior(painter,option->rect,fspec,ispec,ispec.element+"-checked-focused");
-          } else if (option->state & State_NoChange) {
-            renderFrame(painter,option->rect,fspec,fspec.element+"-tristate-focused");
-            renderInterior(painter,option->rect,fspec,ispec,ispec.element+"-tristate-focused");
-          } else {
-            renderFrame(painter,option->rect,fspec,fspec.element+"-focused");
-            renderInterior(painter,option->rect,fspec,ispec,ispec.element+"-focused");
-          }
-        else
-          if (option->state & State_On) {
-            renderFrame(painter,option->rect,fspec,fspec.element+"-checked-normal");
-            renderInterior(painter,option->rect,fspec,ispec,ispec.element+"-checked-normal");
-          } else if (option->state & State_NoChange) {
-            renderFrame(painter,option->rect,fspec,fspec.element+"-tristate-normal");
-            renderInterior(painter,option->rect,fspec,ispec,ispec.element+"-tristate-normal");
-          } else {
-            renderFrame(painter,option->rect,fspec,fspec.element+"-normal");
-            renderInterior(painter,option->rect,fspec,ispec,ispec.element+"-normal");
-          }
-      else
-        if (option->state & State_On) {
-          renderFrame(painter,option->rect,fspec,fspec.element+"-checked-disabled");
-          renderInterior(painter,option->rect,fspec,ispec,ispec.element+"-checked-disabled");
-        } else  if (option->state & State_NoChange) {
-          renderFrame(painter,option->rect,fspec,fspec.element+"-tristate-disabled");
-          renderInterior(painter,option->rect,fspec,ispec,ispec.element+"-tristate-disabled");
-        } else {
-          renderFrame(painter,option->rect,fspec,fspec.element+"-disabled");
-          renderInterior(painter,option->rect,fspec,ispec,ispec.element+"-disabled");
-        }
-
+      // a check box (multiple choices)
+      // QSvgStyle: no pressed or toggled status for check boxes
+      st = (option->state & State_Enabled) ?
+          (option->state & State_MouseOver) ? "hovered" : "normal"
+        : "disabled";
+      if ( option->state & State_On )
+        st = "checked-"+st;
+      else if ( option->state & State_NoChange )
+        st = "tristate-"+st;
+      renderInterior(p,r,fs,is,is.element+"-"+st);
       break;
     }
-
     case PE_IndicatorMenuCheckMark : {
-      const QStyleOptionMenuItem *opt =
-      qstyleoption_cast<const QStyleOptionMenuItem *>(option);
+      // Check box or radio button of a menu item
+      if ( const QStyleOptionMenuItem *opt =
+            qstyleoption_cast<const QStyleOptionMenuItem *>(option) ) {
 
-      if (opt) {
-        QStyleOptionMenuItem o(*opt);
-
-        if (opt->checkType == QStyleOptionMenuItem::Exclusive) {
-          if (opt->checked)
-            o.state |= State_On;
-          drawPrimitive(PE_IndicatorRadioButton,&o,painter,widget);
-        }
-
-        if (opt->checkType == QStyleOptionMenuItem::NonExclusive) {
-          if (opt->checked)
-            o.state |= State_On;
-          drawPrimitive(PE_IndicatorCheckBox,&o,painter,widget);
-        }
+        if ( opt->checkType == QStyleOptionMenuItem::Exclusive )
+          drawPrimitive(PE_IndicatorRadioButton,opt,p,widget);
+        else if ( opt->checkType == QStyleOptionMenuItem::NonExclusive )
+          drawPrimitive(PE_IndicatorCheckBox,opt,p,widget);
       }
-
       break;
     }
-
     case PE_FrameFocusRect : {
-      const QString group = "Focus";
-
-      const frame_spec_t fspec = getFrameSpec(group);
-      const interior_spec_t ispec = getInteriorSpec(group);
-
-      __print_group();
-
-      renderFrame(painter,option->rect,fspec,fspec.element);
-      renderInterior(painter,option->rect,fspec,ispec,ispec.element);
-
+      // The frame of a focus rectangle, used on focusable widgets
+      renderFrame(p,r,fs,fs.element);
       break;
     }
-
     case PE_IndicatorBranch : {
-      QString group = "TreeExpander";
-
-      frame_spec_t fspec = getFrameSpec(group);
-      interior_spec_t ispec = getInteriorSpec(group);
-      indicator_spec_t dspec = getIndicatorSpec(group);
-
-      __print_group();
-
-      renderFrame(painter,option->rect,fspec,fspec.element+"-"+status);
-      renderInterior(painter,option->rect,fspec,ispec,ispec.element+"-"+status);
-
+      // Indicator of tree hierarchies
       if (option->state & State_Children) {
         if (option->state & State_Open)
-          renderIndicator(painter,option->rect,fspec,ispec,dspec,dspec.element+"-minus-"+status);
+          st = "minus-"+st;
         else
-          renderIndicator(painter,option->rect,fspec,ispec,dspec,dspec.element+"-plus-"+status);
+          st = "plus-"+st;
+        renderIndicator(p,r,fs,is,ds,ds.element+"-"+st);
       }
-
       break;
     }
-
-  case PE_FrameMenu :  {
-      const QString group = "Menu";
-
-      const frame_spec_t fspec = getFrameSpec(group);
-
-      __print_group();
-
-      renderFrame(painter,option->rect,fspec,fspec.element+"-normal");
-
+    case PE_FrameMenu :  {
+      // Frame for menus
+      renderFrame(p,r,fs,fs.element+"-"+st);
       break;
     }
-
     case PE_FrameWindow : {
-      const QString group = "GenericFrame";
-
-      const frame_spec_t fspec = getFrameSpec(group);
-
-      __print_group();
-
-      renderFrame(painter,option->rect,fspec,fspec.element+"-"+status);
-
+      // Frame for windows
+      renderFrame(p,r,fs,fs.element+"-"+st);
       break;
     }
-
-    case PE_FrameTabBarBase :
+    case PE_FrameTabBarBase : {
+      // ???
       break;
-
+    }
     case PE_Frame : {
-      const QString group = "GenericFrame";
-
-      const frame_spec_t fspec = getFrameSpec(group);
-      const interior_spec_t ispec = getInteriorSpec(group);
-
-      __print_group();
-
-      // ignore hovered, pressed and toggled statuses
-      const QString status2 =
-        (option->state & State_Enabled) ? "normal" : "disabled";
-
-        renderFrame(painter,option->rect,fspec,fspec.element+"-"+status2);
-        // FIXME should frames have an interior ?
-        renderInterior(painter,option->rect,fspec,ispec,ispec.element+"-"+status2);
-
+      // Generic frame
+      renderFrame(p,r,fs,fs.element+"-"+st);
+      if ( const QStyleOptionFrame *opt =
+           qstyleoption_cast<const QStyleOptionFrame *>(option) ) {
+        if ( (opt->state & State_Sunken) || (opt->state & State_Raised) ) {
+          renderInterior(p,r,fs,is,is.element+"-"+st);
+        }
+      }
       break;
     }
-
-    case PE_FrameDockWidget :
-    case PE_FrameStatusBar :
-     {
-      const QString group = "GenericFrame";
-
-      const frame_spec_t fspec = getFrameSpec(group);
-      const interior_spec_t ispec = getInteriorSpec(group);
-
-      __print_group();
-
-      renderFrame(painter,option->rect,fspec,fspec.element+"-"+status);
-      renderInterior(painter,option->rect,fspec,ispec,ispec.element+"-"+status);
-
+    case PE_FrameDockWidget : {
+      // Frame for dock widgets
+      renderFrame(p,r,fs,fs.element+"-"+st);
       break;
     }
-
+    case PE_FrameStatusBarItem : {
+      // Frame for status bar items
+      renderFrame(p,r,fs,fs.element+"-"+st);
+      break;
+    }
     case PE_FrameGroupBox : {
-      const QString group = "GroupBox";
-
-      const frame_spec_t fspec = getFrameSpec(group);
-      const interior_spec_t ispec = getInteriorSpec(group);
-
-      __print_group();
-
-      renderFrame(painter,option->rect,fspec,fspec.element+"-"+status);
-      renderInterior(painter,option->rect,fspec,ispec,ispec.element+"-"+status);
-
+      // Frame and interior for group boxes
+      renderFrame(p,r,fs,fs.element+"-"+st);
+      renderInterior(p,r,fs,is,is.element+"-"+st);
       break;
     }
-
     case PE_FrameTabWidget : {
-      const QString group = "TabFrame";
-
-      frame_spec_t fspec = getFrameSpec(group);
-      const interior_spec_t ispec = getInteriorSpec(group);
-
-      __print_group();
-
-#if 0
-      const QStyleOptionTabWidgetFrame *opt =
-        qstyleoption_cast<const QStyleOptionTabWidgetFrame *>(option);
-
-      if (opt) {
-        QStyleOptionTabWidgetFrameV2 optV2(*opt);
-
-        QRect r = optV2.tabBarRect;
-
-        if ( (optV2.shape == QTabBar::RoundedNorth) ||
-             (optV2.shape == QTabBar::TriangularNorth)
-        ) {
-          fspec.y0c0 = r.x();
-          fspec.y0c1 = r.x()+r.width()-1;
-        }
-
-        if ( (optV2.shape == QTabBar::RoundedSouth) ||
-             (optV2.shape == QTabBar::TriangularSouth)
-        ) {
-          fspec.y1c0 = r.x();
-          fspec.y1c1 = r.x()+r.width()-1;
-        }
-
-        if ( (optV2.shape == QTabBar::RoundedWest) ||
-             (optV2.shape == QTabBar::TriangularWest)
-        ) {
-          fspec.x0c0 = r.y();
-          fspec.x0c1 = r.y()+r.height()-1;
-        }
-
-        if ( (optV2.shape == QTabBar::RoundedEast) ||
-             (optV2.shape == QTabBar::TriangularEast)
-        ) {
-          fspec.x1c0 = r.y();
-          fspec.x1c1 = r.y()+r.height()-1;
-        }
-      }
-#endif
-
-      renderFrame(painter,option->rect,fspec,fspec.element+"-"+status);
-      renderInterior(painter,option->rect,fspec,ispec,ispec.element+"-"+status);
-
+      // Frame and interior for tab widgets (contents)
+      renderFrame(p,r,fs,fs.element+"-"+st);
+      renderInterior(p,r,fs,is,is.element+"-"+st);
       break;
     }
-
     case PE_FrameLineEdit : {
-      const QString group = "LineEdit";
-
-      frame_spec_t fspec = getFrameSpec(group);
-      if ( qstyleoption_cast<const QStyleOptionSpinBox *>(option) || qstyleoption_cast<const QStyleOptionComboBox *>(option) ) {
-        // spin box and combo boxes have attached arrows, so merge with them
-        fspec.hasCapsule = true;
-        fspec.capsuleH = -1;
-        fspec.capsuleV = 2;
-      }
-      const interior_spec_t ispec = getInteriorSpec(group);
-
-      __print_group();
-
-      renderFrame(painter,option->rect,fspec,fspec.element+"-"+status);
-
+      // Frame for line edits
+      renderFrame(p,r,fs,fs.element+"-"+st);
       break;
     }
-
     case PE_PanelLineEdit : {
-      const QString group = "LineEdit";
-
-      frame_spec_t fspec = getFrameSpec(group);
-      if ( widget && qobject_cast<const QSpinBox *>(widget) ) {
-        qDebug() <<"*********************";
-        fspec.hasCapsule = true;
-        fspec.capsuleH = -1;
-        fspec.capsuleV = 2;
+      // Interior and frame for line edits
+      if ( const QStyleOptionFrame *opt =
+           qstyleoption_cast<const QStyleOptionFrame *>(option) ) {
+        if ( opt->lineWidth > 0 )
+          renderFrame(p,r,fs,fs.element+"-"+st);
       }
-      const interior_spec_t ispec = getInteriorSpec(group);
-
-      __print_group();
-
-      const QLineEdit *w = qobject_cast< const QLineEdit* >(widget);
-      if (w && w->hasFrame()) {
-        const QString status2 = /* ignore "pressed", gives bad results */
-          (option->state & State_Enabled) ?
-            (option->state & State_On) ? "toggled" :
-            (option->state & State_Selected) ? "toggled" :
-            ((option->state & State_MouseOver) || (option->state & State_HasFocus)) ? "focused" : "normal"
-          : "disabled";
-        renderFrame(painter,option->rect,fspec,fspec.element+"-"+status2);
-      }
-      renderInterior(painter,option->rect,fspec,ispec,ispec.element+"-"+status);
-
+      renderInterior(p,r,fs,is,is.element+"-"+st);
       break;
     }
-
     case PE_PanelToolBar : {
-      const QString group = "Toolbar";
-
-      const frame_spec_t fspec = getFrameSpec(group);
-      const interior_spec_t ispec = getInteriorSpec(group);
-
-      __print_group();
-
-      renderFrame(painter,option->rect,fspec,fspec.element+"-"+status);
-      renderInterior(painter,option->rect,fspec,ispec,ispec.element+"-"+status);
-
+      // toolbar frame and interior
+      renderFrame(p,r,fs,fs.element+"-"+st);
+      renderInterior(p,r,fs,is,is.element+"-"+st);
       break;
     }
-
     case PE_IndicatorToolBarHandle : {
-      const QString group = "Toolbar";
-
-      const frame_spec_t fspec = getFrameSpec(group);
-      const interior_spec_t ispec = getInteriorSpec(group);
-      const indicator_spec_t dspec = getIndicatorSpec(group);
-
-      __print_group();
-
-      renderElement(painter,dspec.element+"-handle-"+status,option->rect);
-
+      // toolbar move handle
+      renderElement(p,ds.element+"-handle-"+st,r);
       break;
     }
-
     case PE_IndicatorToolBarSeparator : {
-      const QString group = "Toolbar";
-
-      const frame_spec_t fspec = getFrameSpec(group);
-      const interior_spec_t ispec = getInteriorSpec(group);
-      const indicator_spec_t dspec = getIndicatorSpec(group);
-
-      __print_group();
-
-      renderElement(painter,dspec.element+"-separator-"+status,option->rect);
-
+      // toolbar separator
+      renderElement(p,ds.element+"-separator-"+st,r);
       break;
     }
-
     case PE_IndicatorSpinPlus : {
-      const QString group = "IndicatorSpinBox";
-
-      frame_spec_t fspec = getFrameSpec(group);
-      fspec.hasCapsule = true;
-      fspec.capsuleH = 1;
-      fspec.capsuleV = 2;
-      const interior_spec_t ispec = getInteriorSpec(group);
-      const indicator_spec_t dspec = getIndicatorSpec(group);
-
-      __print_group();
-
-      renderFrame(painter,option->rect,fspec,fspec.element+"-"+status);
-      renderInterior(painter,option->rect,fspec,ispec,ispec.element+"-"+status);
-      renderIndicator(painter,option->rect,fspec,ispec,dspec,dspec.element+"-plus-"+status);
-
+      // Plus spin box indicator
+      renderIndicator(p,r,fs,is,ds,ds.element+"-plus-"+st);
       break;
     }
-
     case PE_IndicatorSpinMinus : {
-      const QString group = "IndicatorSpinBox";
-
-      frame_spec_t fspec = getFrameSpec(group);
-      fspec.hasCapsule = true;
-      fspec.capsuleH = 0;
-      fspec.capsuleV = 2;
-      const interior_spec_t ispec = getInteriorSpec(group);
-      const indicator_spec_t dspec = getIndicatorSpec(group);
-
-      __print_group();
-
-      renderFrame(painter,option->rect,fspec,fspec.element+"-"+status);
-      renderInterior(painter,option->rect,fspec,ispec,ispec.element+"-"+status);
-      renderIndicator(painter,option->rect,fspec,ispec,dspec,dspec.element+"-minus-"+status);
-
+      // Minus spin box indicator
+      renderIndicator(p,r,fs,is,ds,ds.element+"-minus-"+st);
       break;
     }
-
     case PE_IndicatorSpinUp : {
-      const QString group = "IndicatorSpinBox";
-
-      frame_spec_t fspec = getFrameSpec(group);
-      fspec.hasCapsule = true;
-      fspec.capsuleH = 1;
-      fspec.capsuleV = 2;
-      const interior_spec_t ispec = getInteriorSpec(group);
-      const indicator_spec_t dspec = getIndicatorSpec(group);
-
-      __print_group();
-
-      renderFrame(painter,option->rect,fspec,fspec.element+"-"+status);
-      renderInterior(painter,option->rect,fspec,ispec,ispec.element+"-"+status);
-      renderIndicator(painter,option->rect,fspec,ispec,dspec,dspec.element+"-up-"+status);
-
+      // Up spin box indicator
+      renderIndicator(p,r,fs,is,ds,ds.element+"-up-"+st);
       break;
     }
-
     case PE_IndicatorSpinDown : {
-      const QString group = "IndicatorSpinBox";
-
-      frame_spec_t fspec = getFrameSpec(group);
-      fspec.hasCapsule = true;
-      fspec.capsuleH = 0;
-      fspec.capsuleV = 2;
-      const interior_spec_t ispec = getInteriorSpec(group);
-      const indicator_spec_t dspec = getIndicatorSpec(group);
-
-      __print_group();
-
-      renderFrame(painter,option->rect,fspec,fspec.element+"-"+status);
-      renderInterior(painter,option->rect,fspec,ispec,ispec.element+"-"+status);
-      renderIndicator(painter,option->rect,fspec,ispec,dspec,dspec.element+"-down-"+status);
-
+      // down spin box indicator
+      renderIndicator(p,r,fs,is,ds,ds.element+"-down-"+st);
       break;
     }
-
     case PE_IndicatorHeaderArrow : {
-      const QString group = "IndicatorHeaderArrow";
-
-      const frame_spec_t fspec = getFrameSpec(group);
-      const interior_spec_t ispec = getInteriorSpec(group);
-      const indicator_spec_t dspec = getIndicatorSpec(group);
-
-      const QStyleOptionHeader *opt =
-        qstyleoption_cast<const QStyleOptionHeader *>(option);
-
-      __print_group();
-
-      renderFrame(painter,option->rect,fspec,fspec.element+"-"+status);
-      renderInterior(painter,option->rect,fspec,ispec,ispec.element+"-"+status);
-      if (opt) {
+      // Header section sort arrows
+      if ( const QStyleOptionHeader *opt =
+           qstyleoption_cast<const QStyleOptionHeader *>(option) ) {
         if (opt->sortIndicator == QStyleOptionHeader::SortDown)
-          renderIndicator(painter,option->rect,fspec,ispec,dspec,dspec.element+"-down-"+status);
+          renderIndicator(p,r,fs,is,ds,ds.element+"-down-"+st);
         else if (opt->sortIndicator == QStyleOptionHeader::SortUp)
-          renderIndicator(painter,option->rect,fspec,ispec,dspec,dspec.element+"-up-"+status);
+          renderIndicator(p,r,fs,is,ds,ds.element+"-up-"+st);
       }
-
       break;
     }
-
     case PE_IndicatorButtonDropDown : {
-      const QString group = "DropDownButton";
-
-      frame_spec_t fspec = getFrameSpec(group);
-      fspec.hasCapsule = true;
-      fspec.capsuleH = 1;
-      fspec.capsuleV = 2;
-      const interior_spec_t ispec = getInteriorSpec(group);
-      const indicator_spec_t dspec = getIndicatorSpec(group);
-
-      const QToolButton *w = qobject_cast<const QToolButton *>(widget);
-
-      __print_group();
-
-      if (w) {
-        if ( w->autoRaise() && ( (status == "normal") || (status == "disabled") ) ) {
-          ;
-        } else {
-          renderInterior(painter,option->rect,fspec,ispec,ispec.element+"-"+status);
-          renderFrame(painter,option->rect,fspec,fspec.element+"-"+status);
-        }
-      } else {
-        renderInterior(painter,option->rect,fspec,ispec,ispec.element+"-"+status);
-        renderFrame(painter,option->rect,fspec,fspec.element+"-"+status);
-      }
-
-      renderIndicator(painter,option->rect,fspec,ispec,dspec,dspec.element+"-"+status);
-
+      // Drop down button arrow
+      renderIndicator(p,r,fs,is,ds,ds.element+"-dropdown-"+st);
       break;
     }
-
     case PE_PanelMenuBar : {
+      // FIXME
       break;
     }
-
     case PE_IndicatorTabTear : {
-      const QString group = "Tab";
-
-      const frame_spec_t fspec = getFrameSpec(group);
-      const interior_spec_t ispec = getInteriorSpec(group);
-      const indicator_spec_t dspec = getIndicatorSpec(group);
-
-      __print_group();
-
-      renderInterior(painter,option->rect,fspec,ispec,dspec.element+"-tear-"+status);
-
+      // FIXME
       break;
     }
-
     case PE_IndicatorArrowUp : {
-      const QString group = "IndicatorArrow";
-
-      const frame_spec_t fspec = getFrameSpec(group);
-      const interior_spec_t ispec = getInteriorSpec(group);
-      const indicator_spec_t dspec = getIndicatorSpec(group);
-
-      __print_group();
-
-      //renderFrame(painter,option->rect,fspec,fspec.element+"-"+status);
-      //renderInterior(painter,option->rect,fspec,ispec,ispec.element+"-"+status);
-      renderIndicator(painter,option->rect,fspec,ispec,dspec,dspec.element+"-up-"+status);
-
+      // Arrow up indicator
+      renderIndicator(p,r,fs,is,ds,ds.element+"-up-"+st);
       break;
     }
-
     case PE_IndicatorArrowDown : {
-      const QString group = "IndicatorArrow";
-
-      const frame_spec_t fspec = getFrameSpec(group);
-      const interior_spec_t ispec = getInteriorSpec(group);
-      const indicator_spec_t dspec = getIndicatorSpec(group);
-
-      __print_group();
-
-      //renderFrame(painter,option->rect,fspec,fspec.element+"-"+status);
-      //renderInterior(painter,option->rect,fspec,ispec,ispec.element+"-"+status);
-      renderIndicator(painter,option->rect,fspec,ispec,dspec,dspec.element+"-down-"+status);
-
+      // Arrow down indicator
+      renderIndicator(p,r,fs,is,ds,ds.element+"-down-"+st);
       break;
     }
-
     case PE_IndicatorArrowLeft : {
-      const QString group = "IndicatorArrow";
-
-      const frame_spec_t fspec = getFrameSpec(group);
-      const interior_spec_t ispec = getInteriorSpec(group);
-      const indicator_spec_t dspec = getIndicatorSpec(group);
-
-      __print_group();
-
-      //renderFrame(painter,option->rect,fspec,fspec.element+"-"+status);
-      //renderInterior(painter,option->rect,fspec,ispec,ispec.element+"-"+status);
-      renderIndicator(painter,option->rect,fspec,ispec,dspec,dspec.element+"-left-"+status);
-
+      // Arrow left indicator
+      renderIndicator(p,r,fs,is,ds,ds.element+"-left-"+st);
       break;
     }
-
-    case PE_IndicatorColumnViewArrow :
     case PE_IndicatorArrowRight : {
-      const QString group = "IndicatorArrow";
-
-      const frame_spec_t fspec = getFrameSpec(group);
-      const interior_spec_t ispec = getInteriorSpec(group);
-      const indicator_spec_t dspec = getIndicatorSpec(group);
-
-      __print_group();
-
-      //renderFrame(painter,option->rect,fspec,fspec.element+"-"+status);
-      //renderInterior(painter,option->rect,fspec,ispec,ispec.element+"-"+status);
-      renderIndicator(painter,option->rect,fspec,ispec,dspec,dspec.element+"-right-"+status);
-
+      // Arrow right indicator
+      renderIndicator(p,r,fs,is,ds,ds.element+"-right-"+st);
       break;
     }
-
+    case PE_IndicatorColumnViewArrow : {
+      // FIXME
+      break;
+    }
     case PE_IndicatorProgressChunk : {
-      const QString group = "ProgressbarContents";
-
-      const frame_spec_t fspec = getFrameSpec(group);
-      const interior_spec_t ispec = getInteriorSpec(group);
-
-      __print_group();
-
-      renderInterior(painter,option->rect,fspec,ispec,ispec.element+"-"+status);
-
+      // The "filled" part of a progress bar
+      renderInterior(p,r,fs,is,is.element+"-"+st);
       break;
     }
-
-    case PE_IndicatorDockWidgetResizeHandle : {
-      drawControl(CE_Splitter,option,painter,widget);
-
-      break;
-    }
-
-    case PE_PanelItemViewItem :
     case PE_PanelItemViewRow : {
-      const QString group = "ViewItem";
+      // A row of a item view list
+      if ( option->state & State_Enabled ) {
+        if ( const QStyleOptionViewItemV4 *opt =
+             qstyleoption_cast<const QStyleOptionViewItemV4 *>(option) ) {
 
-      const frame_spec_t fspec = getFrameSpec(group);
-      const interior_spec_t ispec = getInteriorSpec(group);
-
-      __print_group();
-
-      if ( status == "normal" ) {
-        const QStyleOptionViewItemV2 *opt = qstyleoption_cast<const QStyleOptionViewItemV2 *>(option);
-
-        if ( opt ) {
           if ( opt->features & QStyleOptionViewItemV2::Alternate )
-            renderInterior(painter,option->rect,fspec,ispec,ispec.element+"-"+status+"alt");
-          else
-            renderInterior(painter,option->rect,fspec,ispec,ispec.element+"-"+status);
-        } else {
-          renderInterior(painter,option->rect,fspec,ispec,ispec.element+"-"+status);
+            st = st+"-alt";
         }
-      } else {
-        renderInterior(painter,option->rect,fspec,ispec,ispec.element+"-"+status);
       }
-
+      renderInterior(p,r,fs,is,is.element+"-"+st);
       break;
     }
-
+    case PE_PanelItemViewItem : {
+      // An item of a view item
+      // FIXME
+      break;
+    }
     case PE_PanelStatusBar : {
+      // nothing
       break;
     }
-
     default :
       //qDebug() << "[QSvgStyle]" << __func__ << ": Unhandled primitive " << element;
-      QCommonStyle::drawPrimitive(element,option,painter,widget);
+      QCommonStyle::drawPrimitive(e,option,p,widget);
       break;
   }
 
-  emit(sig_drawPrimitive_end(PE_str(element)));
+end:
+  emit(sig_drawPrimitive_end(PE_str(e)));
   __exit_func();
 }
 
-void QSvgStyle::drawControl(ControlElement element, const QStyleOption * option, QPainter * painter, const QWidget * widget) const
+void QSvgStyle::drawControl(ControlElement e, const QStyleOption * option, QPainter * p, const QWidget * widget) const
 {
   __enter_func__();
-  emit(sig_drawControl_begin(CE_str(element)));
+  emit(sig_drawControl_begin(CE_str(e)));
 
-  int x,y,h,w;
-  option->rect.getRect(&x,&y,&w,&h);
+  // Copy some values into shorter variable names
+  int x,y,w,h;
+  QRect r = option->rect;
+  r.getRect(&x,&y,&w,&h);
+  QString st = state_str(option->state, widget);
+  Qt::LayoutDirection dir = option->direction;
+  bool focus = option->state & State_HasFocus;
+  QIcon::Mode icm = state_iconmode(option->state);
+  QIcon::State ics = state_iconstate(option->state);
 
-  QString status;
+  Q_UNUSED(dir);
+  Q_UNUSED(focus);
 
-  if ( !isContainerWidget(widget) ) {
-    status =
-        (option->state & State_Enabled) ?
-          (option->state & State_On) ? "toggled" :
-          (option->state & State_Sunken) ? "pressed" :
-          (option->state & State_Selected) ? "toggled" :
-          ((option->state & State_MouseOver) || (option->state & State_HasFocus)) ? "focused" : "normal"
-        : "disabled";
-  } else {
-    status = (option->state & State_Enabled) ? "normal" : "disabled";
+  // Get QSvgStyle configuration group used to render this element
+  QString g = CE_group(e);
+
+  // Configuration for group g
+  frame_spec_t fs;
+  interior_spec_t is;
+  label_spec_t ls;
+  indicator_spec_t ds;
+  size_spec_t ss;
+
+  if ( g.isEmpty() ) {
+    // element not currently supported by QSvgStyle
+    QCommonStyle::drawControl(e,option,p,widget);
+    goto end;
   }
 
-  const QIcon::Mode iconmode =
-        (option->state & State_Enabled) ?
-        (option->state & State_Sunken) ? QIcon::Active :
-        (option->state & State_MouseOver) ? QIcon::Active : QIcon::Normal
-      : QIcon::Disabled;
+  // Get configuration for group
+  fs = getFrameSpec(g);
+  is = getInteriorSpec(g);
+  ls = getLabelSpec(g);
+  ds = getIndicatorSpec(g);
+  ss = getSizeSpec(g);
 
-  const QIcon::State iconstate =
-      (option->state & State_On) ? QIcon::On : QIcon::Off;
+  __print_group();
 
-  switch (element) {
+  switch (e) {
     case CE_PushButtonBevel : {
-      drawPrimitive(PE_FrameButtonBevel,option,painter,widget);
-      drawPrimitive(PE_PanelButtonCommand,option,painter,widget);
-
+      drawPrimitive(PE_FrameButtonBevel,option,p,widget);
+      drawPrimitive(PE_PanelButtonBevel,option,p,widget);
       break;
     }
     case CE_MenuTearoff : {
@@ -1255,11 +794,11 @@ void QSvgStyle::drawControl(ControlElement element, const QStyleOption * option,
       if (opt) {
         const QString group = "MenuItem";
 
-        const indicator_spec_t dspec = getIndicatorSpec(group);
+        const indicator_spec_t ds = getIndicatorSpec(group);
 
         __print_group();
 
-        renderElement(painter,dspec.element+"-tearoff",option->rect,10,0);
+        renderElement(p,ds.element+"-tearoff",option->rect,10,0);
       }
 
       break;
@@ -1271,50 +810,50 @@ void QSvgStyle::drawControl(ControlElement element, const QStyleOption * option,
       if (opt) {
         const QString group = "MenuItem";
 
-        frame_spec_t fspec = getFrameSpec(group);
-        const interior_spec_t ispec = getInteriorSpec(group);
-        const indicator_spec_t dspec = getIndicatorSpec(group);
-        const label_spec_t lspec = getLabelSpec(group);
+        frame_spec_t fs = getFrameSpec(group);
+        const interior_spec_t is = getInteriorSpec(group);
+        const indicator_spec_t ds = getIndicatorSpec(group);
+        const label_spec_t ls = getLabelSpec(group);
 
         __print_group();
 
         if (opt->menuItemType == QStyleOptionMenuItem::Separator)
-          renderElement(painter,dspec.element+"-separator",option->rect,20,0);
+          renderElement(p,ds.element+"-separator",option->rect,20,0);
         else if (opt->menuItemType == QStyleOptionMenuItem::TearOff)
-          renderElement(painter,dspec.element+"-tearoff",option->rect,20,0);
+          renderElement(p,ds.element+"-tearoff",option->rect,20,0);
         else {
-          renderFrame(painter,option->rect,fspec,fspec.element+"-"+status);
-          renderInterior(painter,option->rect,fspec,ispec,ispec.element+"-"+status);
+          renderFrame(p,option->rect,fs,fs.element+"-"+st);
+          renderInterior(p,option->rect,fs,is,is.element+"-"+st);
 
           const QStringList l = opt->text.split('\t');
 
           if (l.size() > 0) {
             // menu label
             if (opt->icon.isNull())
-              renderLabel(painter,option->rect.adjusted(opt->maxIconWidth+lspec.tispace,0,0,0),fspec,ispec,lspec,Qt::AlignLeft|Qt::AlignVCenter | Qt::TextShowMnemonic |Qt::TextSingleLine,l[0], !(option->state & State_Enabled));
+              renderLabel(p,dir,option->rect.adjusted(opt->maxIconWidth+ls.tispace,0,0,0),fs,is,ls,Qt::AlignLeft|Qt::AlignVCenter | Qt::TextShowMnemonic |Qt::TextSingleLine,l[0], !(option->state & State_Enabled));
             else
-              renderLabel(painter,option->rect,fspec,ispec,lspec,Qt::AlignLeft|Qt::AlignVCenter | Qt::TextShowMnemonic |Qt::TextSingleLine,l[0],!(option->state & State_Enabled),opt->icon.pixmap(opt->maxIconWidth,iconmode,iconstate));
+              renderLabel(p,dir,option->rect,fs,is,ls,Qt::AlignLeft|Qt::AlignVCenter | Qt::TextShowMnemonic |Qt::TextSingleLine,l[0],!(option->state & State_Enabled),opt->icon.pixmap(opt->maxIconWidth,icm,ics));
           }
           if (l.size() > 1)
             // shortcut
-            renderLabel(painter,option->rect.adjusted(opt->maxIconWidth,0,-15,0),fspec,ispec,lspec,Qt::AlignRight|Qt::AlignVCenter | Qt::TextShowMnemonic| Qt::TextSingleLine,l[1],!(option->state & State_Enabled));
+            renderLabel(p,dir,option->rect.adjusted(opt->maxIconWidth,0,-15,0),fs,is,ls,Qt::AlignRight|Qt::AlignVCenter | Qt::TextShowMnemonic| Qt::TextSingleLine,l[1],!(option->state & State_Enabled));
 
           QStyleOptionMenuItem o(*opt);
-          o.rect = alignedRect(QApplication::layoutDirection(),Qt::AlignRight | Qt::AlignVCenter,QSize(10,10),labelRect(o.rect,fspec,ispec,lspec));
+          o.rect = alignedRect(QApplication::layoutDirection(),Qt::AlignRight | Qt::AlignVCenter,QSize(10,10),labelRect(o.rect,fs,is,ls));
           if (opt->menuItemType == QStyleOptionMenuItem::SubMenu) {
-            drawPrimitive(PE_IndicatorArrowRight,&o,painter);
+            drawPrimitive(PE_IndicatorArrowRight,&o,p);
           }
 
           if (opt->checkType == QStyleOptionMenuItem::Exclusive) {
             if (opt->checked)
               o.state |= State_On;
-            drawPrimitive(PE_IndicatorRadioButton,&o,painter,widget);
+            drawPrimitive(PE_IndicatorRadioButton,&o,p,widget);
           }
 
           if (opt->checkType == QStyleOptionMenuItem::NonExclusive) {
             if (opt->checked)
               o.state |= State_On;
-            drawPrimitive(PE_IndicatorCheckBox,&o,painter,widget);
+            drawPrimitive(PE_IndicatorCheckBox,&o,p,widget);
           }
         }
       }
@@ -1332,20 +871,20 @@ void QSvgStyle::drawControl(ControlElement element, const QStyleOption * option,
 
       if (opt) {
         QString group = "MenuBar";
-        frame_spec_t fspec = getFrameSpec(group);
-        fspec.hasCapsule = true;
-        fspec.capsuleH = 0;
-        fspec.capsuleV = 2;
+        frame_spec_t fs = getFrameSpec(group);
+        fs.hasCapsule = true;
+        fs.capsuleH = 0;
+        fs.capsuleV = 2;
         group = "MenuBarItem";
-        const interior_spec_t ispec = getInteriorSpec(group);
-        const label_spec_t lspec = getLabelSpec(group);
+        const interior_spec_t is = getInteriorSpec(group);
+        const label_spec_t ls = getLabelSpec(group);
 
         __print_group();
 
-        renderFrame(painter,option->rect,fspec,fspec.element+"-"+status);
-        renderInterior(painter,option->rect,fspec,ispec,ispec.element+"-"+status);
+        renderFrame(p,option->rect,fs,fs.element+"-"+st);
+        renderInterior(p,option->rect,fs,is,is.element+"-"+st);
 
-        renderLabel(painter,option->rect,fspec,ispec,lspec,Qt::AlignLeft | Qt::AlignVCenter | Qt::TextShowMnemonic | Qt::TextSingleLine,opt->text,!(option->state & State_Enabled));
+        renderLabel(p,dir,option->rect,fs,is,ls,Qt::AlignLeft | Qt::AlignVCenter | Qt::TextShowMnemonic | Qt::TextSingleLine,opt->text,!(option->state & State_Enabled));
       }
 
       break;
@@ -1354,24 +893,24 @@ void QSvgStyle::drawControl(ControlElement element, const QStyleOption * option,
     case CE_MenuBarEmptyArea : {
         const QString group = "MenuBar";
 
-        const frame_spec_t fspec = getFrameSpec(group);
-        const interior_spec_t ispec = getInteriorSpec(group);
+        const frame_spec_t fs = getFrameSpec(group);
+        const interior_spec_t is = getInteriorSpec(group);
 
         __print_group();
 
         // NOTE this does not use the status (otherwise always disabled)
-        renderFrame(painter,option->rect,fspec,fspec.element+"-normal");
-        renderInterior(painter,option->rect,fspec,ispec,ispec.element+"-normal");
+        renderFrame(p,option->rect,fs,fs.element+"-normal");
+        renderInterior(p,option->rect,fs,is,is.element+"-normal");
 
       break;
     }
 
     case CE_MenuScroller : {
-      drawPrimitive(PE_PanelButtonTool,option,painter,widget);
+      drawPrimitive(PE_PanelButtonTool,option,p,widget);
       if (option->state & State_DownArrow)
-        drawPrimitive(PE_IndicatorArrowDown,option,painter,widget);
+        drawPrimitive(PE_IndicatorArrowDown,option,p,widget);
       else
-        drawPrimitive(PE_IndicatorArrowUp,option,painter,widget);
+        drawPrimitive(PE_IndicatorArrowUp,option,p,widget);
 
       break;
     }
@@ -1381,69 +920,58 @@ void QSvgStyle::drawControl(ControlElement element, const QStyleOption * option,
       break;
 
     case CE_RadioButtonLabel : {
-      const QStyleOptionButton *opt =
-          qstyleoption_cast<const QStyleOptionButton *>(option);
+      if ( const QStyleOptionButton *opt =
+           qstyleoption_cast<const QStyleOptionButton *>(option) ) {
 
-      if (opt) {
-        QStyleOptionButton o(*opt);
-
-        const QString group = "RadioButton";
-        const frame_spec_t fspec = getFrameSpec(group);
-        const interior_spec_t ispec = getInteriorSpec(group);
-        const label_spec_t lspec = getLabelSpec(group);
-
-        __print_group();
-
-        renderLabel(painter,option->rect,fspec,ispec,lspec,Qt::AlignLeft | Qt::AlignVCenter | Qt::TextShowMnemonic,o.text,!(option->state & State_Enabled),opt->icon.pixmap(opt->iconSize,iconmode,iconstate));
+        renderLabel(p,dir,r,fs,is,ls,
+                    Qt::AlignLeft | Qt::AlignVCenter | Qt::TextShowMnemonic,
+                    opt->text,!(option->state & State_Enabled),
+                    opt->icon.pixmap(opt->iconSize,icm,ics));
       }
-
       break;
     }
-
     case CE_CheckBoxLabel : {
-      const QStyleOptionButton *opt =
-          qstyleoption_cast<const QStyleOptionButton *>(option);
+      if ( const QStyleOptionButton *opt =
+          qstyleoption_cast<const QStyleOptionButton *>(option) ) {
 
-      if (opt) {
-        QStyleOptionButton o(*opt);
-
-        const QString group = "CheckBox";
-        const frame_spec_t fspec = getFrameSpec(group);
-        const interior_spec_t ispec = getInteriorSpec(group);
-        const label_spec_t lspec = getLabelSpec(group);
-
-        __print_group();
-
-        renderLabel(painter,option->rect,fspec,ispec,lspec,Qt::AlignLeft | Qt::AlignVCenter | Qt::TextShowMnemonic,o.text,!(option->state & State_Enabled),opt->icon.pixmap(opt->iconSize,iconmode,iconstate));
+        renderLabel(p,dir,r,fs,is,ls,
+                    Qt::AlignLeft | Qt::AlignVCenter | Qt::TextShowMnemonic,
+                    opt->text,!(option->state & State_Enabled),
+                    opt->icon.pixmap(opt->iconSize,icm,ics));
       }
-
       break;
     }
+    case CE_ComboBoxLabel : {
+      if ( const QStyleOptionComboBox *opt =
+           qstyleoption_cast<const QStyleOptionComboBox *>(option) ) {
 
-    case CE_ComboBoxLabel : { // non editable
-      const QStyleOptionComboBox *opt =
-          qstyleoption_cast<const QStyleOptionComboBox *>(option);
-
-      if (opt && !opt->editable) {
-        const QString group = "ComboBox";
-        const frame_spec_t fspec = getFrameSpec(group);
-        const interior_spec_t ispec = getInteriorSpec(group);
-        const label_spec_t lspec = getLabelSpec(group);
-
-        __print_group();
-
-        const QRect r = subControlRect(CC_ComboBox,opt,SC_ComboBoxEditField,widget);
-        renderLabel(painter,r,fspec,ispec,lspec,Qt::AlignLeft | Qt::AlignVCenter | Qt::TextShowMnemonic,opt->currentText,!(option->state & State_Enabled),opt->currentIcon.pixmap(opt->iconSize,iconmode,iconstate));
+        if ( !opt->editable ) {
+          // NOTE Editable label is rendered by a embedded QLineEdit
+          // inside the QComboBox object, except icon
+          // See QComboBox's qcombobox.cpp::updateLineEditGeometry()
+          renderLabel(p,dir,r,fs,is,ls,
+                      Qt::AlignLeft | Qt::AlignVCenter | Qt::TextShowMnemonic,
+                      opt->currentText,
+                      !(option->state & State_Enabled),
+                      opt->currentIcon.pixmap(opt->iconSize,icm,ics));
+        } else {
+          // NOTE Non editable combo boxes: the embedded QLineEdit is not
+          // able to draw the item icon, so do it here
+          renderLabel(p,dir,r,fs,is,ls,
+                      Qt::AlignLeft | Qt::AlignVCenter | Qt::TextShowMnemonic,
+                      " ", // NOTE renderLabel centers icons if text is empty
+                      !(option->state & State_Enabled),
+                      opt->currentIcon.pixmap(opt->iconSize,icm,ics));
+        }
       }
-
       break;
     }
 
     case CE_TabBarTabShape : {
       const QString group = "Tab";
 
-      frame_spec_t fspec = getFrameSpec(group);
-      const interior_spec_t ispec = getInteriorSpec(group);
+      frame_spec_t fs = getFrameSpec(group);
+      const interior_spec_t is = getInteriorSpec(group);
 
       __print_group();
 
@@ -1451,7 +979,7 @@ void QSvgStyle::drawControl(ControlElement element, const QStyleOption * option,
           qstyleoption_cast<const QStyleOptionTab *>(option);
 
       if (opt) {
-        fspec.hasCapsule = true;
+        fs.hasCapsule = true;
         int capsule = 2;
 
         if (opt->position == QStyleOptionTab::Beginning)
@@ -1466,34 +994,34 @@ void QSvgStyle::drawControl(ControlElement element, const QStyleOption * option,
         if ( (opt->shape == QTabBar::RoundedNorth) ||
              (opt->shape == QTabBar::TriangularNorth)
         ) {
-          fspec.capsuleH = capsule;
-          fspec.capsuleV = -1;
+          fs.capsuleH = capsule;
+          fs.capsuleV = -1;
         }
 
         if ( (opt->shape == QTabBar::RoundedSouth) ||
              (opt->shape == QTabBar::TriangularSouth)
         ) {
-          fspec.capsuleH = capsule;
-          fspec.capsuleV = 1;
+          fs.capsuleH = capsule;
+          fs.capsuleV = 1;
         }
 
         if ( (opt->shape == QTabBar::RoundedWest) ||
              (opt->shape == QTabBar::TriangularWest)
         ) {
-          fspec.capsuleV = capsule;
-          fspec.capsuleH = -1;
+          fs.capsuleV = capsule;
+          fs.capsuleH = -1;
         }
 
         if ( (opt->shape == QTabBar::RoundedEast) ||
              (opt->shape == QTabBar::TriangularEast)
         ) {
-          fspec.capsuleV = capsule;
-          fspec.capsuleH = 1;
+          fs.capsuleV = capsule;
+          fs.capsuleH = 1;
         }
       }
 
-      renderInterior(painter,option->rect,fspec,ispec,ispec.element+"-"+status);
-      renderFrame(painter,option->rect,fspec,fspec.element+"-"+status);
+      renderInterior(p,option->rect,fs,is,is.element+"-"+st);
+      renderFrame(p,option->rect,fs,fs.element+"-"+st);
 
       break;
     }
@@ -1505,13 +1033,13 @@ void QSvgStyle::drawControl(ControlElement element, const QStyleOption * option,
       if (opt) {
         const QString group = "Tab";
 
-        const frame_spec_t fspec = getFrameSpec(group);
-        const interior_spec_t ispec = getInteriorSpec(group);
-        const label_spec_t lspec = getLabelSpec(group);
+        const frame_spec_t fs = getFrameSpec(group);
+        const interior_spec_t is = getInteriorSpec(group);
+        const label_spec_t ls = getLabelSpec(group);
 
         __print_group();
 
-        renderLabel(painter,option->rect,fspec,ispec,lspec,Qt::AlignLeft | Qt::AlignVCenter | Qt::TextShowMnemonic,opt->text,!(option->state & State_Enabled),opt->icon.pixmap(pixelMetric(PM_TabBarIconSize),iconmode,iconstate));
+        renderLabel(p,dir,option->rect,fs,is,ls,Qt::AlignLeft | Qt::AlignVCenter | Qt::TextShowMnemonic,opt->text,!(option->state & State_Enabled),opt->icon.pixmap(pixelMetric(PM_TabBarIconSize),icm,ics));
       }
 
       break;
@@ -1520,13 +1048,13 @@ void QSvgStyle::drawControl(ControlElement element, const QStyleOption * option,
     case CE_ToolBoxTabShape : {
       const QString group = "ToolboxTab";
 
-      frame_spec_t fspec = getFrameSpec(group);
-      const interior_spec_t ispec = getInteriorSpec(group);
+      frame_spec_t fs = getFrameSpec(group);
+      const interior_spec_t is = getInteriorSpec(group);
 
       __print_group();
 
-      renderFrame(painter,option->rect,fspec,fspec.element+"-"+status);
-      renderInterior(painter,option->rect,fspec,ispec,ispec.element+"-"+status);
+      renderFrame(p,option->rect,fs,fs.element+"-"+st);
+      renderInterior(p,option->rect,fs,is,is.element+"-"+st);
 
       break;
     }
@@ -1538,13 +1066,13 @@ void QSvgStyle::drawControl(ControlElement element, const QStyleOption * option,
       if (opt) {
         const QString group = "ToolboxTab";
 
-        frame_spec_t fspec = getFrameSpec(group);
-        const interior_spec_t ispec = getInteriorSpec(group);
-        const label_spec_t lspec = getLabelSpec(group);
+        frame_spec_t fs = getFrameSpec(group);
+        const interior_spec_t is = getInteriorSpec(group);
+        const label_spec_t ls = getLabelSpec(group);
 
         __print_group();
 
-        renderLabel(painter,option->rect,fspec,ispec,lspec,Qt::AlignCenter | Qt::TextShowMnemonic,opt->text,!(option->state & State_Enabled),opt->icon.pixmap(pixelMetric(PM_TabBarIconSize),iconmode,iconstate));
+        renderLabel(p,dir,option->rect,fs,is,ls,Qt::AlignCenter | Qt::TextShowMnemonic,opt->text,!(option->state & State_Enabled),opt->icon.pixmap(pixelMetric(PM_TabBarIconSize),icm,ics));
       }
 
       break;
@@ -1553,13 +1081,13 @@ void QSvgStyle::drawControl(ControlElement element, const QStyleOption * option,
     case CE_ProgressBarGroove : {
       const QString group = "Progressbar";
 
-      frame_spec_t fspec = getFrameSpec(group);
-      const interior_spec_t ispec = getInteriorSpec(group);
+      frame_spec_t fs = getFrameSpec(group);
+      const interior_spec_t is = getInteriorSpec(group);
 
       __print_group();
 
-      renderFrame(painter,option->rect,fspec,fspec.element+"-"+status);
-      renderInterior(painter,option->rect,fspec,ispec,ispec.element+"-"+status);
+      renderFrame(p,option->rect,fs,fs.element+"-"+st);
+      renderInterior(p,option->rect,fs,is,is.element+"-"+st);
 
       break;
     }
@@ -1571,16 +1099,16 @@ void QSvgStyle::drawControl(ControlElement element, const QStyleOption * option,
       if (opt) {
         const QString group = "ProgressbarContents";
 
-        frame_spec_t fspec = getFrameSpec(group);
-        const interior_spec_t ispec = getInteriorSpec(group);
+        frame_spec_t fs = getFrameSpec(group);
+        const interior_spec_t is = getInteriorSpec(group);
 
         __print_group();
 
         if ( opt->progress >= 0 ) {
           int empty = sliderPositionFromValue(opt->minimum,opt->maximum,opt->maximum-opt->progress,w,false);
 
-          renderFrame(painter,option->rect.adjusted(0,0,-empty,0),fspec,fspec.element+"-"+status);
-          renderInterior(painter,option->rect.adjusted(0,0,-empty,0),fspec,ispec,ispec.element+"-"+status);
+          renderFrame(p,option->rect.adjusted(0,0,-empty,0),fs,fs.element+"-"+st);
+          renderInterior(p,option->rect.adjusted(0,0,-empty,0),fs,is,is.element+"-"+st);
         } else { // busy progressbar
           QWidget *w = (QWidget *)widget;
 
@@ -1591,20 +1119,20 @@ void QSvgStyle::drawControl(ControlElement element, const QStyleOption * option,
           r.setWidth(pm);
           if ( r.x()+r.width()-1 > option->rect.x()+option->rect.width()-1 ) {
             // wrap busy indicator
-            fspec.hasCapsule = true;
-            fspec.capsuleH = 1;
-            fspec.capsuleV = 2;
+            fs.hasCapsule = true;
+            fs.capsuleH = 1;
+            fs.capsuleV = 2;
             r.setWidth(option->rect.x()+option->rect.width()-r.x());
-            renderFrame(painter,r,fspec,fspec.element+"-"+status);
-            renderInterior(painter,r,fspec,ispec,ispec.element+"-"+status);
+            renderFrame(p,r,fs,fs.element+"-"+st);
+            renderInterior(p,r,fs,is,is.element+"-"+st);
 
-            fspec.capsuleH = -1;
+            fs.capsuleH = -1;
             r = QRect(option->rect.x(),option->rect.y(),pm-r.width(),option->rect.height());
-            renderFrame(painter,r,fspec,fspec.element+"-"+status);
-            renderInterior(painter,r,fspec,ispec,ispec.element+"-"+status);
+            renderFrame(p,r,fs,fs.element+"-"+st);
+            renderInterior(p,r,fs,is,is.element+"-"+st);
           } else {
-            renderFrame(painter,r,fspec,fspec.element+"-"+status);
-            renderInterior(painter,r,fspec,ispec,ispec.element+"-"+status);
+            renderFrame(p,r,fs,fs.element+"-"+st);
+            renderInterior(p,r,fs,is,is.element+"-"+st);
           }
         }
       }
@@ -1619,13 +1147,13 @@ void QSvgStyle::drawControl(ControlElement element, const QStyleOption * option,
       if (opt && opt->textVisible) {
         const QString group = "Progressbar";
 
-        const frame_spec_t fspec = getFrameSpec(group);
-        const interior_spec_t ispec = getInteriorSpec(group);
-        const label_spec_t lspec = getLabelSpec(group);
+        const frame_spec_t fs = getFrameSpec(group);
+        const interior_spec_t is = getInteriorSpec(group);
+        const label_spec_t ls = getLabelSpec(group);
 
         __print_group();
 
-        renderLabel(painter,option->rect,fspec,ispec,lspec,opt->textAlignment,opt->text,!(option->state & State_Enabled));
+        renderLabel(p,dir,option->rect,fs,is,ls,opt->textAlignment,opt->text,!(option->state & State_Enabled));
       }
 
       break;
@@ -1634,13 +1162,13 @@ void QSvgStyle::drawControl(ControlElement element, const QStyleOption * option,
     case CE_Splitter : {
       const QString group = "Splitter";
 
-      const frame_spec_t fspec = getFrameSpec(group);
-      const interior_spec_t ispec = getInteriorSpec(group);
+      const frame_spec_t fs = getFrameSpec(group);
+      const interior_spec_t is = getInteriorSpec(group);
 
       __print_group();
 
-      renderFrame(painter,option->rect,fspec,fspec.element+"-"+status);
-      renderInterior(painter,option->rect,fspec,ispec,ispec.element+"-"+status, (h > w) ? Qt::Vertical : Qt::Horizontal);
+      renderFrame(p,option->rect,fs,fs.element+"-"+st);
+      renderInterior(p,option->rect,fs,is,is.element+"-"+st, (h > w) ? Qt::Vertical : Qt::Horizontal);
 
       break;
     }
@@ -1648,18 +1176,18 @@ void QSvgStyle::drawControl(ControlElement element, const QStyleOption * option,
     case CE_ScrollBarAddLine : {
       const QString group = "Scrollbar";
 
-      const frame_spec_t fspec = getFrameSpec(group);
-      const interior_spec_t ispec = getInteriorSpec(group);
-      const indicator_spec_t dspec = getIndicatorSpec(group);
+      const frame_spec_t fs = getFrameSpec(group);
+      const interior_spec_t is = getInteriorSpec(group);
+      const indicator_spec_t ds = getIndicatorSpec(group);
 
       __print_group();
 
-      renderFrame(painter,option->rect,fspec,fspec.element+"-"+status);
-      renderInterior(painter,option->rect,fspec,ispec,ispec.element+"-"+status);
+      renderFrame(p,option->rect,fs,fs.element+"-"+st);
+      renderInterior(p,option->rect,fs,is,is.element+"-"+st);
       if (option->state & State_Horizontal)
-        renderIndicator(painter,option->rect,fspec,ispec,dspec,dspec.element+"-right-"+status);
+        renderIndicator(p,option->rect,fs,is,ds,ds.element+"-right-"+st);
       else
-        renderIndicator(painter,option->rect,fspec,ispec,dspec,dspec.element+"-down-"+status);
+        renderIndicator(p,option->rect,fs,is,ds,ds.element+"-down-"+st);
 
       break;
     }
@@ -1667,18 +1195,18 @@ void QSvgStyle::drawControl(ControlElement element, const QStyleOption * option,
     case CE_ScrollBarSubLine : {
       const QString group = "Scrollbar";
 
-      const frame_spec_t fspec = getFrameSpec(group);
-      const interior_spec_t ispec = getInteriorSpec(group);
-      const indicator_spec_t dspec = getIndicatorSpec(group);
+      const frame_spec_t fs = getFrameSpec(group);
+      const interior_spec_t is = getInteriorSpec(group);
+      const indicator_spec_t ds = getIndicatorSpec(group);
 
       __print_group();
 
-      renderFrame(painter,option->rect,fspec,fspec.element+"-"+status);
-      renderInterior(painter,option->rect,fspec,ispec,ispec.element+"-"+status);
+      renderFrame(p,option->rect,fs,fs.element+"-"+st);
+      renderInterior(p,option->rect,fs,is,is.element+"-"+st);
       if (option->state & State_Horizontal)
-        renderIndicator(painter,option->rect,fspec,ispec,dspec,dspec.element+"-left-"+status);
+        renderIndicator(p,option->rect,fs,is,ds,ds.element+"-left-"+st);
       else
-        renderIndicator(painter,option->rect,fspec,ispec,dspec,dspec.element+"-up-"+status);
+        renderIndicator(p,option->rect,fs,is,ds,ds.element+"-up-"+st);
 
       break;
     }
@@ -1686,13 +1214,13 @@ void QSvgStyle::drawControl(ControlElement element, const QStyleOption * option,
     case CE_ScrollBarSlider : {
       const QString group = "ScrollbarSlider";
 
-      const frame_spec_t fspec = getFrameSpec(group);
-      const interior_spec_t ispec = getInteriorSpec(group);
+      const frame_spec_t fs = getFrameSpec(group);
+      const interior_spec_t is = getInteriorSpec(group);
 
       __print_group();
 
-      renderFrame(painter,option->rect,fspec,fspec.element+"-"+status);
-      renderInterior(painter,option->rect,fspec,ispec,ispec.element+"-"+status);
+      renderFrame(p,option->rect,fs,fs.element+"-"+st);
+      renderInterior(p,option->rect,fs,is,is.element+"-"+st);
 
       break;
     }
@@ -1700,13 +1228,13 @@ void QSvgStyle::drawControl(ControlElement element, const QStyleOption * option,
     case CE_HeaderSection : {
       const QString group = "HeaderSection";
 
-      const frame_spec_t fspec = getFrameSpec(group);
-      const interior_spec_t ispec = getInteriorSpec(group);
+      const frame_spec_t fs = getFrameSpec(group);
+      const interior_spec_t is = getInteriorSpec(group);
 
       __print_group();
 
-      renderFrame(painter,option->rect,fspec,fspec.element+"-"+status);
-      renderInterior(painter,option->rect,fspec,ispec,ispec.element+"-"+status);
+      renderFrame(p,option->rect,fs,fs.element+"-"+st);
+      renderInterior(p,option->rect,fs,is,is.element+"-"+st);
 
       break;
     }
@@ -1718,13 +1246,13 @@ void QSvgStyle::drawControl(ControlElement element, const QStyleOption * option,
       if (opt) {
         const QString group = "HeaderSection";
 
-        const frame_spec_t fspec = getFrameSpec(group);
-        const interior_spec_t ispec = getInteriorSpec(group);
-        const label_spec_t lspec = getLabelSpec(group);
+        const frame_spec_t fs = getFrameSpec(group);
+        const interior_spec_t is = getInteriorSpec(group);
+        const label_spec_t ls = getLabelSpec(group);
 
         __print_group();
 
-        renderLabel(painter,option->rect,fspec,ispec,lspec,opt->textAlignment,opt->text,!(option->state & State_Enabled),opt->icon.pixmap(pixelMetric(PM_SmallIconSize),iconmode,iconstate));
+        renderLabel(p,dir,option->rect,fs,is,ls,opt->textAlignment,opt->text,!(option->state & State_Enabled),opt->icon.pixmap(pixelMetric(PM_SmallIconSize),icm,ics));
       }
 
       break;
@@ -1733,14 +1261,14 @@ void QSvgStyle::drawControl(ControlElement element, const QStyleOption * option,
     case CE_ToolBar : {
       const QString group = "Toolbar";
 
-      const frame_spec_t fspec = getFrameSpec(group);
-      const interior_spec_t ispec = getInteriorSpec(group);
-      const indicator_spec_t dspec = getIndicatorSpec(group);
+      const frame_spec_t fs = getFrameSpec(group);
+      const interior_spec_t is = getInteriorSpec(group);
+      const indicator_spec_t ds = getIndicatorSpec(group);
 
       __print_group();
 
-      renderFrame(painter,option->rect,fspec,fspec.element+"-"+status);
-      renderInterior(painter,option->rect,fspec,ispec,ispec.element+"-"+status, (option->state & State_Horizontal) ? Qt::Horizontal : Qt::Vertical);
+      renderFrame(p,option->rect,fs,fs.element+"-"+st);
+      renderInterior(p,option->rect,fs,is,is.element+"-"+st, (option->state & State_Horizontal) ? Qt::Horizontal : Qt::Vertical);
 
       break;
     }
@@ -1748,76 +1276,62 @@ void QSvgStyle::drawControl(ControlElement element, const QStyleOption * option,
     case CE_SizeGrip : {
       const QString group = "SizeGrip";
 
-      const frame_spec_t fspec = getFrameSpec(group);
-      const interior_spec_t ispec = getInteriorSpec(group);
-      const indicator_spec_t dspec = getIndicatorSpec(group);
+      const frame_spec_t fs = getFrameSpec(group);
+      const interior_spec_t is = getInteriorSpec(group);
+      const indicator_spec_t ds = getIndicatorSpec(group);
 
       __print_group();
 
-      renderFrame(painter,option->rect,fspec,fspec.element+"-"+status);
-      renderInterior(painter,option->rect,fspec,ispec,ispec.element+"-"+status);
-      renderIndicator(painter,option->rect,fspec,ispec,dspec,dspec.element+"-"+status);
+      renderFrame(p,option->rect,fs,fs.element+"-"+st);
+      renderInterior(p,option->rect,fs,is,is.element+"-"+st);
+      renderIndicator(p,option->rect,fs,is,ds,ds.element+"-"+st);
 
       break;
     }
 
     case CE_PushButton : {
-      drawControl(CE_PushButtonBevel,option,painter,widget);
-      drawControl(CE_PushButtonLabel,option,painter,widget);
-
+      drawControl(CE_PushButtonBevel,option,p,widget);
+      drawControl(CE_PushButtonLabel,option,p,widget);
       break;
     }
-
     case CE_PushButtonLabel : {
-      const QStyleOptionButton *opt =
-          qstyleoption_cast<const QStyleOptionButton *>(option);
-
-      if (opt) {
-        const QString group = "PanelButtonCommand";
-        const frame_spec_t fspec = getFrameSpec(group);
-        const interior_spec_t ispec = getInteriorSpec(group);
-	const indicator_spec_t dspec = getIndicatorSpec(group);
-        const label_spec_t lspec = getLabelSpec(group);
-
-        __print_group();
-
-        const QPushButton *w = qobject_cast<const QPushButton *>(widget);
-        if (w && w->isDefault()) {
-          QFont f(w->font());
-          f.setBold(true);
-          painter->setFont(f);
-        }
+      if ( const QStyleOptionButton *opt =
+           qstyleoption_cast<const QStyleOptionButton *>(option) ) {
 
         if ( opt->features & QStyleOptionButton::HasMenu ) {
 	  QStyleOptionButton o(*opt);
-	  renderLabel(painter,option->rect.adjusted(0,0,-dspec.size-lspec.tispace,0),fspec,ispec,lspec,Qt::AlignCenter | Qt::AlignVCenter | Qt::TextShowMnemonic,opt->text,!(option->state & State_Enabled),opt->icon.pixmap(opt->iconSize,iconmode,iconstate));
-	  o.rect = QRect(x+option->rect.width()-lspec.tispace-dspec.size-fspec.right,y,dspec.size,h);
-          drawPrimitive(PE_IndicatorArrowDown,&o,painter,widget);
+	  renderLabel(p,dir,r.adjusted(0,0,-ds.size-ls.tispace,0),fs,is,ls,
+                      Qt::AlignCenter | Qt::AlignVCenter | Qt::TextShowMnemonic,
+                      opt->text,!(option->state & State_Enabled),
+                      opt->icon.pixmap(opt->iconSize,icm,ics));
+	  o.rect = QRect(x+w-ls.tispace-ds.size-fs.right,y,ds.size,h);
+          drawPrimitive(PE_IndicatorArrowDown,&o,p,widget);
 	} else {
-	  renderLabel(painter,option->rect,fspec,ispec,lspec,Qt::AlignCenter | Qt::AlignVCenter | Qt::TextShowMnemonic,opt->text,!(option->state & State_Enabled),opt->icon.pixmap(opt->iconSize,iconmode,iconstate));
+	  renderLabel(p,dir,r,fs,is,ls,
+                      Qt::AlignCenter | Qt::AlignVCenter | Qt::TextShowMnemonic,
+                      opt->text,!(option->state & State_Enabled),
+                      opt->icon.pixmap(opt->iconSize,icm,ics));
 	}
       }
 
       break;
     }
-
     case CE_ToolButtonLabel : {
-      const QStyleOptionToolButton *opt =
-          qstyleoption_cast<const QStyleOptionToolButton *>(option);
-
-      if (opt) {
-        const QString group = "PanelButtonTool";
-        const frame_spec_t fspec = getFrameSpec(group);
-        const interior_spec_t ispec = getInteriorSpec(group);
-        const indicator_spec_t dspec = getIndicatorSpec(group);
-        const label_spec_t lspec = getLabelSpec(group);
-
-        __print_group();
+      if ( const QStyleOptionToolButton *opt =
+          qstyleoption_cast<const QStyleOptionToolButton *>(option) ) {
 
         if (opt->arrowType == Qt::NoArrow)
-            renderLabel(painter,option->rect,fspec,ispec,lspec,Qt::AlignCenter | Qt::TextShowMnemonic,opt->text,!(option->state & State_Enabled),opt->icon.pixmap(opt->iconSize,iconmode,iconstate),opt->toolButtonStyle);
+          renderLabel(p,dir,r,fs,is,ls,
+                      Qt::AlignCenter | Qt::TextShowMnemonic,
+                      opt->text,!(option->state & State_Enabled),
+                      opt->icon.pixmap(opt->iconSize,icm,ics),
+                      opt->toolButtonStyle);
         else
-          renderLabel(painter,option->rect.adjusted(dspec.size+lspec.tispace,0,0,0),fspec,ispec,lspec,Qt::AlignCenter | Qt::TextShowMnemonic,opt->text,!(option->state & State_Enabled),opt->icon.pixmap(opt->iconSize,iconmode,iconstate),opt->toolButtonStyle);
+          renderLabel(p,dir,r.adjusted(ds.size+ls.tispace,0,0,0),fs,is,ls,
+                      Qt::AlignCenter | Qt::TextShowMnemonic,
+                      opt->text,!(option->state & State_Enabled),
+                      opt->icon.pixmap(opt->iconSize,icm,ics),
+                      opt->toolButtonStyle);
 
 	// alignement of arrow
 	Qt::AlignmentFlag hAlign = Qt::AlignLeft;
@@ -1828,16 +1342,20 @@ void QSvgStyle::drawControl(ControlElement element, const QStyleOption * option,
           case Qt::NoArrow :
             break;
           case Qt::UpArrow :
-            renderIndicator(painter,option->rect,fspec,ispec,dspec,dspec.element+"-up-"+status,hAlign | Qt::AlignVCenter);
+            renderIndicator(p,r,fs,is,ds,ds.element+"-up-"+st,
+                            hAlign | Qt::AlignVCenter);
             break;
           case Qt::DownArrow :
-            renderIndicator(painter,option->rect,fspec,ispec,dspec,dspec.element+"-down-"+status,hAlign | Qt::AlignVCenter);
+            renderIndicator(p,r,fs,is,ds,ds.element+"-down-"+st,
+                            hAlign | Qt::AlignVCenter);
             break;
           case Qt::LeftArrow :
-            renderIndicator(painter,option->rect,fspec,ispec,dspec,dspec.element+"-left-"+status,hAlign | Qt::AlignVCenter);
+            renderIndicator(p,option->rect,fs,is,ds,ds.element+"-left-"+st,
+                            hAlign | Qt::AlignVCenter);
             break;
           case Qt::RightArrow :
-            renderIndicator(painter,option->rect,fspec,ispec,dspec,dspec.element+"-right-"+status,hAlign | Qt::AlignVCenter);
+            renderIndicator(p,option->rect,fs,is,ds,ds.element+"-right-"+st,
+                            hAlign | Qt::AlignVCenter);
             break;
         }
       }
@@ -1852,20 +1370,20 @@ void QSvgStyle::drawControl(ControlElement element, const QStyleOption * option,
       if (opt) {
         const QString group = "Dock";
 
-        const frame_spec_t fspec = getFrameSpec(group);
-        const interior_spec_t ispec = getInteriorSpec(group);
-        const label_spec_t lspec = getLabelSpec(group);
+        const frame_spec_t fs = getFrameSpec(group);
+        const interior_spec_t is = getInteriorSpec(group);
+        const label_spec_t ls = getLabelSpec(group);
 
         const QDockWidget *w = qobject_cast<const QDockWidget *>(widget);
         __print_group();
 
-        renderFrame(painter,option->rect,fspec,fspec.element+"-"+status);
+        renderFrame(p,option->rect,fs,fs.element+"-"+st);
         if ( w ) {
-          renderInterior(painter,option->rect,fspec,ispec,ispec.element+"-"+status, (w->features() & QDockWidget::DockWidgetVerticalTitleBar) ? Qt::Vertical : Qt::Horizontal);
+          renderInterior(p,option->rect,fs,is,is.element+"-"+st, (w->features() & QDockWidget::DockWidgetVerticalTitleBar) ? Qt::Vertical : Qt::Horizontal);
         } else {
-          renderInterior(painter,option->rect,fspec,ispec,ispec.element+"-"+status);
+          renderInterior(p,option->rect,fs,is,is.element+"-"+st);
         }
-        renderLabel(painter,option->rect,fspec,ispec,lspec,Qt::AlignLeft | Qt::AlignVCenter | Qt::TextShowMnemonic,opt->title,!(option->state & State_Enabled));
+        renderLabel(p,dir,option->rect,fs,is,ls,Qt::AlignLeft | Qt::AlignVCenter | Qt::TextShowMnemonic,opt->title,!(option->state & State_Enabled));
       }
 
       break;
@@ -1874,8 +1392,8 @@ void QSvgStyle::drawControl(ControlElement element, const QStyleOption * option,
     case CE_ShapedFrame : {
       const QString group = "GenericFrame";
 
-      const frame_spec_t fspec = getFrameSpec(group);
-      const interior_spec_t ispec = getInteriorSpec(group);
+      const frame_spec_t fs = getFrameSpec(group);
+      const interior_spec_t is = getInteriorSpec(group);
 
       __print_group();
 
@@ -1883,17 +1401,17 @@ void QSvgStyle::drawControl(ControlElement element, const QStyleOption * option,
         qstyleoption_cast<const QStyleOptionFrameV3 *>(option);
 
       if ( opt && (opt->frameShape == QFrame::HLine) ) {
-        renderElement(painter,
-                      fspec.element+"-"+"hsep",
+        renderElement(p,
+                      fs.element+"-"+"hsep",
                       option->rect,
-                      0,0,Qt::Horizontal,animationcount%fspec.animationFrames);
+                      0,0,Qt::Horizontal,animationcount%fs.animationFrames);
       } else if (opt && (opt->frameShape == QFrame::VLine) ) {
-        renderElement(painter,
-                      fspec.element+"-"+"vsep",
+        renderElement(p,
+                      fs.element+"-"+"vsep",
                       option->rect,
-                      0,0,Qt::Horizontal,animationcount%fspec.animationFrames);
+                      0,0,Qt::Horizontal,animationcount%fs.animationFrames);
       } else if (opt && (opt->frameShape != QFrame::NoFrame) ) {
-        drawPrimitive(PE_Frame,opt,painter,widget);
+        drawPrimitive(PE_Frame,opt,p,widget);
       }
 
       break;
@@ -1901,93 +1419,134 @@ void QSvgStyle::drawControl(ControlElement element, const QStyleOption * option,
 
     default :
       //qDebug() << "[QSvgStyle] " << __func__ << ": Unhandled control " << element;
-      QCommonStyle::drawControl(element,option,painter,widget);
+      QCommonStyle::drawControl(e,option,p,widget);
   }
 
-  emit(sig_drawControl_end(CE_str(element)));
+end:
+  emit(sig_drawControl_end(CE_str(e)));
   __exit_func();
 }
 
-void QSvgStyle::drawComplexControl(ComplexControl control, const QStyleOptionComplex * option, QPainter * painter, const QWidget * widget) const
+void QSvgStyle::drawComplexControl(ComplexControl control, const QStyleOptionComplex * option, QPainter * p, const QWidget * widget) const
 {
   __enter_func__();
   emit(sig_drawComplexControl_begin(CC_str(control)));
 
-  int x,y,h,w;
-  option->rect.getRect(&x,&y,&w,&h);
+  // Copy some values into shorter variable names
+  int x,y,w,h;
+  QRect r = option->rect;
+  r.getRect(&x,&y,&w,&h);
+  QString st = state_str(option->state, widget);
+  Qt::LayoutDirection dir = option->direction;
+  bool focus = option->state & State_HasFocus;
+  QIcon::Mode icm = state_iconmode(option->state);
+  QIcon::State ics = state_iconstate(option->state);
+  QFontMetrics fm = option->fontMetrics;
 
-  QString status;
+  Q_UNUSED(focus);
+  Q_UNUSED(icm);
+  Q_UNUSED(ics);
 
-  if ( !isContainerWidget(widget) ) {
-    status =
-    (option->state & State_Enabled) ?
-    (option->state & State_On) ? "toggled" :
-    (option->state & State_Sunken) ? "pressed" :
-    (option->state & State_Selected) ? "toggled" :
-    ((option->state & State_MouseOver) || (option->state & State_HasFocus)) ? "focused" : "normal"
-    : "disabled";
-  } else {
-    status = (option->state & State_Enabled) ? "normal" : "disabled";
+  // Get QSvgStyle configuration group used to render this element
+  QString g = CC_group(control);
+
+  // Configuration for group g
+  frame_spec_t fs;
+  interior_spec_t is;
+  label_spec_t ls;
+  indicator_spec_t ds;
+  size_spec_t ss;
+
+  if ( g.isEmpty() ) {
+    // element not currently supported by QSvgStyle
+    QCommonStyle::drawComplexControl(control,option,p,widget);
+    goto end;
   }
+
+  // Get configuration for group
+  fs = getFrameSpec(g);
+  is = getInteriorSpec(g);
+  ls = getLabelSpec(g);
+  ds = getIndicatorSpec(g);
+  ss = getSizeSpec(g);
+
+  __print_group();
 
   switch (control) {
     case CC_ToolButton : {
-      const QStyleOptionToolButton *opt =
-        qstyleoption_cast<const QStyleOptionToolButton *>(option);
+      if ( const QStyleOptionToolButton *opt =
+          qstyleoption_cast<const QStyleOptionToolButton *>(option) ) {
 
-      if (opt) {
         QStyleOptionToolButton o(*opt);
 
-        o.rect = subControlRect(CC_ToolButton,opt,SC_ToolButton,widget);
-        drawPrimitive(PE_FrameButtonTool,&o,painter,widget);
-        drawPrimitive(PE_PanelButtonTool,&o,painter,widget);
-        drawControl(CE_ToolButtonLabel,&o,painter,widget);
-
-        if (widget) {
-          const QToolButton * w = qobject_cast<const QToolButton *>(widget);
-          if (w) {
-            o.rect = subControlRect(CC_ToolButton,opt,SC_ToolButtonMenu,widget);
-            if (w->popupMode() == QToolButton::MenuButtonPopup)
-              drawPrimitive(PE_IndicatorButtonDropDown,&o,painter,widget);
-            else if (w->popupMode() == QToolButton::InstantPopup)
-              drawPrimitive(PE_IndicatorArrowDown,&o,painter,widget);
-            else if ((w->popupMode() == QToolButton::DelayedPopup) && (opt->features & QStyleOptionToolButton::HasMenu)) {
-              // Double down arrow for delayed popups
-              drawPrimitive(PE_IndicatorArrowDown,&o,painter,widget);
-              o.rect.adjust(0,-10,0,0);
-              drawPrimitive(PE_IndicatorArrowDown,&o,painter,widget);
-            }
+        // draw frame and interior
+        if ( option->state & State_AutoRaise ) {
+          // Auto raise buttons (found on toolbars)
+          if ( (option->state & State_Enabled) &&
+                ((option->state & State_Sunken) ||
+                (option->state & State_On) ||
+                (option->state & State_MouseOver))
+              ) {
+            // Draw frame and interior around normal non autoraise tool buttons
+            drawPrimitive(PE_FrameButtonTool,&o,p,widget);
+            drawPrimitive(PE_PanelButtonTool,&o,p,widget);
           }
+        } else {
+          drawPrimitive(PE_FrameButtonTool,&o,p,widget);
+          drawPrimitive(PE_PanelButtonTool,&o,p,widget);
         }
+
+        // Draw label
+        o.rect = subControlRect(CC_ToolButton,opt,SC_ToolButton,widget);
+        drawControl(CE_ToolButtonLabel,&o,p,widget);
+
+        // Draw arrow
+        o.rect = subControlRect(CC_ToolButton,opt,SC_ToolButtonMenu,widget);
+        if (opt->features & QStyleOptionToolButton::Menu) {
+          // FIXME draw drop down button separator
+          // Tool button with independant drop down button
+          drawPrimitive(PE_IndicatorButtonDropDown,&o,p,widget);
+        } else if (opt->features & QStyleOptionToolButton::HasMenu)
+          // Simple down arrow for tool buttons with menus
+          drawPrimitive(PE_IndicatorArrowDown,&o,p,widget);
       }
 
       break;
     }
 
     case CC_SpinBox : {
-      const QStyleOptionSpinBox *opt =
-        qstyleoption_cast<const QStyleOptionSpinBox *>(option);
+      if (const QStyleOptionSpinBox *opt =
+          qstyleoption_cast<const QStyleOptionSpinBox *>(option)) {
 
-      if (opt) {
         QStyleOptionSpinBox o(*opt);
 
-        o.rect = subControlRect(CC_SpinBox,opt,SC_SpinBoxEditField,widget);
-        drawPrimitive(PE_FrameLineEdit,&o,painter,widget);
-        /* The QSpinBox widget will itself invoke the drawing of a PanelLineEdit,
-         * so this is not needed */
-        //drawPrimitive(PE_PanelLineEdit,&o,painter,widget);
+        // Remove sunken,pressed,mouse over attributes
+
+
+        // draw frame
+        o.rect = subControlRect(CC_SpinBox,opt,SC_SpinBoxFrame,widget);
+        drawPrimitive(PE_FrameLineEdit,&o,p,widget);
 
         if (opt->buttonSymbols == QAbstractSpinBox::UpDownArrows) {
+          o.state &= ~(State_Sunken | State_Selected | State_MouseOver);
+          if ( opt->activeSubControls & SC_SpinBoxUp )
+            o.state = opt->state;
           o.rect = subControlRect(CC_SpinBox,opt,SC_SpinBoxUp,widget);
-          drawPrimitive(PE_IndicatorSpinUp,&o,painter,widget);
+          drawPrimitive(PE_PanelButtonBevel,&o,p,widget);
+          drawPrimitive(PE_IndicatorSpinUp,&o,p,widget);
+
+          o.state &= ~(State_Sunken | State_Selected | State_MouseOver);
+          if ( opt->activeSubControls & SC_SpinBoxDown )
+            o.state = opt->state;
           o.rect = subControlRect(CC_SpinBox,opt,SC_SpinBoxDown,widget);
-          drawPrimitive(PE_IndicatorSpinDown,&o,painter,widget);
+          drawPrimitive(PE_PanelButtonBevel,&o,p,widget);
+          drawPrimitive(PE_IndicatorSpinDown,&o,p,widget);
         }
         if (opt->buttonSymbols == QAbstractSpinBox::PlusMinus) {
           o.rect = subControlRect(CC_SpinBox,opt,SC_SpinBoxUp,widget);
-          drawPrimitive(PE_IndicatorSpinPlus,&o,painter,widget);
+          drawPrimitive(PE_IndicatorSpinPlus,&o,p,widget);
           o.rect = subControlRect(CC_SpinBox,opt,SC_SpinBoxDown,widget);
-          drawPrimitive(PE_IndicatorSpinMinus,&o,painter,widget);
+          drawPrimitive(PE_IndicatorSpinMinus,&o,p,widget);
         }
       }
 
@@ -1995,50 +1554,28 @@ void QSvgStyle::drawComplexControl(ComplexControl control, const QStyleOptionCom
     }
 
     case CC_ComboBox : {
-      const QStyleOptionComboBox *opt =
-          qstyleoption_cast<const QStyleOptionComboBox *>(option);
+      if ( const QStyleOptionComboBox *opt =
+           qstyleoption_cast<const QStyleOptionComboBox *>(option) ) {
 
-      if (opt) {
         QStyleOptionComboBox o(*opt);
 
-        QString group;
-
-        if (!opt->editable)
-          group = "ComboBox";
-        else
-          group = "LineEdit";
-
-        frame_spec_t fspec = getFrameSpec(group);
-        fspec.hasCapsule = true;
-        fspec.capsuleH = -1;
-        fspec.capsuleV = 2;
-        const interior_spec_t ispec = getInteriorSpec(group);
-        const label_spec_t lspec = getLabelSpec(group);
-
-        o.rect = subControlRect(CC_ComboBox,opt,SC_ComboBoxEditField,widget);
-
-        renderFrame(painter,o.rect,fspec,fspec.element+"-"+status);
-        renderInterior(painter,o.rect,fspec,ispec,ispec.element+"-"+status);
-
-        o.rect = subControlRect(CC_ComboBox,opt,SC_ComboBoxArrow,widget);
-        drawPrimitive(PE_IndicatorButtonDropDown,&o,painter,widget);
-
-        // FIXME when the combo box is editable, the draw of edit field is called
-        // (by who ?) but the icon is missing (edit fields do not have icons)
-        // so draw the icon here
-        if (opt->editable) {
-          const QIcon::Mode iconmode =
-            (option->state & State_Enabled) ?
-            (option->state & State_Sunken) ? QIcon::Active :
-            (option->state & State_MouseOver) ? QIcon::Active : QIcon::Normal
-            : QIcon::Disabled;
-
-          const QIcon::State iconstate =
-            (option->state & State_On) ? QIcon::On : QIcon::Off;
-
-          const QRect r = subControlRect(CC_ComboBox,opt,SC_ComboBoxEditField,widget);
-          renderLabel(painter,r,fspec,ispec,lspec,Qt::AlignLeft | Qt::AlignVCenter | Qt::TextShowMnemonic," ",!(option->state & State_Enabled),opt->currentIcon.pixmap(opt->iconSize,iconmode,iconstate));
+        // Draw frame and interior
+        o.rect = subControlRect(CC_ComboBox,opt,SC_ComboBoxFrame,widget);
+        // FIXME don't draw frame in case of !opt->frame
+        if ( !opt->editable )
+          drawControl(CE_PushButtonBevel,&o,p,widget);
+        else {
+          drawPrimitive(PE_FrameLineEdit,&o,p,widget);
+          drawPrimitive(PE_PanelLineEdit,&o,p,widget);
         }
+
+        // NOTE Don't draw the label, QComboBox will draw it for us
+        // see Qt's implementation qcombobox.cpp::paintEvent()
+
+        // draw drop down button
+        // FIXME render separator
+        o.rect = subControlRect(CC_ComboBox,opt,SC_ComboBoxArrow,widget);
+        drawPrimitive(PE_IndicatorButtonDropDown,&o,p,widget);
       }
 
       break;
@@ -2057,17 +1594,17 @@ void QSvgStyle::drawComplexControl(ComplexControl control, const QStyleOptionCom
         const interior_spec_t ispec = getInteriorSpec(group);
 
         o.rect = subControlRect(CC_ScrollBar,opt,SC_ScrollBarGroove,widget);
-        renderFrame(painter,o.rect,fspec,fspec.element+"-"+status);
-        renderInterior(painter,o.rect,fspec,ispec,ispec.element+"-"+status);
+        renderFrame(p,o.rect,fspec,fspec.element+"-"+st);
+        renderInterior(p,o.rect,fspec,ispec,ispec.element+"-"+st);
 
         o.rect = subControlRect(CC_ScrollBar,opt,SC_ScrollBarAddLine,widget);
-        drawControl(CE_ScrollBarAddLine,&o,painter,widget);
+        drawControl(CE_ScrollBarAddLine,&o,p,widget);
 
         o.rect = subControlRect(CC_ScrollBar,opt,SC_ScrollBarSubLine,widget);
-        drawControl(CE_ScrollBarSubLine,&o,painter,widget);
+        drawControl(CE_ScrollBarSubLine,&o,p,widget);
 
         o.rect = subControlRect(CC_ScrollBar,opt,SC_ScrollBarSlider,widget);
-        drawControl(CE_ScrollBarSlider,&o,painter,widget);
+        drawControl(CE_ScrollBarSlider,&o,p,widget);
       }
 
       break;
@@ -2127,8 +1664,8 @@ void QSvgStyle::drawComplexControl(ComplexControl control, const QStyleOptionCom
               } else {
                 fspec.capsuleV = -1;
               }
-            renderFrame(painter,empty,fspec,fspec.element+"-focused");
-            renderInterior(painter,empty,fspec,ispec,ispec.element+"-focused",(option->state & State_Horizontal) ? Qt::Vertical : Qt::Horizontal);
+            renderFrame(p,empty,fspec,fspec.element+"-focused");
+            renderInterior(p,empty,fspec,ispec,ispec.element+"-focused",(option->state & State_Horizontal) ? Qt::Vertical : Qt::Horizontal);
             if (option->state & State_Horizontal)
               if (!opt->upsideDown) {
                 fspec.capsuleH = -1;
@@ -2141,8 +1678,8 @@ void QSvgStyle::drawComplexControl(ComplexControl control, const QStyleOptionCom
               } else {
                 fspec.capsuleV = 1;
               }
-            renderFrame(painter,full,fspec,fspec.element+"-toggled");
-            renderInterior(painter,full,fspec,ispec,ispec.element+"-toggled",(option->state & State_Horizontal) ? Qt::Vertical : Qt::Horizontal);
+            renderFrame(p,full,fspec,fspec.element+"-toggled");
+            renderInterior(p,full,fspec,ispec,ispec.element+"-toggled",(option->state & State_Horizontal) ? Qt::Vertical : Qt::Horizontal);
           } else {
             if (option->state & State_Horizontal)
               if (!opt->upsideDown) {
@@ -2156,8 +1693,8 @@ void QSvgStyle::drawComplexControl(ComplexControl control, const QStyleOptionCom
               } else {
                 fspec.capsuleV = -1;
               }
-            renderFrame(painter,empty,fspec,fspec.element+"-normal");
-            renderInterior(painter,empty,fspec,ispec,ispec.element+"-normal",(option->state & State_Horizontal) ? Qt::Vertical : Qt::Horizontal);
+            renderFrame(p,empty,fspec,fspec.element+"-normal");
+            renderInterior(p,empty,fspec,ispec,ispec.element+"-normal",(option->state & State_Horizontal) ? Qt::Vertical : Qt::Horizontal);
             if (option->state & State_Horizontal)
               if (!opt->upsideDown) {
                 fspec.capsuleH = -1;
@@ -2170,8 +1707,8 @@ void QSvgStyle::drawComplexControl(ComplexControl control, const QStyleOptionCom
               } else {
                 fspec.capsuleV = 1;
               }
-            renderFrame(painter,full,fspec,fspec.element+"-toggled");
-            renderInterior(painter,full,fspec,ispec,ispec.element+"-toggled",(option->state & State_Horizontal) ? Qt::Vertical : Qt::Horizontal);
+            renderFrame(p,full,fspec,fspec.element+"-toggled");
+            renderInterior(p,full,fspec,ispec,ispec.element+"-toggled",(option->state & State_Horizontal) ? Qt::Vertical : Qt::Horizontal);
           }
         } else {
           if (option->state & State_Horizontal)
@@ -2186,8 +1723,8 @@ void QSvgStyle::drawComplexControl(ComplexControl control, const QStyleOptionCom
             } else {
               fspec.capsuleV = -1;
             }
-          renderFrame(painter,empty,fspec,fspec.element+"-disabled");
-          renderInterior(painter,empty,fspec,ispec,ispec.element+"-disabled",(option->state & State_Horizontal) ? Qt::Vertical : Qt::Horizontal);
+          renderFrame(p,empty,fspec,fspec.element+"-disabled");
+          renderInterior(p,empty,fspec,ispec,ispec.element+"-disabled",(option->state & State_Horizontal) ? Qt::Vertical : Qt::Horizontal);
           if (option->state & State_Horizontal)
             if (!opt->upsideDown) {
               fspec.capsuleH = -1;
@@ -2200,8 +1737,8 @@ void QSvgStyle::drawComplexControl(ComplexControl control, const QStyleOptionCom
             } else {
                 fspec.capsuleV = 1;
             }
-          renderFrame(painter,full,fspec,fspec.element+"-disabled");
-          renderInterior(painter,full,fspec,ispec,ispec.element+"-disabled",(option->state & State_Horizontal) ? Qt::Vertical : Qt::Horizontal);
+          renderFrame(p,full,fspec,fspec.element+"-disabled");
+          renderInterior(p,full,fspec,ispec,ispec.element+"-disabled",(option->state & State_Horizontal) ? Qt::Vertical : Qt::Horizontal);
         }
 
         group = "SliderCursor";
@@ -2212,8 +1749,8 @@ void QSvgStyle::drawComplexControl(ComplexControl control, const QStyleOptionCom
 
         o.rect = subControlRect(CC_Slider,opt,SC_SliderHandle,widget);
 
-        renderFrame(painter,o.rect,fspec,fspec.element+"-"+status);
-        renderInterior(painter,o.rect,fspec,ispec,ispec.element+"-"+status);
+        renderFrame(p,o.rect,fspec,fspec.element+"-"+st);
+        renderInterior(p,o.rect,fspec,ispec,ispec.element+"-"+st);
       }
 
       break;
@@ -2229,11 +1766,11 @@ void QSvgStyle::drawComplexControl(ComplexControl control, const QStyleOptionCom
         QRect empty(squaredRect(subControlRect(CC_Dial,opt,SC_DialGroove,widget)));
         QRect full(squaredRect(subControlRect(CC_Dial,opt,SC_DialHandle,widget)));
 
-        renderElement(painter,"dial-empty",empty);
-        painter->save();
-        painter->setClipRect(full);
-        renderElement(painter,"dial-full",empty);
-        painter->restore();
+        renderElement(p,"dial-empty",empty);
+            p->save();
+            p->setClipRect(full);
+        renderElement(p,"dial-full",empty);
+            p->restore();
       }
 
       break;
@@ -2252,14 +1789,14 @@ void QSvgStyle::drawComplexControl(ComplexControl control, const QStyleOptionCom
         interior_spec_t ispec = getInteriorSpec(group);
         label_spec_t lspec = getLabelSpec(group);
 
-        renderFrame(painter,o.rect,fspec,fspec.element+"-"+status);
-        renderInterior(painter,o.rect,fspec,ispec,ispec.element+"-"+status);
+        renderFrame(p,o.rect,fspec,fspec.element+"-"+st);
+        renderInterior(p,o.rect,fspec,ispec,ispec.element+"-"+st);
 
         o.rect = subControlRect(CC_TitleBar,opt,SC_TitleBarLabel,widget);
 
-        renderLabel(painter,o.rect,fspec,ispec,lspec,Qt::AlignLeft | Qt::AlignVCenter, o.text, !(option->state & State_Enabled),o.icon.pixmap(pixelMetric(PM_TitleBarHeight)));
+        renderLabel(p,dir,o.rect,fspec,ispec,lspec,Qt::AlignLeft | Qt::AlignVCenter, o.text, !(option->state & State_Enabled),o.icon.pixmap(pixelMetric(PM_TitleBarHeight)));
 
-        drawComplexControl(CC_MdiControls,opt,painter,widget);
+        drawComplexControl(CC_MdiControls,opt,p,widget);
       }
 
       break;
@@ -2286,29 +1823,29 @@ void QSvgStyle::drawComplexControl(ComplexControl control, const QStyleOptionCom
         r2 = subControlRect(CC_GroupBox,&o,SC_GroupBoxLabel,widget);
 
         // Draw frame and interior around contents
-        renderFrame(painter,r1,fspec,fspec.element+"-"+status);
-        renderInterior(painter,r1,fspec,ispec,ispec.element+"-"+status);
+        renderFrame(p,r1,fspec,fspec.element+"-"+st);
+        renderInterior(p,r1,fspec,ispec,ispec.element+"-"+st);
 
         // Draw frame and interior around title
         fspec.hasCapsule = true;
         fspec.capsuleH = 2;
         fspec.capsuleV = -1; // FIXME bottom titles
-        renderFrame(painter,r2,fspec,fspec.element+"-"+status);
-        renderInterior(painter,r2,fspec,ispec,ispec.element+"-"+status);
+        renderFrame(p,r2,fspec,fspec.element+"-"+st);
+        renderInterior(p,r2,fspec,ispec,ispec.element+"-"+st);
 
         // Draw title
         fspec.hasCapsule = false;
         r2 = subControlRect(CC_GroupBox,&o,SC_GroupBoxLabel,widget);
         if ( w && w->isCheckable() ) {
-          renderLabel(painter,r2.adjusted(pixelMetric(PM_IndicatorWidth)+pixelMetric(PM_CheckBoxLabelSpacing),0,0,0),fspec,ispec,lspec,opt->textAlignment | Qt::TextShowMnemonic,opt->text,!opt->state & State_Enabled);
+          renderLabel(p,dir,r2.adjusted(pixelMetric(PM_IndicatorWidth)+pixelMetric(PM_CheckBoxLabelSpacing),0,0,0),fspec,ispec,lspec,opt->textAlignment | Qt::TextShowMnemonic,opt->text,!opt->state & State_Enabled);
           QStyleOption oo;
           oo.initFrom(w);
           if ( w->isChecked() )
             oo.state |= State_On;
           oo.rect = subControlRect(CC_GroupBox,&o,SC_GroupBoxCheckBox,widget);
-          drawPrimitive(PE_IndicatorCheckBox,&oo,painter,NULL);
+          drawPrimitive(PE_IndicatorCheckBox,&oo,p,NULL);
         } else
-          renderLabel(painter,r2,fspec,ispec,lspec,opt->textAlignment | Qt::TextShowMnemonic,opt->text,!opt->state & State_Enabled);
+          renderLabel(p,dir,r2,fspec,ispec,lspec,opt->textAlignment | Qt::TextShowMnemonic,opt->text,!opt->state & State_Enabled);
       }
       break;
     }
@@ -2320,9 +1857,10 @@ void QSvgStyle::drawComplexControl(ComplexControl control, const QStyleOptionCom
 
     default :
       //qDebug() << "[QSvgStyle] " << __func__ << ": Unhandled complex control " << control;
-      QCommonStyle::drawComplexControl(control,option,painter,widget);
+      QCommonStyle::drawComplexControl(control,option,p,widget);
   }
 
+end:
   emit(sig_drawComplexControl_end(CC_str(control)));
   __exit_func();
 }
@@ -2411,7 +1949,7 @@ int QSvgStyle::pixelMetric(PixelMetric metric, const QStyleOption * option, cons
 
     case PM_SplitterWidth : return 6;
 
-    case PM_ScrollBarExtent : return 6;
+    case PM_ScrollBarExtent : return 10;
     case PM_ScrollBarSliderMin : return 10;
 
     case PM_SliderThickness : return 4;
@@ -2469,40 +2007,59 @@ QCommonStyle::SubControl QSvgStyle::hitTestComplexControl ( ComplexControl contr
   return QCommonStyle::hitTestComplexControl(control,option,position,widget);
 }
 
-QSize QSvgStyle::sizeFromContents ( ContentsType type, const QStyleOption * option, const QSize & contentsSize, const QWidget * widget) const
+QSize QSvgStyle::sizeFromContents ( ContentsType type, const QStyleOption * option, const QSize & csz, const QWidget * widget) const
 {
   if (!option)
-    return contentsSize;
+    return csz;
 
   emit(sig_sizeFromContents_begin(CT_str(type)));
 
+  // result
+  QSize s;
+
+  // Save some values into shorter variable names
   int x,y,w,h;
   option->rect.getRect(&x,&y,&w,&h);
+  int csw = csz.width();
+  int csh = csz.height();
+  QFontMetrics fm = option->fontMetrics;
 
-  int dw = contentsSize.width();
-  int dh = contentsSize.height();
+  // Get configuration group used to compute size
+  QString g = CT_group(type);
 
-  QSize s;
+  // Configuration for group g
+  frame_spec_t fs;
+  interior_spec_t is;
+  label_spec_t ls;
+  indicator_spec_t ds;
+  size_spec_t ss;
+
+  if ( g.isEmpty() ) {
+    // element not currently supported by QSvgStyle
+    // QSvgStyle does not know how to compute the size of this type
+    s = QCommonStyle::sizeFromContents(type,option,csz,widget);
+    goto end;
+  }
+
+  // Get configuration for group
+  fs = getFrameSpec(g);
+  is = getInteriorSpec(g);
+  ls = getLabelSpec(g);
+  ds = getIndicatorSpec(g);
+  ss = getSizeSpec(g);
 
   switch (type) {
     case CT_LineEdit : {
-      QFont f = QApplication::font();
-        if (widget)
-          f = widget->font();
-
-      const QString group = "LineEdit";
-
-      const frame_spec_t fspec = getFrameSpec(group);
-      const interior_spec_t ispec = getInteriorSpec(group);
-      const label_spec_t lspec = getLabelSpec(group);
-      const size_spec_t sspec = getSizeSpec(group);
-
-      s = sizeFromContents(f,fspec,ispec,lspec,sspec,"W",QPixmap())+QSize(8,0); // +8: seems required by LineEdit widget itself
-      s = QSize(s.width() < dw ? dw : s.width(),s.height());
+      s = csz;
+      if ( qstyleoption_cast<const QStyleOptionFrame *>(option) ) {
+        // add frame size
+        s += QSize(fs.top+fs.bottom,fs.left+fs.right);
+      }
       break;
     }
 
     case CT_SpinBox : {
+      // FIXME
       const QStyleOptionSpinBox *opt =
         qstyleoption_cast<const QStyleOptionSpinBox *>(option);
 
@@ -2513,142 +2070,63 @@ QSize QSvgStyle::sizeFromContents ( ContentsType type, const QStyleOption * opti
 
         const QString group = "LineEdit";
 
-        const frame_spec_t fspec = getFrameSpec(group);
-        const interior_spec_t ispec = getInteriorSpec(group);
-        const label_spec_t lspec = getLabelSpec(group);
-        const size_spec_t sspec = getSizeSpec(group);
+        const frame_spec_t fs = getFrameSpec(group);
+        const interior_spec_t is = getInteriorSpec(group);
+        const label_spec_t ls = getLabelSpec(group);
+        const size_spec_t ss = getSizeSpec(group);
 
         if (widget) {
           const QSpinBox *w = qobject_cast<const QSpinBox *>(widget);
           if (w)
-            s = sizeFromContents(f,fspec,ispec,lspec,sspec,w->prefix()+QString("%1").arg(w->maximum())+w->suffix(),QPixmap())+QSize(40,0)+QSize(8,0);
+            s = sizeFromContents(fm,fs,is,ls,ss,w->prefix()+QString("%1").arg(w->maximum())+w->suffix(),QPixmap())+QSize(40,0)+QSize(8,0);
         } else
-          s = QCommonStyle::sizeFromContents(CT_SpinBox,opt,contentsSize,widget)+QSize(40,0);
+          s = QCommonStyle::sizeFromContents(CT_SpinBox,opt,csz,widget)+QSize(40,0);
       }
 
       break;
     }
 
     case CT_ComboBox : {
-      const QStyleOptionComboBox *opt =
-          qstyleoption_cast<const QStyleOptionComboBox *>(option);
+      if ( const QStyleOptionComboBox *opt =
+           qstyleoption_cast<const QStyleOptionComboBox *>(option) ) {
+        Q_UNUSED(opt);
+        s = sizeFromContents(fm,fs,is,ls,ss,
+                             "W",
+                             QPixmap());
 
-      if (opt) {
-        QFont f = QApplication::font();
-        if (widget)
-          f = widget->font();
-
-        const QString group = "ComboBox";
-
-        const frame_spec_t fspec = getFrameSpec(group);
-        const interior_spec_t ispec = getInteriorSpec(group);
-        const label_spec_t lspec = getLabelSpec(group);
-        const size_spec_t sspec = getSizeSpec(group);
-
-        QString text = opt->currentText; // longest text
-
-        s = sizeFromContents(f,fspec,ispec,lspec,sspec,"W",QPixmap());
-
-        if (widget && !opt->editable) {
-          const QComboBox *w = qobject_cast<const QComboBox *>(widget);
-
-          if (w) {
-            for (int i=0; i < w->count(); i++) {
-              QSize _s = sizeFromContents(f,fspec,ispec,lspec,sspec,w->itemText(i),w->itemIcon(i).pixmap(w->iconSize()));
-              s = QSize(qMax(s.width(),_s.width()),qMax(s.height(),_s.height()));
-            }
-          }
-        }
-
-        if (s.width() < contentsSize.width())
-          s.setWidth(contentsSize.width());
-        if (s.height() < contentsSize.height())
-          s.setHeight(contentsSize.height());
-
-        s += QSize(20,0); // drop down button
+        s = s.expandedTo(csz);
+        s += QSize(20,0); // drop down button;
       }
 
       break;
     }
 
     case CT_PushButton : {
-      const QStyleOptionButton *opt =
-        qstyleoption_cast<const QStyleOptionButton *>(option);
+      if ( const QStyleOptionButton *opt =
+           qstyleoption_cast<const QStyleOptionButton *>(option) ) {
 
-      if (opt) {
-        QFont f = QApplication::font();
-
-        // set bold for default button
-        const QPushButton *w = qobject_cast<const QPushButton *>(widget);
-        if (w/* && w->isDefault()*/) {
-          // some buttons become bold when pressed, so ...
-          f = w->font();
-          f.setBold(true);
-        }
-
-        const QString group = "PanelButtonCommand";
-
-        const frame_spec_t fspec = getFrameSpec(group);
-        const interior_spec_t ispec = getInteriorSpec(group);
-        const label_spec_t lspec = getLabelSpec(group);
-	const indicator_spec_t dspec = getIndicatorSpec(group);
-        const size_spec_t sspec = getSizeSpec(group);
-
-        __print_group();
-
-        s = sizeFromContents(f,fspec,ispec,lspec,sspec,(opt->text.isEmpty() && opt->icon.isNull()) ? "W" : opt->text,opt->icon.pixmap(opt->iconSize));
+        s = sizeFromContents(fm,fs,is,ls,ss,
+                             (opt->text.isEmpty() && opt->icon.isNull()) ? "W"
+                               : opt->text,
+                             opt->icon.pixmap(opt->iconSize));
 
 	if ( opt->features & QStyleOptionButton::HasMenu ) {
-	  s.rwidth() += lspec.tispace+dspec.size;
+	  s.rwidth() += ls.tispace+ds.size;
 	}
       }
-
       break;
     }
-
+    case CT_CheckBox :
     case CT_RadioButton : {
-      const QStyleOptionButton *opt =
-        qstyleoption_cast<const QStyleOptionButton *>(option);
+      if ( const QStyleOptionButton *opt =
+           qstyleoption_cast<const QStyleOptionButton *>(option) ) {
 
-      if (opt) {
-        QFont f = QApplication::font();
-        if (widget)
-          f = widget->font();
-
-        const QString group = "RadioButton";
-
-        const frame_spec_t fspec = getFrameSpec(group);
-        const interior_spec_t ispec = getInteriorSpec(group);
-        const label_spec_t lspec = getLabelSpec(group);
-        const size_spec_t sspec = getSizeSpec(group);
-
-        s = sizeFromContents(f,fspec,ispec,lspec,sspec,opt->text,opt->icon.pixmap(opt->iconSize))+QSize(pixelMetric(PM_CheckBoxLabelSpacing)+pixelMetric(PM_IndicatorWidth),0);
+        s = sizeFromContents(fm,fs,is,ls,ss,
+                             opt->text,
+                             opt->icon.pixmap(opt->iconSize));
+        s += QSize(pixelMetric(PM_CheckBoxLabelSpacing)+pixelMetric(PM_IndicatorWidth),0);
 	s = s.expandedTo(QSize(pixelMetric(PM_IndicatorWidth),pixelMetric(PM_IndicatorWidth))); // minimal checkbox size is size of indicator
       }
-
-      break;
-    }
-
-    case CT_CheckBox : {
-      const QStyleOptionButton *opt =
-        qstyleoption_cast<const QStyleOptionButton *>(option);
-
-      if (opt) {
-        QFont f = QApplication::font();
-        if (widget)
-          f = widget->font();
-
-        const QString group = "CheckBox";
-
-        const frame_spec_t fspec = getFrameSpec(group);
-        const interior_spec_t ispec = getInteriorSpec(group);
-        const label_spec_t lspec = getLabelSpec(group);
-        const size_spec_t sspec = getSizeSpec(group);
-
-        s = sizeFromContents(f,fspec,ispec,lspec,sspec,opt->text,opt->icon.pixmap(opt->iconSize))+QSize(pixelMetric(PM_CheckBoxLabelSpacing)+pixelMetric(PM_IndicatorWidth),0);
-	s = s.expandedTo(QSize(pixelMetric(PM_IndicatorWidth),pixelMetric(PM_IndicatorWidth))); // minimal checkbox size is size of indicator
-      }
-
       break;
     }
 
@@ -2663,25 +2141,25 @@ QSize QSvgStyle::sizeFromContents ( ContentsType type, const QStyleOption * opti
 
         const QString group = "MenuItem";
 
-        const frame_spec_t fspec = getFrameSpec(group);
-        const interior_spec_t ispec = getInteriorSpec(group);
-        const label_spec_t lspec = getLabelSpec(group);
-        const size_spec_t sspec = getSizeSpec(group);
+        const frame_spec_t fs = getFrameSpec(group);
+        const interior_spec_t is = getInteriorSpec(group);
+        const label_spec_t ls = getLabelSpec(group);
+        const size_spec_t ss = getSizeSpec(group);
 
         if (opt->menuItemType == QStyleOptionMenuItem::Separator)
-          s = QSize(dw,2); /* FIXME there is no PM_MenuSeparatorHeight pixel metric */
+          s = QSize(csw,2); /* FIXME there is no PM_MenuSeparatorHeight pixel metric */
         else {
-          s = sizeFromContents(f,fspec,ispec,lspec,sspec,opt->text,opt->icon.pixmap(opt->maxIconWidth));
+          s = sizeFromContents(fm,fs,is,ls,ss,opt->text,opt->icon.pixmap(opt->maxIconWidth));
         }
 
         if (opt->icon.pixmap(opt->maxIconWidth).isNull())
-          s.rwidth() += lspec.tispace+opt->maxIconWidth;
+          s.rwidth() += ls.tispace+opt->maxIconWidth;
 
         if ( (opt->menuItemType == QStyleOptionMenuItem::SubMenu) ||
              (opt->checkType == QStyleOptionMenuItem::Exclusive) ||
              (opt->checkType == QStyleOptionMenuItem::NonExclusive)
             ) {
-          s.rwidth() += 15+lspec.tispace;
+          s.rwidth() += 15+ls.tispace;
         }
       }
 
@@ -2698,88 +2176,79 @@ QSize QSvgStyle::sizeFromContents ( ContentsType type, const QStyleOption * opti
           f = widget->font();
 
         QString group = "MenuBar";
-        frame_spec_t fspec = getFrameSpec(group);
+        frame_spec_t fs = getFrameSpec(group);
         group = "MenuBarItem";
-        const interior_spec_t ispec = getInteriorSpec(group);
-        const label_spec_t lspec = getLabelSpec(group);
-        const size_spec_t sspec = getSizeSpec(group);
+        const interior_spec_t is = getInteriorSpec(group);
+        const label_spec_t ls = getLabelSpec(group);
+        const size_spec_t ss = getSizeSpec(group);
 
-        s = sizeFromContents(f,fspec,ispec,lspec,sspec,opt->text,opt->icon.pixmap(opt->maxIconWidth));
+        s = sizeFromContents(fm,fs,is,ls,ss,opt->text,opt->icon.pixmap(opt->maxIconWidth));
       }
 
       break;
     }
 
     case CT_ProgressBar : {
-      const QStyleOptionProgressBar *opt =
-        qstyleoption_cast<const QStyleOptionProgressBar *>(option);
+      if ( const QStyleOptionProgressBar *opt =
+           qstyleoption_cast<const QStyleOptionProgressBar *>(option) )  {
 
-      if (opt) {
-        QFont f = QApplication::font();
-        if (widget)
-          f = widget->font();
-
-        const QString group = "Progressbar";
-        const frame_spec_t fspec = getFrameSpec(group);
-        const interior_spec_t ispec = getInteriorSpec(group);
-        const label_spec_t lspec = getLabelSpec(group);
-        const size_spec_t sspec = getSizeSpec(group);
-
-        s = sizeFromContents(f,fspec,ispec,lspec,sspec,opt->text,QPixmap());
+        s = sizeFromContents(fm,fs,is,ls,ss,
+                             (opt->textVisible &&
+                              opt->text.isEmpty()) ? "W" : opt->text,
+                             QPixmap());
       }
 
       break;
     }
 
     case CT_ToolButton : {
-      const QStyleOptionToolButton *opt =
-        qstyleoption_cast<const QStyleOptionToolButton *>(option);
-
-      if (opt) {
-        QFont f = QApplication::font();
-        if (widget)
-          f = widget->font();
-
-        const QString group = "PanelButtonTool";
-
-        const frame_spec_t fspec = getFrameSpec(group);
-        const interior_spec_t ispec = getInteriorSpec(group);
-        const label_spec_t lspec = getLabelSpec(group);
-        const indicator_spec_t dspec = getIndicatorSpec(group);
-        const size_spec_t sspec = getSizeSpec(group);
+      if ( const QStyleOptionToolButton *opt =
+           qstyleoption_cast<const QStyleOptionToolButton *>(option) ) {
 
 	// minimum size
 	QSize ms;
 	if ( opt->text.isEmpty() && (opt->toolButtonStyle == Qt::ToolButtonTextOnly) )
-	  ms = sizeFromContents(f,fspec,ispec,lspec,sspec,"W",opt->icon.pixmap(opt->iconSize),Qt::ToolButtonTextOnly);
+	  ms = sizeFromContents(fm,fs,is,ls,ss,
+                                "W",
+                                opt->icon.pixmap(opt->iconSize),
+                                Qt::ToolButtonTextOnly);
 	if ( opt->icon.isNull() && (opt->toolButtonStyle == Qt::ToolButtonIconOnly) )
-	  ms = sizeFromContents(f,fspec,ispec,lspec,sspec,"W",opt->icon.pixmap(opt->iconSize),Qt::ToolButtonTextOnly);
+	  ms = sizeFromContents(fm,fs,is,ls,ss,
+                                "W",
+                                opt->icon.pixmap(opt->iconSize),
+                                Qt::ToolButtonTextOnly);
 	if ( opt->text.isEmpty() && opt->icon.isNull() )
-	  ms = sizeFromContents(f,fspec,ispec,lspec,sspec,"W",opt->icon.pixmap(opt->iconSize),Qt::ToolButtonTextOnly);
+	  ms = sizeFromContents(fm,fs,is,ls,ss,
+                                "W",
+                                opt->icon.pixmap(opt->iconSize),
+                                Qt::ToolButtonTextOnly);
 
-	s = sizeFromContents(f,fspec,ispec,lspec,sspec,opt->text,opt->icon.pixmap(opt->iconSize),opt->toolButtonStyle);
+	s = sizeFromContents(fm,fs,is,ls,ss,
+                             opt->text,
+                             opt->icon.pixmap(opt->iconSize),
+                             opt->toolButtonStyle);
 
         if (opt->arrowType != Qt::NoArrow) {
-          s = sizeFromContents(f,fspec,ispec,lspec,sspec,opt->text,opt->icon.pixmap(opt->iconSize),opt->toolButtonStyle)+QSize(dspec.size,0);
-	  if ( (opt->toolButtonStyle != Qt::ToolButtonIconOnly) && !opt->text.isEmpty() )
-	    s = s + QSize(lspec.tispace,0);
-	  else if ( (opt->toolButtonStyle != Qt::ToolButtonTextOnly) && !opt->icon.isNull() )
-	    s = s + QSize(lspec.tispace,0);
+          // add room for arrow
+          s = s + QSize(ds.size,0);
+          // add spacing between arrow and label if necessary
+	  if ( (opt->toolButtonStyle != Qt::ToolButtonIconOnly) &&
+               !opt->text.isEmpty() )
+	    s = s + QSize(ls.tispace,0);
+	  else if ( (opt->toolButtonStyle != Qt::ToolButtonTextOnly) &&
+               !opt->icon.isNull() )
+	    s = s + QSize(ls.tispace,0);
 
-	  ms = ms+QSize(lspec.tispace+dspec.size,0);
+	  ms = ms+QSize(ls.tispace+ds.size,0);
 	}
 
-        if (widget) {
-          const QToolButton * w = qobject_cast<const QToolButton *>(widget);
-          if (w) {
-            if (w->popupMode() == QToolButton::MenuButtonPopup)
-              s.rwidth() += 20;
-            else if (
-              (w->popupMode() == QToolButton::InstantPopup) ||
-              ((w->popupMode() == QToolButton::DelayedPopup) && (opt->features & QStyleOptionToolButton::HasMenu))
-                 )
-              s.rwidth() += lspec.tispace+dspec.size;
-          }
+	// add room for simple down arrow or drop down arrow
+        if (opt->features & QStyleOptionToolButton::Menu) {
+          // Tool button with drop down button
+          s.rwidth() += 20;
+        } else if (opt->features & QStyleOptionToolButton::HasMenu) {
+          // Tool button with down arrow
+          s.rwidth() += ls.tispace+ds.size;
         }
 
         s = s.expandedTo(ms);
@@ -2799,17 +2268,17 @@ QSize QSvgStyle::sizeFromContents ( ContentsType type, const QStyleOption * opti
 
         const QString group = "Tab";
 
-        const frame_spec_t fspec = getFrameSpec(group);
-        const interior_spec_t ispec = getInteriorSpec(group);
-        const label_spec_t lspec = getLabelSpec(group);
-        const size_spec_t sspec = getSizeSpec(group);
+        const frame_spec_t fs = getFrameSpec(group);
+        const interior_spec_t is = getInteriorSpec(group);
+        const label_spec_t ls = getLabelSpec(group);
+        const size_spec_t ss = getSizeSpec(group);
 
-        s = sizeFromContents(f,fspec,ispec,lspec,sspec,opt->text,opt->icon.pixmap(pixelMetric(PM_ToolBarIconSize)));
+        s = sizeFromContents(fm,fs,is,ls,ss,opt->text,opt->icon.pixmap(pixelMetric(PM_ToolBarIconSize)));
 
         if (widget) {
           const QTabBar *w = qobject_cast<const QTabBar*>(widget);
           if (w && w->tabsClosable())
-            s.rwidth() += pixelMetric(PM_TabCloseIndicatorWidth,option,widget)+lspec.tispace;
+            s.rwidth() += pixelMetric(PM_TabCloseIndicatorWidth,option,widget)+ls.tispace;
         }
       }
 
@@ -2827,12 +2296,12 @@ QSize QSvgStyle::sizeFromContents ( ContentsType type, const QStyleOption * opti
 
         const QString group = "HeaderSection";
 
-        const frame_spec_t fspec = getFrameSpec(group);
-        const interior_spec_t ispec = getInteriorSpec(group);
-        const label_spec_t lspec = getLabelSpec(group);
-        const size_spec_t sspec = getSizeSpec(group);
+        const frame_spec_t fs = getFrameSpec(group);
+        const interior_spec_t is = getInteriorSpec(group);
+        const label_spec_t ls = getLabelSpec(group);
+        const size_spec_t ss = getSizeSpec(group);
 
-        s = sizeFromContents(f,fspec,ispec,lspec,sspec,opt->text,opt->icon.pixmap(pixelMetric(PM_SmallIconSize)));
+        s = sizeFromContents(fm,fs,is,ls,ss,opt->text,opt->icon.pixmap(pixelMetric(PM_SmallIconSize)));
       }
 
       break;
@@ -2840,9 +2309,9 @@ QSize QSvgStyle::sizeFromContents ( ContentsType type, const QStyleOption * opti
 
     case CT_Slider : {
       if (option->state & State_Horizontal)
-        s = QSize(dw,pixelMetric(PM_SliderControlThickness,option,widget)+2); // +2 for frame
+        s = QSize(csw,pixelMetric(PM_SliderControlThickness,option,widget)+2); // +2 for frame
       else
-        s = QSize(pixelMetric(PM_SliderControlThickness,option,widget),dh+2);
+        s = QSize(pixelMetric(PM_SliderControlThickness,option,widget),csh+2);
 
       break;
     }
@@ -2859,11 +2328,11 @@ QSize QSvgStyle::sizeFromContents ( ContentsType type, const QStyleOption * opti
 
         const QString group = "GroupBox";
 
-        const frame_spec_t fspec = getFrameSpec(group);
-        const interior_spec_t ispec = getInteriorSpec(group);
-        label_spec_t lspec = getLabelSpec(group);
-	const indicator_spec_t dspec = getIndicatorSpec(group);
-        const size_spec_t sspec = getSizeSpec(group);
+        const frame_spec_t fs = getFrameSpec(group);
+        const interior_spec_t is = getInteriorSpec(group);
+        label_spec_t ls = getLabelSpec(group);
+	const indicator_spec_t ds = getIndicatorSpec(group);
+        const size_spec_t ss = getSizeSpec(group);
 
         __print_group();
 
@@ -2872,18 +2341,18 @@ QSize QSvgStyle::sizeFromContents ( ContentsType type, const QStyleOption * opti
 	QSize st;
 
 	if ( w && w->isCheckable() )
-          st = sizeFromContents(f,fspec,ispec,lspec,sspec,opt->text,QPixmap())+QSize(pixelMetric(PM_CheckBoxLabelSpacing)+pixelMetric(PM_IndicatorWidth),0);
+          st = sizeFromContents(fm,fs,is,ls,ss,opt->text,QPixmap())+QSize(pixelMetric(PM_CheckBoxLabelSpacing)+pixelMetric(PM_IndicatorWidth),0);
         else
-	  st = sizeFromContents(f,fspec,ispec,lspec,sspec,opt->text,QPixmap());
+	  st = sizeFromContents(fm,fs,is,ls,ss,opt->text,QPixmap());
 
         // add contents to st, 30 is title shift (left and right)
-	s = QSize(qMax(st.width()+30+30,contentsSize.width()+fspec.left+fspec.right),contentsSize.height()+st.height()+fspec.top+fspec.bottom);
+	s = QSize(qMax(st.width()+30+30,csz.width()+fs.left+fs.right),csz.height()+st.height()+fs.top+fs.bottom);
       }
 
       break;
     }
 
-    default : s = QCommonStyle::sizeFromContents(type,option,contentsSize,widget);
+    default : s = QCommonStyle::sizeFromContents(type,option,csz,widget);
   }
 
 #ifdef __DEBUG__
@@ -2893,27 +2362,28 @@ QSize QSvgStyle::sizeFromContents ( ContentsType type, const QStyleOption * opti
 //   }
 #endif
 
+end:
   emit(sig_sizeFromContents_end(CT_str(type)));
   return s;
 }
 
-QSize QSvgStyle::sizeFromContents(const QFont &font,
-                     /* frame spec */ const frame_spec_t &fspec,
-                     /* interior spec */ const interior_spec_t &ispec,
-                     /* label spec */ const label_spec_t &lspec,
-                     /* size spec */ const size_spec_t &sspec,
+QSize QSvgStyle::sizeFromContents(const QFontMetrics &fm,
+                     /* frame spec */ const frame_spec_t &fs,
+                     /* interior spec */ const interior_spec_t &is,
+                     /* label spec */ const label_spec_t &ls,
+                     /* size spec */ const size_spec_t &ss,
                      /* text */ const QString &text,
                      /* icon */ const QPixmap &icon,
                      /* text-icon alignment */ const Qt::ToolButtonStyle tialign) const
 {
-  Q_UNUSED(ispec);
+  Q_UNUSED(is);
 
   QSize s;
-  s.setWidth(fspec.left+fspec.right+lspec.left+lspec.right);
-  s.setHeight(fspec.top+fspec.bottom+lspec.top+lspec.bottom);
-  if (lspec.hasShadow) {
-    s.rwidth() += lspec.xshift+lspec.depth;
-    s.rheight() += lspec.yshift+lspec.depth;
+  s.setWidth(fs.left+fs.right+ls.left+ls.right);
+  s.setHeight(fs.top+fs.bottom+ls.top+ls.bottom);
+  if (ls.hasShadow) {
+    s.rwidth() += ls.xshift+ls.depth;
+    s.rheight() += ls.yshift+ls.depth;
   }
 
   // compute width and height of text. QFontMetrics seems to ignore \n
@@ -2943,9 +2413,9 @@ QSize QSvgStyle::sizeFromContents(const QFont &font,
     /* deal with \n */
     QStringList l = t.split('\n');
 
-    th = QFontMetrics(font).height()*(l.size());
+    th = fm.height()*(l.size());
     for (int i=0; i<l.size(); i++) {
-      tw = qMax(tw,QFontMetrics(font).width(l[i]));
+      tw = qMax(tw,fm.width(l[i]));
     }
   }
 
@@ -2956,147 +2426,187 @@ QSize QSvgStyle::sizeFromContents(const QFont &font,
     s.rwidth() += tw;
     s.rheight() += th;
   } else if (tialign == Qt::ToolButtonTextBesideIcon) {
-    s.rwidth() += (icon.isNull() ? 0 : icon.width()) + (icon.isNull() ? 0 : (text.isEmpty() ? 0 : lspec.tispace)) + tw;
+    s.rwidth() += (icon.isNull() ? 0 : icon.width()) + (icon.isNull() ? 0 : (text.isEmpty() ? 0 : ls.tispace)) + tw;
     s.rheight() += qMax(icon.height(),th);
   } else if (tialign == Qt::ToolButtonTextUnderIcon) {
     s.rwidth() += qMax(icon.width(),tw);
-    s.rheight() += icon.height() + (icon.isNull() ? 0 : lspec.tispace) + th;
+    s.rheight() += icon.height() + (icon.isNull() ? 0 : ls.tispace) + th;
   }
 
-  if ( (sspec.minH > 0) && (s.height() < sspec.minH) )
-    s.setHeight(sspec.minH);
+  if ( (ss.minH > 0) && (s.height() < ss.minH) )
+    s.setHeight(ss.minH);
 
-  if ( (sspec.minW > 0) && (s.width() < sspec.minW) )
-    s.setWidth(sspec.minW);
+  if ( (ss.minW > 0) && (s.width() < ss.minW) )
+    s.setWidth(ss.minW);
 
-  if (sspec.fixedH > 0)
-    s.setHeight(sspec.fixedH);
+  if (ss.fixedH > 0)
+    s.setHeight(ss.fixedH);
 
-  if (sspec.fixedW > 0)
-    s.setWidth(sspec.fixedW);
+  if (ss.fixedW > 0)
+    s.setWidth(ss.fixedW);
 
   return s;
 }
 
-QRect QSvgStyle::subElementRect(SubElement element, const QStyleOption * option, const QWidget * widget) const
+QRect QSvgStyle::subElementRect(SubElement e, const QStyleOption * option, const QWidget * widget) const
 {
-  switch (element) {
-    case SE_CheckBoxFocusRect :
-    case SE_RadioButtonFocusRect :
-    case SE_ProgressBarGroove :
-    case SE_HeaderLabel :
-    case SE_ProgressBarLabel : return option->rect;
+  // Copy some values into shorter variable names
+  int x,y,w,h;
+  QRect r = option->rect;
+  r.getRect(&x,&y,&w,&h);
+  QString st = state_str(option->state, widget);
+  Qt::LayoutDirection dir = option->direction;
+  bool focus = option->state & State_HasFocus;
+
+  Q_UNUSED(dir);
+  Q_UNUSED(focus);
+
+  // Get QSvgStyle configuration group used to render this element
+  QString g = SE_group(e);
+
+  // Configuration for group g
+  frame_spec_t fs;
+  interior_spec_t is;
+  label_spec_t ls;
+  indicator_spec_t ds;
+  size_spec_t ss;
+
+  if ( g.isEmpty() ) {
+    // element not currently supported by QSvgStyle
+    goto end;
+  }
+
+  // Get configuration for group
+  fs = getFrameSpec(g);
+  is = getInteriorSpec(g);
+  ls = getLabelSpec(g);
+  ds = getIndicatorSpec(g);
+  ss = getSizeSpec(g);
+
+  __print_group();
+
+  switch (e) {
     case SE_ProgressBarContents : {
-      const QString group = "Progressbar";
-
-      const frame_spec_t fspec = getFrameSpec(group);
-      const interior_spec_t ispec = getInteriorSpec(group);
-
-      return interiorRect(option->rect, fspec,ispec);
+      return interiorRect(option->rect, fs,is);
     }
     case SE_LineEditContents : {
-      const QString group = "LineEdit";
-
-      const frame_spec_t fspec = getFrameSpec(group);
-      const interior_spec_t ispec = getInteriorSpec(group);
-
-      return interiorRect(option->rect, fspec,ispec);
+      return interiorRect(option->rect, fs,is);
     }
     case SE_PushButtonContents : {
-      const QString group = "PanelButtonCommand";
-
-      const frame_spec_t fspec = getFrameSpec(group);
-      const interior_spec_t ispec = getInteriorSpec(group);
-
-      return interiorRect(option->rect,fspec,ispec);
+      return interiorRect(option->rect,fs,is);
     }
-    case SE_ItemViewItemFocusRect : return QRect();
 
-    default : return QCommonStyle::subElementRect(element,option,widget);
+    default : return QCommonStyle::subElementRect(e,option,widget);
   }
+
+end:
+  return QCommonStyle::subElementRect(e,option,widget);
 }
 
 QRect QSvgStyle::subControlRect(ComplexControl control, const QStyleOptionComplex * option, SubControl subControl, const QWidget * widget) const
 {
-  int x,y,h,w;
-  option->rect.getRect(&x,&y,&w,&h);
+  // FIXME return visual rects
+
+  // result
+  QRect ret = option->rect;
+
+  // Copy some values into shorter variable names
+  int x,y,w,h;
+  QRect r = option->rect;
+  r.getRect(&x,&y,&w,&h);
+  QString st = state_str(option->state, widget);
+  Qt::LayoutDirection dir = option->direction;
+  bool focus = option->state & State_HasFocus;
+  QIcon::Mode icm = state_iconmode(option->state);
+  QIcon::State ics = state_iconstate(option->state);
+  QFontMetrics fm = option->fontMetrics;
+
+  Q_UNUSED(focus);
+  Q_UNUSED(icm);
+  Q_UNUSED(ics);
+
+  // Get QSvgStyle configuration group used to render this element
+  QString g = CC_group(control);
+
+  // Configuration for group g
+  frame_spec_t fs;
+  interior_spec_t is;
+  label_spec_t ls;
+  indicator_spec_t ds;
+  size_spec_t ss;
+
+  if ( g.isEmpty() ) {
+    // element not currently supported by QSvgStyle
+    ret = QCommonStyle::subControlRect(control,option,subControl,widget);
+    goto end;
+  }
+
+  // Get configuration for group
+  fs = getFrameSpec(g);
+  is = getInteriorSpec(g);
+  ls = getLabelSpec(g);
+  ds = getIndicatorSpec(g);
+  ss = getSizeSpec(g);
+
+  __print_group();
 
   switch (control) {
-    case CC_TitleBar :
-      switch (subControl) {
-        case SC_TitleBarLabel : return option->rect;
-
-        default : return QCommonStyle::subControlRect(control,option,subControl,widget);
-      }
-      break;
-
     case CC_SpinBox :
+      // OK
       switch (subControl) {
-        case SC_SpinBoxFrame : return QRect();
-        case SC_SpinBoxEditField : return QRect(x,y,w-40,h);
-        case SC_SpinBoxUp : return QRect(x+w-20,y,20,h);
-        case SC_SpinBoxDown : return QRect(x+w-40,y,20,h);
-
-        default : return QCommonStyle::subControlRect(control,option,subControl,widget);
+        case SC_SpinBoxFrame :
+          ret = r;
+          break;
+        case SC_SpinBoxEditField :
+          ret = r.adjusted(0,0,-40,0);
+          break;
+        case SC_SpinBoxUp :
+          // we adjust thr rect by fs left and right because when we
+          // draw the button panel it will be shrunken again by the frame
+          // left and eight (it is an interior)
+          ret = QRect(x+w-20-fs.right,y,20,h).adjusted(-fs.left,0,fs.right,0);
+          break;
+        case SC_SpinBoxDown :
+          ret = QRect(x+w-40-fs.right,y,20,h).adjusted(-fs.left,0,fs.right,0);
+          break;
+        default :
+          ret = QCommonStyle::subControlRect(control,option,subControl,widget);
       }
       break;
 
     case CC_ComboBox :
+      // OK
       switch (subControl) {
-        case SC_ComboBoxFrame : return QRect();
-        case SC_ComboBoxEditField : return QRect(x,y,w-20,h);
-        case SC_ComboBoxArrow : return QRect(x+w-20,y,20,h);
-        case SC_ComboBoxListBoxPopup : {
-          const QString group = "ComboBox";
-
-          const frame_spec_t fspec = getFrameSpec(group);
-          const interior_spec_t ispec = getInteriorSpec(group);
-          const label_spec_t lspec = getLabelSpec(group);
-          const size_spec_t sspec = getSizeSpec(group);
-
-          int maxW = 0;
-
-          if (widget) {
-            const QComboBox * w = qobject_cast<const QComboBox *>(widget);
-            QSize s;
-            for (int i=0; i<w->count(); i++) {
-              s = sizeFromContents(w->font(),fspec,ispec,lspec,sspec, w->itemText(i),w->itemIcon(i).pixmap(w->iconSize()));
-              if (s.width() > maxW)
-                maxW = s.width();
-            }
-
-            if (w->count() > w->maxVisibleItems()) {
-              /* add scrollbar width */
-              maxW = maxW+pixelMetric(PM_ScrollBarExtent);
-            }
-          }
-
-          if (maxW < w)
-            maxW = w; /* popup width not shorter than combo itself */
-
-          // FIXME limit the width of the combo box
-          return QRect(0,h,maxW,0 /* height seems not to be used */);
-        }
-
-        default : return QCommonStyle::subControlRect(control,option,subControl,widget);
+        case SC_ComboBoxFrame :
+          ret = r;
+          break;
+        case SC_ComboBoxEditField :
+          ret = r.adjusted(0,0,-20,0);
+          break;
+        case SC_ComboBoxArrow :
+          ret = r.adjusted(x+w-20,0,0,0);
+          break;
+        case SC_ComboBoxListBoxPopup :
+          ret = r;
+          break;
+        default :
+          ret = QCommonStyle::subControlRect(control,option,subControl,widget);
       }
       break;
-
-//     case CC_MdiControls :
-//       switch (subControl) {
-//         case SC_MdiCloseButton : return QRect(0,0,30,30);
-//
-//         default : return QCommonStyle::subControlRect(control,option,subControl,widget);
-//       }
-//       break;
 
     case CC_ScrollBar : {
       const int extent = pixelMetric(PM_ScrollBarExtent,option,widget);
       if (option->state & State_Horizontal)
         switch (subControl) {
-          case SC_ScrollBarGroove : return QRect(x+extent,y,w-2*extent,h);
-          case SC_ScrollBarSubLine : return QRect(x,y,extent,extent);
-          case SC_ScrollBarAddLine : return QRect(x+w-extent,y,extent,extent);
+          case SC_ScrollBarGroove :
+            ret = QRect(x+extent,y,w-2*extent,h);
+            break;
+          case SC_ScrollBarSubLine :
+            ret = QRect(x,y,extent,extent);
+            break;
+          case SC_ScrollBarAddLine :
+            ret = QRect(x+w-extent,y,extent,extent);
+            break;
           case SC_ScrollBarSlider : {
             const QStyleOptionSlider *opt =
                 qstyleoption_cast<const QStyleOptionSlider *>(option);
@@ -3119,20 +2629,28 @@ QRect QSvgStyle::subControlRect(ComplexControl control, const QStyleOptionComple
               }
 
               const int start = sliderPositionFromValue(opt->minimum,opt->maximum,opt->sliderPosition,maxLength - length,opt->upsideDown);
-              return QRect(x+start,y,length,h);
+              ret = QRect(x+start,y,length,h);
             } else
-              return QRect();
+              ret = QRect();
+
+            break;
           }
 
-          default : return QCommonStyle::subControlRect(control,option,subControl,widget);
+          default : ret = QCommonStyle::subControlRect(control,option,subControl,widget);
 
           break;
         }
       else
         switch (subControl) {
-          case SC_ScrollBarGroove : return QRect(x,y+extent,w,h-2*extent);
-          case SC_ScrollBarSubLine : return QRect(x,y,extent,extent);
-          case SC_ScrollBarAddLine : return QRect(x,y+h-extent,extent,extent);
+          case SC_ScrollBarGroove :
+            ret = QRect(x,y+extent,w,h-2*extent);
+            break;
+          case SC_ScrollBarSubLine :
+            ret = QRect(x,y,extent,extent);
+            break;
+          case SC_ScrollBarAddLine :
+            ret = QRect(x,y+h-extent,extent,extent);
+            break;
           case SC_ScrollBarSlider : {
             const QStyleOptionSlider *opt =
                 qstyleoption_cast<const QStyleOptionSlider *>(option);
@@ -3155,12 +2673,14 @@ QRect QSvgStyle::subControlRect(ComplexControl control, const QStyleOptionComple
               }
 
               const int start = sliderPositionFromValue(opt->minimum,opt->maximum,opt->sliderPosition,maxLength - length,opt->upsideDown);
-              return QRect(x,y+start,w,length);
+              ret = QRect(x,y+start,w,length);
             } else
-              return QRect();
+              ret = QRect();
+
+            break;
           }
 
-          default : return QCommonStyle::subControlRect(control,option,subControl,widget);
+          default : ret = QCommonStyle::subControlRect(control,option,subControl,widget);
 
           break;
         }
@@ -3169,20 +2689,20 @@ QRect QSvgStyle::subControlRect(ComplexControl control, const QStyleOptionComple
     }
 
     case CC_Slider : {
+      // OK
       const int thick = pixelMetric(PM_SliderThickness,option,widget);
       const bool horiz = (option->state & State_Horizontal);
       switch (subControl) {
         case SC_SliderGroove :
           if (horiz)
-            return QRect(x,y+(h-thick)/2,w,thick);
+            ret = QRect(x,y+(h-thick)/2,w,thick);
           else
-            return QRect(x+(w-thick)/2,y,thick,h);
-
+            ret = QRect(x+(w-thick)/2,y,thick,h);
+          break;
         case SC_SliderHandle : {
-          const QStyleOptionSlider *opt =
-            qstyleoption_cast<const QStyleOptionSlider *>(option);
+          if ( const QStyleOptionSlider *opt =
+               qstyleoption_cast<const QStyleOptionSlider *>(option) ) {
 
-          if (opt) {
             subControlRect(CC_Slider,option,SC_SliderGroove,widget).getRect(&x,&y,&w,&h);
 
             const int len = pixelMetric(PM_SliderLength, option, widget);
@@ -3190,170 +2710,109 @@ QRect QSvgStyle::subControlRect(ComplexControl control, const QStyleOptionComple
             const int sliderPos(sliderPositionFromValue(opt->minimum, opt->maximum, opt->sliderPosition, (horiz ? w : h) - len, opt->upsideDown));
 
             if (horiz)
-              return QRect(x+sliderPos,y+(h-thickness)/2,len,thickness);
+              ret = QRect(x+sliderPos,y+(h-thickness)/2,len,thickness);
             else
-              return QRect(x+(w-len)/2,y+sliderPos,thickness,len);
+              ret = QRect(x+(w-len)/2,y+sliderPos,thickness,len);
           }
 
+          break;
         }
 
-        default : return QCommonStyle::subControlRect(control,option,subControl,widget);
-      }
-
-      break;
-    }
-
-    case CC_Dial : {
-      const bool horiz = (option->state & State_Horizontal);
-      switch(subControl) {
-        case SC_DialGroove : return alignedRect(QApplication::layoutDirection(), Qt::AlignHCenter | Qt::AlignVCenter, QSize(qMin(option->rect.width(),option->rect.height()),qMin(option->rect.width(),option->rect.height())), option->rect);
-        case SC_DialHandle : {
-          const QStyleOptionSlider *opt =
-            qstyleoption_cast<const QStyleOptionSlider *>(option);
-
-          if (opt) {
-            subControlRect(CC_Dial,option,SC_DialGroove,widget).getRect(&x,&y,&w,&h);
-
-            const int sliderPos(sliderPositionFromValue(opt->minimum, opt->maximum, opt->sliderPosition, (horiz ? w : h), opt->upsideDown));
-
-            if (horiz)
-              return QRect(x,y,w,h-sliderPos);
-            else
-              return QRect(x,y,w-sliderPos,h);
-          }
-
-        }
-
-        default : return QCommonStyle::subControlRect(control,option,subControl,widget);
+        default : ret = QCommonStyle::subControlRect(control,option,subControl,widget);
       }
 
       break;
     }
 
     case CC_ToolButton : {
+      // OK
       switch (subControl) {
         case SC_ToolButton : {
-          const QStyleOptionToolButton *opt =
-            qstyleoption_cast<const QStyleOptionToolButton *>(option);
+          if ( const QStyleOptionToolButton *opt =
+               qstyleoption_cast<const QStyleOptionToolButton *>(option) ) {
 
-          const QString group = "PanelButtonTool";
-
-          const indicator_spec_t dspec = getIndicatorSpec(group);
-          const label_spec_t lspec = getLabelSpec(group);
-
-          if (opt) {
-            if (widget) {
-              const QToolButton * w = qobject_cast<const QToolButton *>(widget);
-              if (w) {
-                if (w->popupMode() == QToolButton::MenuButtonPopup)
-                  return option->rect.adjusted(0,0,-20,0);
-                else if (
-                  (w->popupMode() == QToolButton::InstantPopup) ||
-                  ((w->popupMode() == QToolButton::DelayedPopup) && (opt->features & QStyleOptionToolButton::HasMenu))
-                )
-                  return option->rect.adjusted(0,0,-dspec.size-lspec.tispace,0);
-              }
-            }
+            // remove room for drop down buttons or down arrows
+            if (opt->features & QStyleOptionToolButton::Menu)
+                  ret = r.adjusted(0,0,-20,0);
+            if (opt->features & QStyleOptionToolButton::HasMenu)
+                  ret = r.adjusted(0,0,-ds.size-ls.tispace,0);
           }
-
-          return option->rect;
+          break;
         }
-
         case SC_ToolButtonMenu : {
-          const QStyleOptionToolButton *opt =
-            qstyleoption_cast<const QStyleOptionToolButton *>(option);
+          if ( const QStyleOptionToolButton *opt =
+               qstyleoption_cast<const QStyleOptionToolButton *>(option) ) {
 
-          const QString group = "PanelButtonTool";
-
-          const frame_spec_t fspec = getFrameSpec(group);
-          const interior_spec_t ispec = getInteriorSpec(group);
-          const indicator_spec_t dspec = getIndicatorSpec(group);
-          const label_spec_t lspec = getLabelSpec(group);
-
-          if (opt) {
-            if (widget) {
-              const QToolButton * ww = qobject_cast<const QToolButton *>(widget);
-              if (ww) {
-                if (ww->popupMode() == QToolButton::MenuButtonPopup)
-                  return QRect(x+w-20,y,20,h);
-                else if (
-                  (ww->popupMode() == QToolButton::InstantPopup) ||
-                  ((ww->popupMode() == QToolButton::DelayedPopup) && (opt->features & QStyleOptionToolButton::HasMenu))
-                )
-                  return QRect(x+w-lspec.tispace-dspec.size-fspec.right,y+10,dspec.size,h-10);
-              }
-            }
+            if (opt->features & QStyleOptionToolButton::Menu)
+              ret = r.adjusted(x+w-20,0,0,0);
+            if (opt->features & QStyleOptionToolButton::HasMenu)
+              ret = QRect(x+w-ls.tispace-ds.size-fs.right,y+10,ds.size,h-10);
           }
-
-          return option->rect;
+          break;
         }
-
-        default : return QCommonStyle::subControlRect(control,option,subControl,widget);
+        default : ret = QCommonStyle::subControlRect(control,option,subControl,widget);
       }
 
       break;
     }
 
     case CC_GroupBox : {
-      const QString group = "GroupBox";
+      // OK
+      QRect labelRect; // = text + checkbox if any
+      QSize stitle; // size of title (text+checkbox if any)
 
-      frame_spec_t fspec = getFrameSpec(group);
-      interior_spec_t ispec = getInteriorSpec(group);
-      label_spec_t lspec = getLabelSpec(group);
-      size_spec_t sspec = getSizeSpec(group);
+      if (const QStyleOptionGroupBox *opt =
+          qstyleoption_cast<const QStyleOptionGroupBox *>(option) ) {
 
-      const QStyleOptionGroupBox *opt =
-        qstyleoption_cast<const QStyleOptionGroupBox *>(option);
+        // title size
+        stitle = sizeFromContents(fm,fs,is,ls,ss,
+                                  opt->text,QPixmap());
+        if ( opt->subControls & SC_GroupBoxCheckBox ) {
+          // ensure checkbox indicator fits within title interior
+          stitle += QSize(pixelMetric(PM_IndicatorWidth)+pixelMetric(PM_CheckBoxLabelSpacing),0);
+          stitle = stitle.expandedTo(QSize(0,fs.top+fs.bottom+pixelMetric(PM_IndicatorHeight)));
+        }
 
-      // title size
-      QSize stitle;
-      const QGroupBox  * w = qobject_cast<const QGroupBox *>(widget);
-      if (opt) {
-	if (w) {
-	  stitle = sizeFromContents(w->font(),fspec,ispec,lspec,sspec,opt->text,QPixmap());
-	  if ( w && w->isCheckable() ) {
-	    // ensure checkbox indicator fits within title interior
-	    stitle = stitle+QSize(pixelMetric(PM_IndicatorWidth)+pixelMetric(PM_CheckBoxLabelSpacing),0);
-	    stitle = stitle.expandedTo(QSize(0,fspec.top+fspec.bottom+pixelMetric(PM_IndicatorHeight)));
-	  }
-	}
+        labelRect = alignedRect(Qt::LeftToRight,
+                                opt->textAlignment & ~Qt::AlignVertical_Mask,
+                                stitle,
+                                r.adjusted(30,0,-30,0));
       }
 
-      QRect labelRect = alignedRect(QApplication::layoutDirection(), opt->textAlignment & ~Qt::AlignVertical_Mask,
-                                    stitle,
-                                    option->rect.adjusted(30,0,-30,0));
-
       switch (subControl) {
-	// FIXME take into account label V alignment
+      // FIXME take into account label V alignment
         case SC_GroupBoxCheckBox : {
-          // align checkbopx inside label rect
-          return alignedRect(QApplication::layoutDirection(),Qt::AlignLeft | Qt::AlignVCenter,
-			     QSize(pixelMetric(PM_IndicatorWidth),pixelMetric(PM_IndicatorHeight)),
-                             labelRect.adjusted(fspec.left+lspec.left,fspec.top,-fspec.right-lspec.right,-fspec.bottom));
+          // align checkbox inside label rect
+          ret = alignedRect(Qt::LeftToRight,Qt::AlignLeft | Qt::AlignVCenter,
+                            QSize(pixelMetric(PM_IndicatorWidth),pixelMetric(PM_IndicatorHeight)),
+                            labelRect.adjusted(fs.left+ls.left,fs.top,-fs.right-ls.right,-fs.bottom));
+          break;
         }
         case SC_GroupBoxLabel : {
             // Shift for checkbox will be done be drawComplexControl()
-            return labelRect;
-            //return QRect(option->rect.x()+30,option->rect.y(),stitle.width(),stitle.height());
+            ret = labelRect;
+            break;
         }
 	case SC_GroupBoxFrame : {
-	  return QRect(option->rect.x(),option->rect.y()+stitle.height(),option->rect.width(),option->rect.height()-stitle.height());
+	  ret = r.adjusted(0,stitle.height(),0,0);
+          break;
 	}
 	case SC_GroupBoxContents : {
-          qDebug() << "SC_GroupBoxContents" << x << y << option->rect.width() << h;
-          qDebug() << "SC_GroupBoxContents" << stitle.height();
-          // here option->rect is not the whole groupbox rect
-	  return interiorRect(option->rect.adjusted(0,stitle.height(),0,-fspec.bottom /* ???? */),fspec,ispec);
+	  ret = interiorRect(r.adjusted(0,stitle.height(),0,0),fs,is);
+          break;
 	}
 
-        default : return QCommonStyle::subControlRect(control,option,subControl,widget);
+        default : ret = QCommonStyle::subControlRect(control,option,subControl,widget);
       }
+
+      break;
     }
 
-    default : return QCommonStyle::subControlRect(control,option,subControl,widget);
+    default : ret = QCommonStyle::subControlRect(control,option,subControl,widget);
   }
 
-  return QCommonStyle::subControlRect(control,option,subControl,widget);
+end:
+  return visualRect(dir, r,ret);
 }
 
 QIcon QSvgStyle::standardIconImplementation ( QStyle::StandardPixmap standardIcon, const QStyleOption* option, const QWidget* widget ) const
@@ -3839,16 +3298,7 @@ void QSvgStyle::renderIndicator(QPainter *painter,
   __exit_func();
 }
 
-void QSvgStyle::renderLabel(QPainter *painter,
-                     /* frame bounds */ const QRect &bounds,
-                     /* frame spec */ const frame_spec_t &fspec,
-                     /* interior spec */ const interior_spec_t &ispec,
-                     /* label spec */ const label_spec_t &lspec,
-                     /* text alignment */ int talign,
-                     /* text */ const QString &text,
-                     /* text disabled ? */ bool disabled,
-                     /* icon */ const QPixmap &icon,
-                     /* text-icon alignment */ const Qt::ToolButtonStyle tialign) const
+void QSvgStyle::renderLabel(QPainter* painter, Qt::LayoutDirection direction, const QRect& bounds, const frame_spec_t& fspec, const interior_spec_t& ispec, const label_spec_t& lspec, int talign, const QString& text, bool disabled, const QPixmap& icon, const Qt::ToolButtonStyle tialign) const
 {
   __enter_func__();
   emit(sig_renderLabel_begin("text:"+text+"/icon:"+(icon.isNull() ? "yes":"no")));
@@ -3869,20 +3319,25 @@ void QSvgStyle::renderLabel(QPainter *painter,
   QRect rtext = r;
 
   if (tialign == Qt::ToolButtonTextBesideIcon) {
-    ricon = alignedRect(QApplication::layoutDirection(),Qt::AlignVCenter | Qt::AlignLeft, QSize(icon.width(),icon.height()),r);
+    ricon = alignedRect(Qt::LeftToRight,Qt::AlignVCenter | Qt::AlignLeft, QSize(icon.width(),icon.height()),r);
     rtext = QRect(r.x()+icon.width()+(icon.isNull() ? 0 : lspec.tispace),r.y(),r.width()-ricon.width()-(icon.isNull() ? 0 : lspec.tispace),r.height());
   } else if (tialign == Qt::ToolButtonTextUnderIcon) {
-    ricon = alignedRect(QApplication::layoutDirection(),Qt::AlignTop | Qt::AlignHCenter, QSize(icon.width(),icon.height()),r);
+    ricon = alignedRect(Qt::LeftToRight,Qt::AlignTop | Qt::AlignHCenter, QSize(icon.width(),icon.height()),r);
     rtext = QRect(r.x(),r.y()+icon.height()+(icon.isNull() ? 0 : lspec.tispace),r.width(),r.height()-ricon.height()-(icon.isNull() ? 0 : lspec.tispace));
   } else if (tialign == Qt::ToolButtonIconOnly) {
-    ricon = alignedRect(QApplication::layoutDirection(),Qt::AlignCenter, QSize(icon.width(),icon.height()),r);
+    ricon = alignedRect(Qt::LeftToRight,Qt::AlignCenter, QSize(icon.width(),icon.height()),r);
   }
 
   if ( text.isNull() || text.isEmpty() ) {
-    ricon = alignedRect(QApplication::layoutDirection(),Qt::AlignCenter, QSize(icon.width(),icon.height()),r);
+    // When we have no text, center icon
+    ricon = alignedRect(Qt::LeftToRight,Qt::AlignCenter, QSize(icon.width(),icon.height()),r);
   }
 
+  rtext = visualRect(direction,bounds,rtext);
+  ricon = visualRect(direction,bounds,ricon);
+
   if (disabled) {
+    // FIXME use palette
     painter->save();
     painter->setPen(QPen(QColor(100,100,100)));
   }
@@ -4074,8 +3529,44 @@ void QSvgStyle::drawRealRect(QPainter* p, const QRect& r) const
 }
 
 /* !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! */
+QString QSvgStyle::state_str(State st, const QWidget* w) const
+{
+  QString status;
+
+  if ( !isContainerWidget(w) ) {
+    status = (st & State_Enabled) ?
+      (st & State_Sunken) ? "pressed" :
+      (st & State_On) ? "toggled" :
+      (st & State_Selected) ? "toggled" :
+      (st & State_MouseOver) ? "hovered" : "normal"
+    : (st & State_On) ? "disabled-toggled" : "disabled";
+  } else {
+    // container widgets will have only normal, selected and disabled status
+    status = (st & State_Enabled ) ?
+      (st & State_Selected) ? "toggled" : "normal"
+    : "disabled";
+  }
+
+  return status;
+}
+
+QIcon::Mode QSvgStyle::state_iconmode(State st) const
+{
+  return
+    (st & State_Enabled) ?
+      (st & State_Sunken) ? QIcon::Active :
+      (st & State_Selected ) ? QIcon::Selected :
+      (st & State_MouseOver) ? QIcon::Active : QIcon::Normal
+    : QIcon::Disabled;
+}
+
+QIcon::State QSvgStyle::state_iconstate(State st) const
+{
+  return (st & State_On) ? QIcon::On : QIcon::Off;
+}
+
 /* Auto generated */
-const QString QSvgStyle::PE_str(PrimitiveElement element) const
+QString QSvgStyle::PE_str(PrimitiveElement element) const
 {
   switch (element) {
     case PE_Q3CheckListController : return "PE_Q3CheckListController";
@@ -4138,7 +3629,7 @@ const QString QSvgStyle::PE_str(PrimitiveElement element) const
   return "PE_Unknown";
 }
 
-const QString QSvgStyle::CE_str(QStyle::ControlElement element) const
+QString QSvgStyle::CE_str(QStyle::ControlElement element) const
 {
   switch(element) {
     case CE_PushButton : return "CE_PushButton";
@@ -4195,7 +3686,7 @@ const QString QSvgStyle::CE_str(QStyle::ControlElement element) const
   return "CE_Unknown";
 }
 
-const QString QSvgStyle::SE_str(QStyle::SubElement element) const
+QString QSvgStyle::SE_str(QStyle::SubElement element) const
 {
   switch(element) {
     case SE_PushButtonContents : return "SE_PushButtonContents";
@@ -4268,7 +3759,7 @@ const QString QSvgStyle::SE_str(QStyle::SubElement element) const
   return "SE_Unknown";
 }
 
-const QString QSvgStyle::CC_str(QStyle::ComplexControl element) const
+QString QSvgStyle::CC_str(QStyle::ComplexControl element) const
 {
   switch (element) {
     case CC_SpinBox : return "CC_SpinBox";
@@ -4287,7 +3778,7 @@ const QString QSvgStyle::CC_str(QStyle::ComplexControl element) const
   return "CC_Unknown";
 }
 
-const QString QSvgStyle::SC_str(QStyle::ComplexControl control, QStyle::SubControl subControl) const
+QString QSvgStyle::SC_str(QStyle::ComplexControl control, QStyle::SubControl subControl) const
 {
   switch (control) {
     case CC_SpinBox : switch (subControl) {
@@ -4379,7 +3870,7 @@ const QString QSvgStyle::SC_str(QStyle::ComplexControl control, QStyle::SubContr
   return "SC_Unknown";
 }
 
-const QString QSvgStyle::CT_str(QStyle::ContentsType type) const
+QString QSvgStyle::CT_str(QStyle::ContentsType type) const
 {
   switch (type) {
     case CT_PushButton : return "CT_PushButton";
@@ -4412,4 +3903,213 @@ const QString QSvgStyle::CT_str(QStyle::ContentsType type) const
   }
 
   return "CT_Unknown";
+}
+
+/* !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! */
+
+QString QSvgStyle::PE_group(PrimitiveElement element) const
+{
+  switch (element) {
+    // Frames
+    case PE_Frame : return "Frame";
+    case PE_FrameDefaultButton : return "PushButton";
+    case PE_FrameDockWidget : return "DockWidget";
+    case PE_FrameFocusRect : return "Focus";
+    case PE_FrameGroupBox : return "GroupBox";
+    case PE_FrameLineEdit : return "LineEdit";
+    case PE_FrameMenu : return "Menu";
+    case PE_FrameStatusBarItem : return "StatusBar";
+    case PE_FrameTabWidget : return "TabWidget";
+    case PE_FrameWindow : return "Window";
+    case PE_FrameButtonBevel : return "PushButton";
+    case PE_FrameButtonTool : return "ToolButton";
+    case PE_FrameTabBarBase : return "TabWidget";
+    // Panels (interiors)
+    case PE_PanelButtonCommand : return "PushButton";
+    case PE_PanelButtonBevel : return "PushButton";
+    case PE_PanelButtonTool : return "ToolButton";
+    case PE_PanelMenuBar : return "MenuBar";
+    case PE_PanelToolBar : return "ToolBar";
+    case PE_PanelLineEdit : return "LineEdit";
+    case PE_PanelTipLabel : return "Tip";
+    case PE_PanelScrollAreaCorner : return "PE_PanelScrollAreaCorner";
+    case PE_PanelItemViewItem : return "ViewItem";
+    case PE_PanelItemViewRow : return "ViewItem";
+    case PE_PanelStatusBar : return "StatusBar";
+    case PE_PanelMenu : return "Menu";
+    // Indicators
+    case PE_IndicatorArrowDown : return "Indicator";
+    case PE_IndicatorArrowLeft : return "Indicator";
+    case PE_IndicatorArrowRight : return "Indicator";
+    case PE_IndicatorArrowUp : return "Indicator";
+    case PE_IndicatorBranch : return "Indicator";
+    case PE_IndicatorButtonDropDown : return "Indicator";
+    case PE_IndicatorItemViewItemCheck : return "CheckBox";
+    case PE_IndicatorCheckBox : return "CheckBox";
+    case PE_IndicatorDockWidgetResizeHandle : return "DockWidget";
+    case PE_IndicatorHeaderArrow : return "Indicator";
+    case PE_IndicatorMenuCheckMark : return "CheckBox";
+    case PE_IndicatorProgressChunk : return "ProgressbarContents";
+    case PE_IndicatorRadioButton : return "RadioButton";
+    case PE_IndicatorSpinDown : return "Indicator";
+    case PE_IndicatorSpinMinus : return "Indocator";
+    case PE_IndicatorSpinPlus : return "Indicator";
+    case PE_IndicatorSpinUp : return "Indicator";
+    case PE_IndicatorToolBarHandle : return "ToolBar";
+    case PE_IndicatorToolBarSeparator : return "ToolBar";
+    case PE_IndicatorTabTear : return "TabWidget";
+    case PE_IndicatorColumnViewArrow : return "Indicator";
+    case PE_IndicatorItemViewItemDrop : return "Indicator";
+    case PE_IndicatorTabClose : return "TabWidget";
+
+    default : return QString();
+  }
+
+  return QString();
+}
+
+QString QSvgStyle::CE_group(ControlElement element) const
+{
+  switch(element) {
+    case CE_PushButton : return "PushButton";
+    case CE_PushButtonBevel : return "PushButton";
+    case CE_PushButtonLabel : return "PushButton";
+    case CE_CheckBox : return "CheckBox";
+    case CE_CheckBoxLabel : return "CheckBox";
+    case CE_RadioButton : return "RadioButton";
+    case CE_RadioButtonLabel : return "RadioButton";
+    case CE_TabBarTab : return "TabWidget";
+    case CE_TabBarTabShape : return "TabWidget";
+    case CE_TabBarTabLabel : return "TabWidget";
+    case CE_ProgressBar : return "ProgressBar";
+    case CE_ProgressBarGroove : return "ProgressBar";
+    case CE_ProgressBarContents : return "ProgressBar";
+    case CE_ProgressBarLabel : return "ProgressBar";
+    case CE_MenuItem : return "MenuItem";
+    case CE_MenuScroller : return "MenuItem";
+    case CE_MenuTearoff : return "MenuItem";
+    case CE_MenuEmptyArea : return "MenuItem";
+    case CE_MenuBarItem : return "MenuBarItem";
+    case CE_MenuBarEmptyArea : return "MenuBarItem";
+    case CE_ToolButtonLabel : return "ToolButton";
+    case CE_Header : return "Header";
+    case CE_HeaderSection : return "Header";
+    case CE_HeaderLabel : return "Header";
+    case CE_ToolBoxTab : return "ToolBox";
+    case CE_SizeGrip : return "SizeGrip";
+    case CE_Splitter : return "Splitter";
+    case CE_RubberBand : return "RubberBand";
+    case CE_DockWidgetTitle : return "DockWidget";
+    case CE_ScrollBarAddLine : return "ScrollBar";
+    case CE_ScrollBarSubLine : return "ScrollBar";
+    case CE_ScrollBarAddPage : return "ScrollBar";
+    case CE_ScrollBarSubPage : return "ScrollBar";
+    case CE_ScrollBarSlider : return "ScrollBar";
+    case CE_ScrollBarFirst : return "ScrollBar";
+    case CE_ScrollBarLast : return "ScrollBar";
+    case CE_FocusFrame : return "Focus";
+    case CE_ComboBoxLabel : return "ComboBox";
+    case CE_ToolBar : return "ToolBar";
+    case CE_ToolBoxTabShape : return "ToolBox";
+    case CE_ToolBoxTabLabel : return "ToolBox";
+    case CE_HeaderEmptyArea : return "Header";
+    case CE_ItemViewItem : return "ItemView";
+    case CE_ShapedFrame : return "GenericFrame";
+    default : return QString();
+  }
+
+  return QString();
+}
+
+QString QSvgStyle::CT_group(QStyle::ContentsType type) const
+{
+  switch (type) {
+    case CT_PushButton : return "PushButton";
+    case CT_CheckBox : return "CheckBox";
+    case CT_RadioButton : return "RadioButton";
+    case CT_ToolButton : return "ToolButton";
+    case CT_ComboBox : return "PushButton";
+    case CT_Splitter : return "Splitter";
+    case CT_ProgressBar : return "ProgressBar";
+    case CT_MenuItem : return "MenuItem";
+    case CT_MenuBarItem : return "MenuBarItem";
+    case CT_MenuBar : return "MenuBar";
+    case CT_Menu : return "Menu";
+    case CT_TabBarTab : return "TabWidget";
+    case CT_Slider : return "Slider";
+    case CT_ScrollBar : return "ScrollBar";
+    case CT_LineEdit : return "LineEdit";
+    case CT_SpinBox : return "SpinBox";
+    case CT_TabWidget : return "TabWidget";
+    case CT_HeaderSection : return "HeaderSection";
+    case CT_GroupBox : return "GroupBox";
+    default: return QString();
+  }
+
+  return QString();
+}
+
+QString QSvgStyle::SE_group(SubElement element) const
+{
+  switch(element) {
+    case SE_PushButtonContents : return "PushButton";
+    case SE_PushButtonFocusRect : return "PushButton";
+    case SE_CheckBoxIndicator : return "CheckBox";
+    case SE_CheckBoxContents : return "CheckBox";
+    case SE_CheckBoxFocusRect : return "CheckBox";
+    case SE_CheckBoxClickRect : return "CheckBox";
+    case SE_RadioButtonIndicator : return "RadioButton";
+    case SE_RadioButtonContents : return "RadioButton";
+    case SE_RadioButtonFocusRect : return "RadioButton";
+    case SE_RadioButtonClickRect : return "RadioButton";
+    case SE_ComboBoxFocusRect : return "ComboBox";
+    case SE_SliderFocusRect : return "Slider";
+    case SE_ProgressBarGroove : return "ProgressBar";
+    case SE_ProgressBarContents : return "ProgressBar";
+    case SE_ProgressBarLabel : return "ProgressBar";
+    case SE_ToolBoxTabContents : return "ToolBox";
+    case SE_HeaderLabel : return "Header";
+    case SE_HeaderArrow : return "Header";
+    case SE_TabWidgetTabBar : return "TabWidget";
+    case SE_TabWidgetTabPane : return "TabWidget";
+    case SE_TabWidgetTabContents : return "TabWidget";
+    case SE_TabWidgetLeftCorner : return "TabWidget";
+    case SE_TabWidgetRightCorner : return "TabWidget";
+    case SE_ItemViewItemCheckIndicator : return "ItemView";
+    case SE_TabBarTearIndicator : return "TabWidget";
+    case SE_LineEditContents : return "LineEdit";
+    case SE_FrameContents : return "Frame";
+    case SE_DockWidgetCloseButton : return "DockWidget";
+    case SE_DockWidgetFloatButton : return "DockWidget";
+    case SE_DockWidgetTitleBarText : return "DockWidget";
+    case SE_DockWidgetIcon : return "DockWidget";
+    case SE_ItemViewItemDecoration : return "ItemView";
+    case SE_ItemViewItemText : return "ItemView";
+    case SE_ItemViewItemFocusRect : return "ItemView";
+    case SE_TabBarTabLeftButton : return "TabWidget";
+    case SE_TabBarTabRightButton : return "TabWidget";
+    case SE_TabBarTabText : return "TabWidget";
+    case SE_ShapedFrameContents : return "Frame";
+    case SE_ToolBarHandle : return "ToolBar";
+    default : return QString();
+  }
+
+  return QString();
+}
+
+QString QSvgStyle::CC_group(QStyle::ComplexControl element) const
+{
+  switch (element) {
+    case CC_SpinBox : return "SpinBox";
+    case CC_ComboBox : return "ComboBox";
+    case CC_ScrollBar : return "ScrollBar";
+    case CC_Slider : return "Slider";
+    case CC_ToolButton : return "ToolButton";
+    case CC_TitleBar : return "TitleBar";
+    case CC_Dial : return "Dial";
+    case CC_GroupBox : return "GroupBox";
+    default : return QString();
+  }
+
+  return QString();
 }

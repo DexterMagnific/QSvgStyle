@@ -2043,7 +2043,7 @@
        x="90"
        id="tspan3446">RadioButton</tspan></text>
   <rect
-     id="checkbox-focused-text"
+     id="checkbox-hovered-text"
      fill-opacity=".1961"
      fill-rule="evenodd"
      height="10.16"
@@ -2052,7 +2052,7 @@
      x="335"
      fill="#28241b" />
   <rect
-     id="radio-focused-text"
+     id="radio-hovered-text"
      fill-opacity=".1961"
      fill-rule="evenodd"
      height="10.16"
@@ -2428,7 +2428,7 @@
     </g>
   </g>
   <g
-     id="sizegrip-focused"
+     id="sizegrip-hovered"
      transform="matrix(-.7071 .7071 -.7071 -.7071 626.3 1397)"
      fill="none">
     <g
@@ -3186,7 +3186,7 @@
        id="rect3853" />
   </g>
   <g
-     id="arrow-plus-focused"
+     id="arrow-plus-hovered"
      transform="matrix(1.256,1.256,-1.256,1.256,365.6,841.4)"
      fill-rule="evenodd">
     <rect
@@ -3283,7 +3283,7 @@
        id="rect3878" />
   </g>
   <g
-     id="arrow-minus-focused"
+     id="arrow-minus-hovered"
      transform="matrix(1.256,1.256,-1.256,1.256,365.6,873.6)">
     <rect
        fill-rule="evenodd"
@@ -3378,7 +3378,7 @@
        x="100"
        id="tspan3902">Tristate</tspan></text>
   <g
-     id="checkbox-tristate-focused"
+     id="checkbox-tristate-hovered"
      transform="translate(134,389.6)">
     <rect
        d="m 495.48537,452.86569 -1172.91224,0 m 1176.92336,4.04518 -1172.91225,0 m 1176.92337,4.04519 -1172.91225,0 m 1176.92336,4.04518 -1172.91225,0 m 1160.8789,-12.13555 12.03335,12.13555 m -403.00409,-12.13555 12.03334,12.13555 m -403.00409,-12.13555 12.03334,12.13555 m -403.00409,-12.13555 12.03334,12.13555"
@@ -3923,7 +3923,7 @@
        id="rect4144" />
   </g>
   <g
-     id="slider-focused"
+     id="slider-hovered"
      transform="matrix(.4507 0 0 .4507 198.7 718.8)">
     <rect
        fill-rule="evenodd"
@@ -3997,7 +3997,7 @@
        id="rect4164" />
   </g>
   <g
-     id="scrollbar-focused"
+     id="scrollbar-hovered"
      transform="matrix(.4507 0 0 .4507 201.8 817.6)"
      fill-rule="evenodd">
     <rect
@@ -4043,7 +4043,7 @@
        x="90"
        id="tspan4177">Toolbar</tspan></text>
   <g
-     id="toolbar-separator-focused"
+     id="toolbar-separator-hovered"
      transform="matrix(0,3.625,-1,0,659.9,510.2)"
      fill="#000c4a">
     <rect
@@ -4357,7 +4357,7 @@
        id="rect4258" />
   </g>
   <g
-     id="progress-pattern-focused"
+     id="progress-pattern-hovered"
      transform="matrix(.16 0 0 .5333 230.7 78.3)">
     <rect
        d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9"
@@ -5675,7 +5675,7 @@
        id="rect4623" />
   </g>
   <g
-     id="dropdownbutton-normal">
+     id="arrow-dropdown-normal">
     <path
        d="m195 900.5-3 3 9 9 3 3 3-3 9-9-3-3-9 9-9-9z"
        id="path4626" />
@@ -5688,7 +5688,7 @@
        id="rect4628" />
   </g>
   <g
-     id="dropdownbutton-focused"
+     id="arrow-dropdown-hovered"
      transform="translate(50)">
     <path
        d="m195 900.5-3 3 9 9 3 3 3-3 9-9-3-3-9 9-9-9z"
@@ -5758,7 +5758,7 @@
        id="rect4653" />
   </g>
   <g
-     id="arrow-left-focused"
+     id="arrow-left-hovered"
      transform="matrix(0,1,-1,0,1162,592)">
     <path
        d="m195 900.5-3 3 9 9 3 3 3-3 9-9-3-3-9 9-9-9z"
@@ -5772,7 +5772,7 @@
        id="rect4658" />
   </g>
   <g
-     id="arrow-right-focused"
+     id="arrow-right-hovered"
      transform="matrix(0,-1,1,0,-654,960)">
     <path
        d="m195 900.5-3 3 9 9 3 3 3-3 9-9-3-3-9 9-9-9z"
@@ -5786,7 +5786,7 @@
        id="rect4663" />
   </g>
   <g
-     id="arrow-down-focused"
+     id="arrow-down-hovered"
      transform="translate(50,-190)">
     <path
        d="m195 900.5-3 3 9 9 3 3 3-3 9-9-3-3-9 9-9-9z"
@@ -5800,7 +5800,7 @@
        id="rect4668" />
   </g>
   <g
-     id="arrow-up-focused"
+     id="arrow-up-hovered"
      transform="matrix(1,0,0,-1,50,1588)">
     <path
        d="m195 900.5-3 3 9 9 3 3 3-3 9-9-3-3-9 9-9-9z"
@@ -7027,14 +7027,14 @@
      x="194"
      fill="#d8d8d8" />
   <rect
-     id="flat-focused"
+     id="flat-hovered"
      height="16"
      width="16"
      y="1730"
      x="244"
      fill="#d8d8d8" />
   <g
-     id="tab-tear-focused"
+     id="tab-tear-hovered"
      transform="matrix(0,3.625,-1,0,693.4,597.2)"
      fill-rule="evenodd">
     <rect
@@ -7063,7 +7063,7 @@
        id="path5099" />
   </g>
   <g
-     id="toolbar-focused-top"
+     id="toolbar-hovered-top"
      transform="matrix(0,-1.067,-1.06,0,289.5,148)">
     <rect
        d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9"
@@ -7100,7 +7100,7 @@
        id="rect5108" />
   </g>
   <g
-     id="toolbar-focused-bottom"
+     id="toolbar-hovered-bottom"
      transform="matrix(0,1.067,-1.067,0,289.7,-216)">
     <rect
        d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9"
@@ -7136,7 +7136,7 @@
        id="rect5117" />
   </g>
   <g
-     id="toolbar-focused-left"
+     id="toolbar-hovered-left"
      transform="matrix(1.067,0,0,1.067,38,-68.67)">
     <rect
        d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9"
@@ -7182,7 +7182,7 @@
        id="rect5128" />
   </g>
   <g
-     id="toolbar-focused-right"
+     id="toolbar-hovered-right"
      transform="matrix(1.067,0,0,1.067,72,-68.67)">
     <rect
        d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9"
@@ -7228,7 +7228,7 @@
        id="rect5139" />
   </g>
   <g
-     id="toolbar-focused-topleft"
+     id="toolbar-hovered-topleft"
      transform="matrix(1.067,0,0,1.067,166,-513.7)">
     <path
        fill-opacity="0"
@@ -7253,7 +7253,7 @@
        id="path5148" />
   </g>
   <g
-     id="toolbar-focused-topright"
+     id="toolbar-hovered-topright"
      transform="matrix(1.067,0,0,1.067,178.7,-513.7)">
     <path
        fill-opacity=".1569"
@@ -7283,7 +7283,7 @@
        id="path5159" />
   </g>
   <g
-     id="toolbar-focused-bottomleft"
+     id="toolbar-hovered-bottomleft"
      transform="matrix(1.067,0,0,1.067,166,-501.2)">
     <path
        fill-opacity=".1569"
@@ -7307,7 +7307,7 @@
        id="path5168" />
   </g>
   <g
-     id="toolbar-focused-bottomright"
+     id="toolbar-hovered-bottomright"
      transform="matrix(1.067,0,0,1.067,178.7,-501.2)">
     <path
        fill-opacity=".1569"
@@ -7326,7 +7326,7 @@
        id="path5175" />
   </g>
   <g
-     id="toolbar-focused"
+     id="toolbar-hovered"
      transform="matrix(.16 0 0 .5333 231.2 -280.7)">
     <rect
        d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9"
@@ -7348,7 +7348,7 @@
        id="rect5180" />
   </g>
   <g
-     id="radio-focused"
+     id="radio-hovered"
      transform="matrix(1.089,0,0,1.069,210.3,-67.03)">
     <path
        d="m60 425c0 11-8.95 20-20 20s-20-9-20-20 8.95-20 20-20 20 9 20 20z"
@@ -7371,7 +7371,7 @@
        id="path5187" />
   </g>
   <g
-     id="radio-checked-focused"
+     id="radio-checked-hovered"
      transform="matrix(1.089,0,0,1.069,210.3,-9.034)">
     <path
        d="m60 425c0 11-8.95 20-20 20s-20-9-20-20 8.95-20 20-20 20 9 20 20z"
@@ -7399,7 +7399,7 @@
        id="path5196" />
   </g>
   <g
-     id="checkbox-focused"
+     id="checkbox-hovered"
      transform="matrix(1.042,0,0,1.021,375.8,220.4)">
     <rect
        d="m 495.48537,452.86569 -1172.91224,0 m 1176.92336,4.04518 -1172.91225,0 m 1176.92337,4.04519 -1172.91225,0 m 1176.92336,4.04518 -1172.91225,0 m 1160.8789,-12.13555 12.03335,12.13555 m -403.00409,-12.13555 12.03334,12.13555 m -403.00409,-12.13555 12.03334,12.13555 m -403.00409,-12.13555 12.03334,12.13555"
@@ -7443,7 +7443,7 @@
        id="rect5205" />
   </g>
   <g
-     id="checkbox-checked-focused"
+     id="checkbox-checked-hovered"
      transform="matrix(1.042,0,0,1.021,375.8,272.4)">
     <rect
        d="m 495.48537,452.86569 -1172.91224,0 m 1176.92336,4.04518 -1172.91225,0 m 1176.92337,4.04519 -1172.91225,0 m 1176.92336,4.04518 -1172.91225,0 m 1160.8789,-12.13555 12.03335,12.13555 m -403.00409,-12.13555 12.03334,12.13555 m -403.00409,-12.13555 12.03334,12.13555 m -403.00409,-12.13555 12.03334,12.13555"
@@ -8058,7 +8058,7 @@
        id="path5381" />
   </g>
   <g
-     id="tab-focused-top"
+     id="tab-hovered-top"
      transform="matrix(0,-1.067,-1.06,0,285.5,1454)">
     <rect
        d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9"
@@ -8095,7 +8095,7 @@
        id="rect5390" />
   </g>
   <g
-     id="tab-focused-bottom"
+     id="tab-hovered-bottom"
      transform="matrix(0,1.067,-1.067,0,285.7,1090)">
     <rect
        d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9"
@@ -8131,7 +8131,7 @@
        id="rect5399" />
   </g>
   <g
-     id="tab-focused-left"
+     id="tab-hovered-left"
      transform="matrix(1.067,0,0,1.067,34,1237)">
     <rect
        d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9"
@@ -8177,7 +8177,7 @@
        id="rect5410" />
   </g>
   <g
-     id="tab-focused-right"
+     id="tab-hovered-right"
      transform="matrix(1.067,0,0,1.067,68,1237)">
     <rect
        d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9"
@@ -8223,7 +8223,7 @@
        id="rect5421" />
   </g>
   <g
-     id="tab-focused-topleft"
+     id="tab-hovered-topleft"
      transform="matrix(1.067,0,0,1.067,162,792.3)">
     <path
        fill-opacity="0"
@@ -8248,7 +8248,7 @@
        id="path5430" />
   </g>
   <g
-     id="tab-focused-topright"
+     id="tab-hovered-topright"
      transform="matrix(1.067,0,0,1.067,174.7,792.3)">
     <path
        fill-opacity=".1569"
@@ -8278,7 +8278,7 @@
        id="path5441" />
   </g>
   <g
-     id="tab-focused-bottomleft"
+     id="tab-hovered-bottomleft"
      transform="matrix(1.067,0,0,1.067,162,804.8)">
     <path
        fill-opacity=".1569"
@@ -8302,7 +8302,7 @@
        id="path5450" />
   </g>
   <g
-     id="tab-focused-bottomright"
+     id="tab-hovered-bottomright"
      transform="matrix(1.067,0,0,1.067,174.7,804.8)">
     <path
        fill-opacity=".1569"
@@ -8321,7 +8321,7 @@
        id="path5457" />
   </g>
   <g
-     id="tab-focused"
+     id="tab-hovered"
      transform="matrix(.16 0 0 .5333 227.2 1026)">
     <rect
        d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9"
@@ -8343,7 +8343,7 @@
        id="rect5462" />
   </g>
   <g
-     id="lineedit-focused-top"
+     id="lineedit-hovered-top"
      transform="matrix(0,-1.067,-1.06,0,289.5,324)">
     <rect
        d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9"
@@ -8379,7 +8379,7 @@
        id="rect5471" />
   </g>
   <g
-     id="lineedit-focused-bottom"
+     id="lineedit-hovered-bottom"
      transform="matrix(0,1.067,-1.067,0,289.7,-40)">
     <rect
        d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9"
@@ -8433,7 +8433,7 @@
        id="rect5484" />
   </g>
   <g
-     id="lineedit-focused-left"
+     id="lineedit-hovered-left"
      transform="matrix(1.067,0,0,1.067,38,107.3)">
     <rect
        d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9"
@@ -8479,7 +8479,7 @@
        id="rect5495" />
   </g>
   <g
-     id="lineedit-focused-right"
+     id="lineedit-hovered-right"
      transform="matrix(-1.067,0,0,1.067,472,107.3)">
     <rect
        d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9"
@@ -8525,7 +8525,7 @@
        id="rect5506" />
   </g>
   <g
-     id="lineedit-focused-topleft"
+     id="lineedit-hovered-topleft"
      transform="matrix(1.067,0,0,1.067,166,-337.7)">
     <path
        fill-opacity="0"
@@ -8549,7 +8549,7 @@
        id="path5515" />
   </g>
   <g
-     id="lineedit-focused-topright"
+     id="lineedit-hovered-topright"
      transform="matrix(1.067,0,0,1.067,178.7,-337.7)">
     <path
        fill-opacity="0"
@@ -8578,7 +8578,7 @@
        id="path5526" />
   </g>
   <g
-     id="lineedit-focused-bottomleft"
+     id="lineedit-hovered-bottomleft"
      transform="matrix(-1.067,0,0,1.067,331.3,-325.2)">
     <path
        fill-opacity=".6902"
@@ -8603,7 +8603,7 @@
        id="path5535" />
   </g>
   <g
-     id="lineedit-focused-bottomright"
+     id="lineedit-hovered-bottomright"
      transform="matrix(1.067,0,0,1.067,178.7,-325.2)">
     <path
        fill-opacity=".6902"
@@ -9198,7 +9198,7 @@
        id="path5708" />
   </g>
   <g
-     id="lineedit-focused"
+     id="lineedit-hovered"
      transform="matrix(.16 0 0 .5333 231.2 -104.7)">
     <rect
        d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9"
@@ -9500,7 +9500,7 @@
        id="path5793" />
   </g>
   <g
-     id="dropdownbutton-pressed"
+     id="arrow-dropdown-pressed"
      transform="translate(100)">
     <path
        d="m195 900.5-3 3 9 9 3 3 3-3 9-9-3-3-9 9-9-9z"
@@ -9514,7 +9514,7 @@
        id="rect5798" />
   </g>
   <g
-     id="dropdownbutton-toggled"
+     id="arrow-dropdown-toggled"
      transform="translate(148)">
     <path
        d="m195 900.5-3 3 9 9 3 3 3-3 9-9-3-3-9 9-9-9z"
@@ -9528,7 +9528,7 @@
        id="rect5803" />
   </g>
   <g
-     id="dropdownbutton-disabled"
+     id="arrow-dropdown-disabled"
      transform="translate(204)">
     <path
        fill-opacity=".8902"
@@ -9624,7 +9624,7 @@
        id="path5836" />
   </g>
   <g
-     id="commonframe-focused-bottomright-inverted"
+     id="commonframe-hovered-bottomright-inverted"
      transform="matrix(1.067,0,0,1.067,172.7,-219.7)">
     <path
        fill-opacity=".0078"
@@ -9644,7 +9644,7 @@
        id="path5843" />
   </g>
   <g
-     id="commonframe-focused-bottomleft-inverted"
+     id="commonframe-hovered-bottomleft-inverted"
      transform="matrix(-1.067,0,0,1.067,331.3,-219.7)">
     <path
        fill-opacity=".0078"
@@ -9664,7 +9664,7 @@
        id="path5850" />
   </g>
   <g
-     id="commonframe-focused-topleft-inverted"
+     id="commonframe-hovered-topleft-inverted"
      transform="matrix(-1.067,0,0,-1.067,331.3,728.7)">
     <path
        fill-opacity=".0078"
@@ -9684,7 +9684,7 @@
        id="path5857" />
   </g>
   <g
-     id="commonframe-focused-topright-inverted"
+     id="commonframe-hovered-topright-inverted"
      transform="matrix(1.067,0,0,-1.067,172.7,728.7)">
     <path
        fill-opacity=".0078"
@@ -9704,7 +9704,7 @@
        id="path5864" />
   </g>
   <g
-     id="slidercursor-focused"
+     id="slidercursor-hovered"
      transform="matrix(1.089,0,0,1.069,210.3,555)">
     <path
        d="m60 425c0 11-8.95 20-20 20s-20-9-20-20 8.95-20 20-20 20 9 20 20z"
@@ -9803,7 +9803,7 @@
        id="rect5892" />
   </g>
   <g
-     id="group-focused-top"
+     id="group-hovered-top"
      transform="matrix(0,-1.067,-1.06,0,289.9,1814)">
     <rect
        d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9"
@@ -9839,7 +9839,7 @@
        id="rect5901" />
   </g>
   <g
-     id="group-focused-bottom"
+     id="group-hovered-bottom"
      transform="matrix(0,1.067,-1.067,0,290.1,1450)">
     <rect
        d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9"
@@ -9893,7 +9893,7 @@
        id="rect5914" />
   </g>
   <g
-     id="group-focused-left"
+     id="group-hovered-left"
      transform="matrix(1.067,0,0,1.067,38.4,1597)">
     <rect
        d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9"
@@ -9939,7 +9939,7 @@
        id="rect5925" />
   </g>
   <g
-     id="group-focused-right"
+     id="group-hovered-right"
      transform="matrix(-1.067,0,0,1.067,472.4,1597)">
     <rect
        d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9"
@@ -9985,7 +9985,7 @@
        id="rect5936" />
   </g>
   <g
-     id="group-focused-topleft"
+     id="group-hovered-topleft"
      transform="matrix(1.067,0,0,1.067,166.4,1152)">
     <path
        fill-opacity="0"
@@ -10009,7 +10009,7 @@
        id="path5945" />
   </g>
   <g
-     id="group-focused-topright"
+     id="group-hovered-topright"
      transform="matrix(1.067,0,0,1.067,179.1,1152)">
     <path
        fill-opacity="0"
@@ -10038,7 +10038,7 @@
        id="path5956" />
   </g>
   <g
-     id="group-focused-bottomleft"
+     id="group-hovered-bottomleft"
      transform="matrix(-1.067,0,0,1.067,331.7,1165)">
     <path
        fill-opacity=".6275"
@@ -10063,7 +10063,7 @@
        id="path5965" />
   </g>
   <g
-     id="group-focused-bottomright"
+     id="group-hovered-bottomright"
      transform="matrix(1.067,0,0,1.067,179.1,1165)">
     <path
        fill-opacity=".6275"
@@ -11003,7 +11003,7 @@
        id="rect6240" />
   </g>
   <g
-     id="group-focused"
+     id="group-hovered"
      transform="matrix(.16 0 0 .5333 231.6 1385)">
     <rect
        d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9"
@@ -11918,7 +11918,7 @@
        id="rect6486" />
   </g>
   <g
-     id="header-focused-top"
+     id="header-hovered-top"
      transform="matrix(0 -1.067 -.795 0 282.9 1960)">
     <rect
        d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9"
@@ -11956,7 +11956,7 @@
        id="rect6495" />
   </g>
   <g
-     id="header-focused-bottom"
+     id="header-hovered-bottom"
      transform="matrix(0 1.067 -.8 0 283 1596)">
     <rect
        d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9"
@@ -11984,7 +11984,7 @@
        id="rect6502" />
   </g>
   <g
-     id="header-focused-left"
+     id="header-hovered-left"
      transform="matrix(1.067,0,0,1.067,42,1743)">
     <rect
        d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9"
@@ -12012,7 +12012,7 @@
        id="path6509" />
   </g>
   <g
-     id="header-focused-right"
+     id="header-hovered-right"
      transform="matrix(1.067,0,0,1.067,72,1743)">
     <rect
        d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9"
@@ -12040,7 +12040,7 @@
        id="path6516" />
   </g>
   <g
-     id="header-focused-topleft"
+     id="header-hovered-topleft"
      transform="matrix(0 -1.067 -.265 0 256.6 1960)">
     <rect
        d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9"
@@ -12078,7 +12078,7 @@
        id="rect6525" />
   </g>
   <g
-     id="header-focused-topright"
+     id="header-hovered-topright"
      transform="matrix(0 -1.067 -.265 0 274.6 1960)">
     <rect
        d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9"
@@ -12116,7 +12116,7 @@
        id="rect6534" />
   </g>
   <g
-     id="header-focused-bottomleft"
+     id="header-hovered-bottomleft"
      transform="matrix(0 1.067 -.2667 0 256.7 1596)">
     <rect
        d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9"
@@ -12144,7 +12144,7 @@
        id="rect6541" />
   </g>
   <g
-     id="header-focused-bottomright"
+     id="header-hovered-bottomright"
      transform="matrix(0 1.067 -.2667 0 274.7 1596)">
     <rect
        d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9"
@@ -13259,7 +13259,7 @@
        id="rect6825" />
   </g>
   <g
-     id="toolbar-handle-focused"
+     id="toolbar-handle-hovered"
      transform="matrix(0,3.625,-1,0,660.9,547.2)">
     <rect
        d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9"
@@ -14009,7 +14009,7 @@
        id="path7038" />
   </g>
   <g
-     id="slider-focused-top"
+     id="slider-hovered-top"
      transform="matrix(0,-1.067,-1.06,0,289.5,1146)">
     <rect
        d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9"
@@ -14037,7 +14037,7 @@
        id="rect7045" />
   </g>
   <g
-     id="slider-focused-bottom"
+     id="slider-hovered-bottom"
      transform="matrix(0,1.067,-1.067,0,289.7,774)">
     <rect
        d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9"
@@ -14074,7 +14074,7 @@
        id="rect7054" />
   </g>
   <g
-     id="slider-focused-left"
+     id="slider-hovered-left"
      transform="matrix(1.067,0,0,1.067,40,925.3)">
     <rect
        d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9"
@@ -14112,7 +14112,7 @@
        id="rect7063" />
   </g>
   <g
-     id="slider-focused-right"
+     id="slider-hovered-right"
      transform="matrix(-1.067,0,0,1.067,468,925.3)">
     <rect
        d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9"
@@ -14150,7 +14150,7 @@
        id="rect7072" />
   </g>
   <g
-     id="slider-focused-topleft"
+     id="slider-hovered-topleft"
      transform="matrix(-.8 0 0 .8 308 597.7)">
     <path
        fill-opacity="0"
@@ -14180,7 +14180,7 @@
        id="path7083" />
   </g>
   <g
-     id="slider-focused-topright"
+     id="slider-hovered-topright"
      transform="matrix(.8 0 0 .8 200 597.7)">
     <path
        fill-opacity="0"
@@ -14210,7 +14210,7 @@
        id="path7094" />
   </g>
   <g
-     id="slider-focused-bottomleft"
+     id="slider-hovered-bottomleft"
      transform="matrix(-.8 0 0 -.8 308 1322)">
     <path
        fill-opacity=".6275"
@@ -14240,7 +14240,7 @@
        id="path7105" />
   </g>
   <g
-     id="slider-focused-bottomright"
+     id="slider-hovered-bottomright"
      transform="matrix(.8 0 0 -.8 200 1322)">
     <path
        fill-opacity=".6275"
@@ -15070,7 +15070,7 @@
      fill="#769d3b"
      id="path7358" />
   <g
-     id="button-focused-top"
+     id="button-hovered-top"
      transform="matrix(0,-1.067,-1.06,0,289.5,216)">
     <rect
        d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9"
@@ -15107,7 +15107,7 @@
        id="rect7367" />
   </g>
   <g
-     id="button-focused-bottom"
+     id="button-hovered-bottom"
      transform="matrix(0,1.067,-1.067,0,289.7,-148)">
     <rect
        d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9"
@@ -15143,7 +15143,7 @@
        id="rect7376" />
   </g>
   <g
-     id="button-focused-left"
+     id="button-hovered-left"
      transform="matrix(1.067 0 0 1.067 38 -.6667)">
     <rect
        d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9"
@@ -15189,7 +15189,7 @@
        id="rect7387" />
   </g>
   <g
-     id="button-focused-right"
+     id="button-hovered-right"
      transform="matrix(1.067 0 0 1.067 72 -.6667)">
     <rect
        d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9"
@@ -15235,7 +15235,7 @@
        id="rect7398" />
   </g>
   <g
-     id="button-focused-topleft"
+     id="button-hovered-topleft"
      transform="matrix(1.067,0,0,1.067,166,-445.7)">
     <path
        fill-opacity="0"
@@ -15260,7 +15260,7 @@
        id="path7407" />
   </g>
   <g
-     id="button-focused-topright"
+     id="button-hovered-topright"
      transform="matrix(1.067,0,0,1.067,178.7,-445.7)">
     <path
        fill-opacity=".1569"
@@ -15290,7 +15290,7 @@
        id="path7418" />
   </g>
   <g
-     id="button-focused-bottomleft"
+     id="button-hovered-bottomleft"
      transform="matrix(1.067,0,0,1.067,166,-433.2)">
     <path
        fill-opacity=".1569"
@@ -15314,7 +15314,7 @@
        id="path7427" />
   </g>
   <g
-     id="button-focused-bottomright"
+     id="button-hovered-bottomright"
      transform="matrix(1.067,0,0,1.067,178.7,-433.2)">
     <path
        fill-opacity=".1569"
@@ -15333,7 +15333,7 @@
        id="path7434" />
   </g>
   <g
-     id="button-focused"
+     id="button-hovered"
      transform="matrix(.16 0 0 .5333 231.2 -212.7)">
     <rect
        d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9"
@@ -15560,7 +15560,7 @@
        id="rect7504" />
   </g>
   <g
-     id="splitter-focused"
+     id="splitter-hovered"
      transform="matrix(.16 0 0 .5333 229.2 1595)">
     <rect
        d="m 495.50262,453.85937 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1176.01685,3 -1173.01685,0 m 1164.01685,-9 9,9 m -400.00562,-9 9,9 m -400.00561,-9 9,9 m -400.00562,-9 9,9"
@@ -15666,7 +15666,7 @@
      x="196"
      fill="#FFF" />
   <rect
-     id="scrollbarslider-focused"
+     id="scrollbarslider-hovered"
      height="16"
      width="16"
      y="1080"
@@ -15694,7 +15694,7 @@
      x="402"
      fill="#b8b8b8" />
   <rect
-     id="scrollbarslider-focused-top"
+     id="scrollbarslider-hovered-top"
      fill-opacity=".0157"
      height="4"
      width="16"
@@ -15702,7 +15702,7 @@
      x="248"
      fill="#FFF" />
   <rect
-     id="scrollbarslider-focused-bottom"
+     id="scrollbarslider-hovered-bottom"
      fill-opacity=".0157"
      height="4"
      width="16"
@@ -15710,7 +15710,7 @@
      x="248"
      fill="#FFF" />
   <rect
-     id="scrollbarslider-focused-left"
+     id="scrollbarslider-hovered-left"
      fill-opacity=".0157"
      height="16"
      width="4"
@@ -15718,7 +15718,7 @@
      x="242"
      fill="#FFF" />
   <rect
-     id="scrollbarslider-focused-right"
+     id="scrollbarslider-hovered-right"
      fill-opacity=".0157"
      height="16"
      width="4"
@@ -15726,7 +15726,7 @@
      x="266"
      fill="#FFF" />
   <rect
-     id="scrollbarslider-focused-topleft"
+     id="scrollbarslider-hovered-topleft"
      fill-opacity=".0157"
      height="4"
      width="4"
@@ -15734,7 +15734,7 @@
      x="242"
      fill="#FFF" />
   <rect
-     id="scrollbarslider-focused-topright"
+     id="scrollbarslider-hovered-topright"
      fill-opacity=".0157"
      height="4"
      width="4"
@@ -15742,7 +15742,7 @@
      x="266"
      fill="#FFF" />
   <rect
-     id="scrollbarslider-focused-bottomleft"
+     id="scrollbarslider-hovered-bottomleft"
      fill-opacity=".0157"
      height="4"
      width="4"
@@ -15750,7 +15750,7 @@
      x="242"
      fill="#FFF" />
   <rect
-     id="scrollbarslider-focused-bottomright"
+     id="scrollbarslider-hovered-bottomright"
      fill-opacity=".0157"
      height="4"
      width="4"
@@ -15998,7 +15998,7 @@
        id="rect7569" />
   </g>
   <g
-     id="viewitem-focused"
+     id="viewitem-hovered"
      transform="matrix(.0853 0 0 1.067 236.6 1384)">
     <rect
        height="15"
@@ -16022,7 +16022,7 @@
        x="100"
        id="tspan7576">ViewItem</tspan></text>
   <g
-     id="viewitem-normalalt"
+     id="viewitem-alt-normal"
      transform="matrix(.32 0 0 1.067 151.4 1385)">
     <rect
        fill-rule="evenodd"

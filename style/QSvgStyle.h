@@ -28,6 +28,7 @@
 /** Define this to allow style instrumentation */
 //#define QS_INSTRUMENTATION
 
+class QWidget;
 class QSvgRenderer;
 class QSettings;
 class QVariant;
@@ -75,11 +76,11 @@ class QSvgStyle : public QCommonStyle {
     virtual QRect subControlRect ( ComplexControl control, const QStyleOptionComplex * option, SubControl subControl, const QWidget * widget = 0 ) const;
     QSize sizeFromContents ( ContentsType type, const QStyleOption * option, const QSize & contentsSize, const QWidget * widget = 0 ) const;
 
-    virtual void drawPrimitive(PrimitiveElement element, const QStyleOption * option, QPainter * painter, const QWidget * widget = 0) const;
-    virtual void drawControl ( ControlElement element, const QStyleOption * option, QPainter * painter, const QWidget * widget = 0 ) const;
-    virtual void drawComplexControl ( ComplexControl control, const QStyleOptionComplex * option, QPainter * painter, const QWidget * widget = 0 ) const;
+    virtual void drawPrimitive(QStyle::PrimitiveElement e, const QStyleOption* option, QPainter* p, const QWidget* widget = 0) const;
+    virtual void drawControl(ControlElement element, const QStyleOption * option, QPainter * painter, const QWidget * widget = 0 ) const;
+    virtual void drawComplexControl(ComplexControl control, const QStyleOptionComplex * option, QPainter * painter, const QWidget * widget = 0 ) const;
     virtual int styleHint(StyleHint hint, const QStyleOption * option = 0, const QWidget * widget = 0, QStyleHintReturn * returnData = 0 ) const;
-    virtual SubControl hitTestComplexControl ( ComplexControl control, const QStyleOptionComplex * option, const QPoint & position, const QWidget * widget = 0 ) const;
+    virtual SubControl hitTestComplexControl (ComplexControl control, const QStyleOptionComplex * option, const QPoint & position, const QWidget * widget = 0 ) const;
 
   protected slots:
     QIcon standardIconImplementation ( StandardPixmap standardIcon, const QStyleOption * option = 0, const QWidget * widget = 0 ) const;
@@ -252,6 +253,7 @@ class QSvgStyle : public QCommonStyle {
      * Generic method that draws a label (text and/or icon)
      */
     void renderLabel(QPainter *painter,
+                     /* text direction */ Qt::LayoutDirection direction,
                      /* frame bounds */ const QRect &bounds,
                      /* frame spec */ const frame_spec_t &fspec,
                      /* interior spec */ const interior_spec_t &ispec,
@@ -265,7 +267,7 @@ class QSvgStyle : public QCommonStyle {
      * Generic method to compute the ideal
      * (in QSvgStyle : minimal and strictly sufficient) size of a widget
      */
-    QSize sizeFromContents(/* font to determine width/height */ const QFont &font,
+    QSize sizeFromContents(/* font metrics to determine width/height */ const QFontMetrics &fm,
                      /* frame spec */ const frame_spec_t &fspec,
                      /* interior spec */ const interior_spec_t &ispec,
                      /* label spec */ const label_spec_t &lspec,
@@ -297,7 +299,11 @@ class QSvgStyle : public QCommonStyle {
                        frame_spec_t f,
                        interior_spec_t i) const {
       Q_UNUSED(i);
-      QRect r = frameRect(bounds,f).adjusted(f.left,f.top,-f.right,-f.bottom);
+      QRect r;
+      if (f.hasFrame)
+        r = frameRect(bounds,f).adjusted(f.left,f.top,-f.right,-f.bottom);
+      else
+        r = frameRect(bounds,f);
       if ( r.width() < 0 )
         r.setWidth(0);
       if ( r.height() < 0 )
@@ -330,21 +336,36 @@ class QSvgStyle : public QCommonStyle {
     void drawRealRect(QPainter *p, const QRect &r) const;
 
     /** Helper functions that convert various QStyle enums to strings */
-    const QString PE_str(PrimitiveElement element) const;
-    const QString CE_str(ControlElement element) const;
-    const QString CC_str(ComplexControl element) const;
-    const QString SE_str(SubElement element) const;
-    const QString SC_str(ComplexControl control, SubControl subControl) const;
-    const QString CT_str(ContentsType type) const;
+    QString PE_str(PrimitiveElement element) const;
+    QString CE_str(ControlElement element) const;
+    QString CC_str(ComplexControl element) const;
+    QString SE_str(SubElement element) const;
+    QString SC_str(ComplexControl control, SubControl subControl) const;
+    QString CT_str(ContentsType type) const;
 
     /**
      * Helper functions that determine the appriopriate QSvgStyle
      * configuration group to draw a given element
      * TODO implement
      */
-    const QString PE_group(PrimitiveElement element);
-    const QString CE_group(ControlElement element);
-    const QString CC_group(ComplexControl element);
+    QString PE_group(PrimitiveElement element) const;
+    QString SE_group(SubElement element) const;
+    QString CE_group(ControlElement element) const;
+    QString CC_group(ComplexControl element) const;
+    QString CT_group(ContentsType type) const;
+
+    /**
+     * Helper function that converts a QStyle::State value to a string
+     */
+    QString state_str(State st, const QWidget *w) const;
+    /**
+     * Helper function that converts a QStyle::State to a QIcon::Mode
+     */
+    QIcon::Mode state_iconmode(State st) const;
+    /**
+     * Helper function that converts a QStyle::State to a QIcon::State
+     */
+    QIcon::State state_iconstate(State st) const;
 
   private slots:
     /**
