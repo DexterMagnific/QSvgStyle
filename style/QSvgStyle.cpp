@@ -1226,35 +1226,17 @@ void QSvgStyle::drawControl(ControlElement e, const QStyleOption * option, QPain
     }
 
     case CE_HeaderSection : {
-      const QString group = "HeaderSection";
-
-      const frame_spec_t fs = getFrameSpec(group);
-      const interior_spec_t is = getInteriorSpec(group);
-
-      __print_group();
-
       renderFrame(p,option->rect,fs,fs.element+"-"+st);
       renderInterior(p,option->rect,fs,is,is.element+"-"+st);
-
       break;
     }
 
     case CE_HeaderLabel : {
-      const QStyleOptionHeader *opt =
-        qstyleoption_cast<const QStyleOptionHeader *>(option);
-
-      if (opt) {
-        const QString group = "HeaderSection";
-
-        const frame_spec_t fs = getFrameSpec(group);
-        const interior_spec_t is = getInteriorSpec(group);
-        const label_spec_t ls = getLabelSpec(group);
-
-        __print_group();
+      if ( const QStyleOptionHeader *opt =
+           qstyleoption_cast<const QStyleOptionHeader *>(option) ) {
 
         renderLabel(p,dir,option->rect,fs,is,ls,opt->textAlignment,opt->text,!(option->state & State_Enabled),opt->icon.pixmap(pixelMetric(PM_SmallIconSize),icm,ics));
       }
-
       break;
     }
 
@@ -2284,20 +2266,8 @@ QSize QSvgStyle::sizeFromContents ( ContentsType type, const QStyleOption * opti
     }
 
     case CT_HeaderSection : {
-      const QStyleOptionHeader *opt =
-        qstyleoption_cast<const QStyleOptionHeader *>(option);
-
-      if (opt) {
-        QFont f = QApplication::font();
-        if (widget)
-          f = widget->font();
-
-        const QString group = "HeaderSection";
-
-        const frame_spec_t fs = getFrameSpec(group);
-        const interior_spec_t is = getInteriorSpec(group);
-        const label_spec_t ls = getLabelSpec(group);
-        const size_spec_t ss = getSizeSpec(group);
+      if ( const QStyleOptionHeader *opt =
+           qstyleoption_cast<const QStyleOptionHeader *>(option) ) {
 
         s = sizeFromContents(fm,fs,is,ls,ss,opt->text,opt->icon.pixmap(pixelMetric(PM_SmallIconSize)));
       }
@@ -2315,36 +2285,17 @@ QSize QSvgStyle::sizeFromContents ( ContentsType type, const QStyleOption * opti
     }
 
     case CT_GroupBox : {
-      const QStyleOptionGroupBox *opt =
-        qstyleoption_cast<const QStyleOptionGroupBox *>(option);
+      if ( const QStyleOptionGroupBox *opt =
+           qstyleoption_cast<const QStyleOptionGroupBox *>(option) ) {
 
-      if (opt) {
-
-        QFont f = QApplication::font();
-        if (widget)
-          f = widget->font();
-
-        const QString group = "GroupBox";
-
-        const frame_spec_t fs = getFrameSpec(group);
-        const interior_spec_t is = getInteriorSpec(group);
-        label_spec_t ls = getLabelSpec(group);
-	const indicator_spec_t ds = getIndicatorSpec(group);
-        const size_spec_t ss = getSizeSpec(group);
-
-        __print_group();
-
-	// title size
-	const QGroupBox * w = qobject_cast<const QGroupBox *>(widget);
-	QSize st;
-
-	if ( w && w->isCheckable() )
-          st = sizeFromContents(fm,fs,is,ls,ss,opt->text,QPixmap())+QSize(pixelMetric(PM_CheckBoxLabelSpacing)+pixelMetric(PM_IndicatorWidth),0);
+	if ( opt->subControls & SC_GroupBoxCheckBox )
+          s = sizeFromContents(fm,fs,is,ls,ss,opt->text,QPixmap())+QSize(pixelMetric(PM_CheckBoxLabelSpacing)+pixelMetric(PM_IndicatorWidth),0);
         else
-	  st = sizeFromContents(fm,fs,is,ls,ss,opt->text,QPixmap());
+	  s = sizeFromContents(fm,fs,is,ls,ss,opt->text,QPixmap());
 
         // add contents to st, 30 is title shift (left and right)
-	s = QSize(qMax(st.width()+30+30,csz.width()+fs.left+fs.right),csz.height()+st.height()+fs.top+fs.bottom);
+	s = QSize(qMax(s.width()+30+30,csz.width()+fs.left+fs.right),
+                  csz.height()+s.height()+fs.top+fs.bottom);
       }
 
       break;
@@ -2743,7 +2694,7 @@ QRect QSvgStyle::subControlRect(ComplexControl control, const QStyleOptionComple
 
             if (opt->features & QStyleOptionToolButton::Menu)
               ret = r.adjusted(x+w-20,0,0,0);
-            if (opt->features & QStyleOptionToolButton::HasMenu)
+            else if (opt->features & QStyleOptionToolButton::HasMenu)
               ret = QRect(x+w-ls.tispace-ds.size-fs.right,y+10,ds.size,h-10);
           }
           break;
