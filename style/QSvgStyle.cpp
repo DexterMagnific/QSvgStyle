@@ -1803,19 +1803,10 @@ void QSvgStyle::drawComplexControl(ComplexControl control, const QStyleOptionCom
     }
 
     case CC_GroupBox : {
-      const QStyleOptionGroupBox *opt =
-	qstyleoption_cast<const QStyleOptionGroupBox *>(option);
+      if ( const QStyleOptionGroupBox *opt =
+	   qstyleoption_cast<const QStyleOptionGroupBox *>(option) ) {
 
-      const QGroupBox *w = qobject_cast<const QGroupBox *>(widget);
-
-      if (opt) {
         QStyleOptionGroupBox o(*opt);
-
-        QString group = "GroupBox";
-
-        frame_spec_t fspec = getFrameSpec(group);
-        interior_spec_t ispec = getInteriorSpec(group);
-        label_spec_t lspec = getLabelSpec(group);
 
         QRect r1,r2;
 
@@ -1823,29 +1814,36 @@ void QSvgStyle::drawComplexControl(ComplexControl control, const QStyleOptionCom
         r2 = subControlRect(CC_GroupBox,&o,SC_GroupBoxLabel,widget);
 
         // Draw frame and interior around contents
-        renderFrame(p,r1,fspec,fspec.element+"-"+st);
-        renderInterior(p,r1,fspec,ispec,ispec.element+"-"+st);
+        renderFrame(p,r1,fs,fs.element+"-"+st);
+        renderInterior(p,r1,fs,is,is.element+"-"+st);
 
         // Draw frame and interior around title
-        fspec.hasCapsule = true;
-        fspec.capsuleH = 2;
-        fspec.capsuleV = -1; // FIXME bottom titles
-        renderFrame(p,r2,fspec,fspec.element+"-"+st);
-        renderInterior(p,r2,fspec,ispec,ispec.element+"-"+st);
+        fs.hasCapsule = true;
+        fs.capsuleH = 2;
+        fs.capsuleV = -1; // FIXME bottom titles
+        renderFrame(p,r2,fs,fs.element+"-"+st);
+        renderInterior(p,r2,fs,is,is.element+"-"+st);
 
         // Draw title
-        fspec.hasCapsule = false;
+        fs.hasCapsule = false;
         r2 = subControlRect(CC_GroupBox,&o,SC_GroupBoxLabel,widget);
-        if ( w && w->isCheckable() ) {
-          renderLabel(p,dir,r2.adjusted(pixelMetric(PM_IndicatorWidth)+pixelMetric(PM_CheckBoxLabelSpacing),0,0,0),fspec,ispec,lspec,opt->textAlignment | Qt::TextShowMnemonic,opt->text,!opt->state & State_Enabled);
-          QStyleOption oo;
-          oo.initFrom(w);
-          if ( w->isChecked() )
-            oo.state |= State_On;
-          oo.rect = subControlRect(CC_GroupBox,&o,SC_GroupBoxCheckBox,widget);
-          drawPrimitive(PE_IndicatorCheckBox,&oo,p,NULL);
+        if ( opt->subControls & SC_GroupBoxCheckBox ) {
+          if ( dir == Qt::LeftToRight )
+            renderLabel(p,dir,
+                        r2.adjusted(pixelMetric(PM_IndicatorWidth)+pixelMetric(PM_CheckBoxLabelSpacing),0,0,0),
+                        fs,is,ls,opt->textAlignment | Qt::TextShowMnemonic,
+                        opt->text,!opt->state & State_Enabled);
+          else
+            renderLabel(p,dir,
+                        r2.adjusted(0,0,-pixelMetric(PM_IndicatorWidth)-pixelMetric(PM_CheckBoxLabelSpacing),0),
+                        fs,is,ls,opt->textAlignment | Qt::TextShowMnemonic,
+                        opt->text,!opt->state & State_Enabled);
+          o.rect= subControlRect(CC_GroupBox,opt,SC_GroupBoxCheckBox,widget);
+          drawPrimitive(PE_IndicatorCheckBox,&o,p,NULL);
         } else
-          renderLabel(p,dir,r2,fspec,ispec,lspec,opt->textAlignment | Qt::TextShowMnemonic,opt->text,!opt->state & State_Enabled);
+          renderLabel(p,dir,r2,fs,is,ls,
+                      opt->textAlignment | Qt::TextShowMnemonic,
+                      opt->text,!opt->state & State_Enabled);
       }
       break;
     }
