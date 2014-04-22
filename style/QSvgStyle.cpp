@@ -841,7 +841,10 @@ void QSvgStyle::drawControl(ControlElement e, const QStyleOption * option, QPain
           QStyleOptionMenuItem o(*opt);
           o.rect = alignedRect(QApplication::layoutDirection(),Qt::AlignRight | Qt::AlignVCenter,QSize(10,10),labelRect(o.rect,fs,is,ls));
           if (opt->menuItemType == QStyleOptionMenuItem::SubMenu) {
-            drawPrimitive(PE_IndicatorArrowRight,&o,p);
+            if ( dir == Qt::LeftToRight )
+              drawPrimitive(PE_IndicatorArrowRight,&o,p);
+            else
+              drawPrimitive(PE_IndicatorArrowLeft,&o,p);
           }
 
           if (opt->checkType == QStyleOptionMenuItem::Exclusive) {
@@ -1308,15 +1311,23 @@ void QSvgStyle::drawControl(ControlElement e, const QStyleOption * option, QPain
                       opt->text,!(option->state & State_Enabled),
                       opt->icon.pixmap(opt->iconSize,icm,ics),
                       opt->toolButtonStyle);
-        else
-          renderLabel(p,dir,r.adjusted(ds.size+ls.tispace,0,0,0),fs,is,ls,
-                      Qt::AlignCenter | Qt::TextShowMnemonic,
-                      opt->text,!(option->state & State_Enabled),
-                      opt->icon.pixmap(opt->iconSize,icm,ics),
-                      opt->toolButtonStyle);
+        else {
+          if ( dir == Qt::LeftToRight )
+            renderLabel(p,dir,r.adjusted(ds.size+ls.tispace,0,0,0),fs,is,ls,
+                        Qt::AlignCenter | Qt::TextShowMnemonic,
+                        opt->text,!(option->state & State_Enabled),
+                        opt->icon.pixmap(opt->iconSize,icm,ics),
+                        opt->toolButtonStyle);
+          else
+            renderLabel(p,dir,r.adjusted(0,0,-ds.size-ls.tispace,0),fs,is,ls,
+                        Qt::AlignCenter | Qt::TextShowMnemonic,
+                        opt->text,!(option->state & State_Enabled),
+                        opt->icon.pixmap(opt->iconSize,icm,ics),
+                        opt->toolButtonStyle);
+        }
 
 	// alignement of arrow
-	Qt::AlignmentFlag hAlign = Qt::AlignLeft;
+	Qt::Alignment hAlign = visualAlignment(dir,Qt::AlignLeft);
 	if ( opt->text.isEmpty() && opt->icon.isNull() )
 	  hAlign = Qt::AlignCenter;
 
