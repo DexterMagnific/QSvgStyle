@@ -596,9 +596,8 @@ void QSvgStyle::drawPrimitive(PrimitiveElement e, const QStyleOption * option, Q
       break;
     }
     case PE_FrameTabWidget : {
-      // Frame and interior for tab widgets (contents)
+      // Frame for tab widgets (contents)
       renderFrame(p,r,fs,fs.element+"-"+st);
-      renderInterior(p,r,fs,is,is.element+"-"+st);
       break;
     }
     case PE_FrameLineEdit : {
@@ -971,28 +970,31 @@ void QSvgStyle::drawControl(ControlElement e, const QStyleOption * option, QPain
     }
 
     case CE_TabBarTabShape : {
-      const QString group = "Tab";
+      if ( const QStyleOptionTab *opt =
+           qstyleoption_cast<const QStyleOptionTab *>(option) ) {
 
-      frame_spec_t fs = getFrameSpec(group);
-      const interior_spec_t is = getInteriorSpec(group);
-
-      __print_group();
-
-      const QStyleOptionTab *opt =
-          qstyleoption_cast<const QStyleOptionTab *>(option);
-
-      if (opt) {
         fs.hasCapsule = true;
         int capsule = 2;
 
-        if (opt->position == QStyleOptionTab::Beginning)
-          capsule = -1;
-        else if (opt->position == QStyleOptionTab::Middle)
-          capsule = 0;
-        else if (opt->position == QStyleOptionTab::End)
-          capsule = 1;
-        else if (opt->position == QStyleOptionTab::OnlyOneTab)
-          capsule = 2;
+        if ( dir == Qt::LeftToRight ) {
+          if (opt->position == QStyleOptionTab::Beginning)
+            capsule = -1;
+          else if (opt->position == QStyleOptionTab::Middle)
+            capsule = 0;
+          else if (opt->position == QStyleOptionTab::End)
+            capsule = 1;
+          else if (opt->position == QStyleOptionTab::OnlyOneTab)
+            capsule = 2;
+        } else {
+          if (opt->position == QStyleOptionTab::Beginning)
+            capsule = 1;
+          else if (opt->position == QStyleOptionTab::Middle)
+            capsule = 0;
+          else if (opt->position == QStyleOptionTab::End)
+            capsule = -1;
+          else if (opt->position == QStyleOptionTab::OnlyOneTab)
+            capsule = 2;
+        }
 
         if ( (opt->shape == QTabBar::RoundedNorth) ||
              (opt->shape == QTabBar::TriangularNorth)
@@ -1021,26 +1023,17 @@ void QSvgStyle::drawControl(ControlElement e, const QStyleOption * option, QPain
           fs.capsuleV = capsule;
           fs.capsuleH = 1;
         }
-      }
 
-      renderInterior(p,option->rect,fs,is,is.element+"-"+st);
-      renderFrame(p,option->rect,fs,fs.element+"-"+st);
+        renderInterior(p,option->rect,fs,is,is.element+"-"+st);
+        renderFrame(p,option->rect,fs,fs.element+"-"+st);
+      }
 
       break;
     }
 
     case CE_TabBarTabLabel : {
-      const QStyleOptionTab *opt =
-        qstyleoption_cast<const QStyleOptionTab *>(option);
-
-      if (opt) {
-        const QString group = "Tab";
-
-        const frame_spec_t fs = getFrameSpec(group);
-        const interior_spec_t is = getInteriorSpec(group);
-        const label_spec_t ls = getLabelSpec(group);
-
-        __print_group();
+      if ( const QStyleOptionTab *opt =
+           qstyleoption_cast<const QStyleOptionTab *>(option) ) {
 
         renderLabel(p,dir,option->rect,fs,is,ls,Qt::AlignLeft | Qt::AlignVCenter | Qt::TextShowMnemonic,opt->text,!(option->state & State_Enabled),opt->icon.pixmap(pixelMetric(PM_TabBarIconSize),icm,ics));
       }
@@ -1049,13 +1042,6 @@ void QSvgStyle::drawControl(ControlElement e, const QStyleOption * option, QPain
     }
 
     case CE_ToolBoxTabShape : {
-      const QString group = "ToolboxTab";
-
-      frame_spec_t fs = getFrameSpec(group);
-      const interior_spec_t is = getInteriorSpec(group);
-
-      __print_group();
-
       renderFrame(p,option->rect,fs,fs.element+"-"+st);
       renderInterior(p,option->rect,fs,is,is.element+"-"+st);
 
@@ -1063,17 +1049,8 @@ void QSvgStyle::drawControl(ControlElement e, const QStyleOption * option, QPain
     }
 
     case CE_ToolBoxTabLabel : {
-      const QStyleOptionToolBox *opt =
-          qstyleoption_cast<const QStyleOptionToolBox *>(option);
-
-      if (opt) {
-        const QString group = "ToolboxTab";
-
-        frame_spec_t fs = getFrameSpec(group);
-        const interior_spec_t is = getInteriorSpec(group);
-        const label_spec_t ls = getLabelSpec(group);
-
-        __print_group();
+      if ( const QStyleOptionToolBox *opt =
+           qstyleoption_cast<const QStyleOptionToolBox *>(option) ) {
 
         renderLabel(p,dir,option->rect,fs,is,ls,Qt::AlignCenter | Qt::TextShowMnemonic,opt->text,!(option->state & State_Enabled),opt->icon.pixmap(pixelMetric(PM_TabBarIconSize),icm,ics));
       }
@@ -2050,28 +2027,12 @@ QSize QSvgStyle::sizeFromContents ( ContentsType type, const QStyleOption * opti
     }
 
     case CT_SpinBox : {
-      // FIXME
-      const QStyleOptionSpinBox *opt =
-        qstyleoption_cast<const QStyleOptionSpinBox *>(option);
+      if ( const QStyleOptionSpinBox *opt =
+           qstyleoption_cast<const QStyleOptionSpinBox *>(option) ) {
 
-      if (opt) {
-        QFont f = QApplication::font();
-        if (widget)
-          f = widget->font();
-
-        const QString group = "LineEdit";
-
-        const frame_spec_t fs = getFrameSpec(group);
-        const interior_spec_t is = getInteriorSpec(group);
-        const label_spec_t ls = getLabelSpec(group);
-        const size_spec_t ss = getSizeSpec(group);
-
-        if (widget) {
-          const QSpinBox *w = qobject_cast<const QSpinBox *>(widget);
-          if (w)
-            s = sizeFromContents(fm,fs,is,ls,ss,w->prefix()+QString("%1").arg(w->maximum())+w->suffix(),QPixmap())+QSize(40,0)+QSize(8,0);
-        } else
-          s = QCommonStyle::sizeFromContents(CT_SpinBox,opt,csz,widget)+QSize(40,0);
+        s = csz;
+        // add buttons
+        s += QSize(40,0);
       }
 
       break;
@@ -2083,7 +2044,7 @@ QSize QSvgStyle::sizeFromContents ( ContentsType type, const QStyleOption * opti
         Q_UNUSED(opt);
         s = sizeFromContents(fm,fs,is,ls,ss,
                              "W",
-                             QPixmap());
+                            QPixmap());
 
         s = s.expandedTo(csz);
         s += QSize(20,0); // drop down button;
@@ -2249,26 +2210,12 @@ QSize QSvgStyle::sizeFromContents ( ContentsType type, const QStyleOption * opti
     }
 
     case CT_TabBarTab : {
-      const QStyleOptionTab *opt =
-        qstyleoption_cast<const QStyleOptionTab *>(option);
-
-      if (opt) {
-        QFont f = QApplication::font();
-        if (widget)
-          f = widget->font();
-
-        const QString group = "Tab";
-
-        const frame_spec_t fs = getFrameSpec(group);
-        const interior_spec_t is = getInteriorSpec(group);
-        const label_spec_t ls = getLabelSpec(group);
-        const size_spec_t ss = getSizeSpec(group);
+      if ( const QStyleOptionTabV3 *opt =
+           qstyleoption_cast<const QStyleOptionTabV3 *>(option) ) {
 
         s = sizeFromContents(fm,fs,is,ls,ss,opt->text,opt->icon.pixmap(pixelMetric(PM_ToolBarIconSize)));
 
-        if (widget) {
-          const QTabBar *w = qobject_cast<const QTabBar*>(widget);
-          if (w && w->tabsClosable())
+        if ( opt->documentMode ) {
             s.rwidth() += pixelMetric(PM_TabCloseIndicatorWidth,option,widget)+ls.tispace;
         }
       }
@@ -3879,7 +3826,7 @@ QString QSvgStyle::PE_group(PrimitiveElement element) const
     case PE_FrameLineEdit : return "LineEdit";
     case PE_FrameMenu : return "Menu";
     case PE_FrameStatusBarItem : return "StatusBar";
-    case PE_FrameTabWidget : return "TabWidget";
+    case PE_FrameTabWidget : return "Frame";
     case PE_FrameWindow : return "Window";
     case PE_FrameButtonBevel : return "PushButton";
     case PE_FrameButtonTool : return "ToolButton";
@@ -3938,9 +3885,9 @@ QString QSvgStyle::CE_group(ControlElement element) const
     case CE_CheckBoxLabel : return "CheckBox";
     case CE_RadioButton : return "RadioButton";
     case CE_RadioButtonLabel : return "RadioButton";
-    case CE_TabBarTab : return "TabWidget";
-    case CE_TabBarTabShape : return "TabWidget";
-    case CE_TabBarTabLabel : return "TabWidget";
+    case CE_TabBarTab : return "TabBar";
+    case CE_TabBarTabShape : return "TabBar";
+    case CE_TabBarTabLabel : return "TabBar";
     case CE_ProgressBar : return "ProgressBar";
     case CE_ProgressBarGroove : return "ProgressBar";
     case CE_ProgressBarContents : return "ProgressBar";
@@ -3995,11 +3942,11 @@ QString QSvgStyle::CT_group(QStyle::ContentsType type) const
     case CT_MenuBarItem : return "MenuBarItem";
     case CT_MenuBar : return "MenuBar";
     case CT_Menu : return "Menu";
-    case CT_TabBarTab : return "TabWidget";
+    case CT_TabBarTab : return "TabBar";
     case CT_Slider : return "Slider";
     case CT_ScrollBar : return "ScrollBar";
     case CT_LineEdit : return "LineEdit";
-    case CT_SpinBox : return "SpinBox";
+    case CT_SpinBox : return "LineEdit";
     case CT_TabWidget : return "TabWidget";
     case CT_HeaderSection : return "HeaderSection";
     case CT_GroupBox : return "GroupBox";
@@ -4030,13 +3977,13 @@ QString QSvgStyle::SE_group(SubElement element) const
     case SE_ToolBoxTabContents : return "ToolBox";
     case SE_HeaderLabel : return "Header";
     case SE_HeaderArrow : return "Header";
-    case SE_TabWidgetTabBar : return "TabWidget";
+    case SE_TabWidgetTabBar : return "TabBar";
     case SE_TabWidgetTabPane : return "TabWidget";
     case SE_TabWidgetTabContents : return "TabWidget";
     case SE_TabWidgetLeftCorner : return "TabWidget";
     case SE_TabWidgetRightCorner : return "TabWidget";
     case SE_ItemViewItemCheckIndicator : return "ItemView";
-    case SE_TabBarTearIndicator : return "TabWidget";
+    case SE_TabBarTearIndicator : return "TabBar";
     case SE_LineEditContents : return "LineEdit";
     case SE_FrameContents : return "Frame";
     case SE_DockWidgetCloseButton : return "DockWidget";
@@ -4046,9 +3993,9 @@ QString QSvgStyle::SE_group(SubElement element) const
     case SE_ItemViewItemDecoration : return "ItemView";
     case SE_ItemViewItemText : return "ItemView";
     case SE_ItemViewItemFocusRect : return "ItemView";
-    case SE_TabBarTabLeftButton : return "TabWidget";
-    case SE_TabBarTabRightButton : return "TabWidget";
-    case SE_TabBarTabText : return "TabWidget";
+    case SE_TabBarTabLeftButton : return "TabBar";
+    case SE_TabBarTabRightButton : return "TabBar";
+    case SE_TabBarTabText : return "TabBar";
     case SE_ShapedFrameContents : return "Frame";
     case SE_ToolBarHandle : return "ToolBar";
     default : return QString();
@@ -4060,7 +4007,7 @@ QString QSvgStyle::SE_group(SubElement element) const
 QString QSvgStyle::CC_group(QStyle::ComplexControl element) const
 {
   switch (element) {
-    case CC_SpinBox : return "SpinBox";
+    case CC_SpinBox : return "LineEdit";
     case CC_ComboBox : return "ComboBox";
     case CC_ScrollBar : return "ScrollBar";
     case CC_Slider : return "Slider";
