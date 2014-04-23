@@ -1,6 +1,5 @@
 QSvgStyle
 ---------
-* rtl support. visual rects and capsule positions
 * add list of animatable widgets
 * Idea : loop animations. If yes, loop, if no animate on 'enter' and 'leave' widget
 * better animation handling

@@ -346,7 +346,6 @@ class QSvgStyle : public QCommonStyle {
     /**
      * Helper functions that determine the appriopriate QSvgStyle
      * configuration group to draw a given element
-     * TODO implement
      */
     QString PE_group(PrimitiveElement element) const;
     QString SE_group(SubElement element) const;
