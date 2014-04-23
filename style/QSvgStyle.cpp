@@ -789,11 +789,7 @@ void QSvgStyle::drawControl(ControlElement e, const QStyleOption * option, QPain
       break;
     }
     case CE_MenuTearoff : {
-      if ( const QStyleOptionMenuItem *opt =
-           qstyleoption_cast<const QStyleOptionMenuItem *>(option) ) {
-
         renderElement(p,ds.element+"-tearoff",r,10,0);
-      }
 
       break;
     }
@@ -2003,13 +1999,9 @@ QSize QSvgStyle::sizeFromContents ( ContentsType type, const QStyleOption * opti
     }
 
     case CT_SpinBox : {
-      if ( const QStyleOptionSpinBox *opt =
-           qstyleoption_cast<const QStyleOptionSpinBox *>(option) ) {
-
         s = csz;
         // add buttons
         s += QSize(40,0);
-      }
 
       break;
     }
@@ -2272,38 +2264,10 @@ QSize QSvgStyle::sizeFromContents(const QFontMetrics &fm,
     s.rheight() += ls.yshift+ls.depth;
   }
 
-  // compute width and height of text. QFontMetrics seems to ignore \n
-  // and returns wrong values
-
-  int tw = 0;
-  int th = 0;
-
-  if ( !text.isNull() && !text.isEmpty() ) {
-    /* remove & mnemonic character and tabs (for menu items) */
-    // FIXME don't remove & if it is not followed by a character
-    QString t = QString(text).remove('\t');
-    {
-      int i=0;
-      while ( i<t.size() ) {
-        if ( t.at(i) == '&' ) {
-          // see if next character is not a space
-          if ( (i+1<t.size()) && (!t.at(i+1).isSpace()) ) {
-            t.remove(i,1);
-            i++;
-          }
-        }
-        i++;
-      }
-    }
-
-    /* deal with \n */
-    QStringList l = t.split('\n');
-
-    th = fm.height()*(l.size());
-    for (int i=0; i<l.size(); i++) {
-      tw = qMax(tw,fm.width(l[i]));
-    }
-  }
+  // compute width and height of text
+  QSize ts = fm.size(Qt::TextShowMnemonic,text);
+  int tw = ts.width();
+  int th = ts.height();
 
   if (tialign == Qt::ToolButtonIconOnly) {
     s.rwidth() += icon.width();
@@ -2410,7 +2374,6 @@ QRect QSvgStyle::subElementRect(SubElement e, const QStyleOption * option, const
       return QCommonStyle::subElementRect(e,option,widget);
   }
 
-end:
   return visualRect(dir,r,ret);
 }
 
@@ -2722,7 +2685,6 @@ QRect QSvgStyle::subControlRect(ComplexControl control, const QStyleOptionComple
       return QCommonStyle::subControlRect(control,option,subControl,widget);
   }
 
-end:
   return visualRect(dir,r,ret);
 }
 
