@@ -611,7 +611,9 @@ void QSvgStyle::drawPrimitive(PrimitiveElement e, const QStyleOption * option, Q
       if ( const QStyleOptionFrame *opt =
            qstyleoption_cast<const QStyleOptionFrame *>(option) ) {
         if ( opt->lineWidth > 0 )
-          renderFrame(p,r,fs,fs.element+"-"+st);
+          // NOTE QLineEdit sets lineWidth to PM_DefaultFrameWidth
+          // when line edit has a frame
+          drawPrimitive(PE_FrameLineEdit,option,p,widget);
       }
       renderInterior(p,r,fs,is,is.element+"-"+st);
       break;
@@ -1814,7 +1816,8 @@ int QSvgStyle::pixelMetric(PixelMetric metric, const QStyleOption * option, cons
     case PM_ButtonShiftVertical : return 1;
 
     case PM_DefaultFrameWidth : {
-      QString group = "GenericFrame";
+      // DO NOT SET TO zero
+      QString group = "Frame";
       const frame_spec_t fspec = getFrameSpec(group);
 
       return qMax(qMax(fspec.top,fspec.bottom),qMax(fspec.left,fspec.right));
@@ -1911,7 +1914,7 @@ int QSvgStyle::pixelMetric(PixelMetric metric, const QStyleOption * option, cons
     }
 
     case PM_DockWidgetTitleMargin : {
-      QString group = "Dock";
+      QString group = "DockWidget";
       const frame_spec_t fspec = getFrameSpec(group);
       const interior_spec_t ispec = getInteriorSpec(group);
       const label_spec_t lspec = getLabelSpec(group);
