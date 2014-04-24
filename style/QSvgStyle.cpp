@@ -277,6 +277,8 @@ bool QSvgStyle::isContainerWidget(const QWidget * widget) const
     widget->inherits("QDialog") ||
     widget->inherits("QDesktopWidget") ||
     widget->inherits("QToolBar") ||
+    // Ok this one is not a container widget but we want to treat it as such
+    widget->inherits("QProgressBar") ||
     (QString(widget->metaObject()->className()) == "QWidget")
   ));
 }
@@ -958,6 +960,15 @@ void QSvgStyle::drawControl(ControlElement e, const QStyleOption * option, QPain
       if ( const QStyleOptionTab *opt =
            qstyleoption_cast<const QStyleOptionTab *>(option) ) {
 
+        QStyleOptionTab o(*opt);
+
+        if ( o.state & State_Sunken ) {
+          // Remove "pressed" state and replace it by "toggled" state
+          o.state &= ~State_Sunken;
+          o.state |= State_On;
+          st = state_str(o.state,widget);
+        }
+
         fs.hasCapsule = true;
         int capsule = 2;
 
@@ -1009,8 +1020,8 @@ void QSvgStyle::drawControl(ControlElement e, const QStyleOption * option, QPain
           fs.capsuleH = 1;
         }
 
-        renderInterior(p,option->rect,fs,is,is.element+"-"+st);
-        renderFrame(p,option->rect,fs,fs.element+"-"+st);
+        renderInterior(p,r,fs,is,is.element+"-"+st);
+        renderFrame(p,r,fs,fs.element+"-"+st);
       }
 
       break;
@@ -1042,81 +1053,97 @@ void QSvgStyle::drawControl(ControlElement e, const QStyleOption * option, QPain
       if ( const QStyleOptionToolBox *opt =
            qstyleoption_cast<const QStyleOptionToolBox *>(option) ) {
 
-        renderLabel(p,dir,option->rect,fs,is,ls,Qt::AlignCenter | Qt::TextShowMnemonic,opt->text,!(option->state & State_Enabled),opt->icon.pixmap(pixelMetric(PM_TabBarIconSize),icm,ics));
+        renderLabel(p,dir,r,fs,is,ls,
+                    Qt::AlignCenter | Qt::TextShowMnemonic,
+                    opt->text,!(option->state & State_Enabled),
+                    opt->icon.pixmap(pixelMetric(PM_TabBarIconSize),icm,ics));
       }
 
       break;
     }
 
-    case CE_ProgressBarGroove : {
-      renderFrame(p,option->rect,fs,fs.element+"-"+st);
-      renderInterior(p,option->rect,fs,is,is.element+"-"+st);
+    case CE_ProgressBar : {
+      // whole progress bar widget
+      if ( const QStyleOptionProgressBarV2 *opt =
+          qstyleoption_cast<const QStyleOptionProgressBarV2 *>(option) ) {
 
-      break;
-    }
+        QStyleOptionProgressBarV2 o(*opt);
 
-    case CE_ProgressBarContents : {
-      const QStyleOptionProgressBar *opt =
-          qstyleoption_cast<const QStyleOptionProgressBar *>(option);
+        o.rect = subElementRect(SE_ProgressBarGroove, opt, widget);
+        drawControl(CE_ProgressBarGroove, &o, p, widget);
 
-      if (opt) {
-        const QString group = "ProgressbarContents";
+        o.rect = subElementRect(SE_ProgressBarContents, opt, widget);
+        drawControl(CE_ProgressBarContents, &o, p, widget);
 
-        frame_spec_t fs = getFrameSpec(group);
-        const interior_spec_t is = getInteriorSpec(group);
-
-        __print_group();
-
-        if ( opt->progress >= 0 ) {
-          int empty = sliderPositionFromValue(opt->minimum,opt->maximum,opt->maximum-opt->progress,w,false);
-
-          renderFrame(p,option->rect.adjusted(0,0,-empty,0),fs,fs.element+"-"+st);
-          renderInterior(p,option->rect.adjusted(0,0,-empty,0),fs,is,is.element+"-"+st);
-        } else { // busy progressbar
-          QWidget *w = (QWidget *)widget;
-
-          int animcount = progressbars[w];
-          int pm = pixelMetric(PM_ProgressBarChunkWidth);
-          QRect r = option->rect.adjusted(animcount,0,0,0);
-          r.setX(option->rect.x()+(animcount%option->rect.width()));
-          r.setWidth(pm);
-          if ( r.x()+r.width()-1 > option->rect.x()+option->rect.width()-1 ) {
-            // wrap busy indicator
-            fs.hasCapsule = true;
-            fs.capsuleH = 1;
-            fs.capsuleV = 2;
-            r.setWidth(option->rect.x()+option->rect.width()-r.x());
-            renderFrame(p,r,fs,fs.element+"-"+st);
-            renderInterior(p,r,fs,is,is.element+"-"+st);
-
-            fs.capsuleH = -1;
-            r = QRect(option->rect.x(),option->rect.y(),pm-r.width(),option->rect.height());
-            renderFrame(p,r,fs,fs.element+"-"+st);
-            renderInterior(p,r,fs,is,is.element+"-"+st);
-          } else {
-            renderFrame(p,r,fs,fs.element+"-"+st);
-            renderInterior(p,r,fs,is,is.element+"-"+st);
-          }
+        if ( opt->textVisible ) {
+          o.rect = subElementRect(SE_ProgressBarLabel, opt, widget);
+          drawControl(CE_ProgressBarLabel, &o, p, widget);
         }
       }
 
       break;
     }
 
+    case CE_ProgressBarGroove : {
+      // "background" of a progress bar
+      renderFrame(p,r,fs,fs.element+"-"+st);
+      renderInterior(p,r,fs,is,is.element+"-"+st);
+
+      break;
+    }
+
     case CE_ProgressBarLabel : {
-      const QStyleOptionProgressBar *opt =
-          qstyleoption_cast<const QStyleOptionProgressBar *>(option);
+      if ( const QStyleOptionProgressBarV2 *opt =
+           qstyleoption_cast<const QStyleOptionProgressBarV2 *>(option) ) {
 
-      if (opt && opt->textVisible) {
-        const QString group = "Progressbar";
+        renderLabel(p,dir,r,fs,is,ls,
+                    opt->textAlignment,opt->text,
+                    !(option->state & State_Enabled),
+                    QPixmap());
+      }
 
-        const frame_spec_t fs = getFrameSpec(group);
-        const interior_spec_t is = getInteriorSpec(group);
-        const label_spec_t ls = getLabelSpec(group);
+      break;
+    }
 
-        __print_group();
+    case CE_ProgressBarContents : {
+      // the progress indicator
+      if ( const QStyleOptionProgressBarV2 *opt =
+           qstyleoption_cast<const QStyleOptionProgressBarV2 *>(option) ) {
 
-        renderLabel(p,dir,option->rect,fs,is,ls,opt->textAlignment,opt->text,!(option->state & State_Enabled));
+        if ( opt->progress >= 0 ) {
+          // FIXME RTL layout
+          // FIXME vertical orientation
+          // Normal progress bar
+          int empty = sliderPositionFromValue(opt->minimum,
+                                              opt->maximum,
+                                              opt->maximum-opt->progress,
+                                              interiorRect(r,fs,is).width(),
+                                              false);
+
+          if ( opt->invertedAppearance )
+            renderInterior(p,r.adjusted(empty,0,0,0),fs,is,
+                           is.element+"-elapsed-"+st);
+          else
+            renderInterior(p,r.adjusted(0,0,-empty,0),fs,is,
+                           is.element+"-elapsed-"+st);
+        } else { // busy progressbar
+          QWidget *wd = (QWidget *)widget;
+
+          int animcount = progressbars[wd];
+          int pm = pixelMetric(PM_ProgressBarChunkWidth);
+          r = r.adjusted(animcount%w,0,0,0);
+          r.setWidth(pm);
+          if ( r.x()+r.width()-1 > x+w-1 ) {
+            // wrap busy indicator
+            r.setWidth(x+w-r.x());
+            renderInterior(p,r,fs,is,is.element+"-elapsed-"+st);
+
+            r = QRect(x,y,pm-r.width(),h);
+            renderInterior(p,r,fs,is,is.element+"-elapsed-"+st);
+          } else {
+            renderInterior(p,r,fs,is,is.element+"-elapsed-"+st);
+          }
+        }
       }
 
       break;
@@ -2343,8 +2370,10 @@ QRect QSvgStyle::subElementRect(SubElement e, const QStyleOption * option, const
   __print_group();
 
   switch (e) {
-    case SE_ProgressBarContents : {
-      ret = interiorRect(r, fs,is);
+    case SE_ProgressBarGroove :
+    case SE_ProgressBarContents :
+    case SE_ProgressBarLabel: {
+      ret = r;
       break;
     }
     case SE_LineEditContents : {
@@ -2436,9 +2465,9 @@ QRect QSvgStyle::subControlRect(ComplexControl control, const QStyleOptionComple
           ret = r.adjusted(0,0,-40,0);
           break;
         case SC_SpinBoxUp :
-          // we adjust thr rect by fs left and right because when we
+          // we adjust the rect by fs left and right because when we
           // draw the button panel it will be shrunken again by the frame
-          // left and eight (it is an interior)
+          // left and right (it is an interior)
           ret = QRect(x+w-20-fs.right,y,20,h).adjusted(-fs.left,0,fs.right,0);
           break;
         case SC_SpinBoxDown :
@@ -2705,7 +2734,14 @@ QIcon QSvgStyle::standardIconImplementation ( QStyle::StandardPixmap standardIco
       opt.rect = QRect(0,0,s,s);
       opt.state |= State_Enabled;
 
-      drawPrimitive(PE_IndicatorArrowRight,&opt,&painter,0);
+      if ( option ) {
+        if ( option->direction == Qt::LeftToRight )
+          drawPrimitive(PE_IndicatorArrowRight,&opt,&painter,0);
+        else
+          drawPrimitive(PE_IndicatorArrowLeft,&opt,&painter,0);
+      } else {
+        drawPrimitive(PE_IndicatorArrowRight,&opt,&painter,0);
+      }
 
       return QIcon(pm);
     }
@@ -3417,7 +3453,7 @@ QString QSvgStyle::state_str(State st, const QWidget* w) const
       (st & State_MouseOver) ? "hovered" : "normal"
     : (st & State_On) ? "disabled-toggled" : "disabled";
   } else {
-    // container widgets will have only normal, selected and disabled status
+      // container widgets will have only normal, selected and disabled status
     status = (st & State_Enabled ) ?
       (st & State_Selected) ? "toggled" : "normal"
     : "disabled";
