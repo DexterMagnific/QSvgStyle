@@ -543,6 +543,7 @@ void QSvgStyle::drawPrimitive(PrimitiveElement e, const QStyleOption * option, Q
     }
     case PE_FrameFocusRect : {
       // The frame of a focus rectangle, used on focusable widgets
+      // FIXME
       renderFrame(p,r,fs,fs.element);
       break;
     }
@@ -576,14 +577,15 @@ void QSvgStyle::drawPrimitive(PrimitiveElement e, const QStyleOption * option, Q
       renderFrame(p,r,fs,fs.element+"-"+st);
       if ( const QStyleOptionFrame *opt =
            qstyleoption_cast<const QStyleOptionFrame *>(option) ) {
-        if ( (opt->state & State_Sunken) || (opt->state & State_Raised) ) {
+        if ( (opt->state & State_Enabled) &&
+             ((opt->state & State_Sunken) || (opt->state & State_Raised)) ) {
           renderInterior(p,r,fs,is,is.element+"-"+st);
         }
       }
       break;
     }
     case PE_FrameDockWidget : {
-      // Frame for dock widgets
+      // Frame for "detached" dock widgets
       renderFrame(p,r,fs,fs.element+"-"+st);
       break;
     }
@@ -605,6 +607,11 @@ void QSvgStyle::drawPrimitive(PrimitiveElement e, const QStyleOption * option, Q
     }
     case PE_FrameLineEdit : {
       // Frame for line edits
+      // NOTE LineEdits have always State_Sunken (see
+      // QLineEdit.cpp::initStyleOption()). Remove it
+      QStyleOption o(*option);
+      o.state &= ~State_Sunken;
+      st = state_str(o.state,widget);
       renderFrame(p,r,fs,fs.element+"-"+st);
       break;
     }
@@ -617,6 +624,11 @@ void QSvgStyle::drawPrimitive(PrimitiveElement e, const QStyleOption * option, Q
           // when line edit has a frame
           drawPrimitive(PE_FrameLineEdit,option,p,widget);
       }
+      // NOTE LineEdits have always State_Sunken (see
+      // QLineEdit.cpp::initStyleOption()). Remove it
+      QStyleOption o(*option);
+      o.state &= ~State_Sunken;
+      st = state_str(o.state,widget);
       renderInterior(p,r,fs,is,is.element+"-"+st);
       break;
     }
@@ -955,7 +967,6 @@ void QSvgStyle::drawControl(ControlElement e, const QStyleOption * option, QPain
       }
       break;
     }
-
     case CE_TabBarTabShape : {
       if ( const QStyleOptionTab *opt =
            qstyleoption_cast<const QStyleOptionTab *>(option) ) {
@@ -1041,14 +1052,12 @@ void QSvgStyle::drawControl(ControlElement e, const QStyleOption * option, QPain
 
       break;
     }
-
     case CE_ToolBoxTabShape : {
       renderFrame(p,option->rect,fs,fs.element+"-"+st);
       renderInterior(p,option->rect,fs,is,is.element+"-"+st);
 
       break;
     }
-
     case CE_ToolBoxTabLabel : {
       if ( const QStyleOptionToolBox *opt =
            qstyleoption_cast<const QStyleOptionToolBox *>(option) ) {
@@ -1061,7 +1070,6 @@ void QSvgStyle::drawControl(ControlElement e, const QStyleOption * option, QPain
 
       break;
     }
-
     case CE_ProgressBar : {
       // whole progress bar widget
       if ( const QStyleOptionProgressBarV2 *opt =
@@ -1083,7 +1091,6 @@ void QSvgStyle::drawControl(ControlElement e, const QStyleOption * option, QPain
 
       break;
     }
-
     case CE_ProgressBarGroove : {
       // "background" of a progress bar
       renderFrame(p,r,fs,fs.element+"-"+st);
@@ -1091,7 +1098,6 @@ void QSvgStyle::drawControl(ControlElement e, const QStyleOption * option, QPain
 
       break;
     }
-
     case CE_ProgressBarLabel : {
       if ( const QStyleOptionProgressBarV2 *opt =
            qstyleoption_cast<const QStyleOptionProgressBarV2 *>(option) ) {
@@ -1104,7 +1110,6 @@ void QSvgStyle::drawControl(ControlElement e, const QStyleOption * option, QPain
 
       break;
     }
-
     case CE_ProgressBarContents : {
       // the progress indicator
       if ( const QStyleOptionProgressBarV2 *opt =
@@ -1113,6 +1118,7 @@ void QSvgStyle::drawControl(ControlElement e, const QStyleOption * option, QPain
         if ( opt->progress >= 0 ) {
           // FIXME RTL layout
           // FIXME vertical orientation
+          // FIXME top to bottom text
           // Normal progress bar
           int empty = sliderPositionFromValue(opt->minimum,
                                               opt->maximum,
@@ -1148,7 +1154,6 @@ void QSvgStyle::drawControl(ControlElement e, const QStyleOption * option, QPain
 
       break;
     }
-
     case CE_Splitter : {
       renderFrame(p,option->rect,fs,fs.element+"-"+st);
       renderInterior(p,option->rect,fs,is,is.element+"-"+st, (h > w) ? Qt::Vertical : Qt::Horizontal);
@@ -1213,7 +1218,6 @@ void QSvgStyle::drawControl(ControlElement e, const QStyleOption * option, QPain
       renderInterior(p,option->rect,fs,is,is.element+"-"+st);
       break;
     }
-
     case CE_HeaderLabel : {
       if ( const QStyleOptionHeader *opt =
            qstyleoption_cast<const QStyleOptionHeader *>(option) ) {
@@ -1234,7 +1238,6 @@ void QSvgStyle::drawControl(ControlElement e, const QStyleOption * option, QPain
       }
       break;
     }
-
     case CE_Header : {
       drawControl(CE_HeaderSection,option,p,widget);
       drawControl(CE_HeaderLabel,option,p,widget);
@@ -1284,7 +1287,6 @@ void QSvgStyle::drawControl(ControlElement e, const QStyleOption * option, QPain
 
       break;
     }
-
     case CE_ToolButtonLabel : {
       if ( const QStyleOptionToolButton *opt =
           qstyleoption_cast<const QStyleOptionToolButton *>(option) ) {
@@ -1341,25 +1343,11 @@ void QSvgStyle::drawControl(ControlElement e, const QStyleOption * option, QPain
     }
 
     case CE_DockWidgetTitle : {
-      const QStyleOptionDockWidget *opt =
-          qstyleoption_cast<const QStyleOptionDockWidget *>(option);
+      if ( const QStyleOptionDockWidget *opt =
+           qstyleoption_cast<const QStyleOptionDockWidget *>(option) ) {
 
-      if (opt) {
-        const QString group = "Dock";
-
-        const frame_spec_t fs = getFrameSpec(group);
-        const interior_spec_t is = getInteriorSpec(group);
-        const label_spec_t ls = getLabelSpec(group);
-
-        const QDockWidget *w = qobject_cast<const QDockWidget *>(widget);
-        __print_group();
-
-        renderFrame(p,option->rect,fs,fs.element+"-"+st);
-        if ( w ) {
-          renderInterior(p,option->rect,fs,is,is.element+"-"+st, (w->features() & QDockWidget::DockWidgetVerticalTitleBar) ? Qt::Vertical : Qt::Horizontal);
-        } else {
-          renderInterior(p,option->rect,fs,is,is.element+"-"+st);
-        }
+        renderFrame(p,r,fs,fs.element+"-"+st);
+        renderInterior(p,option->rect,fs,is,is.element+"-"+st);
         renderLabel(p,dir,option->rect,fs,is,ls,Qt::AlignLeft | Qt::AlignVCenter | Qt::TextShowMnemonic,opt->title,!(option->state & State_Enabled));
       }
 
@@ -1582,23 +1570,24 @@ void QSvgStyle::drawComplexControl(ComplexControl control, const QStyleOptionCom
     }
 
     case CC_Slider : {
-      const QStyleOptionSlider *opt =
-        qstyleoption_cast<const QStyleOptionSlider *>(option);
+      if ( const QStyleOptionSlider *opt =
+           qstyleoption_cast<const QStyleOptionSlider *>(option) ) {
 
-      if (opt) {
         QStyleOptionSlider o(*opt);
 
-        QString group = "Slider";
-
-        frame_spec_t fspec = getFrameSpec(group);
-        interior_spec_t ispec = getInteriorSpec(group);
+        // remove useless Sunken attribute
+        o.state &= ~State_Sunken;
+        st = state_str(o.state,widget);
 
         QRect empty = subControlRect(CC_Slider,opt,SC_SliderGroove,widget);
         QRect full = subControlRect(CC_Slider,opt,SC_SliderGroove,widget);
         QRect slider = subControlRect(CC_Slider,opt,SC_SliderHandle,widget);
 
-        // take into account inversion
-        if (option->state & State_Horizontal)
+        // Groove
+        renderFrame(p,empty,fs,fs.element+"-"+st);
+
+        // compute elapsed and empty part of groove
+        if (opt->orientation == Qt::Horizontal) {
           if (!opt->upsideDown) {
             full.setWidth(slider.x());
             empty.adjust(slider.x(),0,0,0);
@@ -1606,7 +1595,7 @@ void QSvgStyle::drawComplexControl(ComplexControl control, const QStyleOptionCom
             empty.setWidth(slider.x());
             full.adjust(slider.x(),0,0,0);
           }
-        else
+        } else {
           if (!opt->upsideDown) {
             full.setHeight(slider.y());
             empty.adjust(0,slider.y(),0,0);
@@ -1614,114 +1603,52 @@ void QSvgStyle::drawComplexControl(ComplexControl control, const QStyleOptionCom
             empty.setHeight(slider.y());
             full.adjust(0,slider.y(),0,0);
           }
-
-        fspec.hasCapsule = true;
-        if (option->state & State_Horizontal)
-          fspec.capsuleV = 2;
-        else
-          fspec.capsuleH = 2;
-
-        if (option->state & State_Enabled) {
-          if (option->state & State_MouseOver) {
-            if (option->state & State_Horizontal)
-              if (!opt->upsideDown) {
-                fspec.capsuleH = 1;
-              } else {
-                fspec.capsuleH = -1;
-              }
-            else
-              if (!opt->upsideDown) {
-                fspec.capsuleV = 1;
-              } else {
-                fspec.capsuleV = -1;
-              }
-            renderFrame(p,empty,fspec,fspec.element+"-focused");
-            renderInterior(p,empty,fspec,ispec,ispec.element+"-focused",(option->state & State_Horizontal) ? Qt::Vertical : Qt::Horizontal);
-            if (option->state & State_Horizontal)
-              if (!opt->upsideDown) {
-                fspec.capsuleH = -1;
-              } else {
-                fspec.capsuleH = 1;
-              }
-            else
-              if (!opt->upsideDown) {
-                fspec.capsuleV = -1;
-              } else {
-                fspec.capsuleV = 1;
-              }
-            renderFrame(p,full,fspec,fspec.element+"-toggled");
-            renderInterior(p,full,fspec,ispec,ispec.element+"-toggled",(option->state & State_Horizontal) ? Qt::Vertical : Qt::Horizontal);
-          } else {
-            if (option->state & State_Horizontal)
-              if (!opt->upsideDown) {
-                fspec.capsuleH = 1;
-              } else {
-                fspec.capsuleH = -1;
-              }
-            else
-              if (!opt->upsideDown) {
-                fspec.capsuleV = 1;
-              } else {
-                fspec.capsuleV = -1;
-              }
-            renderFrame(p,empty,fspec,fspec.element+"-normal");
-            renderInterior(p,empty,fspec,ispec,ispec.element+"-normal",(option->state & State_Horizontal) ? Qt::Vertical : Qt::Horizontal);
-            if (option->state & State_Horizontal)
-              if (!opt->upsideDown) {
-                fspec.capsuleH = -1;
-              } else {
-                fspec.capsuleH = 1;
-              }
-            else
-              if (!opt->upsideDown) {
-                fspec.capsuleV = -1;
-              } else {
-                fspec.capsuleV = 1;
-              }
-            renderFrame(p,full,fspec,fspec.element+"-toggled");
-            renderInterior(p,full,fspec,ispec,ispec.element+"-toggled",(option->state & State_Horizontal) ? Qt::Vertical : Qt::Horizontal);
-          }
-        } else {
-          if (option->state & State_Horizontal)
-            if (!opt->upsideDown) {
-              fspec.capsuleH = 1;
-            } else {
-              fspec.capsuleH = -1;
-            }
-          else
-            if (!opt->upsideDown) {
-              fspec.capsuleV = 1;
-            } else {
-              fspec.capsuleV = -1;
-            }
-          renderFrame(p,empty,fspec,fspec.element+"-disabled");
-          renderInterior(p,empty,fspec,ispec,ispec.element+"-disabled",(option->state & State_Horizontal) ? Qt::Vertical : Qt::Horizontal);
-          if (option->state & State_Horizontal)
-            if (!opt->upsideDown) {
-              fspec.capsuleH = -1;
-            } else {
-              fspec.capsuleH = 1;
-            }
-          else
-            if (!opt->upsideDown) {
-              fspec.capsuleV = -1;
-            } else {
-                fspec.capsuleV = 1;
-            }
-          renderFrame(p,full,fspec,fspec.element+"-disabled");
-          renderInterior(p,full,fspec,ispec,ispec.element+"-disabled",(option->state & State_Horizontal) ? Qt::Vertical : Qt::Horizontal);
         }
 
-        group = "SliderCursor";
+        // draw empty part
+        fs.hasCapsule = true;
+        if (opt->orientation == Qt::Horizontal)
+          fs.capsuleV = 2;
+        else
+          fs.capsuleH = 2;
 
-        fspec = getFrameSpec(group);
-        ispec = getInteriorSpec(group);
-        indicator_spec_t dspec = getIndicatorSpec(group);
+        if (opt->orientation == Qt::Horizontal)
+          if (!opt->upsideDown) {
+            fs.capsuleH = 1;
+          } else {
+            fs.capsuleH = -1;
+          }
+        else
+          if (!opt->upsideDown) {
+            fs.capsuleV = 1;
+          } else {
+            fs.capsuleV = -1;
+          }
 
+        renderInterior(p,empty,fs,is,is.element+"-"+st,opt->orientation);
+
+        // draw elapsed part
+        if (option->state & State_Horizontal)
+          if (!opt->upsideDown) {
+            fs.capsuleH = -1;
+          } else {
+            fs.capsuleH = 1;
+          }
+        else
+          if (!opt->upsideDown) {
+            fs.capsuleV = -1;
+          } else {
+            fs.capsuleV = 1;
+          }
+
+        renderInterior(p,full,fs,is,is.element+"-elapsed-"+st,opt->orientation);
+
+        // cursor
+        o.state = option->state;
+        st = state_str(o.state,widget);
+        fs.hasFrame = false;
         o.rect = subControlRect(CC_Slider,opt,SC_SliderHandle,widget);
-
-        renderFrame(p,o.rect,fspec,fspec.element+"-"+st);
-        renderInterior(p,o.rect,fspec,ispec,ispec.element+"-"+st);
+        renderInterior(p,o.rect,fs,is,is.element+"-cursor-"+st);
       }
 
       break;
@@ -1742,32 +1669,6 @@ void QSvgStyle::drawComplexControl(ComplexControl control, const QStyleOptionCom
             p->setClipRect(full);
         renderElement(p,"dial-full",empty);
             p->restore();
-      }
-
-      break;
-    }
-
-    case CC_TitleBar : {
-      const QStyleOptionTitleBar *opt =
-        qstyleoption_cast<const QStyleOptionTitleBar *>(option);
-
-      if (opt) {
-        QStyleOptionTitleBar o(*opt);
-
-        QString group = "TitleBar";
-
-        frame_spec_t fspec = getFrameSpec(group);
-        interior_spec_t ispec = getInteriorSpec(group);
-        label_spec_t lspec = getLabelSpec(group);
-
-        renderFrame(p,o.rect,fspec,fspec.element+"-"+st);
-        renderInterior(p,o.rect,fspec,ispec,ispec.element+"-"+st);
-
-        o.rect = subControlRect(CC_TitleBar,opt,SC_TitleBarLabel,widget);
-
-        renderLabel(p,dir,o.rect,fspec,ispec,lspec,Qt::AlignLeft | Qt::AlignVCenter, o.text, !(option->state & State_Enabled),o.icon.pixmap(pixelMetric(PM_TitleBarHeight)));
-
-        drawComplexControl(CC_MdiControls,opt,p,widget);
       }
 
       break;
@@ -1837,55 +1738,36 @@ end:
 int QSvgStyle::pixelMetric(PixelMetric metric, const QStyleOption * option, const QWidget * widget) const
 {
   switch (metric) {
-    case PM_ButtonMargin : return 0;
-
-    case PM_ButtonShiftHorizontal :
-    case PM_ButtonShiftVertical : return 1;
-
-    case PM_DefaultFrameWidth : {
-      // DO NOT SET TO zero
-      QString group = "Frame";
-      const frame_spec_t fspec = getFrameSpec(group);
-
-      return qMax(qMax(fspec.top,fspec.bottom),qMax(fspec.left,fspec.right));
-    }
-
-    case PM_SpinBoxFrameWidth :
-    case PM_ComboBoxFrameWidth : return 0;
-
-    case PM_MdiSubWindowFrameWidth : return 2;
-    case PM_MdiSubWindowMinimizedWidth : return 50;
-
+    // Custom layout margins
     case PM_LayoutLeftMargin :
     case PM_LayoutRightMargin :
     case PM_LayoutTopMargin :
     case PM_LayoutBottomMargin : return 4;
-
     case PM_LayoutHorizontalSpacing :
     case PM_LayoutVerticalSpacing : return 2;
 
-    case PM_MenuBarPanelWidth :
+    // We don't draw frames around menu bars
+    case PM_MenuBarPanelWidth : return 0;
+    // These are the 'interior' margins of the menu bar
     case PM_MenuBarVMargin :
     case PM_MenuBarHMargin :  return 0;
-
+    // Spacing between menu bar items
     case PM_MenuBarItemSpacing : return 2;
 
+    // Popup menu tear off height
     case PM_MenuTearoffHeight : return 7;
 
-    case PM_MenuPanelWidth : {
-      QString group = "Menu";
-      const frame_spec_t fspec = getFrameSpec(group);
-      const interior_spec_t ispec = getInteriorSpec(group);
-
-      int v = qMax(fspec.top,fspec.bottom);
-      int h = qMax(fspec.left,fspec.right);
-      return qMax(v,h);
-    }
-
-    case PM_ToolBarFrameWidth : return 0;
+    case PM_ToolBarFrameWidth :
+      return getFrameSpec(PE_group(PE_PanelToolBar)).width();
+    // No margin between toolbar frame and contents
+    case PM_ToolBarItemMargin : return 0;
+    // The "move" handle of a toolbar
     case PM_ToolBarHandleExtent : return 8;
+    // Item separator size
     case PM_ToolBarSeparatorExtent : return 2;
+    // No spacing between items
     case PM_ToolBarItemSpacing : return 0;
+    // The "extension" button size on partial toolbars
     case PM_ToolBarExtensionExtent : return 20;
 
     case PM_TabBarTabHSpace : return 0;
@@ -1897,15 +1779,6 @@ int QSvgStyle::pixelMetric(PixelMetric metric, const QStyleOption * option, cons
     case PM_TabBarTabShiftVertical : return 0;
 
     case PM_ToolBarIconSize : return 16;
-    case PM_ToolBarItemMargin : {
-      QString group = "Toolbar";
-      const frame_spec_t fspec = getFrameSpec(group);
-      const interior_spec_t ispec = getInteriorSpec(group);
-
-      int v = qMax(fspec.top,fspec.bottom);
-      int h = qMax(fspec.left,fspec.right);
-      return qMax(v,h);
-    }
 
     case PM_TabBarIconSize : return 16;
     case PM_SmallIconSize : return 16;
@@ -1929,27 +1802,24 @@ int QSvgStyle::pixelMetric(PixelMetric metric, const QStyleOption * option, cons
     case PM_SliderLength : return 15;
     case PM_SliderControlThickness : return 15;
 
-    case PM_DockWidgetFrameWidth : {
-      QString group = "Dock";
-      const frame_spec_t fspec = getFrameSpec(group);
-      const interior_spec_t ispec = getInteriorSpec(group);
-      const label_spec_t lspec = getLabelSpec(group);
+    case PM_DefaultFrameWidth :
+      // NOTE used by QLineEdit, QTabWidget and QMdiArea
+      if ( qobject_cast< const QLineEdit* >(widget) )
+        return getFrameSpec(PE_group(PE_FrameLineEdit)).width();
+      else if ( qobject_cast< const QTabWidget* >(widget) )
+        return getFrameSpec(PE_group(PE_FrameTabWidget)).width();
+      else
+        return getFrameSpec(PE_group(PE_Frame)).width();
 
-      int v = qMax(fspec.top+lspec.top,fspec.bottom+lspec.bottom);
-      int h = qMax(fspec.left+lspec.left,fspec.right+lspec.right);
-      return qMax(v,h);
-    }
+    case PM_MenuPanelWidth :
+      return getFrameSpec(PE_group(PE_FrameMenu)).width();
 
-    case PM_DockWidgetTitleMargin : {
-      QString group = "DockWidget";
-      const frame_spec_t fspec = getFrameSpec(group);
-      const interior_spec_t ispec = getInteriorSpec(group);
-      const label_spec_t lspec = getLabelSpec(group);
+    case PM_DockWidgetFrameWidth :
+      return getFrameSpec(PE_group(PE_FrameDockWidget)).width();
 
-      int v = qMax(lspec.top,lspec.bottom);
-      int h = qMax(lspec.left,lspec.right);
-      return qMax(v,h);
-    }
+    case PM_DockWidgetTitleMargin :
+      // NOTE used by QDockWidgetLayout to compute title size
+      return getLabelSpec(CE_group(CE_DockWidgetTitle)).margin();
 
     case PM_TextCursorWidth : return 1;
 
@@ -1964,9 +1834,9 @@ int QSvgStyle::styleHint(StyleHint hint, const QStyleOption * option, const QWid
     case SH_Menu_MouseTracking :
     case SH_MenuBar_MouseTracking : return true;
 
-    case SH_TabBar_Alignment : return Qt::AlignCenter;
+    case SH_DockWidget_ButtonsHaveFrame : return false;
 
-    //case SH_ScrollBar_BackgroundMode : return Qt::OpaqueMode;
+    case SH_TabBar_Alignment : return Qt::AlignCenter;
 
     default : return QCommonStyle::styleHint(hint,option,widget,returnData);
   }
@@ -2042,7 +1912,7 @@ QSize QSvgStyle::sizeFromContents ( ContentsType type, const QStyleOption * opti
         Q_UNUSED(opt);
         s = sizeFromContents(fm,fs,is,ls,ss,
                              "W",
-                            QPixmap());
+                            QPixmap(QSize(pixelMetric(PM_SmallIconSize),pixelMetric(PM_SmallIconSize))));
 
         s = s.expandedTo(csz);
         s += QSize(20,0); // drop down button;
@@ -2211,10 +2081,12 @@ QSize QSvgStyle::sizeFromContents ( ContentsType type, const QStyleOption * opti
       if ( const QStyleOptionTabV3 *opt =
            qstyleoption_cast<const QStyleOptionTabV3 *>(option) ) {
 
-        s = sizeFromContents(fm,fs,is,ls,ss,opt->text,opt->icon.pixmap(pixelMetric(PM_ToolBarIconSize)));
+        s = sizeFromContents(fm,fs,is,ls,ss,
+                             opt->text,
+                             opt->icon.pixmap(pixelMetric(PM_ToolBarIconSize)));
 
-        if ( opt->documentMode ) {
-            s.rwidth() += pixelMetric(PM_TabCloseIndicatorWidth,option,widget)+ls.tispace;
+        if ( qobject_cast< const QTabBar* >(widget)->tabsClosable() ) {
+            s.rwidth() += ls.tispace;
         }
       }
 
@@ -2611,7 +2483,11 @@ QRect QSvgStyle::subControlRect(ComplexControl control, const QStyleOptionComple
 
             const int len = pixelMetric(PM_SliderLength, option, widget);
             const int thickness = pixelMetric(PM_SliderControlThickness, option, widget);
-            const int sliderPos(sliderPositionFromValue(opt->minimum, opt->maximum, opt->sliderPosition, (horiz ? w : h) - len, opt->upsideDown));
+            const int sliderPos(sliderPositionFromValue(opt->minimum,
+                                                        opt->maximum,
+                                                        opt->sliderPosition,
+                                                        (horiz ? w : h) - len,
+                                                        opt->upsideDown));
 
             if (horiz)
               ret = QRect(x+sliderPos,y+(h-thickness)/2,len,thickness);
@@ -2849,8 +2725,6 @@ QRect QSvgStyle::squaredRect(const QRect& r) const {
 
 void QSvgStyle::renderElement(QPainter* painter, const QString& element, const QRect& bounds, int hsize, int vsize, Qt::Orientation orientation, int frameno) const
 {
-  Q_UNUSED(orientation);
-
   int x,y,h,w;
   bounds.getRect(&x,&y,&w,&h);
 

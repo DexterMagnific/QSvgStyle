@@ -89,6 +89,10 @@ typedef struct {
   value_t<int> animationFrames;
   /* loop animation */
   value_t<int> loopAnimation;
+
+  inline int width() {
+    return qMax(qMax(top,bottom),qMax(left,right));
+  }
 } frame_spec_t;
 
 /** Generic information about a frame interior */
@@ -148,6 +152,10 @@ typedef struct {
   value_t<int> top,bottom,left,right;
   /* text-icon spacing */
   value_t<int> tispace;
+
+  inline int margin() {
+    return qMax(qMax(top,bottom),qMax(left,right));
+  }
 } label_spec_t;
 
 /** Generic information about an element */
