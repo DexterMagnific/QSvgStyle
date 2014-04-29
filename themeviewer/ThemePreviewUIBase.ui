@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>773</width>
-    <height>417</height>
+    <height>445</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -1716,6 +1716,15 @@ check box</string>
       <layout class="QGridLayout" name="gridLayout_18">
        <item row="0" column="0" rowspan="5">
         <widget class="QTreeWidget" name="treeWidget">
+         <property name="alternatingRowColors">
+          <bool>true</bool>
+         </property>
+         <property name="sortingEnabled">
+          <bool>true</bool>
+         </property>
+         <attribute name="headerHighlightSections">
+          <bool>true</bool>
+         </attribute>
          <column>
           <property name="text">
            <string>Header with icon</string>
@@ -2086,8 +2095,8 @@ check box</string>
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>157</width>
-            <height>23</height>
+            <width>155</width>
+            <height>61</height>
            </rect>
           </property>
           <attribute name="icon">
@@ -2126,8 +2135,8 @@ check box</string>
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>157</width>
-            <height>23</height>
+            <width>158</width>
+            <height>61</height>
            </rect>
           </property>
           <attribute name="icon">

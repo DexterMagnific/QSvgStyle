@@ -609,8 +609,9 @@ void QSvgStyle::drawPrimitive(PrimitiveElement e, const QStyleOption * option, Q
       // Frame for line edits
       // NOTE LineEdits have always State_Sunken (see
       // QLineEdit.cpp::initStyleOption()). Remove it
+      // QSvgStyle remove also State_On
       QStyleOption o(*option);
-      o.state &= ~State_Sunken;
+      o.state &= ~(State_Sunken | State_On);
       st = state_str(o.state,widget);
       renderFrame(p,r,fs,fs.element+"-"+st);
       break;
@@ -626,8 +627,9 @@ void QSvgStyle::drawPrimitive(PrimitiveElement e, const QStyleOption * option, Q
       }
       // NOTE LineEdits have always State_Sunken (see
       // QLineEdit.cpp::initStyleOption()). Remove it
+      // QSvgStyle remove also State_On
       QStyleOption o(*option);
-      o.state &= ~State_Sunken;
+      o.state &= ~ (State_Sunken | State_On);
       st = state_str(o.state,widget);
       renderInterior(p,r,fs,is,is.element+"-"+st);
       break;
@@ -1214,8 +1216,8 @@ void QSvgStyle::drawControl(ControlElement e, const QStyleOption * option, QPain
     }
 
     case CE_HeaderSection : {
-      renderFrame(p,option->rect,fs,fs.element+"-"+st);
-      renderInterior(p,option->rect,fs,is,is.element+"-"+st);
+      renderFrame(p,r,fs,fs.element+"-"+st);
+      renderInterior(p,r,fs,is,is.element+"-"+st);
       break;
     }
     case CE_HeaderLabel : {
@@ -1347,8 +1349,10 @@ void QSvgStyle::drawControl(ControlElement e, const QStyleOption * option, QPain
            qstyleoption_cast<const QStyleOptionDockWidget *>(option) ) {
 
         renderFrame(p,r,fs,fs.element+"-"+st);
-        renderInterior(p,option->rect,fs,is,is.element+"-"+st);
-        renderLabel(p,dir,option->rect,fs,is,ls,Qt::AlignLeft | Qt::AlignVCenter | Qt::TextShowMnemonic,opt->title,!(option->state & State_Enabled));
+        renderInterior(p,r,fs,is,is.element+"-"+st);
+        renderLabel(p,dir,r,fs,is,ls,
+                    Qt::AlignLeft | Qt::AlignVCenter | Qt::TextShowMnemonic,
+                    opt->title,!(option->state & State_Enabled));
       }
 
       break;
@@ -1481,24 +1485,32 @@ void QSvgStyle::drawComplexControl(ComplexControl control, const QStyleOptionCom
 
         // Remove sunken,pressed,mouse over attributes
 
-
         // draw frame
         o.rect = subControlRect(CC_SpinBox,opt,SC_SpinBoxFrame,widget);
         drawPrimitive(PE_FrameLineEdit,&o,p,widget);
 
+        // draw spin buttons
         if (opt->buttonSymbols == QAbstractSpinBox::UpDownArrows) {
           o.state &= ~(State_Sunken | State_Selected | State_MouseOver);
           if ( opt->activeSubControls & SC_SpinBoxUp )
             o.state = opt->state;
+          st = state_str(o.state,widget);
+          // button capsule
+          fs.hasCapsule = true;
+          fs.capsuleV = 2;
+          fs.capsuleH = 0;
           o.rect = subControlRect(CC_SpinBox,opt,SC_SpinBoxUp,widget);
-          drawPrimitive(PE_PanelButtonBevel,&o,p,widget);
+          renderInterior(p,o.rect,fs,is,is.element+'-'+st);
           drawPrimitive(PE_IndicatorSpinUp,&o,p,widget);
 
           o.state &= ~(State_Sunken | State_Selected | State_MouseOver);
           if ( opt->activeSubControls & SC_SpinBoxDown )
             o.state = opt->state;
+          st = state_str(o.state,widget);
+          fs.capsuleV = 2;
+          fs.capsuleH = 0;
           o.rect = subControlRect(CC_SpinBox,opt,SC_SpinBoxDown,widget);
-          drawPrimitive(PE_PanelButtonBevel,&o,p,widget);
+          renderInterior(p,o.rect,fs,is,is.element+'-'+st);
           drawPrimitive(PE_IndicatorSpinDown,&o,p,widget);
         }
         if (opt->buttonSymbols == QAbstractSpinBox::PlusMinus) {
@@ -1533,6 +1545,9 @@ void QSvgStyle::drawComplexControl(ComplexControl control, const QStyleOptionCom
 
         // draw drop down button
         // FIXME render separator
+        if ( opt->editable ) {
+          o.state &= ~State_Sunken;
+        }
         o.rect = subControlRect(CC_ComboBox,opt,SC_ComboBoxArrow,widget);
         drawPrimitive(PE_IndicatorButtonDropDown,&o,p,widget);
       }
@@ -1834,7 +1849,7 @@ int QSvgStyle::styleHint(StyleHint hint, const QStyleOption * option, const QWid
     case SH_Menu_MouseTracking :
     case SH_MenuBar_MouseTracking : return true;
 
-    case SH_DockWidget_ButtonsHaveFrame : return false;
+    case SH_DockWidget_ButtonsHaveFrame : return true;
 
     case SH_TabBar_Alignment : return Qt::AlignCenter;
 
@@ -2334,16 +2349,14 @@ QRect QSvgStyle::subControlRect(ComplexControl control, const QStyleOptionComple
           ret = r;
           break;
         case SC_SpinBoxEditField :
+          // do not remove -fs.right: merge with spin box button at right
           ret = r.adjusted(0,0,-40,0);
           break;
         case SC_SpinBoxUp :
-          // we adjust the rect by fs left and right because when we
-          // draw the button panel it will be shrunken again by the frame
-          // left and right (it is an interior)
-          ret = QRect(x+w-20-fs.right,y,20,h).adjusted(-fs.left,0,fs.right,0);
+          ret = QRect(x+w-20-fs.right,y,20,h);
           break;
         case SC_SpinBoxDown :
-          ret = QRect(x+w-40-fs.right,y,20,h).adjusted(-fs.left,0,fs.right,0);
+          ret = QRect(x+w-40-fs.right,y,20,h);
           break;
         default :
           ret = QCommonStyle::subControlRect(control,option,subControl,widget);
@@ -2829,152 +2842,163 @@ void QSvgStyle::renderElement(QPainter* painter, const QString& element, const Q
   }
 }
 
-void QSvgStyle::renderFrame(QPainter *painter,
+void QSvgStyle::renderFrame(QPainter *p,
                     /* frame bounds */ const QRect &bounds,
-                    /* frame spec */ const frame_spec_t &fspec,
-                    /* SVG element */ const QString &element,
+                    /* frame spec */ const frame_spec_t &fs,
+                    /* SVG element */ const QString &e,
                     /* orientation */ Qt::Orientation orientation) const
 {
   Q_UNUSED(orientation);
 
-  if (!fspec.hasFrame)
+  if (!fs.hasFrame)
     return;
 
   __enter_func__();
-  emit(sig_renderFrame_begin(element));
+  emit(sig_renderFrame_begin(e));
 
   int x0,y0,x1,y1,w,h;
   bounds.getRect(&x0,&y0,&w,&h);
   x1 = bounds.bottomRight().x();
   y1 = bounds.bottomRight().y();
 
-  if (!fspec.hasCapsule) {
+  if (!fs.hasCapsule) {
     // top
-    if ( (fspec.y0c0 == -1) || (fspec.y0c1 == -1) || (fspec.y0c1 <= fspec.y0c0) ) {
-      renderElement(painter,element+"-top",QRect(x0+fspec.left,y0,w-fspec.left-fspec.right,fspec.top),0,0,Qt::Horizontal,animationcount%fspec.animationFrames);
+    if ( (fs.y0c0 == -1) || (fs.y0c1 == -1) || (fs.y0c1 <= fs.y0c0) ) {
+      renderElement(p,e+"-top",QRect(x0+fs.left,y0,w-fs.left-fs.right,fs.top),0,0,Qt::Horizontal,animationcount%fs.animationFrames);
     } else {
       // with cut
-      renderElement(painter,element+"-top",QRect(x0+fspec.left,y0,fspec.y0c0-x0-fspec.left+1,fspec.top),0,0,Qt::Horizontal,animationcount%fspec.animationFrames);
-      renderElement(painter,element+"-top",QRect(fspec.y0c1,y0,w-fspec.y0c1-fspec.right+1,fspec.top),0,0,Qt::Horizontal,animationcount%fspec.animationFrames);
+      renderElement(p,e+"-top",QRect(x0+fs.left,y0,fs.y0c0-x0-fs.left+1,fs.top),0,0,Qt::Horizontal,animationcount%fs.animationFrames);
+      renderElement(p,e+"-top",QRect(fs.y0c1,y0,w-fs.y0c1-fs.right+1,fs.top),0,0,Qt::Horizontal,animationcount%fs.animationFrames);
 
       // inverted corners at cut
-      renderElement(painter,element+"-bottomright-inverted",QRect(fspec.y0c0,y0,fspec.right,fspec.bottom),0,0,Qt::Horizontal,animationcount%fspec.animationFrames);
-      renderElement(painter,element+"-bottomleft-inverted",QRect(fspec.y0c1-fspec.right+1,y0,fspec.left,fspec.bottom),0,0,Qt::Horizontal,animationcount%fspec.animationFrames);
+      renderElement(p,e+"-bottomright-inverted",QRect(fs.y0c0,y0,fs.right,fs.bottom),0,0,Qt::Horizontal,animationcount%fs.animationFrames);
+      renderElement(p,e+"-bottomleft-inverted",QRect(fs.y0c1-fs.right+1,y0,fs.left,fs.bottom),0,0,Qt::Horizontal,animationcount%fs.animationFrames);
     }
     // bottom
-    if ( (fspec.y1c0 == -1) || (fspec.y1c1 == -1) || (fspec.y1c1 <= fspec.y1c0) ) {
-      renderElement(painter,element+"-bottom",QRect(x0+fspec.left,y1-fspec.bottom+1,w-fspec.left-fspec.right,fspec.bottom),0,0,Qt::Horizontal,animationcount%fspec.animationFrames);
+    if ( (fs.y1c0 == -1) || (fs.y1c1 == -1) || (fs.y1c1 <= fs.y1c0) ) {
+      renderElement(p,e+"-bottom",QRect(x0+fs.left,y1-fs.bottom+1,w-fs.left-fs.right,fs.bottom),0,0,Qt::Horizontal,animationcount%fs.animationFrames);
     } else {
       // with cut
-      renderElement(painter,element+"-bottom",QRect(x0+fspec.left,y1-fspec.bottom+1,fspec.y1c0-x0-fspec.left+1,fspec.bottom),0,0,Qt::Horizontal,animationcount%fspec.animationFrames);
-      renderElement(painter,element+"-bottom",QRect(fspec.y1c1,y1-fspec.bottom+1,w-fspec.y1c1-fspec.right+1,fspec.bottom),0,0,Qt::Horizontal,animationcount%fspec.animationFrames);
+      renderElement(p,e+"-bottom",QRect(x0+fs.left,y1-fs.bottom+1,fs.y1c0-x0-fs.left+1,fs.bottom),0,0,Qt::Horizontal,animationcount%fs.animationFrames);
+      renderElement(p,e+"-bottom",QRect(fs.y1c1,y1-fs.bottom+1,w-fs.y1c1-fs.right+1,fs.bottom),0,0,Qt::Horizontal,animationcount%fs.animationFrames);
 
       // inverted corners at cut
-      renderElement(painter,element+"-topright-inverted",QRect(fspec.y1c0,y1-fspec.bottom+1,fspec.right,fspec.bottom),0,0,Qt::Horizontal,animationcount%fspec.animationFrames);
-      renderElement(painter,element+"-topleft-inverted",QRect(fspec.y1c1-fspec.right+1,y1-fspec.bottom+1,fspec.left,fspec.bottom),0,0,Qt::Horizontal,animationcount%fspec.animationFrames);
+      renderElement(p,e+"-topright-inverted",QRect(fs.y1c0,y1-fs.bottom+1,fs.right,fs.bottom),0,0,Qt::Horizontal,animationcount%fs.animationFrames);
+      renderElement(p,e+"-topleft-inverted",QRect(fs.y1c1-fs.right+1,y1-fs.bottom+1,fs.left,fs.bottom),0,0,Qt::Horizontal,animationcount%fs.animationFrames);
     }
-    if ( (fspec.x0c0 == -1) || (fspec.x0c1 == -1) || (fspec.x0c1 <= fspec.x0c0) ) {
+    if ( (fs.x0c0 == -1) || (fs.x0c1 == -1) || (fs.x0c1 <= fs.x0c0) ) {
       // left
-      renderElement(painter,element+"-left",QRect(x0,y0+fspec.top,fspec.left,h-fspec.top-fspec.bottom),0,0,Qt::Horizontal,animationcount%fspec.animationFrames);
+      renderElement(p,e+"-left",QRect(x0,y0+fs.top,fs.left,h-fs.top-fs.bottom),0,0,Qt::Horizontal,animationcount%fs.animationFrames);
     } else {
       // with cut
-      renderElement(painter,element+"-left",QRect(x0,y0+fspec.top,fspec.left,fspec.x0c0-y0-fspec.top),0,0,Qt::Horizontal,animationcount%fspec.animationFrames);
-      renderElement(painter,element+"-left",QRect(x0,fspec.x0c1,fspec.left,h-fspec.x0c1-fspec.bottom+1),0,0,Qt::Horizontal,animationcount%fspec.animationFrames);
+      renderElement(p,e+"-left",QRect(x0,y0+fs.top,fs.left,fs.x0c0-y0-fs.top),0,0,Qt::Horizontal,animationcount%fs.animationFrames);
+      renderElement(p,e+"-left",QRect(x0,fs.x0c1,fs.left,h-fs.x0c1-fs.bottom+1),0,0,Qt::Horizontal,animationcount%fs.animationFrames);
 
       // inverted corners at cut
-      renderElement(painter,element+"-bottomright-inverted",QRect(x0,fspec.x0c0,fspec.right,fspec.bottom),0,0,Qt::Horizontal,animationcount%fspec.animationFrames);
-      renderElement(painter,element+"-topright-inverted",QRect(x0,fspec.x0c1-fspec.top+1,fspec.right,fspec.top),0,0,Qt::Horizontal,animationcount%fspec.animationFrames);
+      renderElement(p,e+"-bottomright-inverted",QRect(x0,fs.x0c0,fs.right,fs.bottom),0,0,Qt::Horizontal,animationcount%fs.animationFrames);
+      renderElement(p,e+"-topright-inverted",QRect(x0,fs.x0c1-fs.top+1,fs.right,fs.top),0,0,Qt::Horizontal,animationcount%fs.animationFrames);
     }
     // right
-    if ( (fspec.x1c0 == -1) || (fspec.x1c1 == -1) || (fspec.x1c1 <= fspec.x1c0) ) {
-      renderElement(painter,element+"-right",QRect(x1-fspec.right+1,y0+fspec.top,fspec.right,h-fspec.top-fspec.bottom),0,0,Qt::Horizontal,animationcount%fspec.animationFrames);
+    if ( (fs.x1c0 == -1) || (fs.x1c1 == -1) || (fs.x1c1 <= fs.x1c0) ) {
+      renderElement(p,e+"-right",QRect(x1-fs.right+1,y0+fs.top,fs.right,h-fs.top-fs.bottom),0,0,Qt::Horizontal,animationcount%fs.animationFrames);
     } else {
       // with cut
-      renderElement(painter,element+"-right",QRect(x1-fspec.right+1,y0+fspec.top,fspec.right,fspec.x1c0-y0-fspec.top+1),0,0,Qt::Horizontal,animationcount%fspec.animationFrames);
-      renderElement(painter,element+"-right",QRect(x1-fspec.right+1,fspec.x1c1,fspec.right,h-fspec.x1c1-fspec.bottom+1),0,0,Qt::Horizontal,animationcount%fspec.animationFrames);
+      renderElement(p,e+"-right",QRect(x1-fs.right+1,y0+fs.top,fs.right,fs.x1c0-y0-fs.top+1),0,0,Qt::Horizontal,animationcount%fs.animationFrames);
+      renderElement(p,e+"-right",QRect(x1-fs.right+1,fs.x1c1,fs.right,h-fs.x1c1-fs.bottom+1),0,0,Qt::Horizontal,animationcount%fs.animationFrames);
 
       // inverted corners at cut
-      renderElement(painter,element+"-bottomleft-inverted",QRect(x1-fspec.right+1,fspec.x1c0,fspec.left,fspec.bottom),0,0,Qt::Horizontal,animationcount%fspec.animationFrames);
-      renderElement(painter,element+"-topleft-inverted",QRect(x1-fspec.right+1,fspec.x1c1-fspec.top+1,fspec.left,fspec.top),0,0,Qt::Horizontal,animationcount%fspec.animationFrames);
+      renderElement(p,e+"-bottomleft-inverted",QRect(x1-fs.right+1,fs.x1c0,fs.left,fs.bottom),0,0,Qt::Horizontal,animationcount%fs.animationFrames);
+      renderElement(p,e+"-topleft-inverted",QRect(x1-fs.right+1,fs.x1c1-fs.top+1,fs.left,fs.top),0,0,Qt::Horizontal,animationcount%fs.animationFrames);
     }
     // topleft
-    renderElement(painter,element+"-topleft",QRect(x0,y0,fspec.left,fspec.top),0,0,Qt::Horizontal,animationcount%fspec.animationFrames);
+    renderElement(p,e+"-topleft",QRect(x0,y0,fs.left,fs.top),0,0,Qt::Horizontal,animationcount%fs.animationFrames);
     // topright
-    renderElement(painter,element+"-topright",QRect(x1-fspec.right+1,y0,fspec.right,fspec.top),0,0,Qt::Horizontal,animationcount%fspec.animationFrames);
+    renderElement(p,e+"-topright",QRect(x1-fs.right+1,y0,fs.right,fs.top),0,0,Qt::Horizontal,animationcount%fs.animationFrames);
     // bottomleft
-    renderElement(painter,element+"-bottomleft",QRect(x0,y1-fspec.bottom+1,fspec.left,fspec.bottom),0,0,Qt::Horizontal,animationcount%fspec.animationFrames);
+    renderElement(p,e+"-bottomleft",QRect(x0,y1-fs.bottom+1,fs.left,fs.bottom),0,0,Qt::Horizontal,animationcount%fs.animationFrames);
     // bottomright
-    renderElement(painter,element+"-bottomright",QRect(x1-fspec.right+1,y1-fspec.bottom+1,fspec.right,fspec.bottom),0,0,Qt::Horizontal,animationcount%fspec.animationFrames);
+    renderElement(p,e+"-bottomright",QRect(x1-fs.right+1,y1-fs.bottom+1,fs.right,fs.bottom),0,0,Qt::Horizontal,animationcount%fs.animationFrames);
   } else {
     int left = 0, right = 0, top = 0, bottom = 0;
-    // horizontal separator
-    if ( (fspec.capsuleH == 1) || (fspec.capsuleH == 0) ) {
-      renderElement(painter,element+"-left",QRect(x0,y0+fspec.top,fspec.left,h-fspec.top-fspec.bottom),0,0,Qt::Horizontal);
+    // left horizontal separator
+    if ( (fs.capsuleH == 1) || (fs.capsuleH == 0) ) {
+      p->save();
+      p->setClipRect(QRect(x0,y0+fs.top,w,h-fs.top-fs.bottom));
+      renderElement(p,e+"-left",QRect(x0,y0,fs.left,h),0,0,Qt::Horizontal);
+      p->restore();
     }
 
-    if ( (fspec.capsuleH == 0) && (fspec.capsuleV == 0) )
+    // right horizontal separator
+    if ( (fs.capsuleH == -1) || (fs.capsuleH == 0) ) {
+      p->save();
+      p->setClipRect(QRect(x0,y0+fs.top,w,h-fs.top-fs.bottom));
+      renderElement(p,e+"-right",QRect(x1,y0,fs.right,h),0,0,Qt::Horizontal);
+      p->restore();
+    }
+
+    if ( (fs.capsuleH == 0) && (fs.capsuleV == 0) )
       return;
 
     // edges
-    if ( (fspec.capsuleH == -1) || (fspec.capsuleH == 2) )
-      left = fspec.left;
-    if ( (fspec.capsuleH == 1) || (fspec.capsuleH == 2) )
-      right = fspec.right;
-    if ( (fspec.capsuleV == -1)  || (fspec.capsuleV == 2) )
-      top = fspec.top;
-    if ( (fspec.capsuleV == 1) || (fspec.capsuleV == 2) )
-      bottom = fspec.bottom;
+    if ( (fs.capsuleH == -1) || (fs.capsuleH == 2) )
+      left = fs.left;
+    if ( (fs.capsuleH == 1) || (fs.capsuleH == 2) )
+      right = fs.right;
+    if ( (fs.capsuleV == -1)  || (fs.capsuleV == 2) )
+      top = fs.top;
+    if ( (fs.capsuleV == 1) || (fs.capsuleV == 2) )
+      bottom = fs.bottom;
 
     // top
-    if ( (fspec.capsuleV == -1) || (fspec.capsuleV == 2) ) {
-      renderElement(painter,element+"-top",QRect(x0+left,y0,w-left-right,fspec.top),0,0,Qt::Horizontal);
+    if ( (fs.capsuleV == -1) || (fs.capsuleV == 2) ) {
+      renderElement(p,e+"-top",QRect(x0+left,y0,w-left-right,fs.top),0,0,Qt::Horizontal);
 
       // topleft corner
-      if (fspec.capsuleH == -1)
-        renderElement(painter,element+"-topleft",QRect(x0,y0,fspec.left,fspec.top),0,0,Qt::Horizontal);
+      if (fs.capsuleH == -1)
+        renderElement(p,e+"-topleft",QRect(x0,y0,fs.left,fs.top),0,0,Qt::Horizontal);
 
       // topright corner
-        if (fspec.capsuleH == 1)
-          renderElement(painter,element+"-topright",QRect(x1-fspec.right+1,y0,fspec.right,fspec.top),0,0,Qt::Horizontal);
+        if (fs.capsuleH == 1)
+          renderElement(p,e+"-topright",QRect(x1-fs.right+1,y0,fs.right,fs.top),0,0,Qt::Horizontal);
     }
 
     // bottom
-    if ( (fspec.capsuleV == 1) || (fspec.capsuleV == 2) ) {
-      renderElement(painter,element+"-bottom",QRect(x0+left,y1-bottom+1,w-left-right,fspec.bottom),0,0,Qt::Horizontal);
+    if ( (fs.capsuleV == 1) || (fs.capsuleV == 2) ) {
+      renderElement(p,e+"-bottom",QRect(x0+left,y1-bottom+1,w-left-right,fs.bottom),0,0,Qt::Horizontal);
 
       // bottomleft corner
-      if (fspec.capsuleH == -1)
-        renderElement(painter,element+"-bottomleft",QRect(x0,y1-fspec.bottom+1,fspec.left,fspec.bottom),0,0,Qt::Horizontal);
+      if (fs.capsuleH == -1)
+        renderElement(p,e+"-bottomleft",QRect(x0,y1-fs.bottom+1,fs.left,fs.bottom),0,0,Qt::Horizontal);
 
       // bottomright corner
-        if (fspec.capsuleH == 1)
-          renderElement(painter,element+"-bottomright",QRect(x1-fspec.right+1,y1-fspec.bottom+1,fspec.right,fspec.bottom),0,0,Qt::Horizontal);
+        if (fs.capsuleH == 1)
+          renderElement(p,e+"-bottomright",QRect(x1-fs.right+1,y1-fs.bottom+1,fs.right,fs.bottom),0,0,Qt::Horizontal);
     }
 
     // left
-    if ( (fspec.capsuleH == -1) || (fspec.capsuleH == 2) ) {
-      renderElement(painter,element+"-left",QRect(x0,y0+top,fspec.left,h-top-bottom),0,0,Qt::Horizontal);
+    if ( (fs.capsuleH == -1) || (fs.capsuleH == 2) ) {
+      renderElement(p,e+"-left",QRect(x0,y0+top,fs.left,h-top-bottom),0,0,Qt::Horizontal);
 
       // topleft corner
-      if (fspec.capsuleV == -1)
-        renderElement(painter,element+"-topleft",QRect(x0,y0,fspec.left,fspec.top),0,0,Qt::Horizontal);
+      if (fs.capsuleV == -1)
+        renderElement(p,e+"-topleft",QRect(x0,y0,fs.left,fs.top),0,0,Qt::Horizontal);
 
       // bottomleft corner
-        if (fspec.capsuleV == 1)
-          renderElement(painter,element+"-bottomleft",QRect(x0,y1-fspec.bottom+1,fspec.left,fspec.bottom),0,0,Qt::Horizontal);
+        if (fs.capsuleV == 1)
+          renderElement(p,e+"-bottomleft",QRect(x0,y1-fs.bottom+1,fs.left,fs.bottom),0,0,Qt::Horizontal);
     }
 
     // right
-    if ( (fspec.capsuleH == 1) || (fspec.capsuleH == 2) ) {
-      renderElement(painter,element+"-right",QRect(x1-fspec.right+1,y0+top,fspec.right,h-top-bottom),0,0,Qt::Horizontal);
+    if ( (fs.capsuleH == 1) || (fs.capsuleH == 2) ) {
+      renderElement(p,e+"-right",QRect(x1-fs.right+1,y0+top,fs.right,h-top-bottom),0,0,Qt::Horizontal);
 
       // topright corner
-      if (fspec.capsuleV == -1)
-        renderElement(painter,element+"-topright",QRect(x1-fspec.right+1,y0,fspec.right,fspec.top),0,0,Qt::Horizontal);
+      if (fs.capsuleV == -1)
+        renderElement(p,e+"-topright",QRect(x1-fs.right+1,y0,fs.right,fs.top),0,0,Qt::Horizontal);
 
       // bottomright corner
-        if (fspec.capsuleV == 1)
-          renderElement(painter,element+"-bottomright",QRect(x1-fspec.right+1,y1-fspec.bottom+1,fspec.right,fspec.bottom),0,0,Qt::Horizontal);
+        if (fs.capsuleV == 1)
+          renderElement(p,e+"-bottomright",QRect(x1-fs.right+1,y1-fs.bottom+1,fs.right,fs.bottom),0,0,Qt::Horizontal);
     }
   }
 
@@ -2985,62 +3009,60 @@ void QSvgStyle::renderFrame(QPainter *painter,
   painter->restore();
   #endif
 
-  emit(sig_renderFrame_end(element));
+  emit(sig_renderFrame_end(e));
   __exit_func();
 }
 
-void QSvgStyle::renderInterior(QPainter *painter,
+void QSvgStyle::renderInterior(QPainter *p,
                        /* frame bounds */ const QRect &bounds,
-                       /* frame spec */ const frame_spec_t &fspec,
-                       /* interior spec */ const interior_spec_t &ispec,
-                       /* SVG element */ const QString &element,
+                       /* frame spec */ const frame_spec_t &fs,
+                       /* interior spec */ const interior_spec_t &is,
+                       /* SVG element */ const QString &e,
                        /* orientation */ Qt::Orientation orientation) const
 {
-  if (!ispec.hasInterior)
+  if (!is.hasInterior)
     return;
 
   __enter_func__();
-  emit(sig_renderInterior_begin(element));
+  emit(sig_renderInterior_begin(e));
 
-  if (!fspec.hasCapsule) {
-    renderElement(painter,element,interiorRect(bounds,fspec,ispec),ispec.px,ispec.py,orientation,animationcount%ispec.animationFrames);
+  if (!fs.hasCapsule) {
+    renderElement(p,e,interiorRect(bounds,fs,is),is.px,is.py,orientation,animationcount%is.animationFrames);
   } else {
     // add these to compensate the absence of the frame
     int left = 0, right = 0, top = 0, bottom = 0;
-    if (fspec.capsuleH == 0) {
-      left = fspec.left;
-      right = fspec.right;
+    if (fs.capsuleH == 0) {
+      left = fs.left;
+      right = fs.right;
     }
-    if (fspec.capsuleH == -1) {
-      right = fspec.right;
+    if (fs.capsuleH == -1) {
+      right = fs.right;
     }
-    if (fspec.capsuleH == 1) {
-      left = fspec.left;
+    if (fs.capsuleH == 1) {
+      left = fs.left;
     }
-    if (fspec.capsuleV == 0) {
-      top = fspec.top;
-      bottom = fspec.bottom;
+    if (fs.capsuleV == 0) {
+      top = fs.top;
+      bottom = fs.bottom;
     }
-    if (fspec.capsuleV == -1) {
-      bottom = fspec.bottom;
+    if (fs.capsuleV == -1) {
+      bottom = fs.bottom;
     }
-    if (fspec.capsuleV == 1) {
-      top = fspec.top;
+    if (fs.capsuleV == 1) {
+      top = fs.top;
     }
-    QRect r = interiorRect(bounds,fspec,ispec).adjusted(-left,-top,right,bottom);
+    QRect r = interiorRect(bounds,fs,is).adjusted(-left,-top,right,bottom);
     if ( r.width() < 0 )
       r.setWidth(0);
     if ( r.height() < 0 )
       r.setHeight(0);
-    renderElement(painter,element,
-                   r,
-                   ispec.px,ispec.py,orientation,animationcount%ispec.animationFrames);
+    renderElement(p,e,r,is.px,is.py,orientation,animationcount%is.animationFrames);
   }
 
-  painter->save();
-  painter->setCompositionMode(QPainter::CompositionMode_Overlay);
-  painter->fillRect(bounds,QBrush(QColor(255,0,0,50)));
-  painter->restore();
+  p->save();
+  p->setCompositionMode(QPainter::CompositionMode_Overlay);
+  p->fillRect(bounds,QBrush(QColor(255,0,0,50)));
+  p->restore();
 
   #ifdef __DEBUG__
   painter->save();
@@ -3049,29 +3071,29 @@ void QSvgStyle::renderInterior(QPainter *painter,
   painter->restore();
   #endif
 
-  emit(sig_renderInterior_end(element));
+  emit(sig_renderInterior_end(e));
   __exit_func();
 }
 
-void QSvgStyle::renderIndicator(QPainter *painter,
+void QSvgStyle::renderIndicator(QPainter *p,
                        /* frame bounds */ const QRect &bounds,
-                       /* frame spec */ const frame_spec_t &fspec,
-                       /* interior spec */ const interior_spec_t &ispec,
-                       /* indicator spec */ const indicator_spec_t &dspec,
-                       /* indocator SVG element */ const QString &element,
+                       /* frame spec */ const frame_spec_t &fs,
+                       /* interior spec */ const interior_spec_t &is,
+                       /* indicator spec */ const indicator_spec_t &ds,
+                       /* indocator SVG element */ const QString &e,
                        Qt::Alignment alignment) const
 {
   __enter_func__();
-  emit(sig_renderIndicator_begin(element));
+  emit(sig_renderIndicator_begin(e));
 
-  const QRect interior = squaredRect(interiorRect(bounds,fspec,ispec));
+  const QRect interior = squaredRect(interiorRect(bounds,fs,is));
   //const QRect interior = squaredRect(frameRect(bounds,fspec));
   //const QRect interior = interiorRect(bounds,fspec,ispec);
-  int s = (interior.width() > dspec.size) ? dspec.size : interior.width();
+  int s = (interior.width() > ds.size) ? ds.size : interior.width();
 
-  renderElement(painter,element,
-                alignedRect(QApplication::layoutDirection(),alignment,QSize(s,s),interiorRect(bounds,fspec,ispec)),
-                0,0,Qt::Horizontal,animationcount%dspec.animationFrames);
+  renderElement(p,e,
+                alignedRect(QApplication::layoutDirection(),alignment,QSize(s,s),interiorRect(bounds,fs,is)),
+                0,0,Qt::Horizontal,animationcount%ds.animationFrames);
 
   #ifdef __DEBUG__
   painter->save();
@@ -3080,11 +3102,21 @@ void QSvgStyle::renderIndicator(QPainter *painter,
   painter->restore();
   #endif
 
-  emit(sig_renderIndicator_end(element));
+  emit(sig_renderIndicator_end(e));
   __exit_func();
 }
 
-void QSvgStyle::renderLabel(QPainter* painter, Qt::LayoutDirection direction, const QRect& bounds, const frame_spec_t& fspec, const interior_spec_t& ispec, const label_spec_t& lspec, int talign, const QString& text, bool disabled, const QPixmap& icon, const Qt::ToolButtonStyle tialign) const
+void QSvgStyle::renderLabel(QPainter* p,
+                            Qt::LayoutDirection dir,
+                            const QRect& bounds,
+                            const frame_spec_t& fs,
+                            const interior_spec_t& is,
+                            const label_spec_t& ls,
+                            int talign,
+                            const QString& text,
+                            bool disabled,
+                            const QPixmap& icon,
+                            const Qt::ToolButtonStyle tialign) const
 {
   __enter_func__();
   emit(sig_renderLabel_begin("text:"+text+"/icon:"+(icon.isNull() ? "yes":"no")));
@@ -3092,7 +3124,7 @@ void QSvgStyle::renderLabel(QPainter* painter, Qt::LayoutDirection direction, co
   // FIXME implement Right-to-Left
 
   // compute text and icon rect
-  QRect r(labelRect(bounds,fspec,ispec,lspec));
+  QRect r(labelRect(bounds,fs,is,ls));
 
   #ifdef __DEBUG__
   painter->save();
@@ -3106,10 +3138,10 @@ void QSvgStyle::renderLabel(QPainter* painter, Qt::LayoutDirection direction, co
 
   if (tialign == Qt::ToolButtonTextBesideIcon) {
     ricon = alignedRect(Qt::LeftToRight,Qt::AlignVCenter | Qt::AlignLeft, QSize(icon.width(),icon.height()),r);
-    rtext = QRect(r.x()+icon.width()+(icon.isNull() ? 0 : lspec.tispace),r.y(),r.width()-ricon.width()-(icon.isNull() ? 0 : lspec.tispace),r.height());
+    rtext = QRect(r.x()+icon.width()+(icon.isNull() ? 0 : ls.tispace),r.y(),r.width()-ricon.width()-(icon.isNull() ? 0 : ls.tispace),r.height());
   } else if (tialign == Qt::ToolButtonTextUnderIcon) {
     ricon = alignedRect(Qt::LeftToRight,Qt::AlignTop | Qt::AlignHCenter, QSize(icon.width(),icon.height()),r);
-    rtext = QRect(r.x(),r.y()+icon.height()+(icon.isNull() ? 0 : lspec.tispace),r.width(),r.height()-ricon.height()-(icon.isNull() ? 0 : lspec.tispace));
+    rtext = QRect(r.x(),r.y()+icon.height()+(icon.isNull() ? 0 : ls.tispace),r.width(),r.height()-ricon.height()-(icon.isNull() ? 0 : ls.tispace));
   } else if (tialign == Qt::ToolButtonIconOnly) {
     ricon = alignedRect(Qt::LeftToRight,Qt::AlignCenter, QSize(icon.width(),icon.height()),r);
   }
@@ -3119,33 +3151,33 @@ void QSvgStyle::renderLabel(QPainter* painter, Qt::LayoutDirection direction, co
     ricon = alignedRect(Qt::LeftToRight,Qt::AlignCenter, QSize(icon.width(),icon.height()),r);
   }
 
-  rtext = visualRect(direction,bounds,rtext);
-  ricon = visualRect(direction,bounds,ricon);
+  rtext = visualRect(dir,bounds,rtext);
+  ricon = visualRect(dir,bounds,ricon);
 
   if (disabled) {
     // FIXME use palette
-    painter->save();
-    painter->setPen(QPen(QColor(100,100,100)));
+        p->save();
+        p->setPen(QPen(QColor(100,100,100)));
   }
 
   if (tialign != Qt::ToolButtonIconOnly) {
     if ( !text.isNull() && !text.isEmpty() ) {
-      if (lspec.hasShadow) {
-        painter->save();
+      if (ls.hasShadow) {
+                p->save();
 
-        painter->setPen(QPen(QColor(lspec.r,lspec.g,lspec.b,lspec.a)));
-        for (int i=0; i<lspec.depth; i++)
-          painter->drawText(rtext.adjusted(lspec.xshift+i,lspec.yshift+i,0,0),talign,text);
+                p->setPen(QPen(QColor(ls.r,ls.g,ls.b,ls.a)));
+        for (int i=0; i<ls.depth; i++)
+                    p->drawText(rtext.adjusted(ls.xshift+i,ls.yshift+i,0,0),talign,text);
 
-        painter->restore();
+                p->restore();
       }
-      painter->drawText(rtext,talign,text);
+            p->drawText(rtext,talign,text);
     }
   }
 
   if (tialign != Qt::ToolButtonTextOnly) {
     if (!icon.isNull()) {
-      painter->drawPixmap(ricon,icon);
+            p->drawPixmap(ricon,icon);
 #ifdef __DEBUG__
       painter->save();
       painter->setPen(QPen(QColor(255,0,255)));
@@ -3163,7 +3195,7 @@ void QSvgStyle::renderLabel(QPainter* painter, Qt::LayoutDirection direction, co
 #endif
 
   if (disabled)
-    painter->restore();
+        p->restore();
 
   emit(sig_renderLabel_end("text:"+text+"/icon:"+(icon.isNull() ? "yes":"no")));
   __exit_func();
@@ -3825,7 +3857,7 @@ QString QSvgStyle::CT_group(QStyle::ContentsType type) const
     case CT_Slider : return "Slider";
     case CT_ScrollBar : return "ScrollBar";
     case CT_LineEdit : return "LineEdit";
-    case CT_SpinBox : return "LineEdit";
+    case CT_SpinBox : return "SpinBox";
     case CT_TabWidget : return "TabWidget";
     case CT_HeaderSection : return "Header";
     case CT_GroupBox : return "GroupBox";
@@ -3886,7 +3918,7 @@ QString QSvgStyle::SE_group(SubElement element) const
 QString QSvgStyle::CC_group(QStyle::ComplexControl element) const
 {
   switch (element) {
-    case CC_SpinBox : return "LineEdit";
+    case CC_SpinBox : return "SpinBox";
     case CC_ComboBox : return "ComboBox";
     case CC_ScrollBar : return "ScrollBar";
     case CC_Slider : return "Slider";
