@@ -493,13 +493,17 @@ void QSvgStyle::drawPrimitive(PrimitiveElement e, const QStyleOption * option, Q
     }
     case PE_PanelButtonTool : {
       // Interior for tool buttons
-      capsulePosition(widget,fs.hasCapsule,fs.capsuleH,fs.capsuleV);
+      // Do not compute capsule position for autoraise buttons
+      if ( !option->state & State_AutoRaise )
+        capsulePosition(widget,fs.hasCapsule,fs.capsuleH,fs.capsuleV);
       renderInterior(p,r,fs,is,is.element+"-"+st);
       break;
     }
     case PE_FrameButtonTool : {
       // Frame for tool buttons
-      capsulePosition(widget,fs.hasCapsule,fs.capsuleH,fs.capsuleV);
+      // Do not compute capsule position for autoraise buttons
+      if ( !option->state & State_AutoRaise )
+        capsulePosition(widget,fs.hasCapsule,fs.capsuleH,fs.capsuleV);
       renderFrame(p,r,fs,fs.element+"-"+st);
       break;
     }
