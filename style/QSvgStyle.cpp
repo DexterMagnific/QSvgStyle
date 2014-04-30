@@ -515,7 +515,7 @@ void QSvgStyle::drawPrimitive(PrimitiveElement e, const QStyleOption * option, Q
         : "disabled";
       if ( option->state & State_On )
         st = "checked-"+st;
-      renderInterior(p,r,fs,is,is.element+"-"+st);
+      renderIndicator(p,r,fs,is,ds,ds.element+"-"+st);
       break;
     }
     case PE_IndicatorViewItemCheck :
@@ -530,7 +530,7 @@ void QSvgStyle::drawPrimitive(PrimitiveElement e, const QStyleOption * option, Q
         st = "checked-"+st;
       else if ( option->state & State_NoChange )
         st = "tristate-"+st;
-      renderInterior(p,r,fs,is,is.element+"-"+st);
+      renderIndicator(p,r,fs,is,ds,ds.element+"-"+st);
       break;
     }
     case PE_IndicatorMenuCheckMark : {
@@ -538,10 +538,15 @@ void QSvgStyle::drawPrimitive(PrimitiveElement e, const QStyleOption * option, Q
       if ( const QStyleOptionMenuItem *opt =
             qstyleoption_cast<const QStyleOptionMenuItem *>(option) ) {
 
+        QStyleOptionMenuItem o(*opt);
+
+        if ( opt->checked )
+          o.state |= State_On;
+
         if ( opt->checkType == QStyleOptionMenuItem::Exclusive )
-          drawPrimitive(PE_IndicatorRadioButton,opt,p,widget);
+          drawPrimitive(PE_IndicatorRadioButton,&o,p,widget);
         else if ( opt->checkType == QStyleOptionMenuItem::NonExclusive )
-          drawPrimitive(PE_IndicatorCheckBox,opt,p,widget);
+          drawPrimitive(PE_IndicatorCheckBox,&o,p,widget);
       }
       break;
     }
@@ -811,8 +816,7 @@ void QSvgStyle::drawControl(ControlElement e, const QStyleOption * option, QPain
       break;
     }
     case CE_MenuTearoff : {
-        renderElement(p,ds.element+"-tearoff",r,10,0);
-
+      renderElement(p,is.element+"-tearoff",r,10,0);
       break;
     }
     case CE_MenuItem : {
@@ -820,59 +824,77 @@ void QSvgStyle::drawControl(ControlElement e, const QStyleOption * option, QPain
            qstyleoption_cast<const QStyleOptionMenuItem *>(option) ) {
 
         if (opt->menuItemType == QStyleOptionMenuItem::Separator)
-          renderElement(p,ds.element+"-separator",r,20,0);
+          // Menu separator
+          renderElement(p,is.element+"-separator",r,20,0);
         else if (opt->menuItemType == QStyleOptionMenuItem::TearOff)
+          // Menu tear off
           drawControl(CE_MenuTearoff,opt,p,widget);
         else {
-          renderFrame(p,option->rect,fs,fs.element+"-"+st);
-          renderInterior(p,option->rect,fs,is,is.element+"-"+st);
+          // Standard menu item
+          renderInterior(p,r,fs,is,is.element+"-"+st);
 
+          QRect rtext = r; // text rect (menu item label+shortcut)
+          QRect rcheckmark, rarrow;
+          QStyleOptionMenuItem o(*opt);
+
+          // determine positions
           const QStringList l = opt->text.split('\t');
+          if ( (l.size() > 0) && (opt->icon.isNull()) )
+            // No icon ? leave space for icon anyway
+            rtext.adjust(opt->maxIconWidth+ls.tispace,0,0,0);
 
+          if ( opt->checkType != QStyleOptionMenuItem::NotCheckable )
+            // remove room for check mark
+            rtext = rtext.adjusted(0,0,-pixelMetric(PM_IndicatorWidth)-pixelMetric(PM_CheckBoxLabelSpacing),0);
+          if ( opt->menuItemType == QStyleOptionMenuItem::SubMenu )
+            // remove room for sub menu arrow
+            rtext = rtext.adjusted(0,0,-ls.tispace-ds.size,0);
+
+          rarrow = QRect(r.topRight(),QSize(ds.size,h))
+                    .translated(-ds.size-fs.right-ls.right,0);
+          rcheckmark = QRect(r.topRight(),QSize(pixelMetric(PM_IndicatorWidth),h))
+                    .translated(-pixelMetric(PM_IndicatorWidth)-fs.right-ls.right,0);
+
+          if (opt->menuItemType == QStyleOptionMenuItem::SubMenu)
+            rcheckmark.translate(-ds.size-ls.tispace,0);
+
+          // translate to visual rects inside r
+          rtext = visualRect(dir,r,rtext);
+          rcheckmark = visualRect(dir,r,rcheckmark);
+          rarrow = visualRect(dir,r,rarrow);
+
+          // draw menu text (label+shortcut)
           if (l.size() > 0) {
             // menu label
-            if (opt->icon.isNull())
-              renderLabel(p,dir,
-                          r.adjusted(opt->maxIconWidth+ls.tispace,0,0,0),
-                          fs,is,ls,
-                          Qt::AlignLeft|Qt::AlignVCenter | Qt::TextShowMnemonic,l[0],
-                          !(option->state & State_Enabled));
-            else
-              renderLabel(p,dir,r,fs,is,ls,
-                          Qt::AlignLeft|Qt::AlignVCenter | Qt::TextShowMnemonic,
-                          l[0],
-                          !(option->state & State_Enabled),
-                          opt->icon.pixmap(opt->maxIconWidth,icm,ics));
+            renderLabel(p,dir,
+                        rtext,
+                        fs,is,ls,
+                        Qt::AlignLeft|Qt::AlignVCenter | Qt::TextShowMnemonic,
+                        l[0],
+                        !(option->state & State_Enabled),
+                        opt->icon.pixmap(opt->maxIconWidth,icm,ics));
           }
-          if (l.size() > 1)
+
+          if (l.size() > 1) {
             // shortcut
             renderLabel(p,dir,
-                        r.adjusted(opt->maxIconWidth,0,-15,0),
+                        rtext,
                         fs,is,ls,
                         Qt::AlignRight|Qt::AlignVCenter,
                         l[1],!(option->state & State_Enabled));
+          }
+
+          // menu check mark
+          o.rect = rcheckmark;
+          drawPrimitive(PE_IndicatorMenuCheckMark,&o,p,widget);
 
           // submenu arrow
-          QStyleOptionMenuItem o(*opt);
-          o.rect = alignedRect(dir,Qt::AlignRight | Qt::AlignVCenter,
-                               QSize(10,10),labelRect(o.rect,fs,is,ls));
           if (opt->menuItemType == QStyleOptionMenuItem::SubMenu) {
+            o.rect = rarrow;
             if ( dir == Qt::LeftToRight )
               drawPrimitive(PE_IndicatorArrowRight,&o,p);
             else
               drawPrimitive(PE_IndicatorArrowLeft,&o,p);
-          }
-
-          if (opt->checkType == QStyleOptionMenuItem::Exclusive) {
-            if (opt->checked)
-              o.state |= State_On;
-            drawPrimitive(PE_IndicatorRadioButton,&o,p,widget);
-          }
-
-          if (opt->checkType == QStyleOptionMenuItem::NonExclusive) {
-            if (opt->checked)
-              o.state |= State_On;
-            drawPrimitive(PE_IndicatorCheckBox,&o,p,widget);
           }
         }
       }
@@ -1970,20 +1992,8 @@ QSize QSvgStyle::sizeFromContents ( ContentsType type, const QStyleOption * opti
     }
 
     case CT_MenuItem : {
-      const QStyleOptionMenuItem *opt =
-        qstyleoption_cast<const QStyleOptionMenuItem *>(option);
-
-      if (opt) {
-        QFont f = QApplication::font();
-        if (widget)
-          f = widget->font();
-
-        const QString group = "MenuItem";
-
-        const frame_spec_t fs = getFrameSpec(group);
-        const interior_spec_t is = getInteriorSpec(group);
-        const label_spec_t ls = getLabelSpec(group);
-        const size_spec_t ss = getSizeSpec(group);
+      if ( const QStyleOptionMenuItem *opt =
+           qstyleoption_cast<const QStyleOptionMenuItem *>(option) ) {
 
         if (opt->menuItemType == QStyleOptionMenuItem::Separator)
           s = QSize(csw,2); /* FIXME there is no PM_MenuSeparatorHeight pixel metric */
@@ -1991,14 +2001,21 @@ QSize QSvgStyle::sizeFromContents ( ContentsType type, const QStyleOption * opti
           s = sizeFromContents(fm,fs,is,ls,ss,opt->text,opt->icon.pixmap(opt->maxIconWidth));
         }
 
+        // No icon ? add icon width nevertheless
         if (opt->icon.pixmap(opt->maxIconWidth).isNull())
           s.rwidth() += ls.tispace+opt->maxIconWidth;
 
+        // add width for check mark
         if ( (opt->menuItemType == QStyleOptionMenuItem::SubMenu) ||
              (opt->checkType == QStyleOptionMenuItem::Exclusive) ||
              (opt->checkType == QStyleOptionMenuItem::NonExclusive)
             ) {
-          s.rwidth() += 15+ls.tispace;
+          s.rwidth() += pixelMetric(PM_CheckBoxLabelSpacing)+pixelMetric(PM_IndicatorWidth);
+        }
+
+        // add width for sub menu arrow
+        if ( opt->menuItemType == QStyleOptionMenuItem::SubMenu ) {
+          s.rwidth() += ls.tispace+ds.size;
         }
       }
 
@@ -3063,10 +3080,10 @@ void QSvgStyle::renderInterior(QPainter *p,
     renderElement(p,e,r,is.px,is.py,orientation,animationcount%is.animationFrames);
   }
 
-  p->save();
-  p->setCompositionMode(QPainter::CompositionMode_Overlay);
-  p->fillRect(bounds,QBrush(QColor(255,0,0,50)));
-  p->restore();
+//   p->save();
+//   p->setCompositionMode(QPainter::CompositionMode_Overlay);
+//   p->fillRect(bounds,QBrush(QColor(255,0,0,50)));
+//   p->restore();
 
   #ifdef __DEBUG__
   painter->save();
