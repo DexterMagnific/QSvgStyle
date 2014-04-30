@@ -22,7 +22,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -42,8 +42,8 @@
      showguides="true"
      inkscape:guide-bbox="true"
      inkscape:zoom="2.64"
-     inkscape:cx="284.04381"
-     inkscape:cy="450.78413"
+     inkscape:cx="350.31016"
+     inkscape:cy="527.34384"
      inkscape:window-x="-2"
      inkscape:window-y="-3"
      inkscape:window-maximized="1"
@@ -67,10 +67,6 @@
        orientation="1,0"
        position="330,1330"
        id="guide11116" />
-    <sodipodi:guide
-       orientation="0.70710678,0.70710678"
-       position="570.83333,1537.8788"
-       id="guide11118" />
     <sodipodi:guide
        orientation="1,0"
        position="380,1305"
@@ -1300,30 +1296,6 @@
          style="stop-color:#373e48;stop-opacity:0" />
     </linearGradient>
     <linearGradient
-       id="b-0"
-       xlink:href="#ay"
-       gradientUnits="userSpaceOnUse"
-       y1="25"
-       gradientTransform="matrix(1.25 0 0 1-47.5-65)"
-       x2="0"
-       y2="40" />
-    <linearGradient
-       id="ax-7"
-       xlink:href="#bp"
-       gradientUnits="userSpaceOnUse"
-       y1="40"
-       gradientTransform="translate(0-65)"
-       x2="0"
-       y2="25" />
-    <radialGradient
-       id="ae-3"
-       cx="191.2"
-       xlink:href="#br"
-       gradientUnits="userSpaceOnUse"
-       cy="32.52"
-       r="1.875"
-       gradientTransform="matrix(3.75-.0506.054 4-910.2-87.99)" />
-    <linearGradient
        y2="40"
        x2="0"
        y1="25"
@@ -1932,14 +1904,6 @@
        y1="407.6"
        x2="40"
        y2="425.3" />
-    <linearGradient
-       inkscape:collect="always"
-       xlink:href="#as"
-       id="linearGradient8384"
-       gradientUnits="userSpaceOnUse"
-       y1="43.36"
-       x2="0"
-       y2="28.36" />
     <linearGradient
        inkscape:collect="always"
        xlink:href="#as"
@@ -3169,6 +3133,28 @@
          id="stop3009-9-4"
          style="stop-color:#fff;stop-opacity:.25098" />
     </linearGradient>
+    <linearGradient
+       id="as-7"
+       gradientUnits="userSpaceOnUse"
+       x2="0"
+       y1="43.360001"
+       y2="28.360001">
+      <stop
+         id="stop3146-8"
+         style="stop-color:#72a0cf" />
+      <stop
+         offset="1"
+         id="stop3148-0"
+         style="stop-color:#8fcad9" />
+    </linearGradient>
+    <linearGradient
+       y2="28.360001"
+       x2="0"
+       y1="43.360001"
+       gradientUnits="userSpaceOnUse"
+       id="linearGradient5598"
+       xlink:href="#as-7"
+       inkscape:collect="always" />
   </defs>
   <text
      line-height="125%"
@@ -5044,57 +5030,57 @@
        style="fill:url(#bl)" />
   </g>
   <rect
-     id="menu-normal"
-     height="8"
-     width="8"
-     y="1006.6667"
-     x="220.30302"
-     style="fill:#d8d8d8;fill-rule:evenodd" />
-  <rect
-     id="menu-normal-left"
+     id="menuitem-normal-left"
      height="8"
      width="4"
-     y="1006.6667"
-     x="214.30302"
-     style="fill:#d8d8d8;fill-rule:evenodd" />
+     y="890.37878"
+     x="542.48486"
+     style="fill:#d8d8d8;fill-rule:evenodd"
+     inkscape:label="#menu-normal-left" />
   <rect
-     id="menu-normal-right"
+     id="menuitem-normal-right"
      height="8"
      width="4"
-     y="1006.6667"
-     x="230.30302"
-     style="fill:#d8d8d8;fill-rule:evenodd" />
+     y="890.37878"
+     x="558.48486"
+     style="fill:#d8d8d8;fill-rule:evenodd"
+     inkscape:label="#menu-normal-right" />
   <rect
-     id="menu-normal-topright"
+     id="menuitem-normal-topright"
      height="4"
      width="4"
-     y="1000.6667"
-     x="230.30302"
-     style="fill:#d8d8d8;fill-rule:evenodd" />
+     y="884.37878"
+     x="558.48486"
+     style="fill:#d8d8d8;fill-rule:evenodd"
+     inkscape:label="#menu-normal-topright" />
   <rect
-     id="menu-normal-bottomright"
+     id="menuitem-normal-bottomright"
      height="4"
      width="4"
-     y="1016.6667"
-     x="230.30302"
-     style="fill:#d8d8d8;fill-rule:evenodd" />
+     y="900.37878"
+     x="558.48486"
+     style="fill:#d8d8d8;fill-rule:evenodd"
+     inkscape:label="#menu-normal-bottomright" />
   <rect
-     id="menu-normal-bottomleft"
+     id="menuitem-normal-bottomleft"
      height="4"
      width="4"
-     y="1016.6667"
-     x="214.30302"
-     style="fill:#d8d8d8;fill-rule:evenodd" />
+     y="900.37878"
+     x="542.48486"
+     style="fill:#d8d8d8;fill-rule:evenodd"
+     inkscape:label="#menu-normal-bottomleft" />
   <rect
-     id="menu-normal-topleft"
+     id="menuitem-normal-topleft"
      height="4"
      width="4"
-     y="1000.6667"
-     x="214.30302"
-     style="fill:#d8d8d8;fill-rule:evenodd" />
+     y="884.37878"
+     x="542.48486"
+     style="fill:#d8d8d8;fill-rule:evenodd"
+     inkscape:label="#menu-normal-topleft" />
   <g
-     id="menu-toggled"
-     transform="matrix(2,0,0,0.5333,371.18182,991.36364)">
+     id="menubaritem-toggled"
+     transform="matrix(0.63636364,0,0,0.5333,389.21212,918.19697)"
+     inkscape:label="#menu-toggled">
     <rect
        height="15"
        width="15"
@@ -6441,16 +6427,18 @@
        style="fill:#d8d8d8" />
   </g>
   <rect
-     id="menu-normal-top"
+     id="menuitem-normal-top"
      height="4"
      width="8"
-     y="1000.6667"
-     x="220.30302"
-     style="fill:#d8d8d8;fill-rule:evenodd" />
+     y="884.37878"
+     x="548.48486"
+     style="fill:#d8d8d8;fill-rule:evenodd"
+     inkscape:label="#menu-normal-top" />
   <g
-     id="menu-normal-bottom"
-     transform="matrix(0.2667,0,0,0.3636,193.00303,1006.6667)"
-     style="fill:#d8d8d8">
+     id="menuitem-normal-bottom"
+     transform="matrix(0.2667,0,0,0.3636,521.18484,890.37882)"
+     style="fill:#d8d8d8"
+     inkscape:label="#menu-normal-bottom">
     <rect
        height="11"
        width="30"
@@ -6483,70 +6471,9 @@
      id="menuitem-normal"
      height="8"
      width="8"
-     y="912.37878"
+     y="886.37878"
      x="201.62122"
      style="fill:#f4f4f4;fill-rule:evenodd" />
-  <rect
-     id="menuitem-normal-left"
-     height="8"
-     width="4"
-     y="886"
-     x="196"
-     style="fill:#f4f4f4;fill-rule:evenodd" />
-  <rect
-     id="menuitem-normal-right"
-     height="8"
-     width="4"
-     y="886"
-     x="212"
-     style="fill:#f4f4f4;fill-rule:evenodd" />
-  <rect
-     id="menuitem-normal-topright"
-     height="4"
-     width="4"
-     y="880"
-     x="212"
-     style="fill:#f4f4f4;fill-rule:evenodd" />
-  <rect
-     id="menuitem-normal-bottomright"
-     height="4"
-     width="4"
-     y="896"
-     x="212"
-     style="fill:#f4f4f4;fill-rule:evenodd" />
-  <rect
-     id="menuitem-normal-bottomleft"
-     height="4"
-     width="4"
-     y="896"
-     x="196"
-     style="fill:#f4f4f4;fill-rule:evenodd" />
-  <rect
-     id="menuitem-normal-topleft"
-     height="4"
-     width="4"
-     y="880"
-     x="196"
-     style="fill:#f4f4f4;fill-rule:evenodd" />
-  <rect
-     id="menuitem-normal-top"
-     height="4"
-     width="8"
-     y="880"
-     x="202"
-     style="fill:#f4f4f4;fill-rule:evenodd" />
-  <g
-     id="menuitem-normal-bottom"
-     transform="matrix(0.2667,0,0,0.3636,174.7,886)"
-     style="fill:#f4f4f4">
-    <rect
-       height="11"
-       width="30"
-       y="27.360001"
-       x="102.5"
-       id="rect4938"
-       style="fill-rule:evenodd" />
-  </g>
   <g
      id="button-toggled-topright"
      transform="matrix(1.067 0 0 1.067 278.7-445.7)">
@@ -7796,7 +7723,7 @@
   </g>
   <g
      id="menuitem-toggled"
-     transform="matrix(0.56060606,0,0,0.5333,385.12122,897.25465)">
+     transform="matrix(0.56060606,0,0,0.5333,385.12122,871.25465)">
     <rect
        height="15"
        width="15"
@@ -7804,17 +7731,6 @@
        x="-59"
        id="rect6321"
        style="opacity:0.8;fill:url(#linearGradient8386);fill-rule:evenodd" />
-  </g>
-  <g
-     id="menuitem-pressed"
-     transform="matrix(0.61111111,0,0,0.5333,337.07071,897.25465)">
-    <rect
-       height="15"
-       width="15"
-       y="28.360001"
-       x="-59"
-       id="rect6324"
-       style="opacity:0.8;fill:url(#linearGradient8384);fill-rule:evenodd" />
   </g>
   <g
      id="arrow-up-pressed"
@@ -8095,7 +8011,7 @@
      id="menuitem-disabled"
      height="8"
      width="8.787879"
-     y="912.37878"
+     y="886.37878"
      x="405.83334"
      style="fill:#f4f4f4;fill-rule:evenodd" />
   <g
@@ -14274,17 +14190,17 @@
        text-indent="0"
        block-progression="tb"
        id="text3926"
-       x="40"
-       y="-125"
+       x="255"
+       y="-145"
        line-height="125%">
       <tspan
          id="tspan3928"
-         x="40"
-         y="-125">QSvgStyle Default Theme</tspan>
+         x="255"
+         y="-145">QSvgStyle Default Theme</tspan>
       <tspan
          id="tspan3930"
-         x="40"
-         y="-112.5">by Richard Kung</tspan>
+         x="255"
+         y="-132.5">by Richard Kung</tspan>
     </text>
     <text
        style="font-size:10px;text-indent:0;line-height:normal;text-transform:none;color:#000000;fill:#000000;font-family:cmr10"
@@ -15149,10 +15065,10 @@
        style="fill:#bc2122;fill-rule:evenodd" />
   </g>
   <g
-     transform="translate(295.53271,766.50093)"
-     id="g5736-4-1-5-2-0-9-1-8">
+     transform="translate(245.0024,762.47059)"
+     id="g5736-4-1-5-2-0-9-1-0-4-2">
     <rect
-       id="rect3673-5-0-7-6-3-7-1-4"
+       id="rect3673-5-0-7-6-3-7-1-2-3-6"
        x="96.489998"
        y="77.790001"
        width="2.5"
@@ -15160,7 +15076,7 @@
        transform="matrix(0.7071,0.7071,-0.7071,0.7071,0,0)"
        style="fill:#bc2122;fill-rule:evenodd" />
     <rect
-       id="rect3675-5-1-9-4-4-2-3-9"
+       id="rect3675-5-1-9-4-4-2-3-5-5-0"
        x="91.489998"
        y="82.779999"
        width="12.5"
@@ -15169,10 +15085,10 @@
        style="fill:#bc2122;fill-rule:evenodd" />
   </g>
   <g
-     transform="translate(345.53271,766.50093)"
-     id="g5736-4-1-5-2-0-9-6-4-4">
+     transform="translate(294.85089,763.68275)"
+     id="g5736-4-1-5-2-0-9-1-8-5">
     <rect
-       id="rect3673-5-0-7-6-3-7-2-8-6"
+       id="rect3673-5-0-7-6-3-7-1-4-8"
        x="96.489998"
        y="77.790001"
        width="2.5"
@@ -15180,7 +15096,146 @@
        transform="matrix(0.7071,0.7071,-0.7071,0.7071,0,0)"
        style="fill:#bc2122;fill-rule:evenodd" />
     <rect
-       id="rect3675-5-1-9-4-4-2-7-2-0"
+       id="rect3675-5-1-9-4-4-2-3-9-4"
+       x="91.489998"
+       y="82.779999"
+       width="12.5"
+       height="2.5"
+       transform="matrix(0.7071,0.7071,-0.7071,0.7071,0,0)"
+       style="fill:#bc2122;fill-rule:evenodd" />
+  </g>
+  <text
+     line-height="normal"
+     y="880"
+     x="530"
+     id="text4017-8"
+     block-progression="tb"
+     text-indent="0"
+     text-transform="none"
+     style="font-size:10px;text-indent:0;line-height:normal;text-transform:none;color:#000000;font-family:cmr10">
+    <tspan
+       y="880"
+       x="530"
+       id="tspan4019-7">Whole menu frame</tspan>
+  </text>
+  <text
+     line-height="normal"
+     y="941"
+     x="90"
+     id="text4149-5"
+     block-progression="tb"
+     text-indent="0"
+     text-transform="none"
+     style="font-size:10px;text-indent:0;line-height:normal;text-transform:none;color:#000000;font-family:cmr10">
+    <tspan
+       y="941"
+       x="90"
+       id="tspan4151-8">Menu bar item</tspan>
+  </text>
+  <rect
+     id="menubaritem-normal"
+     height="8"
+     width="8"
+     y="929.2121"
+     x="201.24243"
+     style="fill:#f4f4f4;fill-rule:evenodd"
+     inkscape:label="#menuitem-normal-8" />
+  <rect
+     id="menubaritem-normal-left"
+     height="8"
+     width="4"
+     y="935.37878"
+     x="537.48486"
+     style="fill:#d8d8d8;fill-rule:evenodd"
+     inkscape:label="#menu-normal-left" />
+  <rect
+     id="menubaritem-normal-right"
+     height="8"
+     width="4"
+     y="935.37878"
+     x="553.48486"
+     style="fill:#d8d8d8;fill-rule:evenodd"
+     inkscape:label="#menu-normal-right" />
+  <rect
+     id="menubaritem-normal-topright"
+     height="4"
+     width="4"
+     y="929.37878"
+     x="553.48486"
+     style="fill:#d8d8d8;fill-rule:evenodd"
+     inkscape:label="#menu-normal-topright" />
+  <rect
+     id="menubaritem-normal-bottomright"
+     height="4"
+     width="4"
+     y="945.37878"
+     x="553.48486"
+     style="fill:#d8d8d8;fill-rule:evenodd"
+     inkscape:label="#menu-normal-bottomright" />
+  <rect
+     id="menubaritem-normal-bottomleft"
+     height="4"
+     width="4"
+     y="945.37878"
+     x="537.48486"
+     style="fill:#d8d8d8;fill-rule:evenodd"
+     inkscape:label="#menu-normal-bottomleft" />
+  <rect
+     id="menubaritem-normal-topleft"
+     height="4"
+     width="4"
+     y="929.37878"
+     x="537.48486"
+     style="fill:#d8d8d8;fill-rule:evenodd"
+     inkscape:label="#menu-normal-topleft" />
+  <rect
+     id="menubaritem-normal-top"
+     height="4"
+     width="8"
+     y="929.37878"
+     x="543.48486"
+     style="fill:#d8d8d8;fill-rule:evenodd"
+     inkscape:label="#menu-normal-top" />
+  <g
+     id="menubaritem-normal-bottom"
+     transform="matrix(0.2667,0,0,0.3636,516.18484,935.37882)"
+     style="fill:#d8d8d8"
+     inkscape:label="#menu-normal-bottom">
+    <rect
+       height="11"
+       width="30"
+       y="27.360001"
+       x="102.5"
+       id="rect4847-9"
+       style="fill-rule:evenodd" />
+  </g>
+  <text
+     line-height="normal"
+     y="925"
+     x="525"
+     id="text4017-8-2"
+     block-progression="tb"
+     text-indent="0"
+     text-transform="none"
+     style="font-size:10px;text-indent:0;line-height:normal;text-transform:none;color:#000000;font-family:cmr10">
+    <tspan
+       y="925"
+       x="525"
+       id="tspan4019-7-9">Whole menu bar frame</tspan>
+  </text>
+  <g
+     transform="translate(242.95695,807.39483)"
+     id="g5736-4-1-5-2-0-9-1-0-4-2-8">
+    <rect
+       id="rect3673-5-0-7-6-3-7-1-2-3-6-2"
+       x="96.489998"
+       y="77.790001"
+       width="2.5"
+       height="12.5"
+       transform="matrix(0.7071,0.7071,-0.7071,0.7071,0,0)"
+       style="fill:#bc2122;fill-rule:evenodd" />
+    <rect
+       id="rect3675-5-1-9-4-4-2-3-5-5-0-6"
        x="91.489998"
        y="82.779999"
        width="12.5"
@@ -15189,10 +15244,10 @@
        style="fill:#bc2122;fill-rule:evenodd" />
   </g>
   <g
-     transform="translate(245.07816,766.95544)"
-     id="g5736-4-1-5-2-0-9-1-0-4">
+     transform="translate(292.80544,808.60699)"
+     id="g5736-4-1-5-2-0-9-1-8-5-6">
     <rect
-       id="rect3673-5-0-7-6-3-7-1-2-3"
+       id="rect3673-5-0-7-6-3-7-1-4-8-8"
        x="96.489998"
        y="77.790001"
        width="2.5"
@@ -15200,7 +15255,7 @@
        transform="matrix(0.7071,0.7071,-0.7071,0.7071,0,0)"
        style="fill:#bc2122;fill-rule:evenodd" />
     <rect
-       id="rect3675-5-1-9-4-4-2-3-5-5"
+       id="rect3675-5-1-9-4-4-2-3-9-4-4"
        x="91.489998"
        y="82.779999"
        width="12.5"
@@ -15208,24 +15263,12 @@
        transform="matrix(0.7071,0.7071,-0.7071,0.7071,0,0)"
        style="fill:#bc2122;fill-rule:evenodd" />
   </g>
-  <g
-     transform="translate(398.48726,765.44032)"
-     id="g5736-4-1-5-2-0-9-6-4-4-7">
-    <rect
-       id="rect3673-5-0-7-6-3-7-2-8-6-2"
-       x="96.489998"
-       y="77.790001"
-       width="2.5"
-       height="12.5"
-       transform="matrix(0.7071,0.7071,-0.7071,0.7071,0,0)"
-       style="fill:#bc2122;fill-rule:evenodd" />
-    <rect
-       id="rect3675-5-1-9-4-4-2-7-2-0-7"
-       x="91.489998"
-       y="82.779999"
-       width="12.5"
-       height="2.5"
-       transform="matrix(0.7071,0.7071,-0.7071,0.7071,0,0)"
-       style="fill:#bc2122;fill-rule:evenodd" />
-  </g>
+  <rect
+     id="menubaritem-disabled"
+     height="8"
+     width="8.787879"
+     y="934.63635"
+     x="404.77274"
+     style="fill:#f4f4f4;fill-rule:evenodd"
+     inkscape:label="#menuitem-disabled-7" />
 </svg>

@@ -540,6 +540,10 @@ void QSvgStyle::drawPrimitive(PrimitiveElement e, const QStyleOption * option, Q
 
         QStyleOptionMenuItem o(*opt);
 
+        // NOTE Cheat here: the frame is for the whole menu,
+        // not the individual menu items
+        fs.hasFrame = false;
+
         if ( opt->checked )
           o.state |= State_On;
 
@@ -696,7 +700,14 @@ void QSvgStyle::drawPrimitive(PrimitiveElement e, const QStyleOption * option, Q
       break;
     }
     case PE_PanelMenuBar : {
-      // FIXME
+      // Menu bar "border" (see QMenuBar.cpp)
+      renderFrame(p,r,fs,fs.element+"-"+st);
+      break;
+    }
+    case PE_PanelMenu : {
+      // Interior of a menu
+      // NOTE do nothing. Menu will be filled by its menu items
+      // which have their own interior
       break;
     }
     case PE_IndicatorTabTear : {
@@ -823,6 +834,12 @@ void QSvgStyle::drawControl(ControlElement e, const QStyleOption * option, QPain
       if ( const QStyleOptionMenuItem *opt =
            qstyleoption_cast<const QStyleOptionMenuItem *>(option) ) {
 
+        QStyleOptionMenuItem o(*opt);
+
+        // NOTE Cheat here: the frame is for the whole menu,
+        // not the individual menu items
+        fs.hasFrame = false;
+
         if (opt->menuItemType == QStyleOptionMenuItem::Separator)
           // Menu separator
           renderElement(p,is.element+"-separator",r,20,0);
@@ -831,11 +848,13 @@ void QSvgStyle::drawControl(ControlElement e, const QStyleOption * option, QPain
           drawControl(CE_MenuTearoff,opt,p,widget);
         else {
           // Standard menu item
+          // NOTE QSvgStyle ignore pressed state
+          o.state &= ~State_Sunken;
+          st = state_str(o.state,widget);
           renderInterior(p,r,fs,is,is.element+"-"+st);
 
           QRect rtext = r; // text rect (menu item label+shortcut)
           QRect rcheckmark, rarrow;
-          QStyleOptionMenuItem o(*opt);
 
           // determine positions
           const QStringList l = opt->text.split('\t');
@@ -905,10 +924,19 @@ void QSvgStyle::drawControl(ControlElement e, const QStyleOption * option, QPain
       break;
     }
     case CE_MenuBarItem : {
-      // FIXME
       if ( const QStyleOptionMenuItem *opt =
            qstyleoption_cast<const QStyleOptionMenuItem *>(option) ) {
 
+        QStyleOptionMenuItem o(*opt);
+
+        // NOTE QSvgSyle: ignore pressed state
+        o.state &= ~State_Sunken;
+        st = state_str(o.state,widget);
+
+        // NOTE cheat here: frame is for whole menu bar, not individual
+        // menu bar items
+        fs.hasFrame = false;
+        
         renderInterior(p,option->rect,fs,is,is.element+"-"+st);
         renderLabel(p,dir,r,fs,is,ls,
                     Qt::AlignCenter | Qt::AlignVCenter | Qt::TextShowMnemonic,
@@ -919,17 +947,8 @@ void QSvgStyle::drawControl(ControlElement e, const QStyleOption * option, QPain
     }
 
     case CE_MenuBarEmptyArea : {
-      // FIXME
-        const QString group = "MenuBar";
-
-        const frame_spec_t fs = getFrameSpec(group);
-        const interior_spec_t is = getInteriorSpec(group);
-
-        __print_group();
-
-        // NOTE this does not use the status (otherwise always disabled)
-        renderFrame(p,option->rect,fs,fs.element+"-normal");
-        renderInterior(p,option->rect,fs,is,is.element+"-normal");
+        // Menu bar interior
+        renderInterior(p,r,fs,is,is.element+"-"+st);
 
       break;
     }
@@ -1787,8 +1806,9 @@ int QSvgStyle::pixelMetric(PixelMetric metric, const QStyleOption * option, cons
     case PM_LayoutHorizontalSpacing :
     case PM_LayoutVerticalSpacing : return 2;
 
-    // We don't draw frames around menu bars
-    case PM_MenuBarPanelWidth : return 0;
+    case PM_MenuBarPanelWidth :
+      return getFrameSpec(PE_group(PE_PanelMenuBar)).width();
+
     // These are the 'interior' margins of the menu bar
     case PM_MenuBarVMargin :
     case PM_MenuBarHMargin :  return 0;
@@ -1995,8 +2015,12 @@ QSize QSvgStyle::sizeFromContents ( ContentsType type, const QStyleOption * opti
       if ( const QStyleOptionMenuItem *opt =
            qstyleoption_cast<const QStyleOptionMenuItem *>(option) ) {
 
+        // NOTE Cheat here: the frame is for the whole menu,
+        // not the individual menu items
+        fs.hasFrame = false;
+
         if (opt->menuItemType == QStyleOptionMenuItem::Separator)
-          s = QSize(csw,2); /* FIXME there is no PM_MenuSeparatorHeight pixel metric */
+          s = QSize(csw,2); /* there is no PM_MenuSeparatorHeight pixel metric */
         else {
           s = sizeFromContents(fm,fs,is,ls,ss,opt->text,opt->icon.pixmap(opt->maxIconWidth));
         }
@@ -2006,8 +2030,7 @@ QSize QSvgStyle::sizeFromContents ( ContentsType type, const QStyleOption * opti
           s.rwidth() += ls.tispace+opt->maxIconWidth;
 
         // add width for check mark
-        if ( (opt->menuItemType == QStyleOptionMenuItem::SubMenu) ||
-             (opt->checkType == QStyleOptionMenuItem::Exclusive) ||
+        if ( (opt->checkType == QStyleOptionMenuItem::Exclusive) ||
              (opt->checkType == QStyleOptionMenuItem::NonExclusive)
             ) {
           s.rwidth() += pixelMetric(PM_CheckBoxLabelSpacing)+pixelMetric(PM_IndicatorWidth);
@@ -2023,22 +2046,16 @@ QSize QSvgStyle::sizeFromContents ( ContentsType type, const QStyleOption * opti
     }
 
     case CT_MenuBarItem : {
-      const QStyleOptionMenuItem *opt =
-        qstyleoption_cast<const QStyleOptionMenuItem *>(option);
+      if ( const QStyleOptionMenuItem *opt =
+           qstyleoption_cast<const QStyleOptionMenuItem *>(option) ) {
 
-      if (opt) {
-        QFont f = QApplication::font();
-        if (widget)
-          f = widget->font();
-
-        QString group = "MenuBar";
-        frame_spec_t fs = getFrameSpec(group);
-        group = "MenuBarItem";
-        const interior_spec_t is = getInteriorSpec(group);
-        const label_spec_t ls = getLabelSpec(group);
-        const size_spec_t ss = getSizeSpec(group);
-
-        s = sizeFromContents(fm,fs,is,ls,ss,opt->text,opt->icon.pixmap(opt->maxIconWidth));
+        // NOTE Cheat here: frame is for whole menu bar, not
+        // individual menu bar items
+        fs.hasFrame = false;
+        fs.left = fs.right = fs.top = fs.bottom = 0;
+        s = sizeFromContents(fm,fs,is,ls,ss,
+                             opt->text,
+                             opt->icon.pixmap(opt->maxIconWidth));
       }
 
       break;
@@ -3373,7 +3390,7 @@ QString QSvgStyle::state_str(State st, const QWidget* w) const
   QString status;
 
   if ( !isContainerWidget(w) ) {
-    status = (st & State_Enabled) ?
+    status = ( (st & State_Enabled) || (st == State_None) ) ?
       (st & State_Sunken) ? "pressed" :
       (st & State_On) ? "toggled" :
       (st & State_Selected) ? "toggled" :
@@ -3381,7 +3398,7 @@ QString QSvgStyle::state_str(State st, const QWidget* w) const
     : (st & State_On) ? "disabled-toggled" : "disabled";
   } else {
       // container widgets will have only normal, selected and disabled status
-    status = (st & State_Enabled ) ?
+    status = ( (st & State_Enabled) || (st == State_None) ) ?
       (st & State_Selected) ? "toggled" : "normal"
     : "disabled";
   }
@@ -3756,7 +3773,7 @@ QString QSvgStyle::PE_group(PrimitiveElement element) const
     case PE_FrameFocusRect : return "Focus";
     case PE_FrameGroupBox : return "GroupBox";
     case PE_FrameLineEdit : return "LineEdit";
-    case PE_FrameMenu : return "Menu";
+    case PE_FrameMenu : return "MenuItem";
     case PE_FrameStatusBarItem : return "StatusBar";
     case PE_FrameTabWidget : return "Frame";
     case PE_FrameWindow : return "Window";
@@ -3767,7 +3784,7 @@ QString QSvgStyle::PE_group(PrimitiveElement element) const
     case PE_PanelButtonCommand : return "PushButton";
     case PE_PanelButtonBevel : return "PushButton";
     case PE_PanelButtonTool : return "ToolButton";
-    case PE_PanelMenuBar : return "MenuBar";
+    case PE_PanelMenuBar : return "MenuBarItem";
     case PE_PanelToolBar : return "ToolBar";
     case PE_PanelLineEdit : return "LineEdit";
     case PE_PanelTipLabel : return "Tip";
@@ -3872,8 +3889,7 @@ QString QSvgStyle::CT_group(QStyle::ContentsType type) const
     case CT_ProgressBar : return "ProgressBar";
     case CT_MenuItem : return "MenuItem";
     case CT_MenuBarItem : return "MenuBarItem";
-    case CT_MenuBar : return "MenuBar";
-    case CT_Menu : return "Menu";
+    case CT_MenuBar : return "MenuBarItem";
     case CT_TabBarTab : return "TabBar";
     case CT_Slider : return "Slider";
     case CT_ScrollBar : return "ScrollBar";
