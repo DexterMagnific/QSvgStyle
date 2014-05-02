@@ -54,6 +54,7 @@
 #include <QGroupBox>
 #include <QDockWidget>
 #include <QScrollBar>
+#include <QTreeWidget>
 
 #include "../themeconfig/ThemeConfig.h"
 
@@ -269,7 +270,8 @@ void QSvgStyle::setUserTheme()
 bool QSvgStyle::isContainerWidget(const QWidget * widget) const
 {
   return !widget || (widget && (
-    widget->inherits("QFrame") ||
+    (widget->inherits("QFrame") &&
+      !(widget->inherits("QTreeWidget") || widget->inherits("QHeaderView"))) ||
     widget->inherits("QGroupBox") ||
     widget->inherits("QTabWidget") ||
     widget->inherits("QDockWidget") ||
@@ -306,40 +308,20 @@ void QSvgStyle::polish(QWidget * widget)
     widget->setAttribute(Qt::WA_Hover, true);
   }
 
-  QString group = QString::null;
+  // Remove WA_OpaquePaintEvent from scrollbars to correctly render them
+  // when the svg items have non opaque colors
+  if ( qobject_cast< const QScrollBar* >(widget) ) {
+    widget->setAttribute(Qt::WA_OpaquePaintEvent, false);
+  }
 
-  if ( qobject_cast< const QPushButton* >(widget) )
-    group = "PanelButtonCommand";
-
-  if ( qobject_cast< const QToolButton* >(widget) )
-    group = "PanelButtonTool";
-
-  if ( qobject_cast< const QLineEdit* >(widget) )
-    group = "LineEdit";
-
+  // Install event filter on progress bars to animate them
   if ( qobject_cast< const QProgressBar* >(widget) ) {
-    group = "ProgressbarContents";
     widget->installEventFilter(this);
   }
 
-  if ( qobject_cast< const QComboBox* >(widget) )
-    group = "ComboBox";
-
+  // Enable menu tear off
   if ( qobject_cast< QMenu* >(widget) ) {
     (qobject_cast< QMenu* >(widget))->setTearOffEnabled(true);
-  }
-
-//     if ( qobject_cast< const QTabWidget* >(widget) )
-//       group = "Tab";
-
-  if ( !group.isNull() ) {
-    const frame_spec_t fspec = getFrameSpec(group);
-    const interior_spec_t ispec = getInteriorSpec(group);
-    const indicator_spec_t dspec = getIndicatorSpec(group);
-
-    if ( (fspec.animationFrames > 1) || (ispec.animationFrames > 1) || (dspec.animationFrames > 1) ) {
-      animatedWidgets.append(widget);
-    }
   }
 }
 
@@ -371,7 +353,7 @@ void QSvgStyle::slot_animate()
   foreach (QWidget *widget, animatedWidgets) {
     if (widget->testAttribute(Qt::WA_UnderMouse)) {
       DEBUG("Repainting %s\n",(const char *)widget->objectName().toAscii());
-      widget->repaint();
+      widget->update();
     }
   }
 }
@@ -384,7 +366,7 @@ void QSvgStyle::slot_animateProgressBars()
     QWidget *widget = it.key();
     if (widget->isVisible()) {
       it.value() += 2;
-      widget->repaint();
+      widget->update();
     }
   }
 }
@@ -587,11 +569,17 @@ void QSvgStyle::drawPrimitive(PrimitiveElement e, const QStyleOption * option, Q
     }
     case PE_Frame : {
       // Generic frame
-      renderFrame(p,r,fs,fs.element+"-"+st);
       if ( const QStyleOptionFrame *opt =
-           qstyleoption_cast<const QStyleOptionFrame *>(option) ) {
+        qstyleoption_cast<const QStyleOptionFrame *>(option) ) {
+        QStyleOptionFrame o(*opt);
+        // NOTE remove hovered, toggled and pressed states
+        o.state &= ~(State_MouseOver | State_Sunken | State_On);
+        st = state_str(o.state,widget);
+        renderFrame(p,r,fs,fs.element+"-"+st);
+
         if ( (opt->state & State_Enabled) &&
-             ((opt->state & State_Sunken) || (opt->state & State_Raised)) ) {
+             ((opt->state & State_Sunken) || (opt->state & State_Raised)) &&
+             !qobject_cast< const QTreeWidget* >(widget) ) {
           renderInterior(p,r,fs,is,is.element+"-"+st);
         }
       }
@@ -744,22 +732,20 @@ void QSvgStyle::drawPrimitive(PrimitiveElement e, const QStyleOption * option, Q
       break;
     }
     case PE_PanelItemViewRow : {
-      // FIXME
       // A row of a item view list
-      if ( option->state & State_Enabled ) {
-        if ( const QStyleOptionViewItemV4 *opt =
-             qstyleoption_cast<const QStyleOptionViewItemV4 *>(option) ) {
-
-          if ( opt->features & QStyleOptionViewItemV2::Alternate )
-            st = st+"-alt";
-        }
-      }
-      renderInterior(p,r,fs,is,is.element+"-"+st);
       break;
     }
     case PE_PanelItemViewItem : {
       // An item of a view item
-      // FIXME
+      if ( (option->state & State_Enabled) && (st == "normal") ) {
+        if ( const QStyleOptionViewItemV4 *opt =
+          qstyleoption_cast<const QStyleOptionViewItemV4 *>(option) ) {
+
+          if ( opt->features & QStyleOptionViewItemV2::Alternate )
+            st = "-alt-"+st;
+          }
+      }
+      renderInterior(p,r,fs,is,is.element+"-"+st);
       break;
     }
     case PE_PanelStatusBar : {
@@ -936,7 +922,7 @@ void QSvgStyle::drawControl(ControlElement e, const QStyleOption * option, QPain
         // NOTE cheat here: frame is for whole menu bar, not individual
         // menu bar items
         fs.hasFrame = false;
-        
+
         renderInterior(p,option->rect,fs,is,is.element+"-"+st);
         renderLabel(p,dir,r,fs,is,ls,
                     Qt::AlignCenter | Qt::AlignVCenter | Qt::TextShowMnemonic,
@@ -2779,7 +2765,7 @@ void QSvgStyle::renderElement(QPainter* painter, const QString& element, const Q
   int x,y,h,w;
   bounds.getRect(&x,&y,&w,&h);
 
-  if ( (x < 0) || (y < 0) || (w <= 0) || (h <= 0) )
+  if ( (w <= 0) || (h <= 0) )
     return;
 
   QSvgRenderer *renderer = 0;
