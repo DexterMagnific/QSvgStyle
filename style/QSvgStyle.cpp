@@ -271,7 +271,12 @@ bool QSvgStyle::isContainerWidget(const QWidget * widget) const
 {
   return !widget || (widget && (
     (widget->inherits("QFrame") &&
-      !(widget->inherits("QTreeWidget") || widget->inherits("QHeaderView"))) ||
+      !(
+        widget->inherits("QTreeWidget") ||
+        widget->inherits("QHeaderView") ||
+        widget->inherits("QSplitter")
+      )
+    ) ||
     widget->inherits("QGroupBox") ||
     widget->inherits("QTabWidget") ||
     widget->inherits("QDockWidget") ||
@@ -521,10 +526,6 @@ void QSvgStyle::drawPrimitive(PrimitiveElement e, const QStyleOption * option, Q
             qstyleoption_cast<const QStyleOptionMenuItem *>(option) ) {
 
         QStyleOptionMenuItem o(*opt);
-
-        // NOTE Cheat here: the frame is for the whole menu,
-        // not the individual menu items
-        fs.hasFrame = false;
 
         if ( opt->checked )
           o.state |= State_On;
@@ -812,10 +813,12 @@ void QSvgStyle::drawControl(ControlElement e, const QStyleOption * option, QPain
       drawPrimitive(PE_PanelButtonBevel,option,p,widget);
       break;
     }
+
     case CE_MenuTearoff : {
       renderElement(p,is.element+"-tearoff",r,10,0);
       break;
     }
+
     case CE_MenuItem : {
       if ( const QStyleOptionMenuItem *opt =
            qstyleoption_cast<const QStyleOptionMenuItem *>(option) ) {
@@ -825,6 +828,7 @@ void QSvgStyle::drawControl(ControlElement e, const QStyleOption * option, QPain
         // NOTE Cheat here: the frame is for the whole menu,
         // not the individual menu items
         fs.hasFrame = false;
+        fs.top = fs.bottom = fs.left = fs.right = 0;
 
         if (opt->menuItemType == QStyleOptionMenuItem::Separator)
           // Menu separator
@@ -906,9 +910,11 @@ void QSvgStyle::drawControl(ControlElement e, const QStyleOption * option, QPain
 
       break;
     }
+
     case CE_MenuEmptyArea : {
       break;
     }
+
     case CE_MenuBarItem : {
       if ( const QStyleOptionMenuItem *opt =
            qstyleoption_cast<const QStyleOptionMenuItem *>(option) ) {
@@ -922,6 +928,7 @@ void QSvgStyle::drawControl(ControlElement e, const QStyleOption * option, QPain
         // NOTE cheat here: frame is for whole menu bar, not individual
         // menu bar items
         fs.hasFrame = false;
+        fs.top = fs.bottom = fs.left = fs.right = 0;
 
         renderInterior(p,option->rect,fs,is,is.element+"-"+st);
         renderLabel(p,dir,r,fs,is,ls,
@@ -933,9 +940,8 @@ void QSvgStyle::drawControl(ControlElement e, const QStyleOption * option, QPain
     }
 
     case CE_MenuBarEmptyArea : {
-        // Menu bar interior
-        renderInterior(p,r,fs,is,is.element+"-"+st);
-
+      // Menu bar interior
+      renderInterior(p,r,fs,is,is.element+"-"+st);
       break;
     }
 
@@ -964,6 +970,7 @@ void QSvgStyle::drawControl(ControlElement e, const QStyleOption * option, QPain
       }
       break;
     }
+
     case CE_CheckBoxLabel : {
       if ( const QStyleOptionButton *opt =
           qstyleoption_cast<const QStyleOptionButton *>(option) ) {
@@ -975,6 +982,7 @@ void QSvgStyle::drawControl(ControlElement e, const QStyleOption * option, QPain
       }
       break;
     }
+
     case CE_ComboBoxLabel : {
       if ( const QStyleOptionComboBox *opt =
            qstyleoption_cast<const QStyleOptionComboBox *>(option) ) {
@@ -1000,6 +1008,7 @@ void QSvgStyle::drawControl(ControlElement e, const QStyleOption * option, QPain
       }
       break;
     }
+
     case CE_TabBarTabShape : {
       if ( const QStyleOptionTab *opt =
            qstyleoption_cast<const QStyleOptionTab *>(option) ) {
@@ -1070,6 +1079,7 @@ void QSvgStyle::drawControl(ControlElement e, const QStyleOption * option, QPain
 
       break;
     }
+
     case CE_TabBarTabLabel : {
       if ( const QStyleOptionTab *opt =
            qstyleoption_cast<const QStyleOptionTab *>(option) ) {
@@ -1079,18 +1089,21 @@ void QSvgStyle::drawControl(ControlElement e, const QStyleOption * option, QPain
 
       break;
     }
+
     case CE_TabBarTab : {
       drawControl(CE_TabBarTabShape,option,p,widget);
       drawControl(CE_TabBarTabLabel,option,p,widget);
 
       break;
     }
+
     case CE_ToolBoxTabShape : {
       renderFrame(p,option->rect,fs,fs.element+"-"+st);
       renderInterior(p,option->rect,fs,is,is.element+"-"+st);
 
       break;
     }
+
     case CE_ToolBoxTabLabel : {
       if ( const QStyleOptionToolBox *opt =
            qstyleoption_cast<const QStyleOptionToolBox *>(option) ) {
@@ -1103,6 +1116,7 @@ void QSvgStyle::drawControl(ControlElement e, const QStyleOption * option, QPain
 
       break;
     }
+
     case CE_ProgressBar : {
       // whole progress bar widget
       if ( const QStyleOptionProgressBarV2 *opt =
@@ -1124,6 +1138,7 @@ void QSvgStyle::drawControl(ControlElement e, const QStyleOption * option, QPain
 
       break;
     }
+
     case CE_ProgressBarGroove : {
       // "background" of a progress bar
       renderFrame(p,r,fs,fs.element+"-"+st);
@@ -1131,6 +1146,7 @@ void QSvgStyle::drawControl(ControlElement e, const QStyleOption * option, QPain
 
       break;
     }
+
     case CE_ProgressBarLabel : {
       if ( const QStyleOptionProgressBarV2 *opt =
            qstyleoption_cast<const QStyleOptionProgressBarV2 *>(option) ) {
@@ -1143,6 +1159,7 @@ void QSvgStyle::drawControl(ControlElement e, const QStyleOption * option, QPain
 
       break;
     }
+
     case CE_ProgressBarContents : {
       // the progress indicator
       if ( const QStyleOptionProgressBarV2 *opt =
@@ -1187,6 +1204,7 @@ void QSvgStyle::drawControl(ControlElement e, const QStyleOption * option, QPain
 
       break;
     }
+
     case CE_Splitter : {
       renderFrame(p,option->rect,fs,fs.element+"-"+st);
       renderInterior(p,option->rect,fs,is,is.element+"-"+st, (h > w) ? Qt::Vertical : Qt::Horizontal);
@@ -1195,54 +1213,61 @@ void QSvgStyle::drawControl(ControlElement e, const QStyleOption * option, QPain
     }
 
     case CE_ScrollBarAddLine : {
-      const QString group = "Scrollbar";
+      if ( const QStyleOptionSlider *opt =
+           qstyleoption_cast<const QStyleOptionSlider *>(option) ) {
+        QStyleOptionSlider o(*opt);
 
-      const frame_spec_t fs = getFrameSpec(group);
-      const interior_spec_t is = getInteriorSpec(group);
-      const indicator_spec_t ds = getIndicatorSpec(group);
-
-      __print_group();
-
-      renderFrame(p,option->rect,fs,fs.element+"-"+st);
-      renderInterior(p,option->rect,fs,is,is.element+"-"+st);
-      if (option->state & State_Horizontal)
-        renderIndicator(p,option->rect,fs,is,ds,ds.element+"-right-"+st);
-      else
-        renderIndicator(p,option->rect,fs,is,ds,ds.element+"-down-"+st);
-
+        o.state &= ~(State_Sunken | State_Selected | State_On | State_MouseOver);
+        if ( opt->activeSubControls & SC_ScrollBarAddLine )
+          o.state = opt->state;
+        st = state_str(o.state,widget);
+        renderFrame(p,option->rect,fs,fs.element+"-"+st);
+        renderInterior(p,option->rect,fs,is,is.element+"-"+st);
+        if (option->state & State_Horizontal) {
+          if ( dir == Qt::LeftToRight )
+            drawPrimitive(PE_IndicatorArrowRight,option,p,widget);
+          else
+            drawPrimitive(PE_IndicatorArrowLeft,option,p,widget);
+        } else
+          drawPrimitive(PE_IndicatorArrowDown,option,p,widget);
+      }
       break;
     }
 
     case CE_ScrollBarSubLine : {
-      const QString group = "Scrollbar";
+      if ( const QStyleOptionSlider *opt =
+        qstyleoption_cast<const QStyleOptionSlider *>(option) ) {
+        QStyleOptionSlider o(*opt);
 
-      const frame_spec_t fs = getFrameSpec(group);
-      const interior_spec_t is = getInteriorSpec(group);
-      const indicator_spec_t ds = getIndicatorSpec(group);
-
-      __print_group();
-
-      renderFrame(p,option->rect,fs,fs.element+"-"+st);
-      renderInterior(p,option->rect,fs,is,is.element+"-"+st);
-      if (option->state & State_Horizontal)
-        renderIndicator(p,option->rect,fs,is,ds,ds.element+"-left-"+st);
-      else
-        renderIndicator(p,option->rect,fs,is,ds,ds.element+"-up-"+st);
-
+        o.state &= ~(State_Sunken | State_Selected | State_On | State_MouseOver);
+        if ( opt->activeSubControls & SC_ScrollBarSubLine )
+          o.state = opt->state;
+        st = state_str(o.state,widget);
+        renderFrame(p,option->rect,fs,fs.element+"-"+st);
+        renderInterior(p,option->rect,fs,is,is.element+"-"+st);
+        if (option->state & State_Horizontal) {
+          if ( dir == Qt::LeftToRight )
+            drawPrimitive(PE_IndicatorArrowLeft,option,p,widget);
+          else
+            drawPrimitive(PE_IndicatorArrowRight,option,p,widget);
+        } else
+          drawPrimitive(PE_IndicatorArrowUp,option,p,widget);
+      }
       break;
     }
 
     case CE_ScrollBarSlider : {
-      const QString group = "ScrollbarSlider";
+      if ( const QStyleOptionSlider *opt =
+        qstyleoption_cast<const QStyleOptionSlider *>(option) ) {
+        QStyleOptionSlider o(*opt);
 
-      const frame_spec_t fs = getFrameSpec(group);
-      const interior_spec_t is = getInteriorSpec(group);
-
-      __print_group();
-
-      renderFrame(p,option->rect,fs,fs.element+"-"+st);
-      renderInterior(p,option->rect,fs,is,is.element+"-"+st);
-
+        o.state &= ~(State_Sunken | State_Selected | State_On | State_MouseOver);
+        if ( opt->activeSubControls & SC_ScrollBarSlider )
+          o.state = opt->state;
+        st = state_str(o.state,widget);
+        renderFrame(p,option->rect,fs,fs.element+"-cursor-"+st);
+        renderInterior(p,option->rect,fs,is,is.element+"-cursor-"+st);
+      }
       break;
     }
 
@@ -1251,6 +1276,7 @@ void QSvgStyle::drawControl(ControlElement e, const QStyleOption * option, QPain
       renderInterior(p,r,fs,is,is.element+"-"+st);
       break;
     }
+
     case CE_HeaderLabel : {
       if ( const QStyleOptionHeader *opt =
            qstyleoption_cast<const QStyleOptionHeader *>(option) ) {
@@ -1271,6 +1297,7 @@ void QSvgStyle::drawControl(ControlElement e, const QStyleOption * option, QPain
       }
       break;
     }
+
     case CE_Header : {
       drawControl(CE_HeaderSection,option,p,widget);
       drawControl(CE_HeaderLabel,option,p,widget);
@@ -1281,15 +1308,11 @@ void QSvgStyle::drawControl(ControlElement e, const QStyleOption * option, QPain
     case CE_ToolBar : {
       renderFrame(p,option->rect,fs,fs.element+"-"+st);
       renderInterior(p,option->rect,fs,is,is.element+"-"+st, (option->state & State_Horizontal) ? Qt::Horizontal : Qt::Vertical);
-
       break;
     }
 
     case CE_SizeGrip : {
-      renderFrame(p,option->rect,fs,fs.element+"-"+st);
-      renderInterior(p,option->rect,fs,is,is.element+"-"+st);
       renderIndicator(p,option->rect,fs,is,ds,ds.element+"-"+st);
-
       break;
     }
 
@@ -1298,6 +1321,7 @@ void QSvgStyle::drawControl(ControlElement e, const QStyleOption * option, QPain
       drawControl(CE_PushButtonLabel,option,p,widget);
       break;
     }
+
     case CE_PushButtonLabel : {
       if ( const QStyleOptionButton *opt =
            qstyleoption_cast<const QStyleOptionButton *>(option) ) {
@@ -1320,6 +1344,7 @@ void QSvgStyle::drawControl(ControlElement e, const QStyleOption * option, QPain
 
       break;
     }
+
     case CE_ToolButtonLabel : {
       if ( const QStyleOptionToolButton *opt =
           qstyleoption_cast<const QStyleOptionToolButton *>(option) ) {
@@ -1593,21 +1618,28 @@ void QSvgStyle::drawComplexControl(ComplexControl control, const QStyleOptionCom
       if (opt) {
         QStyleOptionSlider o(*opt);
 
-        const QString group = "ScrollbarGroove";
-
-        const frame_spec_t fspec = getFrameSpec(group);
-        const interior_spec_t ispec = getInteriorSpec(group);
-
+        // Groove
+        // Remove pressed and selected state
+        o.state &= ~(State_Sunken | State_Selected | State_On | State_MouseOver);
+        if ( opt->activeSubControls & SC_ScrollBarGroove )
+          o.state = opt->state;
+        st = state_str(o.state,widget);
         o.rect = subControlRect(CC_ScrollBar,opt,SC_ScrollBarGroove,widget);
-        renderFrame(p,o.rect,fspec,fspec.element+"-"+st);
-        renderInterior(p,o.rect,fspec,ispec,ispec.element+"-"+st);
+        renderFrame(p,o.rect,fs,fs.element+"-"+st);
+        renderInterior(p,o.rect,fs,is,is.element+"-"+st);
 
+        // 'Next' arrow
+        o.state = opt->state;
         o.rect = subControlRect(CC_ScrollBar,opt,SC_ScrollBarAddLine,widget);
         drawControl(CE_ScrollBarAddLine,&o,p,widget);
 
+        // 'Previous' arrow
+        o.state = opt->state;
         o.rect = subControlRect(CC_ScrollBar,opt,SC_ScrollBarSubLine,widget);
         drawControl(CE_ScrollBarSubLine,&o,p,widget);
 
+        // Cursor
+        o.state = opt->state;
         o.rect = subControlRect(CC_ScrollBar,opt,SC_ScrollBarSlider,widget);
         drawControl(CE_ScrollBarSlider,&o,p,widget);
       }
@@ -1766,11 +1798,6 @@ void QSvgStyle::drawComplexControl(ComplexControl control, const QStyleOptionCom
       break;
     }
 
-    // case CC_MdiControls : {
-
-    //   break;
-    // }
-
     default :
       //qDebug() << "[QSvgStyle] " << __func__ << ": Unhandled complex control " << control;
       QCommonStyle::drawComplexControl(control,option,p,widget);
@@ -1839,7 +1866,7 @@ int QSvgStyle::pixelMetric(PixelMetric metric, const QStyleOption * option, cons
 
     case PM_SplitterWidth : return 6;
 
-    case PM_ScrollBarExtent : return 10;
+    case PM_ScrollBarExtent : return 16;
     case PM_ScrollBarSliderMin : return 10;
 
     case PM_SliderThickness : return 4;
@@ -2004,6 +2031,7 @@ QSize QSvgStyle::sizeFromContents ( ContentsType type, const QStyleOption * opti
         // NOTE Cheat here: the frame is for the whole menu,
         // not the individual menu items
         fs.hasFrame = false;
+        fs.top = fs.bottom = fs.left = fs.right = 0;
 
         if (opt->menuItemType == QStyleOptionMenuItem::Separator)
           s = QSize(csw,2); /* there is no PM_MenuSeparatorHeight pixel metric */
@@ -2039,6 +2067,7 @@ QSize QSvgStyle::sizeFromContents ( ContentsType type, const QStyleOption * opti
         // individual menu bar items
         fs.hasFrame = false;
         fs.left = fs.right = fs.top = fs.bottom = 0;
+
         s = sizeFromContents(fm,fs,is,ls,ss,
                              opt->text,
                              opt->icon.pixmap(opt->maxIconWidth));
@@ -2112,7 +2141,6 @@ QSize QSvgStyle::sizeFromContents ( ContentsType type, const QStyleOption * opti
 
         s = s.expandedTo(ms);
       }
-
       break;
     }
 
@@ -2421,11 +2449,11 @@ QRect QSvgStyle::subControlRect(ComplexControl control, const QStyleOptionComple
             ret = QRect(x+w-extent,y,extent,extent);
             break;
           case SC_ScrollBarSlider : {
-            const QStyleOptionSlider *opt =
-                qstyleoption_cast<const QStyleOptionSlider *>(option);
+            if ( const QStyleOptionSlider *opt =
+                 qstyleoption_cast<const QStyleOptionSlider *>(option) ) {
 
-            if (opt) {
-              QRect r = subControlRect(CC_ScrollBar,option,SC_ScrollBarGroove,widget);
+              r = subControlRect(CC_ScrollBar,option,SC_ScrollBarGroove,widget);
+              r = interiorRect(r,fs,is);
               r.getRect(&x,&y,&w,&h);
 
               const int minLength = pixelMetric(PM_ScrollBarSliderMin,option,widget);
@@ -2441,11 +2469,13 @@ QRect QSvgStyle::subControlRect(ComplexControl control, const QStyleOptionComple
                   length = maxLength;
               }
 
-              const int start = sliderPositionFromValue(opt->minimum,opt->maximum,opt->sliderPosition,maxLength - length,opt->upsideDown);
+              const int start = sliderPositionFromValue(opt->minimum,
+                                                        opt->maximum,
+                                                        opt->sliderPosition,
+                                                        maxLength - length,
+                                                        opt->upsideDown);
               ret = QRect(x+start,y,length,h);
-            } else
-              ret = QRect();
-
+            }
             break;
           }
 
@@ -2465,11 +2495,10 @@ QRect QSvgStyle::subControlRect(ComplexControl control, const QStyleOptionComple
             ret = QRect(x,y+h-extent,extent,extent);
             break;
           case SC_ScrollBarSlider : {
-            const QStyleOptionSlider *opt =
-                qstyleoption_cast<const QStyleOptionSlider *>(option);
+            if ( const QStyleOptionSlider *opt =
+                 qstyleoption_cast<const QStyleOptionSlider *>(option) ) {
 
-            if (opt) {
-              QRect r = subControlRect(CC_ScrollBar,option,SC_ScrollBarGroove,widget);
+              r = subControlRect(CC_ScrollBar,option,SC_ScrollBarGroove,widget);
               r.getRect(&x,&y,&w,&h);
 
               const int minLength = pixelMetric(PM_ScrollBarSliderMin,option,widget);
