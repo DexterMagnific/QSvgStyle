@@ -570,18 +570,23 @@ void QSvgStyle::drawPrimitive(PrimitiveElement e, const QStyleOption * option, Q
     }
     case PE_Frame : {
       // Generic frame
-      if ( const QStyleOptionFrame *opt =
-        qstyleoption_cast<const QStyleOptionFrame *>(option) ) {
-        QStyleOptionFrame o(*opt);
+      if ( const QStyleOptionFrameV3 *opt =
+        qstyleoption_cast<const QStyleOptionFrameV3 *>(option) ) {
+        QStyleOptionFrameV3 o(*opt);
         // NOTE remove hovered, toggled and pressed states
         o.state &= ~(State_MouseOver | State_Sunken | State_On);
         st = state_str(o.state,widget);
-        renderFrame(p,r,fs,fs.element+"-"+st);
 
-        if ( (opt->state & State_Enabled) &&
-             ((opt->state & State_Sunken) || (opt->state & State_Raised)) &&
-             !qobject_cast< const QTreeWidget* >(widget) ) {
-          renderInterior(p,r,fs,is,is.element+"-"+st);
+        if ( opt->state & State_Sunken )
+          renderFrame(p,r,fs,fs.element+"-sunken-"+st);
+        else
+          renderFrame(p,r,fs,fs.element+"-raised-"+st);
+
+        if ( !qobject_cast< const QTreeWidget* >(widget) ) {
+          if ( opt->state & State_Sunken )
+            renderInterior(p,r,fs,is,is.element+"-sunken-"+st);
+          if ( opt->state & State_Raised )
+            renderInterior(p,r,fs,is,is.element+"-raised-"+st);
         }
       }
       break;
@@ -604,7 +609,7 @@ void QSvgStyle::drawPrimitive(PrimitiveElement e, const QStyleOption * option, Q
     }
     case PE_FrameTabWidget : {
       // Frame for tab widgets (contents)
-      renderFrame(p,r,fs,fs.element+"-"+st);
+      renderFrame(p,r,fs,fs.element+"-raised-"+st);
       break;
     }
     case PE_FrameLineEdit : {

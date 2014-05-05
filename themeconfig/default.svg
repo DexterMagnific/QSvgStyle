@@ -42,8 +42,8 @@
      showguides="true"
      inkscape:guide-bbox="true"
      inkscape:zoom="1.8667619"
-     inkscape:cx="206.29183"
-     inkscape:cy="-437.75913"
+     inkscape:cx="265.84217"
+     inkscape:cy="1108.2524"
      inkscape:window-x="-2"
      inkscape:window-y="-3"
      inkscape:window-maximized="1"
@@ -267,7 +267,7 @@
        id="ea"
        gradientUnits="userSpaceOnUse"
        x2="0"
-       gradientTransform="translate(-456 53)"
+       gradientTransform="translate(-456,53)"
        y1="-52.86"
        y2="-130.4">
       <stop
@@ -1255,7 +1255,7 @@
        y2="40"
        x2="0"
        y1="25"
-       gradientTransform="matrix(1.25 0 0 1-41.25 0)"
+       gradientTransform="matrix(1.25,0,0,1,-41.25,0)"
        gradientUnits="userSpaceOnUse"
        id="linearGradient5711"
        xlink:href="#by"
@@ -1335,7 +1335,7 @@
        xlink:href="#by"
        id="linearGradient5880"
        gradientUnits="userSpaceOnUse"
-       gradientTransform="matrix(1.25 0 0 1-41.25 0)"
+       gradientTransform="matrix(1.25,0,0,1,-41.25,0)"
        y1="25"
        x2="0"
        y2="40" />
@@ -1344,7 +1344,7 @@
        xlink:href="#av"
        id="linearGradient5882"
        gradientUnits="userSpaceOnUse"
-       gradientTransform="matrix(1.25 0 0 1-40 .000001)"
+       gradientTransform="matrix(1.25,0,0,1,-40,1e-6)"
        y1="25"
        x2="0"
        y2="40" />
@@ -1353,7 +1353,7 @@
        xlink:href="#by"
        id="linearGradient5884"
        gradientUnits="userSpaceOnUse"
-       gradientTransform="matrix(1.25 0 0 1-45 0)"
+       gradientTransform="matrix(1.25,0,0,1,-45,0)"
        y1="25"
        x2="0"
        y2="40" />
@@ -1362,7 +1362,7 @@
        xlink:href="#aa"
        id="linearGradient5886"
        gradientUnits="userSpaceOnUse"
-       gradientTransform="translate(-456-53)"
+       gradientTransform="translate(-456,-53)"
        y1="52.86"
        x2="0"
        y2="130.4" />
@@ -3796,6 +3796,402 @@
        id="radialGradient14735"
        xlink:href="#y-2-0"
        inkscape:collect="always" />
+    <linearGradient
+       id="bo-8-7">
+      <stop
+         id="stop3052-8-3"
+         style="stop-color:#d8d8d8" />
+      <stop
+         offset="1"
+         id="stop3054-7-5"
+         style="stop-color:#c4c4c4" />
+    </linearGradient>
+    <linearGradient
+       x2="180"
+       x1="123"
+       gradientUnits="userSpaceOnUse"
+       id="linearGradient6562-85"
+       xlink:href="#bj-9-6"
+       inkscape:collect="always" />
+    <linearGradient
+       id="bj-9-6">
+      <stop
+         id="stop3027-1-5"
+         style="stop-color:#c4c4c4" />
+      <stop
+         offset="1"
+         id="stop3029-7-0"
+         style="stop-color:#c4c4c4" />
+    </linearGradient>
+    <linearGradient
+       x2="195"
+       x1="187.5"
+       gradientUnits="userSpaceOnUse"
+       id="linearGradient6554-3"
+       xlink:href="#bj-9-6"
+       inkscape:collect="always" />
+    <linearGradient
+       y2="40"
+       x2="0"
+       y1="25"
+       gradientTransform="matrix(1.25,0,0,1,-47.5,-65)"
+       gradientUnits="userSpaceOnUse"
+       id="linearGradient6556-2"
+       xlink:href="#ay-6"
+       inkscape:collect="always" />
+    <linearGradient
+       id="ay-6">
+      <stop
+         id="stop3072-7"
+         style="stop-color:#fff;stop-opacity:.6902" />
+      <stop
+         offset="1"
+         id="stop3074-0"
+         style="stop-color:#fff;stop-opacity:0" />
+    </linearGradient>
+    <linearGradient
+       y2="40"
+       x2="0"
+       y1="25"
+       gradientTransform="matrix(1.25,0,0,1,-45,0)"
+       gradientUnits="userSpaceOnUse"
+       id="linearGradient6558-15"
+       xlink:href="#a-7"
+       inkscape:collect="always" />
+    <linearGradient
+       id="a-7"
+       gradientUnits="userSpaceOnUse"
+       y1="25"
+       gradientTransform="matrix(1.25,0,0,1,-45,0)"
+       x2="0"
+       y2="40">
+      <stop
+         id="stop3165-9"
+         style="stop-color:#707070" />
+      <stop
+         offset="1"
+         id="stop3167-4"
+         style="stop-color:#828282" />
+    </linearGradient>
+    <linearGradient
+       y2="25"
+       x2="0"
+       y1="40"
+       gradientTransform="translate(-378.7,-65)"
+       gradientUnits="userSpaceOnUse"
+       id="linearGradient6560-9"
+       xlink:href="#bn-8"
+       inkscape:collect="always" />
+    <linearGradient
+       id="bn-8">
+      <stop
+         id="stop3047-3"
+         style="stop-color:#a8a8a8" />
+      <stop
+         offset="1"
+         id="stop3049-6"
+         style="stop-color:#b0b0b0" />
+    </linearGradient>
+    <radialGradient
+       r="1.875"
+       cy="32.52"
+       cx="191.2"
+       gradientTransform="matrix(7.5,-0.0506,0.108,4,-1629,-87.99)"
+       gradientUnits="userSpaceOnUse"
+       id="radialGradient6568-9"
+       xlink:href="#br-9"
+       inkscape:collect="always" />
+    <linearGradient
+       id="br-9">
+      <stop
+         id="stop3191-0"
+         style="stop-color:#fff;stop-opacity:.25098" />
+      <stop
+         offset="1"
+         id="stop3193-5"
+         style="stop-color:#fff;stop-opacity:0" />
+    </linearGradient>
+    <radialGradient
+       r="1.875"
+       cy="32.52"
+       cx="191.2"
+       gradientTransform="matrix(3.75,-0.051,0.054,4.025,-527.7,-88.7)"
+       gradientUnits="userSpaceOnUse"
+       id="radialGradient6570-4"
+       xlink:href="#e-1"
+       inkscape:collect="always" />
+    <radialGradient
+       id="e-1"
+       gradientUnits="userSpaceOnUse"
+       cy="32.52"
+       cx="191.2"
+       gradientTransform="matrix(3.75,-0.051,0.054,4.025,-527.7,-88.7)"
+       r="1.875">
+      <stop
+         id="stop3170-3"
+         style="stop-color:#fff;stop-opacity:.007843" />
+      <stop
+         offset="1"
+         id="stop3172-1"
+         style="stop-color:#fff;stop-opacity:0" />
+    </radialGradient>
+    <radialGradient
+       r="1.875"
+       cy="32.549999"
+       cx="180.5"
+       gradientTransform="matrix(3.721,3.83e-6,-4.09e-6,4.025,-491.1,-98.46)"
+       gradientUnits="userSpaceOnUse"
+       id="radialGradient6572-5"
+       xlink:href="#bo-8-7"
+       inkscape:collect="always" />
+    <radialGradient
+       r="212.8"
+       cy="731.20001"
+       cx="899.09998"
+       gradientTransform="matrix(0.235,-2.411e-5,1e-7,0.1034,-62.56,-523.2)"
+       gradientUnits="userSpaceOnUse"
+       id="radialGradient6135"
+       xlink:href="#bo-8-7"
+       inkscape:collect="always" />
+    <linearGradient
+       x2="195"
+       x1="187.5"
+       gradientUnits="userSpaceOnUse"
+       id="linearGradient6137"
+       xlink:href="#bj-9-6"
+       inkscape:collect="always" />
+    <linearGradient
+       y2="40"
+       x2="0"
+       y1="25"
+       gradientTransform="matrix(1.25,0,0,1,-47.5,-65)"
+       gradientUnits="userSpaceOnUse"
+       id="linearGradient6139"
+       xlink:href="#ay-6"
+       inkscape:collect="always" />
+    <linearGradient
+       y2="40"
+       x2="0"
+       y1="25"
+       gradientTransform="matrix(1.25,0,0,1,-45,0)"
+       gradientUnits="userSpaceOnUse"
+       id="linearGradient6141"
+       xlink:href="#a-7"
+       inkscape:collect="always" />
+    <linearGradient
+       y2="25"
+       x2="0"
+       y1="40"
+       gradientTransform="translate(-378.7,-65)"
+       gradientUnits="userSpaceOnUse"
+       id="linearGradient6143"
+       xlink:href="#bn-8"
+       inkscape:collect="always" />
+    <linearGradient
+       x2="180"
+       x1="123"
+       gradientUnits="userSpaceOnUse"
+       id="linearGradient6145"
+       xlink:href="#bj-9-6"
+       inkscape:collect="always" />
+    <linearGradient
+       x2="180"
+       x1="123"
+       gradientUnits="userSpaceOnUse"
+       id="linearGradient6147"
+       xlink:href="#bj-9-6"
+       inkscape:collect="always" />
+    <linearGradient
+       x2="180"
+       x1="123"
+       gradientUnits="userSpaceOnUse"
+       id="linearGradient6149"
+       xlink:href="#bj-9-6"
+       inkscape:collect="always" />
+    <radialGradient
+       r="1.875"
+       cy="32.52"
+       cx="191.2"
+       gradientTransform="matrix(7.5,-0.0506,0.108,4,-1629,-87.99)"
+       gradientUnits="userSpaceOnUse"
+       id="radialGradient6151"
+       xlink:href="#br-9"
+       inkscape:collect="always" />
+    <radialGradient
+       r="1.875"
+       cy="32.52"
+       cx="191.2"
+       gradientTransform="matrix(3.75,-0.051,0.054,4.025,-527.7,-88.7)"
+       gradientUnits="userSpaceOnUse"
+       id="radialGradient6153"
+       xlink:href="#e-1"
+       inkscape:collect="always" />
+    <radialGradient
+       r="1.875"
+       cy="32.549999"
+       cx="180.5"
+       gradientTransform="matrix(3.721,3.83e-6,-4.09e-6,4.025,-491.1,-98.46)"
+       gradientUnits="userSpaceOnUse"
+       id="radialGradient6155"
+       xlink:href="#bo-8-7"
+       inkscape:collect="always" />
+    <linearGradient
+       x2="195"
+       x1="187.5"
+       gradientUnits="userSpaceOnUse"
+       id="linearGradient6157"
+       xlink:href="#bj-9-6"
+       inkscape:collect="always" />
+    <linearGradient
+       y2="40"
+       x2="0"
+       y1="25"
+       gradientTransform="matrix(1.25,0,0,1,-47.5,-65)"
+       gradientUnits="userSpaceOnUse"
+       id="linearGradient6159"
+       xlink:href="#ay-6"
+       inkscape:collect="always" />
+    <linearGradient
+       y2="40"
+       x2="0"
+       y1="25"
+       gradientTransform="matrix(1.25,0,0,1,-45,0)"
+       gradientUnits="userSpaceOnUse"
+       id="linearGradient6161"
+       xlink:href="#a-7"
+       inkscape:collect="always" />
+    <linearGradient
+       y2="25"
+       x2="0"
+       y1="40"
+       gradientTransform="translate(-378.7,-65)"
+       gradientUnits="userSpaceOnUse"
+       id="linearGradient6163"
+       xlink:href="#bn-8"
+       inkscape:collect="always" />
+    <linearGradient
+       x2="180"
+       x1="123"
+       gradientUnits="userSpaceOnUse"
+       id="linearGradient6165"
+       xlink:href="#bj-9-6"
+       inkscape:collect="always" />
+    <linearGradient
+       x2="195"
+       x1="187.5"
+       gradientUnits="userSpaceOnUse"
+       id="linearGradient6167"
+       xlink:href="#bj-9-6"
+       inkscape:collect="always" />
+    <linearGradient
+       y2="40"
+       x2="0"
+       y1="25"
+       gradientTransform="matrix(1.25,0,0,1,-47.5,-65)"
+       gradientUnits="userSpaceOnUse"
+       id="linearGradient6169"
+       xlink:href="#ay-6"
+       inkscape:collect="always" />
+    <linearGradient
+       y2="40"
+       x2="0"
+       y1="25"
+       gradientTransform="matrix(1.25,0,0,1,-45,0)"
+       gradientUnits="userSpaceOnUse"
+       id="linearGradient6171"
+       xlink:href="#a-7"
+       inkscape:collect="always" />
+    <linearGradient
+       y2="25"
+       x2="0"
+       y1="40"
+       gradientTransform="translate(-378.7,-65)"
+       gradientUnits="userSpaceOnUse"
+       id="linearGradient6173"
+       xlink:href="#bn-8"
+       inkscape:collect="always" />
+    <linearGradient
+       x2="180"
+       x1="123"
+       gradientUnits="userSpaceOnUse"
+       id="linearGradient6175"
+       xlink:href="#bj-9-6"
+       inkscape:collect="always" />
+    <linearGradient
+       x2="180"
+       x1="123"
+       gradientUnits="userSpaceOnUse"
+       id="linearGradient6177"
+       xlink:href="#bj-9-6"
+       inkscape:collect="always" />
+    <linearGradient
+       x2="180"
+       x1="123"
+       gradientUnits="userSpaceOnUse"
+       id="linearGradient6179"
+       xlink:href="#bj-9-6"
+       inkscape:collect="always" />
+    <radialGradient
+       r="212.8"
+       cy="731.20001"
+       cx="899.09998"
+       gradientTransform="matrix(0.235,-2.411e-5,1e-7,0.1034,-62.56,-523.2)"
+       gradientUnits="userSpaceOnUse"
+       id="radialGradient6181"
+       xlink:href="#bo-8-7"
+       inkscape:collect="always" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#dy"
+       id="linearGradient6698"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(53,456)"
+       x1="-52.86"
+       x2="-130.4" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#dy"
+       id="linearGradient6700"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(53,456)"
+       x1="-52.86"
+       x2="-130.4" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#aa"
+       id="linearGradient6702"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(-456,-53)"
+       y1="52.86"
+       x2="0"
+       y2="130.4" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#aa"
+       id="linearGradient6704"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(-456,-53)"
+       y1="52.86"
+       x2="0"
+       y2="130.4" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#aa"
+       id="linearGradient6706"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(-456,-53)"
+       y1="52.86"
+       x2="0"
+       y2="130.4" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#aa"
+       id="linearGradient6708"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(-456,-53)"
+       y1="52.86"
+       x2="0"
+       y2="130.4" />
   </defs>
   <text
      line-height="125%"
@@ -3811,7 +4207,7 @@
   </text>
   <text
      line-height="normal"
-     y="367"
+     y="475"
      x="90"
      id="text3444"
      block-progression="tb"
@@ -3819,7 +4215,7 @@
      text-transform="none"
      style="font-size:10px;text-indent:0;line-height:normal;text-transform:none;color:#000000;font-family:cmr10">
     <tspan
-       y="367"
+       y="475"
        x="90"
        id="tspan3446">Radio button</tspan>
   </text>
@@ -3839,7 +4235,7 @@
   </text>
   <text
      line-height="normal"
-     y="1655"
+     y="1763"
      x="90"
      id="text3470"
      block-progression="tb"
@@ -3847,13 +4243,13 @@
      text-transform="none"
      style="font-size:10px;text-indent:0;line-height:normal;text-transform:none;color:#000000;font-family:cmr10">
     <tspan
-       y="1655"
+       y="1763"
        x="90"
        id="tspan3472">Size Grip</tspan>
   </text>
   <text
      line-height="normal"
-     y="1726"
+     y="1834"
      x="90"
      id="text3474"
      block-progression="tb"
@@ -3861,13 +4257,13 @@
      text-transform="none"
      style="font-size:10px;text-indent:0;line-height:normal;text-transform:none;color:#000000;font-family:cmr10">
     <tspan
-       y="1726"
+       y="1834"
        x="90"
        id="tspan3476">MdiControls</tspan>
   </text>
   <text
      line-height="normal"
-     y="1701"
+     y="1809"
      x="181"
      id="text3478"
      block-progression="tb"
@@ -3875,13 +4271,13 @@
      text-transform="none"
      style="font-size:10px;text-indent:0;line-height:normal;text-transform:none;color:#000000;font-family:cmr10">
     <tspan
-       y="1701"
+       y="1809"
        x="181"
        id="tspan3480">Maximize</tspan>
   </text>
   <g
      id="mdi-maximize-normal"
-     transform="matrix(0.52217116,0.52217116,-0.52217116,0.52217116,512.68037,1632.5482)"
+     transform="matrix(0.52217116,0.52217116,-0.52217116,0.52217116,512.68037,1740.5482)"
      style="fill:none;stroke:#000000">
     <rect
        style="opacity:0;fill:#800000;fill-opacity:1;stroke:none"
@@ -3953,7 +4349,7 @@
   </g>
   <text
      line-height="normal"
-     y="1701"
+     y="1809"
      x="235"
      id="text3501"
      block-progression="tb"
@@ -3961,13 +4357,13 @@
      text-transform="none"
      style="font-size:10px;text-indent:0;line-height:normal;text-transform:none;color:#000000;fill:#000000;font-family:cmr10">
     <tspan
-       y="1701"
+       y="1809"
        x="235"
        id="tspan3503">Minimize</tspan>
   </text>
   <g
      id="mdi-minimize-normal"
-     transform="matrix(0.73846154,0,0,0.73846154,127.02624,1251.4199)"
+     transform="matrix(0.73846154,0,0,0.73846154,127.02624,1359.4199)"
      style="stroke:#000000">
     <rect
        style="opacity:0;fill:#800000;fill-opacity:1;stroke:none"
@@ -3993,7 +4389,7 @@
   </g>
   <text
      line-height="normal"
-     y="1701"
+     y="1809"
      x="293"
      id="text3514"
      block-progression="tb"
@@ -4001,13 +4397,13 @@
      text-transform="none"
      style="font-size:10px;text-indent:0;line-height:normal;text-transform:none;color:#000000;font-family:cmr10">
     <tspan
-       y="1701"
+       y="1809"
        x="293"
        id="tspan3516">Close</tspan>
   </text>
   <g
      id="mdi-close-normal"
-     transform="matrix(0,0.73846154,-0.73846154,0,742.23392,1558.6402)"
+     transform="matrix(0,0.73846154,-0.73846154,0,742.23392,1666.6402)"
      style="stroke:#000000">
     <rect
        style="opacity:0;fill:#800000;fill-opacity:1;stroke:none"
@@ -4102,7 +4498,7 @@
   </g>
   <g
      id="sizegrip-disabled"
-     transform="matrix(-2.8330603,2.8330603,-2.8330603,-2.8330603,2115.7869,1424.7353)"
+     transform="matrix(-2.8330603,2.8330603,-2.8330603,-2.8330603,2115.7869,1532.7353)"
      style="stroke:#808080">
     <g
        transform="matrix(1,0,0,-1,184.8,354.8)"
@@ -4122,7 +4518,7 @@
   </g>
   <g
      id="sizegrip-normal"
-     transform="matrix(-2.290872,2.290872,-2.290872,-2.290872,1589.1829,1468.0615)"
+     transform="matrix(-2.290872,2.290872,-2.290872,-2.290872,1589.1829,1576.0615)"
      style="fill:none">
     <g
        transform="matrix(1,0,0,-1,184.8,355.8)"
@@ -4157,7 +4553,7 @@
   </g>
   <g
      id="sizegrip-hovered"
-     transform="matrix(-2.4441403,2.4441403,-2.4441403,-2.4441403,1732.0059,1455.9784)"
+     transform="matrix(-2.4441403,2.4441403,-2.4441403,-2.4441403,1732.0059,1563.9784)"
      style="fill:none">
     <g
        transform="matrix(1,0,0,-1,184.8,355.8)"
@@ -4192,7 +4588,7 @@
   </g>
   <g
      id="sizegrip-pressed"
-     transform="matrix(-2.3930509,2.3930509,-2.3930509,-2.3930509,1750.0043,1460.5111)"
+     transform="matrix(-2.3930509,2.3930509,-2.3930509,-2.3930509,1750.0043,1568.5111)"
      style="fill:none">
     <g
        transform="matrix(1,0,0,-1,184.8,355.8)"
@@ -4227,7 +4623,7 @@
   </g>
   <g
      id="sizegrip-toggled"
-     transform="matrix(-2.7506769,2.7506769,-2.7506769,-2.7506769,2011.5913,1431.2442)"
+     transform="matrix(-2.7506769,2.7506769,-2.7506769,-2.7506769,2011.5913,1539.2442)"
      style="fill:none">
     <g
        transform="matrix(1,0,0,-1,184.8,355.8)"
@@ -4262,7 +4658,7 @@
   </g>
   <text
      line-height="normal"
-     y="954"
+     y="1062"
      x="435"
      id="text3605"
      block-progression="tb"
@@ -4270,13 +4666,13 @@
      text-transform="none"
      style="font-size:10px;text-indent:0;line-height:normal;text-transform:none;color:#000000;fill:#000000;font-family:cmr10">
     <tspan
-       y="954"
+       y="1062"
        x="435"
        id="tspan3607">Separator</tspan>
   </text>
   <g
      id="menuitem-separator"
-     transform="matrix(4.8,0,0,-1.614,320,1838.6515)"
+     transform="matrix(4.8,0,0,-1.614,320,1946.6515)"
      style="opacity:0.8;fill-rule:evenodd"
      inkscape:label="#menu-separator">
     <path
@@ -4320,105 +4716,105 @@
   </text>
   <text
      line-height="normal"
-     y="205"
+     y="195"
      x="90"
      id="text3697"
      block-progression="tb"
      text-indent="0"
      text-transform="none"
-     style="font-size:10;font-family:cmr10;fill:#000000;color:#000000">
+     style="font-size:10px;text-indent:0;line-height:normal;text-transform:none;color:#000000;fill:#000000;font-family:cmr10">
     <tspan
-       y="205"
+       y="195"
        x="90"
        id="tspan3699">Frame</tspan>
   </text>
   <g
-     id="commonframe-disabled-topright"
-     transform="translate(455 163.6)"
+     id="frame-raised-disabled-topright"
+     transform="translate(455,173.6)"
      inkscape:label="#frameframe-disabled-topright"
      style="fill-rule:evenodd">
     <path
-       d="m-43 12.36l0 5c6 0 10 4 10 10l5 0c0-10-5-15-15-15"
+       d="m -43,12.36 0,5 c 6,0 10,4 10,10 l 5,0 c 0,-10 -5,-15 -15,-15"
        id="path3702"
        inkscape:connector-curvature="0"
-       style="fill:url(#linearGradient5886);opacity:.8" />
+       style="opacity:0.8;fill:url(#linearGradient5886)" />
     <path
-       d="m-43 20.36l0 7 7 0c0-5-2-7-7-7"
+       d="m -43,20.36 0,7 7,0 c 0,-5 -2,-7 -7,-7"
        id="path3704"
        inkscape:connector-curvature="0"
-       style="fill:#cccccc;opacity:.8" />
+       style="opacity:0.8;fill:#cccccc" />
     <path
-       d="m-43 17.36l0 3c5 0 7 2 7 7l3 0c0-6-4-10-10-10"
+       d="m -43,17.36 0,3 c 5,0 7,2 7,7 l 3,0 c 0,-6 -4,-10 -10,-10"
        id="path3706"
        inkscape:connector-curvature="0"
-       style="fill:#808080;opacity:.8" />
+       style="opacity:0.8;fill:#808080" />
   </g>
   <g
-     id="commonframe-disabled-topleft"
-     transform="translate(455 163.6)"
+     id="frame-raised-disabled-topleft"
+     transform="translate(455,173.6)"
      inkscape:label="#frameframe-disabled-topleft"
      style="fill-rule:evenodd">
     <path
-       d="m-60 12.36l0 5c-6 0-10 4-10 10l-5 0c0-10 5-15 15-15"
+       d="m -60,12.36 0,5 c -6,0 -10,4 -10,10 l -5,0 c 0,-10 5,-15 15,-15"
        id="path3709"
        inkscape:connector-curvature="0"
-       style="fill:url(#linearGradient5886);opacity:.8" />
+       style="opacity:0.8;fill:url(#linearGradient6708)" />
     <path
-       d="m-60 20.36l0 7-7 0c0-5 2-7 7-7"
+       d="m -60,20.36 0,7 -7,0 c 0,-5 2,-7 7,-7"
        id="path3711"
        inkscape:connector-curvature="0"
-       style="fill:#cccccc;opacity:.8" />
+       style="opacity:0.8;fill:#cccccc" />
     <path
-       d="m-60 17.36l0 3c-5 0-7 2-7 7l-3 0c0-6 4-10 10-10"
+       d="m -60,17.36 0,3 c -5,0 -7,2 -7,7 l -3,0 c 0,-6 4,-10 10,-10"
        id="path3713"
        inkscape:connector-curvature="0"
-       style="fill:#808080;opacity:.8" />
+       style="opacity:0.8;fill:#808080" />
   </g>
   <g
-     id="commonframe-disabled-bottomright"
-     transform="translate(455 163.6)"
+     id="frame-raised-disabled-bottomright"
+     transform="translate(455,173.6)"
      inkscape:label="#frameframe-disabled-bottomright"
      style="fill-rule:evenodd">
     <path
-       d="m-43 59.36l0-5c6 0 10-4 10-10l5 0c0 10-5 15-15 15"
+       d="m -43,59.36 0,-5 c 6,0 10,-4 10,-10 l 5,0 c 0,10 -5,15 -15,15"
        id="path3716"
        inkscape:connector-curvature="0"
-       style="fill:url(#linearGradient5886);opacity:.8" />
+       style="opacity:0.8;fill:url(#linearGradient6706)" />
     <path
-       d="m-43 51.36l0-7 7 0c0 5-2 7-7 7"
+       d="m -43,51.36 0,-7 7,0 c 0,5 -2,7 -7,7"
        id="path3718"
        inkscape:connector-curvature="0"
-       style="fill:#cccccc;opacity:.8" />
+       style="opacity:0.8;fill:#cccccc" />
     <path
-       d="m-43 54.36l0-3c5 0 7-2 7-7l3 0c0 6-4 10-10 10"
+       d="m -43,54.36 0,-3 c 5,0 7,-2 7,-7 l 3,0 c 0,6 -4,10 -10,10"
        id="path3720"
        inkscape:connector-curvature="0"
-       style="fill:#808080;opacity:.8" />
+       style="opacity:0.8;fill:#808080" />
   </g>
   <g
-     id="commonframe-disabled-bottomleft"
-     transform="translate(455 163.6)"
+     id="frame-raised-disabled-bottomleft"
+     transform="translate(455,173.6)"
      inkscape:label="#frameframe-disabled-bottomleft"
      style="fill-rule:evenodd">
     <path
-       d="m-60 59.36l0-5c-6 0-10-4-10-10l-5 0c0 10 5 15 15 15"
+       d="m -60,59.36 0,-5 c -6,0 -10,-4 -10,-10 l -5,0 c 0,10 5,15 15,15"
        id="path3723"
        inkscape:connector-curvature="0"
-       style="fill:url(#linearGradient5886);opacity:.8" />
+       style="opacity:0.8;fill:url(#linearGradient6704)" />
     <path
-       d="m-60 51.36l0-7-7 0c0 5 2 7 7 7"
+       d="m -60,51.36 0,-7 -7,0 c 0,5 2,7 7,7"
        id="path3725"
        inkscape:connector-curvature="0"
-       style="fill:#cccccc;opacity:.8" />
+       style="opacity:0.8;fill:#cccccc" />
     <path
-       d="m-60 54.36l0-3c-5 0-7-2-7-7l-3 0c0 6 4 10 10 10"
+       d="m -60,54.36 0,-3 c -5,0 -7,-2 -7,-7 l -3,0 c 0,6 4,10 10,10"
        id="path3727"
        inkscape:connector-curvature="0"
-       style="fill:#808080;opacity:.8" />
+       style="opacity:0.8;fill:#808080" />
   </g>
   <g
-     id="commonframe-disabled-top"
-     transform="translate(455 162.86914)"
+     id="frame-raised-disabled-top"
+     transform="translate(455,172.86914)"
      inkscape:label="#frameframe-disabled-top"
      style="fill-rule:evenodd">
     <rect
@@ -4427,115 +4823,115 @@
        y="12.36"
        x="-59"
        id="rect3730"
-       style="fill:url(#linearGradient5886);opacity:.8" />
+       style="opacity:0.8;fill:url(#linearGradient6702)" />
     <rect
        height="7"
        width="15"
        y="20.360001"
        x="-59"
        id="rect3732"
-       style="fill:#cccccc;opacity:.8" />
+       style="opacity:0.8;fill:#cccccc" />
     <rect
        height="3"
        width="15"
        y="17.360001"
        x="-59"
        id="rect3734"
-       style="fill:#808080;opacity:.8" />
+       style="opacity:0.8;fill:#808080" />
   </g>
   <g
-     id="commonframe-disabled-bottom"
-     transform="translate(455 163.6)"
+     id="frame-raised-disabled-bottom"
+     transform="translate(455,173.6)"
      inkscape:label="#frameframe-disabled-bottom"
      style="fill-rule:evenodd">
     <rect
-       transform="scale(1-1)"
+       transform="scale(1,-1)"
        height="5"
        width="15"
-       y="-59.36"
+       y="-59.360001"
        x="-59"
        id="rect3737"
-       style="fill:url(#ea);opacity:.8" />
+       style="opacity:0.8;fill:url(#ea)" />
     <rect
-       transform="scale(1-1)"
+       transform="scale(1,-1)"
        height="7"
        width="15"
-       y="-51.36"
+       y="-51.360001"
        x="-59"
        id="rect3739"
-       style="fill:#cccccc;opacity:.8" />
+       style="opacity:0.8;fill:#cccccc" />
     <rect
-       transform="scale(1-1)"
+       transform="scale(1,-1)"
        height="3"
        width="15"
-       y="-54.36"
+       y="-54.360001"
        x="-59"
        id="rect3741"
-       style="fill:#808080;opacity:.8" />
+       style="opacity:0.8;fill:#808080" />
   </g>
   <g
-     id="commonframe-disabled-left"
-     transform="translate(455 163.6)"
+     id="frame-raised-disabled-left"
+     transform="translate(455,173.6)"
      inkscape:label="#frameframe-disabled-left"
      style="fill-rule:evenodd">
     <rect
-       transform="matrix(0-1 1 0 0 0)"
+       transform="matrix(0,-1,1,0,0,0)"
        height="5"
        width="15"
        y="-75"
-       x="-43.36"
+       x="-43.360001"
        id="rect3744"
-       style="fill:url(#dy);opacity:.8" />
+       style="opacity:0.8;fill:url(#linearGradient6700)" />
     <rect
-       transform="matrix(0-1 1 0 0 0)"
+       transform="matrix(0,-1,1,0,0,0)"
        height="7"
        width="15"
        y="-67"
-       x="-43.36"
+       x="-43.360001"
        id="rect3746"
-       style="fill:#cccccc;opacity:.8" />
+       style="opacity:0.8;fill:#cccccc" />
     <rect
-       transform="matrix(0-1 1 0 0 0)"
+       transform="matrix(0,-1,1,0,0,0)"
        height="3"
        width="15"
        y="-70"
-       x="-43.36"
+       x="-43.360001"
        id="rect3748"
-       style="fill:#808080;opacity:.8" />
+       style="opacity:0.8;fill:#808080" />
   </g>
   <g
-     id="commonframe-disabled-right"
-     transform="translate(455 163.6)"
+     id="frame-raised-disabled-right"
+     transform="translate(455,173.6)"
      inkscape:label="#frameframe-disabled-right"
      style="fill-rule:evenodd">
     <rect
-       transform="matrix(0-1-1 0 0 0)"
+       transform="matrix(0,-1,-1,0,0,0)"
        height="5"
        width="15"
        y="28"
-       x="-43.36"
+       x="-43.360001"
        id="rect3751"
-       style="fill:url(#dy);opacity:.8" />
+       style="opacity:0.8;fill:url(#linearGradient6698)" />
     <rect
-       transform="matrix(0-1-1 0 0 0)"
+       transform="matrix(0,-1,-1,0,0,0)"
        height="7"
        width="15"
        y="36"
-       x="-43.36"
+       x="-43.360001"
        id="rect3753"
-       style="fill:#cccccc;opacity:.8" />
+       style="opacity:0.8;fill:#cccccc" />
     <rect
-       transform="matrix(0-1-1 0 0 0)"
+       transform="matrix(0,-1,-1,0,0,0)"
        height="3"
        width="15"
        y="33"
-       x="-43.36"
+       x="-43.360001"
        id="rect3755"
-       style="fill:#808080;opacity:.8" />
+       style="opacity:0.8;fill:#808080" />
   </g>
   <g
-     id="commonframe-disabled"
-     transform="translate(455 163.6)"
+     id="frame-raised-disabled"
+     transform="translate(455,173.6)"
      inkscape:label="#frame-disabled">
     <rect
        height="15"
@@ -4543,11 +4939,11 @@
        y="28.360001"
        x="-59"
        id="rect3758"
-       style="fill:#cccccc;opacity:.8;fill-rule:evenodd" />
+       style="opacity:0.8;fill:#cccccc;fill-rule:evenodd" />
   </g>
   <text
      line-height="normal"
-     y="437"
+     y="545"
      x="115"
      id="text3819"
      block-progression="tb"
@@ -4555,13 +4951,13 @@
      text-transform="none"
      style="font-size:10px;text-indent:0;line-height:normal;text-transform:none;color:#000000;font-family:cmr10">
     <tspan
-       y="437"
+       y="545"
        x="115"
        id="tspan3821">Checked</tspan>
   </text>
   <text
      line-height="125%"
-     y="387"
+     y="495"
      x="115"
      id="text3823"
      block-progression="tb"
@@ -4570,14 +4966,14 @@
      style="font-size:10px;text-indent:0;line-height:125%;letter-spacing:0;word-spacing:0;text-transform:none;color:#000000;font-family:umr10"
      sodipodi:linespacing="125%">
     <tspan
-       y="387"
+       y="495"
        x="115"
        id="tspan3825"
        style="font-family:cmr10">Unchecked</tspan>
   </text>
   <text
      line-height="normal"
-     y="480.91992"
+     y="588.91992"
      x="89.99897"
      id="text3827"
      block-progression="tb"
@@ -4585,13 +4981,13 @@
      text-transform="none"
      style="font-size:10px;text-indent:0;line-height:normal;text-transform:none;color:#000000;font-family:cmr10">
     <tspan
-       y="480.91992"
+       y="588.91992"
        x="89.99897"
        id="tspan3829">Check button</tspan>
   </text>
   <text
      line-height="normal"
-     y="552"
+     y="660"
      x="115"
      id="text3831"
      block-progression="tb"
@@ -4599,13 +4995,13 @@
      text-transform="none"
      style="font-size:10px;text-indent:0;line-height:normal;text-transform:none;color:#000000;font-family:cmr10">
     <tspan
-       y="552"
+       y="660"
        x="115"
        id="tspan3833">Checked</tspan>
   </text>
   <text
      line-height="125%"
-     y="502"
+     y="610"
      x="115"
      id="text3835"
      block-progression="tb"
@@ -4614,14 +5010,14 @@
      style="font-size:10px;text-indent:0;line-height:125%;letter-spacing:0;word-spacing:0;text-transform:none;color:#000000;font-family:umr10"
      sodipodi:linespacing="125%">
     <tspan
-       y="502"
+       y="610"
        x="115"
        id="tspan3837"
        style="font-family:cmr10">Unchecked</tspan>
   </text>
   <g
      id="checkbox-tristate-normal"
-     transform="translate(87,142.6)">
+     transform="translate(87,250.6)">
     <rect
        rx="7.2909999"
        ry="7.1490002"
@@ -4665,7 +5061,7 @@
   </g>
   <g
      id="arrow-plus-normal"
-     transform="matrix(1.256,1.256,-1.256,1.256,315.6,1557.4)"
+     transform="matrix(1.256,1.256,-1.256,1.256,315.6,1665.4)"
      style="fill-rule:evenodd">
     <rect
        transform="matrix(0.7071,0.7071,-0.7071,0.7071,0,0)"
@@ -4684,7 +5080,7 @@
   </g>
   <g
      id="arrow-plus-hovered"
-     transform="matrix(1.256,1.256,-1.256,1.256,365.6,1557.4)"
+     transform="matrix(1.256,1.256,-1.256,1.256,365.6,1665.4)"
      style="fill-rule:evenodd">
     <rect
        transform="matrix(0.7071,0.7071,-0.7071,0.7071,0,0)"
@@ -4703,7 +5099,7 @@
   </g>
   <g
      id="arrow-plus-pressed"
-     transform="matrix(1.256,1.256,-1.256,1.256,415.6,1557.4)"
+     transform="matrix(1.256,1.256,-1.256,1.256,415.6,1665.4)"
      style="fill-rule:evenodd">
     <rect
        transform="matrix(0.7071,0.7071,-0.7071,0.7071,0,0)"
@@ -4722,7 +5118,7 @@
   </g>
   <g
      id="arrow-plus-toggled"
-     transform="matrix(1.256,1.256,-1.256,1.256,465.1,1557.4)"
+     transform="matrix(1.256,1.256,-1.256,1.256,465.1,1665.4)"
      style="fill-rule:evenodd">
     <rect
        transform="matrix(0.7071,0.7071,-0.7071,0.7071,0,0)"
@@ -4741,7 +5137,7 @@
   </g>
   <g
      id="arrow-plus-disabled"
-     transform="matrix(1.256,1.256,-1.256,1.256,520.1,1557.4)"
+     transform="matrix(1.256,1.256,-1.256,1.256,520.1,1665.4)"
      style="fill:#808080;fill-rule:evenodd">
     <rect
        transform="matrix(0.7071,0.7071,-0.7071,0.7071,0,0)"
@@ -4760,7 +5156,7 @@
   </g>
   <g
      id="arrow-minus-normal"
-     transform="matrix(1.256,1.256,-1.256,1.256,315.6,1411.6)">
+     transform="matrix(1.256,1.256,-1.256,1.256,315.6,1519.6)">
     <rect
        transform="matrix(0.70710678,0.70710678,-0.70710678,0.70710678,0,0)"
        height="12.49988"
@@ -4780,7 +5176,7 @@
   </g>
   <g
      id="arrow-minus-hovered"
-     transform="matrix(1.256,1.256,-1.256,1.256,365.6,1592.1)">
+     transform="matrix(1.256,1.256,-1.256,1.256,365.6,1700.1)">
     <rect
        transform="matrix(0.70710678,0.70710678,-0.70710678,0.70710678,0,0)"
        height="12.49988"
@@ -4800,7 +5196,7 @@
   </g>
   <g
      id="arrow-minus-pressed"
-     transform="matrix(1.256,1.256,-1.256,1.256,415.6,1592.1)">
+     transform="matrix(1.256,1.256,-1.256,1.256,415.6,1700.1)">
     <rect
        transform="matrix(0.70710678,0.70710678,-0.70710678,0.70710678,0,0)"
        height="12.49988"
@@ -4820,7 +5216,7 @@
   </g>
   <g
      id="arrow-minus-toggled"
-     transform="matrix(1.256,1.256,-1.256,1.256,465.1,1587.1)">
+     transform="matrix(1.256,1.256,-1.256,1.256,465.1,1695.1)">
     <rect
        transform="matrix(0.70710678,0.70710678,-0.70710678,0.70710678,0,0)"
        height="12.49988"
@@ -4840,7 +5236,7 @@
   </g>
   <g
      id="arrow-minus-disabled"
-     transform="matrix(1.256,1.256,-1.256,1.256,520.1,1589.9018)"
+     transform="matrix(1.256,1.256,-1.256,1.256,520.1,1697.9018)"
      style="fill:#808080">
     <rect
        transform="matrix(0.7071,0.7071,-0.7071,0.7071,0,0)"
@@ -4853,7 +5249,7 @@
   </g>
   <text
      line-height="normal"
-     y="607"
+     y="715"
      x="115"
      id="text3900"
      block-progression="tb"
@@ -4861,13 +5257,13 @@
      text-transform="none"
      style="font-size:10px;text-indent:0;line-height:normal;text-transform:none;color:#000000;fill:#000000;font-family:cmr10">
     <tspan
-       y="607"
+       y="715"
        x="115"
        id="tspan3902">Tristate</tspan>
   </text>
   <g
      id="checkbox-tristate-hovered"
-     transform="translate(134,369.6)">
+     transform="translate(134,477.6)">
     <rect
        rx="7.2909999"
        ry="7.1490002"
@@ -4911,7 +5307,7 @@
   </g>
   <g
      id="checkbox-tristate-disabled"
-     transform="translate(-0.09629,-15.24941)">
+     transform="translate(-0.09629,92.75059)">
     <rect
        rx="7.2909999"
        ry="7.1490002"
@@ -4956,7 +5352,7 @@
   </g>
   <text
      line-height="normal"
-     y="1399"
+     y="1507"
      x="90"
      id="text3946"
      block-progression="tb"
@@ -4964,13 +5360,13 @@
      text-transform="none"
      style="font-size:10px;text-indent:0;line-height:normal;text-transform:none;color:#000000;font-family:cmr10">
     <tspan
-       y="1399"
+       y="1507"
        x="90"
        id="tspan3948">Arrows</tspan>
   </text>
   <text
      line-height="normal"
-     y="1613"
+     y="1721"
      x="90"
      id="text3950"
      block-progression="tb"
@@ -4978,13 +5374,13 @@
      text-transform="none"
      style="font-size:10px;text-indent:0;line-height:normal;text-transform:none;color:#000000;font-family:cmr10">
     <tspan
-       y="1613"
+       y="1721"
        x="90"
        id="tspan3952">Drop down button</tspan>
   </text>
   <text
      line-height="normal"
-     y="954"
+     y="1062"
      x="485"
      id="text4017"
      block-progression="tb"
@@ -4992,13 +5388,13 @@
      text-transform="none"
      style="font-size:10px;text-indent:0;line-height:normal;text-transform:none;color:#000000;font-family:cmr10">
     <tspan
-       y="954"
+       y="1062"
        x="485"
        id="tspan4019">Tearoff</tspan>
   </text>
   <text
      line-height="normal"
-     y="260"
+     y="368"
      x="90"
      id="text4115"
      block-progression="tb"
@@ -5006,13 +5402,13 @@
      text-transform="none"
      style="font-size:10px;text-indent:0;line-height:normal;text-transform:none;color:#000000;font-family:cmr10">
     <tspan
-       y="260"
+       y="368"
        x="90"
        id="tspan4117">Progress bar</tspan>
   </text>
   <text
      line-height="normal"
-     y="652"
+     y="760"
      x="90"
      id="text4125"
      block-progression="tb"
@@ -5020,13 +5416,13 @@
      text-transform="none"
      style="font-size:10px;text-indent:0;line-height:normal;text-transform:none;color:#000000;font-family:cmr10">
     <tspan
-       y="652"
+       y="760"
        x="90"
        id="tspan4127">Slider</tspan>
   </text>
   <g
      id="slider-disabled"
-     transform="matrix(1.577,0,0,1.577,229.5727,-100.9602)">
+     transform="matrix(1.577,0,0,1.577,229.5727,7.0398)">
     <rect
        height="10.14"
        width="10.14"
@@ -5037,7 +5433,7 @@
   </g>
   <text
      line-height="normal"
-     y="803.05078"
+     y="911.05078"
      x="114.43848"
      id="text4135"
      block-progression="tb"
@@ -5045,13 +5441,13 @@
      text-transform="none"
      style="font-size:10px;text-indent:0;line-height:normal;text-transform:none;color:#000000;font-family:cmr10">
     <tspan
-       y="803.05078"
+       y="911.05078"
        x="114.43848"
        id="tspan4137">Cursor</tspan>
   </text>
   <g
      id="slider-normal"
-     transform="matrix(0.4507,0,0,0.4507,147.7727,458.0398)">
+     transform="matrix(0.4507,0,0,0.4507,147.7727,566.0398)">
     <rect
        height="35.5"
        width="35.5"
@@ -5062,7 +5458,7 @@
   </g>
   <g
      id="slider-hovered"
-     transform="matrix(0.4507,0,0,0.4507,196.7727,458.0398)">
+     transform="matrix(0.4507,0,0,0.4507,196.7727,566.0398)">
     <rect
        height="35.5"
        width="35.5"
@@ -5073,7 +5469,7 @@
   </g>
   <text
      line-height="normal"
-     y="970"
+     y="1078"
      x="90"
      id="text4149"
      block-progression="tb"
@@ -5081,13 +5477,13 @@
      text-transform="none"
      style="font-size:10px;text-indent:0;line-height:normal;text-transform:none;color:#000000;font-family:cmr10">
     <tspan
-       y="970"
+       y="1078"
        x="90"
        id="tspan4151">Menu item</tspan>
   </text>
   <text
      line-height="normal"
-     y="1200"
+     y="1308"
      x="90"
      id="text4153"
      block-progression="tb"
@@ -5095,13 +5491,13 @@
      text-transform="none"
      style="font-size:10px;text-indent:0;line-height:normal;text-transform:none;color:#000000;font-family:cmr10">
     <tspan
-       y="1200"
+       y="1308"
        x="90"
        id="tspan4155">Scrollbar</tspan>
   </text>
   <text
      line-height="normal"
-     y="1220"
+     y="1328"
      x="105"
      id="text4171"
      block-progression="tb"
@@ -5109,13 +5505,13 @@
      text-transform="none"
      style="font-size:10px;text-indent:0;line-height:normal;text-transform:none;color:#000000;font-family:cmr10">
     <tspan
-       y="1220"
+       y="1328"
        x="105"
        id="tspan4173">Groove</tspan>
   </text>
   <g
      id="menuitem-tearoff"
-     transform="matrix(0,3.625,-1,0,909.97879,282.10909)"
+     transform="matrix(0,3.625,-1,0,909.97879,390.10909)"
      style="fill-rule:evenodd"
      inkscape:label="#menu-tearoff">
     <rect
@@ -5142,7 +5538,7 @@
   </g>
   <text
      line-height="normal"
-     y="671.78027"
+     y="779.78027"
      x="113.81836"
      id="text4216"
      block-progression="tb"
@@ -5150,13 +5546,13 @@
      text-transform="none"
      style="font-size:10px;text-indent:0;line-height:normal;text-transform:none;color:#000000;font-family:cmr10">
     <tspan
-       y="671.78027"
+       y="779.78027"
        x="113.81836"
        id="tspan4218">Groove</tspan>
   </text>
   <g
      id="dial-full"
-     transform="translate(140.1,1588)"
+     transform="translate(140.1,1696)"
      style="fill-rule:evenodd">
     <rect
        rx="23.5"
@@ -5294,7 +5690,7 @@
   </g>
   <g
      id="progress-elapsed-normal"
-     transform="matrix(0.16,0,0,0.5333,179.17439,90.408959)"
+     transform="matrix(0.16,0,0,0.5333,179.17439,198.40896)"
      inkscape:label="#progress-pattern-hovered">
     <rect
        height="30"
@@ -5482,7 +5878,7 @@
   </g>
   <g
      id="checkbox-checked-normal"
-     transform="matrix(1.042,0,0,1.021,325.8,259.30371)">
+     transform="matrix(1.042,0,0,1.021,325.8,367.30371)">
     <rect
        rx="7"
        height="43.080002"
@@ -5524,7 +5920,7 @@
      id="menuitem-normal-left"
      height="8"
      width="4"
-     y="964.37878"
+     y="1072.3788"
      x="542.48486"
      style="fill:#d8d8d8;fill-rule:evenodd"
      inkscape:label="#menu-normal-left" />
@@ -5532,7 +5928,7 @@
      id="menuitem-normal-right"
      height="8"
      width="4"
-     y="964.37878"
+     y="1072.3788"
      x="558.48486"
      style="fill:#d8d8d8;fill-rule:evenodd"
      inkscape:label="#menu-normal-right" />
@@ -5540,7 +5936,7 @@
      id="menuitem-normal-topright"
      height="4"
      width="4"
-     y="958.37878"
+     y="1066.3788"
      x="558.48486"
      style="fill:#d8d8d8;fill-rule:evenodd"
      inkscape:label="#menu-normal-topright" />
@@ -5548,7 +5944,7 @@
      id="menuitem-normal-bottomright"
      height="4"
      width="4"
-     y="974.37878"
+     y="1082.3788"
      x="558.48486"
      style="fill:#d8d8d8;fill-rule:evenodd"
      inkscape:label="#menu-normal-bottomright" />
@@ -5556,7 +5952,7 @@
      id="menuitem-normal-bottomleft"
      height="4"
      width="4"
-     y="974.37878"
+     y="1082.3788"
      x="542.48486"
      style="fill:#d8d8d8;fill-rule:evenodd"
      inkscape:label="#menu-normal-bottomleft" />
@@ -5564,13 +5960,13 @@
      id="menuitem-normal-topleft"
      height="4"
      width="4"
-     y="958.37878"
+     y="1066.3788"
      x="542.48486"
      style="fill:#d8d8d8;fill-rule:evenodd"
      inkscape:label="#menu-normal-topleft" />
   <g
      id="menubaritem-toggled"
-     transform="matrix(0.63636364,0,0,0.5333,389.21212,992.19697)"
+     transform="matrix(0.63636364,0,0,0.5333,389.21212,1100.197)"
      inkscape:label="#menu-toggled">
     <rect
        height="15"
@@ -5582,7 +5978,7 @@
   </g>
   <g
      id="radio-normal"
-     transform="matrix(1.089,0,0,1.069,160.3,-73.93371)">
+     transform="matrix(1.089,0,0,1.069,160.3,34.06629)">
     <path
        d="m 60,425 c 0,11 -8.95,20 -20,20 -11.05,0 -20,-9 -20,-20 0,-11 8.95,-20 20,-20 11.05,0 20,9 20,20"
        transform="matrix(1.01,0,0,1.029,1.597,-7.92)"
@@ -5604,7 +6000,7 @@
   </g>
   <g
      id="radio-checked-normal"
-     transform="matrix(1.089,0,0,1.069,160.3,-21.034)">
+     transform="matrix(1.089,0,0,1.069,160.3,86.966)">
     <path
        d="m 60,425 c 0,11 -8.95,20 -20,20 -11.05,0 -20,-9 -20,-20 0,-11 8.95,-20 20,-20 11.05,0 20,9 20,20"
        transform="matrix(1.01,0,0,1.029,1.597,-7.92)"
@@ -5631,7 +6027,7 @@
   </g>
   <g
      id="checkbox-normal"
-     transform="matrix(1.042,0,0,1.021,325.8,204.4)">
+     transform="matrix(1.042,0,0,1.021,325.8,312.4)">
     <rect
        rx="7"
        height="43.080002"
@@ -5667,7 +6063,7 @@
   </g>
   <g
      id="slider-cursor-normal"
-     transform="matrix(1.089,0,0,1.069,160.3,347)"
+     transform="matrix(1.089,0,0,1.069,160.3,455)"
      inkscape:label="#slidercursor-normal">
     <path
        d="m 60,425 c 0,11 -8.95,20 -20,20 -11.05,0 -20,-9 -20,-20 0,-11 8.95,-20 20,-20 11.05,0 20,9 20,20"
@@ -6517,7 +6913,7 @@
   </g>
   <g
      id="arrow-dropdown-normal"
-     transform="translate(0,704)">
+     transform="translate(0,812)">
     <path
        d="m 195,900.5 -3,3 9,9 3,3 3,-3 9,-9 -3,-3 -9,9 -9,-9"
        id="path4626"
@@ -6532,7 +6928,7 @@
   </g>
   <g
      id="arrow-dropdown-hovered"
-     transform="translate(50,704)">
+     transform="translate(50,812)">
     <path
        d="m 195,900.5 -3,3 9,9 3,3 3,-3 9,-9 -3,-3 -9,9 -9,-9"
        id="path4631"
@@ -6547,7 +6943,7 @@
   </g>
   <g
      id="arrow-left-normal"
-     transform="matrix(0,1,-1,0,1110,1308)">
+     transform="matrix(0,1,-1,0,1110,1416)">
     <path
        d="m 195,900.5 -3,3 9,9 3,3 3,-3 9,-9 -3,-3 -9,9 -9,-9"
        id="path4636"
@@ -6562,7 +6958,7 @@
   </g>
   <g
      id="arrow-right-normal"
-     transform="matrix(0,-1,1,0,-706,1676)">
+     transform="matrix(0,-1,1,0,-706,1784)">
     <path
        d="m 195,900.5 -3,3 9,9 3,3 3,-3 9,-9 -3,-3 -9,9 -9,-9"
        id="path4641"
@@ -6577,7 +6973,7 @@
   </g>
   <g
      id="arrow-down-normal"
-     transform="translate(-2,526)">
+     transform="translate(-2,634)">
     <path
        d="m 195,900.5 -3,3 9,9 3,3 3,-3 9,-9 -3,-3 -9,9 -9,-9"
        id="path4646"
@@ -6592,7 +6988,7 @@
   </g>
   <g
      id="arrow-up-normal"
-     transform="matrix(1,0,0,-1,-2,2304)">
+     transform="matrix(1,0,0,-1,-2,2412)">
     <path
        d="m 195,900.5 -3,3 9,9 3,3 3,-3 9,-9 -3,-3 -9,9 -9,-9"
        id="path4651"
@@ -6607,7 +7003,7 @@
   </g>
   <g
      id="arrow-left-hovered"
-     transform="matrix(0,1,-1,0,1162,1308)">
+     transform="matrix(0,1,-1,0,1162,1416)">
     <path
        d="m 195,900.5 -3,3 9,9 3,3 3,-3 9,-9 -3,-3 -9,9 -9,-9"
        id="path4656"
@@ -6622,7 +7018,7 @@
   </g>
   <g
      id="arrow-right-hovered"
-     transform="matrix(0,-1,1,0,-654,1676)">
+     transform="matrix(0,-1,1,0,-654,1784)">
     <path
        d="m 195,900.5 -3,3 9,9 3,3 3,-3 9,-9 -3,-3 -9,9 -9,-9"
        id="path4661"
@@ -6637,7 +7033,7 @@
   </g>
   <g
      id="arrow-down-hovered"
-     transform="translate(50,526)">
+     transform="translate(50,634)">
     <path
        d="m 195,900.5 -3,3 9,9 3,3 3,-3 9,-9 -3,-3 -9,9 -9,-9"
        id="path4666"
@@ -6652,7 +7048,7 @@
   </g>
   <g
      id="arrow-up-hovered"
-     transform="matrix(1,0,0,-1,50,2304)">
+     transform="matrix(1,0,0,-1,50,2412)">
     <path
        d="m 195,900.5 -3,3 9,9 3,3 3,-3 9,-9 -3,-3 -9,9 -9,-9"
        id="path4671"
@@ -6666,20 +7062,20 @@
        style="fill-opacity:0" />
   </g>
   <g
-     id="commonframe-normal"
-     transform="matrix(.16 0 0 .5333 181.2-45.7)">
+     id="frame-raised-normal"
+     transform="matrix(0.16,0,0,0.5333,181.2,-35.7)">
     <rect
-       transform="scale(1-1)"
+       transform="scale(1,-1)"
        height="30"
        width="100"
        y="-477.60001"
-       x="98.73"
+       x="98.730003"
        id="rect4771"
        style="fill:#d8d8d8" />
   </g>
   <g
-     id="commonframe-normal-left"
-     transform="matrix(1.067 0 0 1.067-12 166.3)">
+     id="frame-raised-normal-left"
+     transform="matrix(1.067,0,0,1.067,-12,176.3)">
     <rect
        height="15"
        width="7.5"
@@ -6710,8 +7106,8 @@
        style="fill-opacity:0" />
   </g>
   <g
-     id="commonframe-normal-right"
-     transform="matrix(1.067 0 0 1.067 22 166.3)">
+     id="frame-raised-normal-right"
+     transform="matrix(1.067,0,0,1.067,22,176.3)">
     <rect
        height="15"
        width="7.5"
@@ -6732,7 +7128,7 @@
        y="25"
        x="191.2"
        id="rect4787"
-       style="fill-opacity:.1569" />
+       style="fill-opacity:0.15690002" />
     <rect
        height="15"
        width="3.75"
@@ -6742,120 +7138,120 @@
        style="fill:url(#linearGradient5880)" />
   </g>
   <g
-     id="commonframe-normal-topleft"
-     transform="matrix(1.067 0 0 1.067 116-278.7)">
+     id="frame-raised-normal-topleft"
+     transform="matrix(1.067,0,0,1.067,116,-268.7)">
     <path
-       transform="matrix(.2632 0 0 .3093 27.63 356)"
-       d="m123 272.9c0-26.8 25.5-48.5 57-48.5l0 48.5z"
+       transform="matrix(0.2632,0,0,0.3093,27.63,356)"
+       d="m 123,272.9 c 0,-26.8 25.5,-48.5 57,-48.5 l 0,48.5 z"
        id="path4792"
        inkscape:connector-curvature="0"
        style="fill-opacity:0" />
     <path
-       transform="matrix(.1974 0 0 .232 39.47 377.1)"
-       d="m123 272.9c0-26.8 25.5-48.5 57-48.5l0 48.5z"
+       transform="matrix(0.1974,0,0,0.232,39.47,377.1)"
+       d="m 123,272.9 c 0,-26.8 25.5,-48.5 57,-48.5 l 0,48.5 z"
        id="path4794"
        inkscape:connector-curvature="0"
        style="fill:#909090" />
     <path
-       transform="matrix(.1316 0 0 .1546 51.32 398.2)"
-       d="m123 272.9c0-26.8 25.5-48.5 57-48.5l0 48.5z"
+       transform="matrix(0.1316,0,0,0.1546,51.32,398.2)"
+       d="m 123,272.9 c 0,-26.8 25.5,-48.5 57,-48.5 l 0,48.5 z"
        id="path4796"
        inkscape:connector-curvature="0"
        style="fill:#ececec" />
     <path
-       transform="matrix(.0658 0 0 .0773 63.16 419.3)"
-       d="m123 272.9c0-26.8 25.5-48.5 57-48.5l0 48.5z"
+       transform="matrix(0.0658,0,0,0.0773,63.16,419.3)"
+       d="m 123,272.9 c 0,-26.8 25.5,-48.5 57,-48.5 l 0,48.5 z"
        id="path4798"
        inkscape:connector-curvature="0"
        style="fill:#d8d8d8" />
   </g>
   <g
-     id="commonframe-normal-topright"
-     transform="matrix(1.067 0 0 1.067 128.7-278.7)">
+     id="frame-raised-normal-topright"
+     transform="matrix(1.067,0,0,1.067,128.7,-268.7)">
     <path
-       transform="matrix(0 .1316-.232 0 147 416.7)"
-       d="m123 272.9c0-26.8 25.5-48.5 57-48.5l0 48.5z"
+       transform="matrix(0,0.1316,-0.232,0,147,416.7)"
+       d="m 123,272.9 c 0,-26.8 25.5,-48.5 57,-48.5 l 0,48.5 z"
        id="path4801"
        inkscape:connector-curvature="0"
-       style="fill-opacity:.1569" />
+       style="fill-opacity:0.15690002" />
     <path
-       transform="matrix(0 .2632-.3093 0 164.4 393)"
-       d="m123 272.9c0-26.8 25.5-48.5 57-48.5l0 48.5z"
+       transform="matrix(0,0.2632,-0.3093,0,164.4,393)"
+       d="m 123,272.9 c 0,-26.8 25.5,-48.5 57,-48.5 l 0,48.5 z"
        id="path4803"
        inkscape:connector-curvature="0"
        style="fill-opacity:0" />
     <path
-       transform="matrix(0 .1974-.232 0 143.3 404.8)"
-       d="m123 272.9c0-26.8 25.5-48.5 57-48.5l0 48.5z"
+       transform="matrix(0,0.1974,-0.232,0,143.3,404.8)"
+       d="m 123,272.9 c 0,-26.8 25.5,-48.5 57,-48.5 l 0,48.5 z"
        id="path4805"
        inkscape:connector-curvature="0"
        style="fill:#909090" />
     <path
-       transform="matrix(0 .1316-.1546 0 122.2 416.7)"
-       d="m123 272.9c0-26.8 25.5-48.5 57-48.5l0 48.5z"
+       transform="matrix(0,0.1316,-0.1546,0,122.2,416.7)"
+       d="m 123,272.9 c 0,-26.8 25.5,-48.5 57,-48.5 l 0,48.5 z"
        id="path4807"
        inkscape:connector-curvature="0"
        style="fill:#ececec" />
     <path
-       transform="matrix(0 .0658-.0773 0 101.1 428.5)"
-       d="m123 272.9c0-26.8 25.5-48.5 57-48.5l0 48.5z"
+       transform="matrix(0,0.0658,-0.0773,0,101.1,428.5)"
+       d="m 123,272.9 c 0,-26.8 25.5,-48.5 57,-48.5 l 0,48.5 z"
        id="path4809"
        inkscape:connector-curvature="0"
        style="fill:#d8d8d8" />
   </g>
   <g
-     id="commonframe-normal-bottomleft"
-     transform="matrix(1.067 0 0 1.067 116-266.2)">
+     id="frame-raised-normal-bottomleft"
+     transform="matrix(1.067,0,0,1.067,116,-256.2)">
     <path
-       transform="matrix(.1316 0 0-.232 51.32 514.4)"
-       d="m123 272.9c0-26.8 25.5-48.5 57-48.5l0 48.5z"
+       transform="matrix(0.1316,0,0,-0.232,51.32,514.4)"
+       d="m 123,272.9 c 0,-26.8 25.5,-48.5 57,-48.5 l 0,48.5 z"
        id="path4812"
        inkscape:connector-curvature="0"
-       style="fill-opacity:.1569" />
+       style="fill-opacity:0.15690002" />
     <path
-       transform="matrix(.2632 0 0-.3093 27.63 531.8)"
-       d="m123 272.9c0-26.8 25.5-48.5 57-48.5l0 48.5z"
+       transform="matrix(0.2632,0,0,-0.3093,27.63,531.8)"
+       d="m 123,272.9 c 0,-26.8 25.5,-48.5 57,-48.5 l 0,48.5 z"
        id="path4814"
        inkscape:connector-curvature="0"
        style="fill-opacity:0" />
     <path
-       transform="matrix(.1974 0 0-.232 39.47 510.7)"
-       d="m123 272.9c0-26.8 25.5-48.5 57-48.5l0 48.5z"
+       transform="matrix(0.1974,0,0,-0.232,39.47,510.7)"
+       d="m 123,272.9 c 0,-26.8 25.5,-48.5 57,-48.5 l 0,48.5 z"
        id="path4816"
        inkscape:connector-curvature="0"
        style="fill:#747474" />
     <path
-       transform="matrix(.1316 0 0-.1546 51.32 489.6)"
-       d="m123 272.9c0-26.8 25.5-48.5 57-48.5l0 48.5z"
+       transform="matrix(0.1316,0,0,-0.1546,51.32,489.6)"
+       d="m 123,272.9 c 0,-26.8 25.5,-48.5 57,-48.5 l 0,48.5 z"
        id="path4818"
        inkscape:connector-curvature="0"
        style="fill:#d8d8d8" />
   </g>
   <g
-     id="commonframe-normal-bottomright"
-     transform="matrix(1.067 0 0 1.067 128.7-266.2)">
+     id="frame-raised-normal-bottomright"
+     transform="matrix(1.067,0,0,1.067,128.7,-256.2)">
     <path
-       transform="matrix(0-.2632-.3093 0 164.4 494.7)"
-       d="m123 272.9c0-26.8 25.5-48.5 57-48.5l0 48.5z"
+       transform="matrix(0,-0.2632,-0.3093,0,164.4,494.7)"
+       d="m 123,272.9 c 0,-26.8 25.5,-48.5 57,-48.5 l 0,48.5 z"
        id="path4821"
        inkscape:connector-curvature="0"
-       style="fill-opacity:.1569" />
+       style="fill-opacity:0.15690002" />
     <path
-       transform="matrix(0-.1974-.232 0 143.3 482.9)"
-       d="m123 272.9c0-26.8 25.5-48.5 57-48.5l0 48.5z"
+       transform="matrix(0,-0.1974,-0.232,0,143.3,482.9)"
+       d="m 123,272.9 c 0,-26.8 25.5,-48.5 57,-48.5 l 0,48.5 z"
        id="path4823"
        inkscape:connector-curvature="0"
        style="fill:#747474" />
     <path
-       transform="matrix(0-.1316-.1546 0 122.2 471)"
-       d="m123 272.9c0-26.8 25.5-48.5 57-48.5l0 48.5z"
+       transform="matrix(0,-0.1316,-0.1546,0,122.2,471)"
+       d="m 123,272.9 c 0,-26.8 25.5,-48.5 57,-48.5 l 0,48.5 z"
        id="path4825"
        inkscape:connector-curvature="0"
        style="fill:#d8d8d8" />
   </g>
   <g
-     id="commonframe-normal-bottom"
-     transform="matrix(0 1.067-1.067 0 239.7 19)">
+     id="frame-raised-normal-bottom"
+     transform="matrix(0,1.067,-1.067,0,239.7,29)">
     <rect
        height="15"
        width="7.5"
@@ -6883,11 +7279,11 @@
        y="25"
        x="191.2"
        id="rect4834"
-       style="fill-opacity:.1569" />
+       style="fill-opacity:0.15690002" />
   </g>
   <g
-     id="commonframe-normal-top"
-     transform="matrix(0-1.067-1.06 0 239.5 383.36543)">
+     id="frame-raised-normal-top"
+     transform="matrix(0,-1.067,-1.06,0,239.5,391.36543)">
     <rect
        height="15.09"
        width="7.5"
@@ -6921,13 +7317,13 @@
      id="menuitem-normal-top"
      height="4"
      width="8"
-     y="958.37878"
+     y="1066.3788"
      x="548.48486"
      style="fill:#d8d8d8;fill-rule:evenodd"
      inkscape:label="#menu-normal-top" />
   <g
      id="menuitem-normal-bottom"
-     transform="matrix(0.2667,0,0,0.3636,521.18484,964.37882)"
+     transform="matrix(0.2667,0,0,0.3636,521.18484,1072.3788)"
      style="fill:#d8d8d8"
      inkscape:label="#menu-normal-bottom">
     <rect
@@ -6962,7 +7358,7 @@
      id="menuitem-normal"
      height="8"
      width="8"
-     y="960.37878"
+     y="1068.3788"
      x="201.62122"
      style="fill:#f4f4f4;fill-rule:evenodd" />
   <g
@@ -7345,7 +7741,7 @@
   </g>
   <g
      id="radio-hovered"
-     transform="matrix(1.089,0,0,1.069,210.3,-73.93371)">
+     transform="matrix(1.089,0,0,1.069,210.3,34.06629)">
     <path
        d="m 60,425 c 0,11 -8.95,20 -20,20 -11.05,0 -20,-9 -20,-20 0,-11 8.95,-20 20,-20 11.05,0 20,9 20,20"
        transform="matrix(1.01,0,0,1.029,1.597,-7.92)"
@@ -7367,7 +7763,7 @@
   </g>
   <g
      id="radio-checked-hovered"
-     transform="matrix(1.089,0,0,1.069,210.3,-21.034)">
+     transform="matrix(1.089,0,0,1.069,210.3,86.966)">
     <path
        d="m 60,425 c 0,11 -8.95,20 -20,20 -11.05,0 -20,-9 -20,-20 0,-11 8.95,-20 20,-20 11.05,0 20,9 20,20"
        transform="matrix(1.01,0,0,1.029,1.597,-7.92)"
@@ -7394,7 +7790,7 @@
   </g>
   <g
      id="checkbox-hovered"
-     transform="matrix(1.042,0,0,1.021,375.8,204.4)">
+     transform="matrix(1.042,0,0,1.021,375.8,312.4)">
     <rect
        rx="7"
        height="43.080002"
@@ -7430,7 +7826,7 @@
   </g>
   <g
      id="checkbox-checked-hovered"
-     transform="matrix(1.042,0,0,1.021,375.8,259.66914)">
+     transform="matrix(1.042,0,0,1.021,375.8,367.66914)">
     <rect
        rx="7"
        height="43.080002"
@@ -8035,7 +8431,7 @@
   </g>
   <g
      id="arrow-dropdown-pressed"
-     transform="translate(100,704)">
+     transform="translate(100,812)">
     <path
        d="m 195,900.5 -3,3 9,9 3,3 3,-3 9,-9 -3,-3 -9,9 -9,-9"
        id="path5796"
@@ -8050,7 +8446,7 @@
   </g>
   <g
      id="arrow-dropdown-toggled"
-     transform="translate(148,704)">
+     transform="translate(148,812)">
     <path
        d="m 195,900.5 -3,3 9,9 3,3 3,-3 9,-9 -3,-3 -9,9 -9,-9"
        id="path5801"
@@ -8065,7 +8461,7 @@
   </g>
   <g
      id="arrow-dropdown-disabled"
-     transform="translate(204,704)">
+     transform="translate(204,812)">
     <path
        d="m 195,900.5 -3,3 9,9 3,3 3,-3 9,-9 -3,-3 -9,9 -9,-9"
        id="path5806"
@@ -8081,7 +8477,7 @@
   </g>
   <g
      id="slider-cursor-hovered"
-     transform="matrix(1.089,0,0,1.069,210.3,347)"
+     transform="matrix(1.089,0,0,1.069,210.3,455)"
      inkscape:label="#slidercursor-hovered">
     <path
        d="m 60,425 c 0,11 -8.95,20 -20,20 -11.05,0 -20,-9 -20,-20 0,-11 8.95,-20 20,-20 11.05,0 20,9 20,20"
@@ -8104,7 +8500,7 @@
   </g>
   <g
      id="slider-cursor-pressed"
-     transform="matrix(1.089,0,0,1.069,260.3,347)"
+     transform="matrix(1.089,0,0,1.069,260.3,455)"
      inkscape:label="#slidercursor-pressed">
     <path
        d="m 60,425 c 0,11 -8.95,20 -20,20 -11.05,0 -20,-9 -20,-20 0,-11 8.95,-20 20,-20 11.05,0 20,9 20,20"
@@ -8127,7 +8523,7 @@
   </g>
   <g
      id="slider-cursor-disabled"
-     transform="matrix(1.089,0,0,1.069,360.3,347)"
+     transform="matrix(1.089,0,0,1.069,360.3,455)"
      inkscape:label="#slidercursor-disabled">
     <path
        d="m 60,425 c 0,11 -8.95,20 -20,20 -11.05,0 -20,-9 -20,-20 0,-11 8.95,-20 20,-20 11.05,0 20,9 20,20"
@@ -8150,7 +8546,7 @@
   </g>
   <g
      id="arrow-left-disabled"
-     transform="matrix(0,1,-1,0,1316,1308)">
+     transform="matrix(0,1,-1,0,1316,1416)">
     <path
        d="m 195,900.5 -3,3 9,9 3,3 3,-3 9,-9 -3,-3 -9,9 -9,-9"
        id="path6223"
@@ -8166,7 +8562,7 @@
   </g>
   <g
      id="arrow-right-disabled"
-     transform="matrix(0,-1,1,0,-500,1676)">
+     transform="matrix(0,-1,1,0,-500,1784)">
     <path
        d="m 195,900.5 -3,3 9,9 3,3 3,-3 9,-9 -3,-3 -9,9 -9,-9"
        id="path6228"
@@ -8182,7 +8578,7 @@
   </g>
   <g
      id="arrow-down-disabled"
-     transform="translate(204,526)">
+     transform="translate(204,634)">
     <path
        d="m 195,900.5 -3,3 9,9 3,3 3,-3 9,-9 -3,-3 -9,9 -9,-9"
        id="path6233"
@@ -8198,7 +8594,7 @@
   </g>
   <g
      id="arrow-up-disabled"
-     transform="matrix(1,0,0,-1,204,2304)">
+     transform="matrix(1,0,0,-1,204,2412)">
     <path
        d="m 195,900.5 -3,3 9,9 3,3 3,-3 9,-9 -3,-3 -9,9 -9,-9"
        id="path6238"
@@ -8214,7 +8610,7 @@
   </g>
   <g
      id="menuitem-toggled"
-     transform="matrix(0.56060606,0,0,0.5333,385.12122,945.25465)">
+     transform="matrix(0.56060606,0,0,0.5333,385.12122,1053.2546)">
     <rect
        height="15"
        width="15"
@@ -8225,7 +8621,7 @@
   </g>
   <g
      id="arrow-up-pressed"
-     transform="matrix(1,0,0,-1,100,2304)">
+     transform="matrix(1,0,0,-1,100,2412)">
     <path
        d="m 195,900.5 -3,3 9,9 3,3 3,-3 9,-9 -3,-3 -9,9 -9,-9"
        id="path6737"
@@ -8240,7 +8636,7 @@
   </g>
   <g
      id="arrow-up-toggled"
-     transform="matrix(1,0,0,-1,146,2304)">
+     transform="matrix(1,0,0,-1,146,2412)">
     <path
        d="m 195,900.5 -3,3 9,9 3,3 3,-3 9,-9 -3,-3 -9,9 -9,-9"
        id="path6742"
@@ -8255,7 +8651,7 @@
   </g>
   <g
      id="arrow-down-pressed"
-     transform="translate(100,526)">
+     transform="translate(100,634)">
     <path
        d="m 195,900.5 -3,3 9,9 3,3 3,-3 9,-9 -3,-3 -9,9 -9,-9"
        id="path6747"
@@ -8270,7 +8666,7 @@
   </g>
   <g
      id="arrow-down-toggled"
-     transform="translate(146,526)">
+     transform="translate(146,634)">
     <path
        d="m 195,900.5 -3,3 9,9 3,3 3,-3 9,-9 -3,-3 -9,9 -9,-9"
        id="path6752"
@@ -8285,7 +8681,7 @@
   </g>
   <g
      id="arrow-right-pressed"
-     transform="matrix(0,-1,1,0,-604,1676)">
+     transform="matrix(0,-1,1,0,-604,1784)">
     <path
        d="m 195,900.5 -3,3 9,9 3,3 3,-3 9,-9 -3,-3 -9,9 -9,-9"
        id="path6757"
@@ -8300,7 +8696,7 @@
   </g>
   <g
      id="arrow-right-toggled"
-     transform="matrix(0,-1,1,0,-558,1676)">
+     transform="matrix(0,-1,1,0,-558,1784)">
     <path
        d="m 195,900.5 -3,3 9,9 3,3 3,-3 9,-9 -3,-3 -9,9 -9,-9"
        id="path6762"
@@ -8315,7 +8711,7 @@
   </g>
   <g
      id="arrow-left-pressed"
-     transform="matrix(0,1,-1,0,1210,1308)">
+     transform="matrix(0,1,-1,0,1210,1416)">
     <path
        d="m 195,900.5 -3,3 9,9 3,3 3,-3 9,-9 -3,-3 -9,9 -9,-9"
        id="path6767"
@@ -8330,7 +8726,7 @@
   </g>
   <g
      id="arrow-left-toggled"
-     transform="matrix(0,1,-1,0,1256,1308)">
+     transform="matrix(0,1,-1,0,1256,1416)">
     <path
        d="m 195,900.5 -3,3 9,9 3,3 3,-3 9,-9 -3,-3 -9,9 -9,-9"
        id="path6772"
@@ -8345,7 +8741,7 @@
   </g>
   <g
      id="radio-disabled"
-     transform="matrix(1.089,0,0,1.069,360.3,-73.93371)">
+     transform="matrix(1.089,0,0,1.069,360.3,34.06629)">
     <path
        d="m 60,425 c 0,11 -8.95,20 -20,20 -11.05,0 -20,-9 -20,-20 0,-11 8.95,-20 20,-20 11.05,0 20,9 20,20"
        transform="matrix(1.01,0,0,1.029,1.597,-7.92)"
@@ -8367,7 +8763,7 @@
   </g>
   <g
      id="radio-checked-disabled"
-     transform="matrix(1.089,0,0,1.069,360.3,-21.034)">
+     transform="matrix(1.089,0,0,1.069,360.3,86.966)">
     <path
        d="m 60,425 c 0,11 -8.95,20 -20,20 -11.05,0 -20,-9 -20,-20 0,-11 8.95,-20 20,-20 11.05,0 20,9 20,20"
        transform="matrix(1.01,0,0,1.029,1.597,-7.92)"
@@ -8395,7 +8791,7 @@
   </g>
   <g
      id="checkbox-checked-disabled"
-     transform="matrix(1.042,0,0,1.021,527.8,258.93828)">
+     transform="matrix(1.042,0,0,1.021,527.8,366.93828)">
     <rect
        rx="7"
        height="43.080002"
@@ -8436,7 +8832,7 @@
   </g>
   <g
      id="checkbox-disabled"
-     transform="matrix(1.042,0,0,1.021,527.8,204.4)">
+     transform="matrix(1.042,0,0,1.021,527.8,312.4)">
     <rect
        rx="7"
        height="43.080002"
@@ -8472,7 +8868,7 @@
   </g>
   <g
      id="progress-elapsed-disabled"
-     transform="matrix(0.16,0,0,0.5333,379.21855,90.408959)"
+     transform="matrix(0.16,0,0,0.5333,379.21855,198.40896)"
      inkscape:label="#progress-pattern-disabled">
     <rect
        height="30"
@@ -8502,7 +8898,7 @@
      id="menuitem-disabled"
      height="8"
      width="8.787879"
-     y="960.37878"
+     y="1068.3788"
      x="405.83334"
      style="fill:#f4f4f4;fill-rule:evenodd" />
   <g
@@ -9006,7 +9402,7 @@
   </g>
   <g
      id="slider-normal-top"
-     transform="matrix(0,-1.067,-1.06,0,239.5,850)">
+     transform="matrix(0,-1.067,-1.06,0,239.5,958)">
     <rect
        height="15.09"
        width="3.75"
@@ -9031,7 +9427,7 @@
   </g>
   <g
      id="slider-normal-bottom"
-     transform="matrix(0,1.067,-1.067,0,239.7,478)">
+     transform="matrix(0,1.067,-1.067,0,239.7,586)">
     <rect
        height="15"
        width="3.75"
@@ -9063,7 +9459,7 @@
   </g>
   <g
      id="slider-normal-right"
-     transform="matrix(-1.067,0,0,1.067,418,629.3)">
+     transform="matrix(-1.067,0,0,1.067,418,737.3)">
     <rect
        transform="scale(1,-1)"
        height="15"
@@ -9097,7 +9493,7 @@
   </g>
   <g
      id="slider-normal-topright"
-     transform="matrix(0.8,0,0,0.8,150,301.7)">
+     transform="matrix(0.8,0,0,0.8,150,409.7)">
     <path
        transform="matrix(0,0.2632,-0.3093,0,164.4,393)"
        d="m 123,272.9 c 0,-26.8 25.5,-48.5 57,-48.5 l 0,48.5 z"
@@ -9131,7 +9527,7 @@
   </g>
   <g
      id="slider-normal-bottomright"
-     transform="matrix(0.8,0,0,-0.8,150,1026)">
+     transform="matrix(0.8,0,0,-0.8,150,1134)">
     <path
        transform="matrix(0,0.2632,-0.3093,0,164.4,393)"
        d="m 123,272.9 c 0,-26.8 25.5,-48.5 57,-48.5 l 0,48.5 z"
@@ -9165,7 +9561,7 @@
   </g>
   <g
      id="slider-normal-bottomleft"
-     transform="matrix(-0.8,0,0,-0.8,260,1026)">
+     transform="matrix(-0.8,0,0,-0.8,260,1134)">
     <path
        transform="matrix(0,0.2632,-0.3093,0,164.4,393)"
        d="m 123,272.9 c 0,-26.8 25.5,-48.5 57,-48.5 l 0,48.5 z"
@@ -9199,7 +9595,7 @@
   </g>
   <g
      id="slider-normal-left"
-     transform="matrix(1.067,0,0,1.067,-8,629.3)">
+     transform="matrix(1.067,0,0,1.067,-8,737.3)">
     <rect
        transform="scale(1,-1)"
        height="15"
@@ -9233,7 +9629,7 @@
   </g>
   <g
      id="slider-normal-topleft"
-     transform="matrix(-0.8,0,0,0.8,260,301.7)">
+     transform="matrix(-0.8,0,0,0.8,260,409.7)">
     <path
        transform="matrix(0,0.2632,-0.3093,0,164.4,393)"
        d="m 123,272.9 c 0,-26.8 25.5,-48.5 57,-48.5 l 0,48.5 z"
@@ -9267,7 +9663,7 @@
   </g>
   <g
      id="slider-hovered-top"
-     transform="matrix(0,-1.067,-1.06,0,289.5,850)">
+     transform="matrix(0,-1.067,-1.06,0,289.5,958)">
     <rect
        height="15.09"
        width="3.75"
@@ -9292,7 +9688,7 @@
   </g>
   <g
      id="slider-hovered-bottom"
-     transform="matrix(0,1.067,-1.067,0,289.7,478)">
+     transform="matrix(0,1.067,-1.067,0,289.7,586)">
     <rect
        height="15"
        width="3.75"
@@ -9324,7 +9720,7 @@
   </g>
   <g
      id="slider-hovered-left"
-     transform="matrix(1.067,0,0,1.067,40,629.3)">
+     transform="matrix(1.067,0,0,1.067,40,737.3)">
     <rect
        transform="scale(1,-1)"
        height="15"
@@ -9358,7 +9754,7 @@
   </g>
   <g
      id="slider-hovered-right"
-     transform="matrix(-1.067,0,0,1.067,468,629.3)">
+     transform="matrix(-1.067,0,0,1.067,468,737.3)">
     <rect
        transform="scale(1,-1)"
        height="15"
@@ -9392,7 +9788,7 @@
   </g>
   <g
      id="slider-hovered-topleft"
-     transform="matrix(-0.8,0,0,0.8,308,301.7)">
+     transform="matrix(-0.8,0,0,0.8,308,409.7)">
     <path
        transform="matrix(0,0.2632,-0.3093,0,164.4,393)"
        d="m 123,272.9 c 0,-26.8 25.5,-48.5 57,-48.5 l 0,48.5 z"
@@ -9426,7 +9822,7 @@
   </g>
   <g
      id="slider-hovered-topright"
-     transform="matrix(0.8,0,0,0.8,200,301.7)">
+     transform="matrix(0.8,0,0,0.8,200,409.7)">
     <path
        transform="matrix(0,0.2632,-0.3093,0,164.4,393)"
        d="m 123,272.9 c 0,-26.8 25.5,-48.5 57,-48.5 l 0,48.5 z"
@@ -9460,7 +9856,7 @@
   </g>
   <g
      id="slider-hovered-bottomleft"
-     transform="matrix(-0.8,0,0,-0.8,308,1026)">
+     transform="matrix(-0.8,0,0,-0.8,308,1134)">
     <path
        transform="matrix(0,0.2632,-0.3093,0,164.4,393)"
        d="m 123,272.9 c 0,-26.8 25.5,-48.5 57,-48.5 l 0,48.5 z"
@@ -9494,7 +9890,7 @@
   </g>
   <g
      id="slider-hovered-bottomright"
-     transform="matrix(0.8,0,0,-0.8,200,1026)">
+     transform="matrix(0.8,0,0,-0.8,200,1134)">
     <path
        transform="matrix(0,0.2632,-0.3093,0,164.4,393)"
        d="m 123,272.9 c 0,-26.8 25.5,-48.5 57,-48.5 l 0,48.5 z"
@@ -9528,7 +9924,7 @@
   </g>
   <g
      id="slider-disabled-top"
-     transform="matrix(0,-1.067,-1.06,0,439.5,850)">
+     transform="matrix(0,-1.067,-1.06,0,439.5,958)">
     <rect
        height="15.09"
        width="3.75"
@@ -9553,7 +9949,7 @@
   </g>
   <g
      id="slider-disabled-bottom"
-     transform="matrix(0,1.067,-1.067,0,439.7,478)">
+     transform="matrix(0,1.067,-1.067,0,439.7,586)">
     <rect
        height="15"
        width="3.75"
@@ -9585,7 +9981,7 @@
   </g>
   <g
      id="slider-disabled-left"
-     transform="matrix(1.067,0,0,1.067,192,629.3)">
+     transform="matrix(1.067,0,0,1.067,192,737.3)">
     <rect
        transform="scale(1,-1)"
        height="15"
@@ -9619,7 +10015,7 @@
   </g>
   <g
      id="slider-disabled-right"
-     transform="matrix(-1.067,0,0,1.067,618,629.3)">
+     transform="matrix(-1.067,0,0,1.067,618,737.3)">
     <rect
        transform="scale(1,-1)"
        height="15"
@@ -9653,7 +10049,7 @@
   </g>
   <g
      id="slider-disabled-topleft"
-     transform="matrix(-0.8,0,0,0.8,460,301.7)">
+     transform="matrix(-0.8,0,0,0.8,460,409.7)">
     <path
        transform="matrix(0,0.2632,-0.3093,0,164.4,393)"
        d="m 123,272.9 c 0,-26.8 25.5,-48.5 57,-48.5 l 0,48.5 z"
@@ -9687,7 +10083,7 @@
   </g>
   <g
      id="slider-disabled-topright"
-     transform="matrix(0.8,0,0,0.8,350,301.7)">
+     transform="matrix(0.8,0,0,0.8,350,409.7)">
     <path
        transform="matrix(0,0.2632,-0.3093,0,164.4,393)"
        d="m 123,272.9 c 0,-26.8 25.5,-48.5 57,-48.5 l 0,48.5 z"
@@ -9721,7 +10117,7 @@
   </g>
   <g
      id="slider-disabled-bottomleft"
-     transform="matrix(-0.8,0,0,-0.8,460,1026)">
+     transform="matrix(-0.8,0,0,-0.8,460,1134)">
     <path
        transform="matrix(0,0.2632,-0.3093,0,164.4,393)"
        d="m 123,272.9 c 0,-26.8 25.5,-48.5 57,-48.5 l 0,48.5 z"
@@ -9755,7 +10151,7 @@
   </g>
   <g
      id="slider-disabled-bottomright"
-     transform="matrix(0.8,0,0,-0.8,350,1026)">
+     transform="matrix(0.8,0,0,-0.8,350,1134)">
     <path
        transform="matrix(0,0.2632,-0.3093,0,164.4,393)"
        d="m 123,272.9 c 0,-26.8 25.5,-48.5 57,-48.5 l 0,48.5 z"
@@ -10051,7 +10447,7 @@
   </g>
   <g
      id="dial-empty"
-     transform="matrix(1.089,0,0,1.069,160.3,1361)">
+     transform="matrix(1.089,0,0,1.069,160.3,1469)">
     <path
        d="m 60,425 c 0,11 -8.95,20 -20,20 -11.05,0 -20,-9 -20,-20 0,-11 8.95,-20 20,-20 11.05,0 20,9 20,20"
        transform="matrix(1.01,0,0,1.029,1.597,-7.92)"
@@ -10073,7 +10469,7 @@
   </g>
   <text
      line-height="normal"
-     y="1701"
+     y="1809"
      x="341"
      id="text7448"
      block-progression="tb"
@@ -10081,13 +10477,13 @@
      text-transform="none"
      style="font-size:10px;text-indent:0;line-height:normal;text-transform:none;color:#000000;font-family:cmr10">
     <tspan
-       y="1701"
+       y="1809"
        x="341"
        id="tspan7450">Restore</tspan>
   </text>
   <g
      id="mdi-restore-normal"
-     transform="matrix(0.73846154,0,0,0.73846154,221.07319,1251.5352)"
+     transform="matrix(0.73846154,0,0,0.73846154,221.07319,1359.5352)"
      style="stroke:#000000">
     <rect
        style="opacity:0;fill:#800000;fill-opacity:1;stroke:none"
@@ -10106,7 +10502,7 @@
   </g>
   <text
      line-height="normal"
-     y="1701"
+     y="1809"
      x="389"
      id="text7465"
      block-progression="tb"
@@ -10114,13 +10510,13 @@
      text-transform="none"
      style="font-size:10px;text-indent:0;line-height:normal;text-transform:none;color:#000000;font-family:cmr10">
     <tspan
-       y="1701"
+       y="1809"
        x="389"
        id="tspan7467">Menu</tspan>
   </text>
   <g
      id="mdi-menu-normal"
-     transform="matrix(0.73846154,0,0,0.73846154,283.63886,1254.2977)"
+     transform="matrix(0.73846154,0,0,0.73846154,283.63886,1362.2977)"
      style="fill:none;stroke:#000000">
     <rect
        style="opacity:0;fill:#800000;fill-opacity:1;stroke:none"
@@ -10142,7 +10538,7 @@
   </g>
   <text
      line-height="normal"
-     y="1130"
+     y="1238"
      x="90"
      id="text7482"
      block-progression="tb"
@@ -10150,13 +10546,13 @@
      text-transform="none"
      style="font-size:10px;text-indent:0;line-height:normal;text-transform:none;color:#000000;fill:#000000;font-family:cmr10">
     <tspan
-       y="1130"
+       y="1238"
        x="90"
        id="tspan7484">Splitter</tspan>
   </text>
   <g
      id="splitter-normal"
-     transform="matrix(0.16,0,0,0.5333,174.2,890)">
+     transform="matrix(0.16,0,0,0.5333,174.2,998)">
     <rect
        height="30"
        width="100"
@@ -10176,7 +10572,7 @@
   </g>
   <g
      id="splitter-disabled"
-     transform="matrix(0.16,0,0,0.5333,379.2,890)">
+     transform="matrix(0.16,0,0,0.5333,379.2,998)">
     <rect
        height="30"
        width="100"
@@ -10196,7 +10592,7 @@
   </g>
   <g
      id="splitter-pressed"
-     transform="matrix(0.16,0,0,0.5333,274.2,886)">
+     transform="matrix(0.16,0,0,0.5333,274.2,994)">
     <rect
        height="30"
        width="100"
@@ -10216,7 +10612,7 @@
   </g>
   <g
      id="splitter-toggled"
-     transform="matrix(0.16,0,0,-0.5333,324.2,1384)">
+     transform="matrix(0.16,0,0,-0.5333,324.2,1492)">
     <rect
        transform="scale(1,-1)"
        height="30"
@@ -10236,7 +10632,7 @@
   </g>
   <g
      id="splitter-hovered"
-     transform="matrix(0.16,0,0,0.5333,224.2,890)">
+     transform="matrix(0.16,0,0,0.5333,224.2,998)">
     <rect
        height="30"
        width="100"
@@ -10258,19 +10654,19 @@
      id="scrollbar-cursor-normal-left"
      height="16"
      width="4"
-     y="1292"
+     y="1400"
      x="190"
      style="fill:#ff0000;fill-opacity:0.66666667" />
   <rect
      id="scrollbar-cursor-normal-right"
      height="16"
      width="4"
-     y="1292"
+     y="1400"
      x="214"
      style="fill:#ff0000;fill-opacity:0.66666667" />
   <text
      line-height="normal"
-     y="1302"
+     y="1410"
      x="105"
      id="text7513"
      block-progression="tb"
@@ -10278,7 +10674,7 @@
      text-transform="none"
      style="font-size:10px;text-indent:0;line-height:normal;text-transform:none;color:#000000;font-family:cmr10">
     <tspan
-       y="1302"
+       y="1410"
        x="105"
        id="tspan7515">Cursor</tspan>
   </text>
@@ -10286,7 +10682,7 @@
      id="scrollbar-cursor-normal"
      height="16"
      width="16"
-     y="1292"
+     y="1400"
      x="196"
      style="fill:#989898"
      inkscape:label="#scrollbar-cursor-normal" />
@@ -10294,35 +10690,35 @@
      id="scrollbar-cursor-normal-topleft"
      height="4"
      width="4"
-     y="1284"
+     y="1392"
      x="190"
      style="fill:#ff0000;fill-opacity:0.66666667" />
   <rect
      id="scrollbar-cursor-normal-topright"
      height="4"
      width="4"
-     y="1284"
+     y="1392"
      x="214"
      style="fill:#ff0000;fill-opacity:0.66666667" />
   <rect
      id="scrollbar-cursor-normal-bottomleft"
      height="4"
      width="4"
-     y="1312"
+     y="1420"
      x="190"
      style="fill:#ff0000;fill-opacity:0.66666667" />
   <rect
      id="scrollbar-cursor-normal-bottomright"
      height="4"
      width="4"
-     y="1312"
+     y="1420"
      x="214"
      style="fill:#ff0000;fill-opacity:0.66666667" />
   <rect
      id="scrollbar-cursor-normal-bottom"
      height="4"
      width="16"
-     y="1312"
+     y="1420"
      x="196"
      style="fill:#ff0000;fill-opacity:0.66666667"
      inkscape:label="#scrollbar-cursor-normal-bottom" />
@@ -10330,14 +10726,14 @@
      id="scrollbar-cursor-normal-top"
      height="4"
      width="16"
-     y="1284"
+     y="1392"
      x="196"
      style="fill:#ff0000;fill-opacity:0.66666667" />
   <rect
      id="scrollbar-cursor-hovered"
      height="16"
      width="16"
-     y="1292"
+     y="1400"
      x="248"
      style="fill:#666666"
      inkscape:label="#scrollbar-cursor-hovered" />
@@ -10345,7 +10741,7 @@
      id="scrollbar-cursor-pressed"
      height="16"
      width="16"
-     y="1292"
+     y="1400"
      x="298"
      style="fill:#00ffff"
      inkscape:label="#scrollbar-cursor-pressed" />
@@ -10353,7 +10749,7 @@
      id="scrollbar-cursor-disabled"
      height="16"
      width="16"
-     y="1292"
+     y="1400"
      x="402"
      style="fill:#b8b8b8"
      inkscape:label="#scrollbar-cursor-disabled" />
@@ -10361,173 +10757,173 @@
      id="scrollbar-cursor-hovered-top"
      height="4"
      width="16"
-     y="1284"
+     y="1392"
      x="248"
      style="fill:#ff2a2a;fill-opacity:0.86458333" />
   <rect
      id="scrollbar-cursor-hovered-bottom"
      height="4"
      width="16"
-     y="1312"
+     y="1420"
      x="248"
      style="fill:#ff2a2a;fill-opacity:0.86458333" />
   <rect
      id="scrollbar-cursor-hovered-left"
      height="16"
      width="4"
-     y="1292"
+     y="1400"
      x="242"
      style="fill:#ff2a2a;fill-opacity:0.86458333" />
   <rect
      id="scrollbar-cursor-hovered-right"
      height="16"
      width="4"
-     y="1292"
+     y="1400"
      x="266"
      style="fill:#ff2a2a;fill-opacity:0.86458333" />
   <rect
      id="scrollbar-cursor-hovered-topleft"
      height="4"
      width="4"
-     y="1284"
+     y="1392"
      x="242"
      style="fill:#ff2a2a;fill-opacity:0.86458333" />
   <rect
      id="scrollbar-cursor-hovered-topright"
      height="4"
      width="4"
-     y="1284"
+     y="1392"
      x="266"
      style="fill:#ff2a2a;fill-opacity:0.86458333" />
   <rect
      id="scrollbar-cursor-hovered-bottomleft"
      height="4"
      width="4"
-     y="1312"
+     y="1420"
      x="242"
      style="fill:#ff2a2a;fill-opacity:0.86458333" />
   <rect
      id="scrollbar-cursor-hovered-bottomright"
      height="4"
      width="4"
-     y="1312"
+     y="1420"
      x="266"
      style="fill:#ff2a2a;fill-opacity:0.86458333" />
   <rect
      id="scrollbar-cursor-pressed-top"
      height="4"
      width="16"
-     y="1284"
+     y="1392"
      x="298"
      style="fill:#ff2a2a;fill-opacity:0.86458333" />
   <rect
      id="scrollbar-cursor-pressed-bottom"
      height="4"
      width="16"
-     y="1312"
+     y="1420"
      x="298"
      style="fill:#ff2a2a;fill-opacity:0.86458333" />
   <rect
      id="scrollbar-cursor-pressed-left"
      height="16"
      width="4"
-     y="1292"
+     y="1400"
      x="292"
      style="fill:#ff2a2a;fill-opacity:0.86458333" />
   <rect
      id="scrollbar-cursor-pressed-right"
      height="16"
      width="4"
-     y="1292"
+     y="1400"
      x="316"
      style="fill:#ff2a2a;fill-opacity:0.86458333" />
   <rect
      id="scrollbar-cursor-pressed-topleft"
      height="4"
      width="4"
-     y="1284"
+     y="1392"
      x="292"
      style="fill:#ff2a2a;fill-opacity:0.86458333" />
   <rect
      id="scrollbar-cursor-pressed-topright"
      height="4"
      width="4"
-     y="1284"
+     y="1392"
      x="316"
      style="fill:#ff2a2a;fill-opacity:0.86458333" />
   <rect
      id="scrollbar-cursor-pressed-bottomleft"
      height="4"
      width="4"
-     y="1312"
+     y="1420"
      x="292"
      style="fill:#ff2a2a;fill-opacity:0.86458333" />
   <rect
      id="scrollbar-cursor-pressed-bottomright"
      height="4"
      width="4"
-     y="1312"
+     y="1420"
      x="316"
      style="fill:#ff2a2a;fill-opacity:0.86458333" />
   <rect
      id="scrollbar-cursor-disabled-top"
      height="4"
      width="16"
-     y="1284"
+     y="1392"
      x="402"
      style="fill:#ff2a2a;fill-opacity:0.86458333" />
   <rect
      id="scrollbar-cursor-disabled-bottom"
      height="4"
      width="16"
-     y="1312"
+     y="1420"
      x="402"
      style="fill:#ff2a2a;fill-opacity:0.86458333" />
   <rect
      id="scrollbar-cursor-disabled-left"
      height="16"
      width="4"
-     y="1292"
+     y="1400"
      x="396"
      style="fill:#ff2a2a;fill-opacity:0.86458333" />
   <rect
      id="scrollbar-cursor-disabled-right"
      height="16"
      width="4"
-     y="1292"
+     y="1400"
      x="420"
      style="fill:#ff2a2a;fill-opacity:0.86458333" />
   <rect
      id="scrollbar-cursor-disabled-topleft"
      height="4"
      width="4"
-     y="1284"
+     y="1392"
      x="396"
      style="fill:#ff2a2a;fill-opacity:0.86458333" />
   <rect
      id="scrollbar-cursor-disabled-topright"
      height="4"
      width="4"
-     y="1284"
+     y="1392"
      x="420"
      style="fill:#ff2a2a;fill-opacity:0.86458333" />
   <rect
      id="scrollbar-cursor-disabled-bottomleft"
      height="4"
      width="4"
-     y="1312"
+     y="1420"
      x="396"
      style="fill:#ff2a2a;fill-opacity:0.86458333" />
   <rect
      id="scrollbar-cursor-disabled-bottomright"
      height="4"
      width="4"
-     y="1312"
+     y="1420"
      x="420"
      style="fill:#ff2a2a;fill-opacity:0.86458333" />
   <g
      id="viewitem-normal"
-     transform="matrix(0.32,0,0,1.067,156.4,537)">
+     transform="matrix(0.32,0,0,1.067,156.4,645)">
     <rect
        height="15"
        width="50"
@@ -10538,7 +10934,7 @@
   </g>
   <g
      id="viewitem-disabled"
-     transform="matrix(0.16,0,0,0.5333,383.84313,803)"
+     transform="matrix(0.16,0,0,0.5333,383.84313,911)"
      style="fill:#999999">
     <rect
        height="30"
@@ -10559,7 +10955,7 @@
   </g>
   <g
      id="viewitem-toggled"
-     transform="matrix(0.16,0,0,-0.5333,334.2,1295)"
+     transform="matrix(0.16,0,0,-0.5333,334.2,1403)"
      style="fill:#ff2a2a">
     <rect
        transform="scale(1,-1)"
@@ -10572,7 +10968,7 @@
   </g>
   <g
      id="viewitem-hovered"
-     transform="matrix(0.0853,0,0,1.067,242.6,556)"
+     transform="matrix(0.0853,0,0,1.067,242.6,664)"
      style="fill:#782121">
     <rect
        height="15"
@@ -10584,7 +10980,7 @@
   </g>
   <text
      line-height="normal"
-     y="1057"
+     y="1165"
      x="90"
      id="text7574"
      block-progression="tb"
@@ -10592,13 +10988,13 @@
      text-transform="none"
      style="font-size:10px;text-indent:0;line-height:normal;text-transform:none;color:#000000;font-family:cmr10">
     <tspan
-       y="1057"
+       y="1165"
        x="90"
        id="tspan7576">ViewItem</tspan>
   </text>
   <g
      id="viewitem-alt-normal"
-     transform="matrix(0.32,0,0,1.067,155.81985,578.499)">
+     transform="matrix(0.32,0,0,1.067,155.81985,686.499)">
     <rect
        height="15"
        width="50"
@@ -10608,9 +11004,9 @@
        style="fill:#e5dede;fill-rule:evenodd" />
   </g>
   <g
-     id="commonframe-vsep"
-     transform="matrix(1.067 0 0 1.067 266.935 167.32)"
-     inkscape:label="#commonframe-normal-right-1">
+     id="frame-vsep"
+     transform="matrix(1.067,0,0,1.067,266.49555,222.53973)"
+     inkscape:label="#frame-raised-normal-right-1">
     <rect
        height="15"
        width="7.5"
@@ -10631,7 +11027,7 @@
        y="25"
        x="191.2"
        id="rect4787-2"
-       style="fill-opacity:.1569" />
+       style="fill-opacity:0.15690002" />
     <rect
        height="15"
        width="3.75"
@@ -10641,9 +11037,9 @@
        style="fill:url(#linearGradient5711)" />
   </g>
   <g
-     id="commonframe-hsep"
-     transform="matrix(0 1.067-1.067 0 546.675 1.935)"
-     inkscape:label="#commonframe-normal-bottom-3">
+     id="frame-hsep"
+     transform="matrix(0,1.067,-1.067,0,546.23555,57.154727)"
+     inkscape:label="#frame-raised-normal-bottom-3">
     <rect
        height="15"
        width="7.5"
@@ -10671,11 +11067,11 @@
        y="25"
        x="191.2"
        id="rect4834-4"
-       style="fill-opacity:.1569" />
+       style="fill-opacity:0.15690002" />
   </g>
   <g
      id="progress-normal"
-     transform="matrix(0.16,0,0,0.5333,179.37285,49.463455)"
+     transform="matrix(0.16,0,0,0.5333,179.37285,157.46346)"
      inkscape:label="#tabbar-normal-4">
     <rect
        height="30"
@@ -10696,7 +11092,7 @@
   </g>
   <g
      id="progress-disabled"
-     transform="matrix(0.16,0,0,0.5333,379.18498,49.098025)"
+     transform="matrix(0.16,0,0,0.5333,379.18498,157.09802)"
      inkscape:label="#tabbar-disabled-5">
     <rect
        height="30"
@@ -10776,7 +11172,7 @@
        style="fill:#bc2122;fill-rule:evenodd" />
   </g>
   <g
-     transform="translate(245.37159,73.00704)"
+     transform="translate(245.37159,83.00704)"
      id="g5736-0-1">
     <rect
        id="rect3673-6-4"
@@ -10796,7 +11192,7 @@
        style="fill:#bc2122;fill-rule:evenodd" />
   </g>
   <g
-     transform="translate(295.6496,73.68577)"
+     transform="translate(295.6496,83.68577)"
      id="g5736-4-1">
     <rect
        id="rect3673-5-0"
@@ -10816,7 +11212,7 @@
        style="fill:#bc2122;fill-rule:evenodd" />
   </g>
   <g
-     transform="translate(345.59747,72.72288)"
+     transform="translate(345.59747,82.72288)"
      id="g5736-8-7">
     <rect
        id="rect3673-69-5"
@@ -10836,7 +11232,7 @@
        style="fill:#bc2122;fill-rule:evenodd" />
   </g>
   <g
-     transform="translate(294.69937,252.51768)"
+     transform="translate(294.69937,360.51768)"
      id="g5736-4-1-5-5">
     <rect
        id="rect3673-5-0-7-0"
@@ -10856,7 +11252,7 @@
        style="fill:#bc2122;fill-rule:evenodd" />
   </g>
   <g
-     transform="translate(344.64724,251.55479)"
+     transform="translate(344.64724,359.55479)"
      id="g5736-8-7-8-4">
     <rect
        id="rect3673-69-5-4-8"
@@ -10876,7 +11272,7 @@
        style="fill:#bc2122;fill-rule:evenodd" />
   </g>
   <g
-     transform="translate(294.69937,307.51768)"
+     transform="translate(294.69937,415.51768)"
      id="g5736-4-1-5-2">
     <rect
        id="rect3673-5-0-7-6"
@@ -10896,7 +11292,7 @@
        style="fill:#bc2122;fill-rule:evenodd" />
   </g>
   <g
-     transform="translate(344.64724,306.55479)"
+     transform="translate(344.64724,414.55479)"
      id="g5736-8-7-8-2">
     <rect
        id="rect3673-69-5-4-2"
@@ -10916,7 +11312,7 @@
        style="fill:#bc2122;fill-rule:evenodd" />
   </g>
   <g
-     transform="translate(296.97327,364.35231)"
+     transform="translate(296.97327,472.35231)"
      id="g5736-4-1-5-5-4">
     <rect
        id="rect3673-5-0-7-0-0"
@@ -10936,7 +11332,7 @@
        style="fill:#bc2122;fill-rule:evenodd" />
   </g>
   <g
-     transform="translate(346.92114,363.38942)"
+     transform="translate(346.92114,471.38942)"
      id="g5736-8-7-8-4-0">
     <rect
        id="rect3673-69-5-4-8-0"
@@ -10956,7 +11352,7 @@
        style="fill:#bc2122;fill-rule:evenodd" />
   </g>
   <g
-     transform="translate(296.97327,419.3523)"
+     transform="translate(296.97327,527.3523)"
      id="g5736-4-1-5-2-0">
     <rect
        id="rect3673-5-0-7-6-3"
@@ -10976,7 +11372,7 @@
        style="fill:#bc2122;fill-rule:evenodd" />
   </g>
   <g
-     transform="translate(346.92114,418.38941)"
+     transform="translate(346.92114,526.38941)"
      id="g5736-8-7-8-2-8">
     <rect
        id="rect3673-69-5-4-2-4"
@@ -10996,7 +11392,7 @@
        style="fill:#bc2122;fill-rule:evenodd" />
   </g>
   <g
-     transform="translate(336.97327,434.3523)"
+     transform="translate(336.97327,542.3523)"
      id="g5736-4-1-5-2-0-3">
     <rect
        id="rect3673-5-0-7-6-3-5"
@@ -11016,7 +11412,7 @@
        style="fill:#bc2122;fill-rule:evenodd" />
   </g>
   <g
-     transform="translate(346.61106,475.24988)"
+     transform="translate(346.61106,583.24988)"
      id="g5736-8-7-8-2-8-3">
     <rect
        id="rect3673-69-5-4-2-4-3"
@@ -12215,30 +12611,30 @@
   </text>
   <text
      line-height="normal"
-     y="179.78027"
-     x="455.43945"
+     y="235"
+     x="455"
      id="text3454-22"
      block-progression="tb"
      text-indent="0"
      text-transform="none"
-     style="font-size:10;font-family:cmr10;color:#000000">
+     style="font-size:10px;text-indent:0;line-height:normal;text-transform:none;color:#000000;font-family:cmr10">
     <tspan
-       y="179.78027"
-       x="455.43945"
+       y="235"
+       x="455"
        id="tspan3456-8">V Line</tspan>
   </text>
   <text
      line-height="normal"
-     y="179.78027"
-     x="495.43945"
+     y="235"
+     x="495"
      id="text3454-22-2"
      block-progression="tb"
      text-indent="0"
      text-transform="none"
-     style="font-size:10;font-family:cmr10;color:#000000">
+     style="font-size:10px;text-indent:0;line-height:normal;text-transform:none;color:#000000;font-family:cmr10">
     <tspan
-       y="179.78027"
-       x="495.43945"
+       y="235"
+       x="495"
        id="tspan3456-8-1">H Line</tspan>
   </text>
   <g
@@ -12912,7 +13308,7 @@
        style="fill:#bc2122;fill-rule:evenodd" />
   </g>
   <g
-     transform="translate(345.61598,672.77369)"
+     transform="translate(345.61598,780.77369)"
      id="g5736-8-7-8-2-8-3-5">
     <rect
        id="rect3673-69-5-4-2-4-3-8"
@@ -12952,7 +13348,7 @@
        style="fill:#bc2122;fill-rule:evenodd" />
   </g>
   <g
-     transform="translate(335.31249,491.29964)"
+     transform="translate(335.31249,599.29964)"
      id="g5736-4-1-5-2-0-3-2">
     <rect
        id="rect3673-5-0-7-6-3-5-0"
@@ -12973,7 +13369,7 @@
   </g>
   <g
      id="header-normal-top"
-     transform="matrix(0,-1.067,-0.795,0,233.34824,1044.8075)">
+     transform="matrix(0,-1.067,-0.795,0,233.34824,1152.8075)">
     <rect
        height="15.09"
        width="3.75"
@@ -13005,7 +13401,7 @@
   </g>
   <g
      id="header-normal-bottom"
-     transform="matrix(0,1.067,-0.8,0,233.44824,680.8075)">
+     transform="matrix(0,1.067,-0.8,0,233.44824,788.8075)">
     <rect
        height="15"
        width="3.75"
@@ -13030,7 +13426,7 @@
   </g>
   <g
      id="header-normal-left"
-     transform="matrix(1.067,0,0,1.067,-7.551761,827.8075)">
+     transform="matrix(1.067,0,0,1.067,-7.551761,935.8075)">
     <rect
        height="15"
        width="3.75"
@@ -13055,7 +13451,7 @@
   </g>
   <g
      id="header-normal-right"
-     transform="matrix(1.067,0,0,1.067,22.448242,827.8075)">
+     transform="matrix(1.067,0,0,1.067,22.448242,935.8075)">
     <rect
        height="15"
        width="3.75"
@@ -13080,7 +13476,7 @@
   </g>
   <text
      line-height="normal"
-     y="861.8877"
+     y="969.8877"
      x="89.692383"
      id="text6284"
      block-progression="tb"
@@ -13088,13 +13484,13 @@
      text-transform="none"
      style="font-size:10px;text-indent:0;line-height:normal;text-transform:none;color:#000000;font-family:cmr10">
     <tspan
-       y="861.8877"
+       y="969.8877"
        x="89.692383"
        id="tspan6286">Header</tspan>
   </text>
   <g
      id="header-normal-topright"
-     transform="matrix(0,-1.067,-0.265,0,225.04824,1044.8075)">
+     transform="matrix(0,-1.067,-0.265,0,225.04824,1152.8075)">
     <rect
        height="15.09"
        width="3.75"
@@ -13126,7 +13522,7 @@
   </g>
   <g
      id="header-normal-bottomright"
-     transform="matrix(0,1.067,-0.2667,0,225.14824,680.8075)">
+     transform="matrix(0,1.067,-0.2667,0,225.14824,788.8075)">
     <rect
        height="15"
        width="3.75"
@@ -13151,7 +13547,7 @@
   </g>
   <g
      id="header-normal-topleft"
-     transform="matrix(0,-1.067,-0.265,0,207.04824,1044.8075)">
+     transform="matrix(0,-1.067,-0.265,0,207.04824,1152.8075)">
     <rect
        height="15.09"
        width="3.75"
@@ -13183,7 +13579,7 @@
   </g>
   <g
      id="header-normal-bottomleft"
-     transform="matrix(0,1.067,-0.2667,0,207.14824,680.8075)">
+     transform="matrix(0,1.067,-0.2667,0,207.14824,788.8075)">
     <rect
        height="15"
        width="3.75"
@@ -13208,7 +13604,7 @@
   </g>
   <g
      id="header-disabled-top"
-     transform="matrix(0,-1.067,-0.795,0,441.34824,1044.8075)">
+     transform="matrix(0,-1.067,-0.795,0,441.34824,1152.8075)">
     <rect
        height="15.09"
        width="3.75"
@@ -13240,7 +13636,7 @@
   </g>
   <g
      id="header-disabled-bottom"
-     transform="matrix(0,1.067,-0.8,0,441.44824,680.8075)">
+     transform="matrix(0,1.067,-0.8,0,441.44824,788.8075)">
     <rect
        height="15"
        width="3.75"
@@ -13265,7 +13661,7 @@
   </g>
   <g
      id="header-disabled-left"
-     transform="matrix(1.067,0,0,1.067,200.44824,827.8075)">
+     transform="matrix(1.067,0,0,1.067,200.44824,935.8075)">
     <rect
        height="15"
        width="3.75"
@@ -13290,7 +13686,7 @@
   </g>
   <g
      id="header-disabled-right"
-     transform="matrix(1.067,0,0,1.067,230.44824,827.8075)">
+     transform="matrix(1.067,0,0,1.067,230.44824,935.8075)">
     <rect
        height="15"
        width="3.75"
@@ -13315,7 +13711,7 @@
   </g>
   <g
      id="header-disabled-topleft"
-     transform="matrix(0,-1.067,-0.265,0,415.04824,1044.8075)">
+     transform="matrix(0,-1.067,-0.265,0,415.04824,1152.8075)">
     <rect
        height="15.09"
        width="3.75"
@@ -13347,7 +13743,7 @@
   </g>
   <g
      id="header-disabled-topright"
-     transform="matrix(0,-1.067,-0.265,0,433.04824,1044.8075)">
+     transform="matrix(0,-1.067,-0.265,0,433.04824,1152.8075)">
     <rect
        height="15.09"
        width="3.75"
@@ -13379,7 +13775,7 @@
   </g>
   <g
      id="header-disabled-bottomleft"
-     transform="matrix(0,1.067,-0.2667,0,415.14824,680.8075)">
+     transform="matrix(0,1.067,-0.2667,0,415.14824,788.8075)">
     <rect
        height="15"
        width="3.75"
@@ -13404,7 +13800,7 @@
   </g>
   <g
      id="header-disabled-bottomright"
-     transform="matrix(0,1.067,-0.2667,0,433.14824,680.8075)">
+     transform="matrix(0,1.067,-0.2667,0,433.14824,788.8075)">
     <rect
        height="15"
        width="3.75"
@@ -13429,7 +13825,7 @@
   </g>
   <g
      id="slider-elapsed-disabled"
-     transform="matrix(1.577,0,0,1.577,229.4765,-58.19204)"
+     transform="matrix(1.577,0,0,1.577,229.4765,49.80796)"
      inkscape:label="#slider-disabled-5">
     <rect
        height="10.14"
@@ -13441,7 +13837,7 @@
   </g>
   <g
      id="slider-elapsed-normal"
-     transform="matrix(0.4507,0,0,0.4507,147.6765,500.80796)"
+     transform="matrix(0.4507,0,0,0.4507,147.6765,608.80796)"
      inkscape:label="#slider-normal-5"
      style="fill:#729fcf">
     <rect
@@ -13454,7 +13850,7 @@
   </g>
   <g
      id="slider-elapsed-hovered"
-     transform="matrix(0.4507,0,0,0.4507,196.6765,500.80796)"
+     transform="matrix(0.4507,0,0,0.4507,196.6765,608.80796)"
      inkscape:label="#slider-hovered-7"
      style="fill:#aac5e2">
     <rect
@@ -13466,7 +13862,7 @@
        style="fill-rule:evenodd" />
   </g>
   <g
-     transform="translate(346.92114,532.38942)"
+     transform="translate(346.92114,640.38942)"
      id="g5736-8-7-8-4-0-6">
     <rect
        id="rect3673-69-5-4-8-0-1"
@@ -13486,7 +13882,7 @@
        style="fill:#bc2122;fill-rule:evenodd" />
   </g>
   <g
-     transform="translate(295.00241,573.77369)"
+     transform="translate(295.00241,681.77369)"
      id="g5736-4-1-5-2-0-9">
     <rect
        id="rect3673-5-0-7-6-3-7"
@@ -13506,7 +13902,7 @@
        style="fill:#bc2122;fill-rule:evenodd" />
   </g>
   <g
-     transform="translate(335.31249,574.29964)"
+     transform="translate(335.31249,682.29964)"
      id="g5736-4-1-5-2-0-3-7">
     <rect
        id="rect3673-5-0-7-6-3-5-4"
@@ -13526,7 +13922,7 @@
        style="fill:#bc2122;fill-rule:evenodd" />
   </g>
   <g
-     transform="translate(345.00241,573.77369)"
+     transform="translate(345.00241,681.77369)"
      id="g5736-4-1-5-2-0-9-6">
     <rect
        id="rect3673-5-0-7-6-3-7-2"
@@ -13546,7 +13942,7 @@
        style="fill:#bc2122;fill-rule:evenodd" />
   </g>
   <g
-     transform="translate(385.31249,574.29964)"
+     transform="translate(385.31249,682.29964)"
      id="g5736-4-1-5-2-0-3-7-8">
     <rect
        id="rect3673-5-0-7-6-3-5-4-6"
@@ -13567,7 +13963,7 @@
   </g>
   <g
      id="header-normal"
-     transform="matrix(0.10518008,0,0,0.5333,191.53292,615.38633)"
+     transform="matrix(0.10518008,0,0,0.5333,191.53292,723.38633)"
      inkscape:label="#button-normal-4">
     <rect
        height="30"
@@ -13588,7 +13984,7 @@
   </g>
   <g
      id="header-disabled"
-     transform="matrix(0.10883475,0,0,0.5333,399.1721,615.38633)"
+     transform="matrix(0.10883475,0,0,0.5333,399.1721,723.38633)"
      inkscape:label="#button-disabled-9">
     <rect
        height="30"
@@ -13941,7 +14337,7 @@
     </text>
   </g>
   <g
-     transform="translate(294.62362,127.63733)"
+     transform="translate(294.62362,235.63733)"
      id="g5736-4-1-5-2-0-9-1">
     <rect
        id="rect3673-5-0-7-6-3-7-1"
@@ -13961,7 +14357,7 @@
        style="fill:#bc2122;fill-rule:evenodd" />
   </g>
   <g
-     transform="translate(334.9337,164.16328)"
+     transform="translate(334.9337,272.16328)"
      id="g5736-4-1-5-2-0-3-7-3">
     <rect
        id="rect3673-5-0-7-6-3-5-4-69"
@@ -13981,7 +14377,7 @@
        style="fill:#bc2122;fill-rule:evenodd" />
   </g>
   <g
-     transform="translate(344.62362,127.63733)"
+     transform="translate(344.62362,235.63733)"
      id="g5736-4-1-5-2-0-9-6-4">
     <rect
        id="rect3673-5-0-7-6-3-7-2-8"
@@ -14001,7 +14397,7 @@
        style="fill:#bc2122;fill-rule:evenodd" />
   </g>
   <g
-     transform="translate(384.9337,164.16328)"
+     transform="translate(384.9337,272.16328)"
      id="g5736-4-1-5-2-0-3-7-8-1">
     <rect
        id="rect3673-5-0-7-6-3-5-4-6-6"
@@ -14021,7 +14417,7 @@
        style="fill:#bc2122;fill-rule:evenodd" />
   </g>
   <g
-     transform="translate(244.16907,128.09184)"
+     transform="translate(244.16907,236.09184)"
      id="g5736-4-1-5-2-0-9-1-0">
     <rect
        id="rect3673-5-0-7-6-3-7-1-2"
@@ -14041,7 +14437,7 @@
        style="fill:#bc2122;fill-rule:evenodd" />
   </g>
   <g
-     transform="translate(284.47915,164.61779)"
+     transform="translate(284.47915,272.61779)"
      id="g5736-4-1-5-2-0-3-7-3-7">
     <rect
        id="rect3673-5-0-7-6-3-5-4-69-8"
@@ -14062,7 +14458,7 @@
   </g>
   <g
      id="progress-normal-left"
-     transform="matrix(1.067,0,0,1.067,-14.064313,221.07135)"
+     transform="matrix(1.067,0,0,1.067,-14.064313,329.07135)"
      inkscape:label="#group-normal-left-2">
     <rect
        height="15"
@@ -14104,7 +14500,7 @@
   </g>
   <g
      id="progress-normal-topleft"
-     transform="matrix(1.067,0,0,1.067,113.93568,-223.92865)"
+     transform="matrix(1.067,0,0,1.067,113.93568,-115.92865)"
      inkscape:label="#group-normal-topleft-3">
     <path
        inkscape:connector-curvature="0"
@@ -14133,7 +14529,7 @@
   </g>
   <g
      id="progress-normal-topright"
-     transform="matrix(1.067,0,0,1.067,126.63568,-223.92865)"
+     transform="matrix(1.067,0,0,1.067,126.63568,-115.92865)"
      inkscape:label="#group-normal-topright-1">
     <path
        inkscape:connector-curvature="0"
@@ -14168,7 +14564,7 @@
   </g>
   <g
      id="progress-normal-bottomright"
-     transform="matrix(1.067,0,0,1.067,126.63568,-210.92865)"
+     transform="matrix(1.067,0,0,1.067,126.63568,-102.92865)"
      inkscape:label="#group-normal-bottomright-1">
     <path
        inkscape:connector-curvature="0"
@@ -14197,7 +14593,7 @@
   </g>
   <g
      id="progress-normal-bottom"
-     transform="matrix(0,1.067,-1.067,0,237.63568,74.071344)"
+     transform="matrix(0,1.067,-1.067,0,237.63568,182.07134)"
      inkscape:label="#group-normal-bottom-3">
     <rect
        height="15"
@@ -14245,7 +14641,7 @@
   </g>
   <g
      id="progress-normal-top"
-     transform="matrix(0,-1.067,-1.06,0,237.43568,438.07135)"
+     transform="matrix(0,-1.067,-1.06,0,237.43568,546.07135)"
      inkscape:label="#group-normal-top-1">
     <rect
        height="15.09"
@@ -14278,7 +14674,7 @@
   </g>
   <g
      id="progress-normal-right"
-     transform="matrix(-1.067,0,0,1.067,419.93569,221.07135)"
+     transform="matrix(-1.067,0,0,1.067,419.93569,329.07135)"
      inkscape:label="#group-normal-right-5">
     <rect
        height="15"
@@ -14320,7 +14716,7 @@
   </g>
   <g
      id="progress-normal-bottomleft"
-     transform="matrix(-1.067,0,0,1.067,279.23569,-210.92865)"
+     transform="matrix(-1.067,0,0,1.067,279.23569,-102.92865)"
      inkscape:label="#group-normal-bottomleft-7">
     <path
        inkscape:connector-curvature="0"
@@ -14349,7 +14745,7 @@
   </g>
   <g
      id="progress-disabled-left"
-     transform="matrix(1.067,0,0,1.067,185.93874,221.07137)"
+     transform="matrix(1.067,0,0,1.067,185.93874,329.07137)"
      inkscape:label="#group-normal-left-2">
     <rect
        height="15"
@@ -14391,7 +14787,7 @@
   </g>
   <g
      id="progress-disabled-topleft"
-     transform="matrix(1.067,0,0,1.067,313.93873,-223.92863)"
+     transform="matrix(1.067,0,0,1.067,313.93873,-115.92863)"
      inkscape:label="#group-normal-topleft-3">
     <path
        inkscape:connector-curvature="0"
@@ -14420,7 +14816,7 @@
   </g>
   <g
      id="progress-disabled-topright"
-     transform="matrix(1.067,0,0,1.067,326.63873,-223.92863)"
+     transform="matrix(1.067,0,0,1.067,326.63873,-115.92863)"
      inkscape:label="#group-normal-topright-1">
     <path
        inkscape:connector-curvature="0"
@@ -14455,7 +14851,7 @@
   </g>
   <g
      id="progress-disabled-bottomright"
-     transform="matrix(1.067,0,0,1.067,326.63873,-210.92863)"
+     transform="matrix(1.067,0,0,1.067,326.63873,-102.92863)"
      inkscape:label="#group-normal-bottomright-1">
     <path
        inkscape:connector-curvature="0"
@@ -14484,7 +14880,7 @@
   </g>
   <g
      id="progress-disabled-bottom"
-     transform="matrix(0,1.067,-1.067,0,437.63873,74.071359)"
+     transform="matrix(0,1.067,-1.067,0,437.63873,182.07136)"
      inkscape:label="#group-normal-bottom-3">
     <rect
        height="15"
@@ -14532,7 +14928,7 @@
   </g>
   <g
      id="progress-disabled-top"
-     transform="matrix(0,-1.067,-1.06,0,437.43873,438.07137)"
+     transform="matrix(0,-1.067,-1.06,0,437.43873,546.07137)"
      inkscape:label="#group-normal-top-1">
     <rect
        height="15.09"
@@ -14565,7 +14961,7 @@
   </g>
   <g
      id="progress-disabled-right"
-     transform="matrix(-1.067,0,0,1.067,619.93875,221.07137)"
+     transform="matrix(-1.067,0,0,1.067,619.93875,329.07137)"
      inkscape:label="#group-normal-right-5">
     <rect
        height="15"
@@ -14607,7 +15003,7 @@
   </g>
   <g
      id="progress-disabled-bottomleft"
-     transform="matrix(-1.067,0,0,1.067,479.23875,-210.92863)"
+     transform="matrix(-1.067,0,0,1.067,479.23875,-102.92863)"
      inkscape:label="#group-normal-bottomleft-7">
     <path
        inkscape:connector-curvature="0"
@@ -14636,7 +15032,7 @@
   </g>
   <text
      line-height="normal"
-     y="924"
+     y="1032"
      x="90"
      id="text6284-2"
      block-progression="tb"
@@ -14644,13 +15040,13 @@
      text-transform="none"
      style="font-size:10px;text-indent:0;line-height:normal;text-transform:none;color:#000000;font-family:cmr10">
     <tspan
-       y="924"
+       y="1032"
        x="90"
        id="tspan6286-0">SpinBox</tspan>
   </text>
   <g
      id="spin-normal"
-     transform="matrix(0.10518008,0,0,-0.5333,191.84054,1170.8988)"
+     transform="matrix(0.10518008,0,0,-0.5333,191.84054,1278.8988)"
      inkscape:label="#button-normal-4">
     <rect
        height="30"
@@ -14671,7 +15067,7 @@
   </g>
   <g
      id="spin-disabled"
-     transform="matrix(0.10883475,0,0,-0.5333,399.47972,1170.8988)"
+     transform="matrix(0.10883475,0,0,-0.5333,399.47972,1278.8988)"
      inkscape:label="#button-disabled-9">
     <rect
        height="30"
@@ -14692,7 +15088,7 @@
   </g>
   <g
      id="spin-pressed"
-     transform="matrix(0.10700742,0,0,-0.5333,297.66013,1170.8988)"
+     transform="matrix(0.10700742,0,0,-0.5333,297.66013,1278.8988)"
      inkscape:label="#button-pressed-7">
     <rect
        height="30"
@@ -14713,7 +15109,7 @@
   </g>
   <g
      id="spin-toggled"
-     transform="matrix(0.10518008,0,0,0.5333,345.84054,677.49863)"
+     transform="matrix(0.10518008,0,0,0.5333,345.84054,785.49863)"
      inkscape:label="#button-toggled-3">
     <rect
        transform="scale(1,-1)"
@@ -14734,7 +15130,7 @@
   </g>
   <g
      id="spin-hovered"
-     transform="matrix(0.10335275,0,0,-0.5333,246.02095,1170.8988)"
+     transform="matrix(0.10335275,0,0,-0.5333,246.02095,1278.8988)"
      inkscape:label="#button-hovered-0">
     <rect
        height="30"
@@ -14774,7 +15170,7 @@
        style="fill:#bc2122;fill-rule:evenodd" />
   </g>
   <g
-     transform="translate(245.0024,836.47059)"
+     transform="translate(245.0024,944.47059)"
      id="g5736-4-1-5-2-0-9-1-0-4-2">
     <rect
        id="rect3673-5-0-7-6-3-7-1-2-3-6"
@@ -14794,7 +15190,7 @@
        style="fill:#bc2122;fill-rule:evenodd" />
   </g>
   <g
-     transform="translate(294.85089,837.68275)"
+     transform="translate(294.85089,945.68275)"
      id="g5736-4-1-5-2-0-9-1-8-5">
     <rect
        id="rect3673-5-0-7-6-3-7-1-4-8"
@@ -14815,7 +15211,7 @@
   </g>
   <text
      line-height="normal"
-     y="954"
+     y="1062"
      x="530"
      id="text4017-8"
      block-progression="tb"
@@ -14823,13 +15219,13 @@
      text-transform="none"
      style="font-size:10px;text-indent:0;line-height:normal;text-transform:none;color:#000000;font-family:cmr10">
     <tspan
-       y="954"
+       y="1062"
        x="530"
        id="tspan4019-7">Whole menu frame</tspan>
   </text>
   <text
      line-height="normal"
-     y="1015"
+     y="1123"
      x="90"
      id="text4149-5"
      block-progression="tb"
@@ -14837,7 +15233,7 @@
      text-transform="none"
      style="font-size:10px;text-indent:0;line-height:normal;text-transform:none;color:#000000;font-family:cmr10">
     <tspan
-       y="1015"
+       y="1123"
        x="90"
        id="tspan4151-8">Menu bar item</tspan>
   </text>
@@ -14845,7 +15241,7 @@
      id="menubaritem-normal"
      height="8"
      width="8"
-     y="1003.2121"
+     y="1111.2122"
      x="201.24243"
      style="fill:#f4f4f4;fill-rule:evenodd"
      inkscape:label="#menuitem-normal-8" />
@@ -14853,7 +15249,7 @@
      id="menubaritem-normal-left"
      height="8"
      width="4"
-     y="1009.3788"
+     y="1117.3788"
      x="542.48486"
      style="fill:#d8d8d8;fill-rule:evenodd"
      inkscape:label="#menu-normal-left" />
@@ -14861,7 +15257,7 @@
      id="menubaritem-normal-right"
      height="8"
      width="4"
-     y="1009.3788"
+     y="1117.3788"
      x="558.48486"
      style="fill:#d8d8d8;fill-rule:evenodd"
      inkscape:label="#menu-normal-right" />
@@ -14869,7 +15265,7 @@
      id="menubaritem-normal-topright"
      height="4"
      width="4"
-     y="1003.3788"
+     y="1111.3788"
      x="558.48486"
      style="fill:#d8d8d8;fill-rule:evenodd"
      inkscape:label="#menu-normal-topright" />
@@ -14877,7 +15273,7 @@
      id="menubaritem-normal-bottomright"
      height="4"
      width="4"
-     y="1019.3788"
+     y="1127.3788"
      x="558.48486"
      style="fill:#d8d8d8;fill-rule:evenodd"
      inkscape:label="#menu-normal-bottomright" />
@@ -14885,7 +15281,7 @@
      id="menubaritem-normal-bottomleft"
      height="4"
      width="4"
-     y="1019.3788"
+     y="1127.3788"
      x="542.48486"
      style="fill:#d8d8d8;fill-rule:evenodd"
      inkscape:label="#menu-normal-bottomleft" />
@@ -14893,7 +15289,7 @@
      id="menubaritem-normal-topleft"
      height="4"
      width="4"
-     y="1003.3788"
+     y="1111.3788"
      x="542.48486"
      style="fill:#d8d8d8;fill-rule:evenodd"
      inkscape:label="#menu-normal-topleft" />
@@ -14901,13 +15297,13 @@
      id="menubaritem-normal-top"
      height="4"
      width="8"
-     y="1003.3788"
+     y="1111.3788"
      x="548.48486"
      style="fill:#d8d8d8;fill-rule:evenodd"
      inkscape:label="#menu-normal-top" />
   <g
      id="menubaritem-normal-bottom"
-     transform="matrix(0.2667,0,0,0.3636,521.18484,1009.3788)"
+     transform="matrix(0.2667,0,0,0.3636,521.18484,1117.3788)"
      style="fill:#d8d8d8"
      inkscape:label="#menu-normal-bottom">
     <rect
@@ -14920,7 +15316,7 @@
   </g>
   <text
      line-height="normal"
-     y="999"
+     y="1107"
      x="530"
      id="text4017-8-2"
      block-progression="tb"
@@ -14928,12 +15324,12 @@
      text-transform="none"
      style="font-size:10px;text-indent:0;line-height:normal;text-transform:none;color:#000000;font-family:cmr10">
     <tspan
-       y="999"
+       y="1107"
        x="530"
        id="tspan4019-7-9">Whole menu bar frame</tspan>
   </text>
   <g
-     transform="translate(242.95695,881.39483)"
+     transform="translate(242.95695,989.39483)"
      id="g5736-4-1-5-2-0-9-1-0-4-2-8">
     <rect
        id="rect3673-5-0-7-6-3-7-1-2-3-6-2"
@@ -14953,7 +15349,7 @@
        style="fill:#bc2122;fill-rule:evenodd" />
   </g>
   <g
-     transform="translate(292.80544,882.60699)"
+     transform="translate(292.80544,990.60699)"
      id="g5736-4-1-5-2-0-9-1-8-5-6">
     <rect
        id="rect3673-5-0-7-6-3-7-1-4-8-8"
@@ -14976,13 +15372,13 @@
      id="menubaritem-disabled"
      height="8"
      width="8.787879"
-     y="1008.6364"
+     y="1116.6365"
      x="404.77274"
      style="fill:#f4f4f4;fill-rule:evenodd"
      inkscape:label="#menuitem-disabled-7" />
   <g
      id="header-hovered-top"
-     transform="matrix(0,-1.067,-0.795,0,282.65127,1044.7317)">
+     transform="matrix(0,-1.067,-0.795,0,282.65127,1152.7317)">
     <rect
        height="15.09"
        width="3.75"
@@ -15014,7 +15410,7 @@
   </g>
   <g
      id="header-hovered-bottom"
-     transform="matrix(0,1.067,-0.8,0,282.75127,680.73174)">
+     transform="matrix(0,1.067,-0.8,0,282.75127,788.73174)">
     <rect
        height="15"
        width="3.75"
@@ -15039,7 +15435,7 @@
   </g>
   <g
      id="header-hovered-left"
-     transform="matrix(1.067,0,0,1.067,41.75127,827.73174)">
+     transform="matrix(1.067,0,0,1.067,41.75127,935.73174)">
     <rect
        height="15"
        width="3.75"
@@ -15064,7 +15460,7 @@
   </g>
   <g
      id="header-hovered-right"
-     transform="matrix(1.067,0,0,1.067,71.75127,827.73174)">
+     transform="matrix(1.067,0,0,1.067,71.75127,935.73174)">
     <rect
        height="15"
        width="3.75"
@@ -15089,7 +15485,7 @@
   </g>
   <g
      id="header-hovered-topleft"
-     transform="matrix(0,-1.067,-0.265,0,256.35127,1044.7317)">
+     transform="matrix(0,-1.067,-0.265,0,256.35127,1152.7317)">
     <rect
        height="15.09"
        width="3.75"
@@ -15121,7 +15517,7 @@
   </g>
   <g
      id="header-hovered-topright"
-     transform="matrix(0,-1.067,-0.265,0,274.35127,1044.7317)">
+     transform="matrix(0,-1.067,-0.265,0,274.35127,1152.7317)">
     <rect
        height="15.09"
        width="3.75"
@@ -15153,7 +15549,7 @@
   </g>
   <g
      id="header-hovered-bottomleft"
-     transform="matrix(0,1.067,-0.2667,0,256.45127,680.73174)">
+     transform="matrix(0,1.067,-0.2667,0,256.45127,788.73174)">
     <rect
        height="15"
        width="3.75"
@@ -15178,7 +15574,7 @@
   </g>
   <g
      id="header-hovered-bottomright"
-     transform="matrix(0,1.067,-0.2667,0,274.45127,680.73174)">
+     transform="matrix(0,1.067,-0.2667,0,274.45127,788.73174)">
     <rect
        height="15"
        width="3.75"
@@ -15203,7 +15599,7 @@
   </g>
   <g
      id="header-pressed-top"
-     transform="matrix(0,-1.067,-0.795,0,334.65127,1044.7317)">
+     transform="matrix(0,-1.067,-0.795,0,334.65127,1152.7317)">
     <rect
        height="15.09"
        width="3.75"
@@ -15235,7 +15631,7 @@
   </g>
   <g
      id="header-pressed-bottom"
-     transform="matrix(0,1.067,-0.8,0,334.75127,680.73174)">
+     transform="matrix(0,1.067,-0.8,0,334.75127,788.73174)">
     <rect
        height="15"
        width="3.75"
@@ -15260,7 +15656,7 @@
   </g>
   <g
      id="header-pressed-left"
-     transform="matrix(1.067,0,0,1.067,93.75127,827.73174)">
+     transform="matrix(1.067,0,0,1.067,93.75127,935.73174)">
     <rect
        height="15"
        width="3.75"
@@ -15285,7 +15681,7 @@
   </g>
   <g
      id="header-pressed-right"
-     transform="matrix(1.067,0,0,1.067,123.75127,827.73174)">
+     transform="matrix(1.067,0,0,1.067,123.75127,935.73174)">
     <rect
        height="15"
        width="3.75"
@@ -15310,7 +15706,7 @@
   </g>
   <g
      id="header-pressed-topleft"
-     transform="matrix(0,-1.067,-0.265,0,308.35127,1044.7317)">
+     transform="matrix(0,-1.067,-0.265,0,308.35127,1152.7317)">
     <rect
        height="15.09"
        width="3.75"
@@ -15342,7 +15738,7 @@
   </g>
   <g
      id="header-pressed-topright"
-     transform="matrix(0,-1.067,-0.265,0,326.35127,1044.7317)">
+     transform="matrix(0,-1.067,-0.265,0,326.35127,1152.7317)">
     <rect
        height="15.09"
        width="3.75"
@@ -15374,7 +15770,7 @@
   </g>
   <g
      id="header-pressed-bottomleft"
-     transform="matrix(0,1.067,-0.2667,0,308.45127,680.73174)">
+     transform="matrix(0,1.067,-0.2667,0,308.45127,788.73174)">
     <rect
        height="15"
        width="3.75"
@@ -15399,7 +15795,7 @@
   </g>
   <g
      id="header-pressed-bottomright"
-     transform="matrix(0,1.067,-0.2667,0,326.45127,680.73174)">
+     transform="matrix(0,1.067,-0.2667,0,326.45127,788.73174)">
     <rect
        height="15"
        width="3.75"
@@ -15424,7 +15820,7 @@
   </g>
   <g
      id="header-pressed"
-     transform="matrix(0.10700742,0,0,0.5333,292.65554,615.31057)"
+     transform="matrix(0.10700742,0,0,0.5333,292.65554,723.31057)"
      inkscape:label="#button-pressed-7">
     <rect
        height="30"
@@ -15445,7 +15841,7 @@
   </g>
   <g
      id="header-hovered"
-     transform="matrix(0.10335275,0,0,0.5333,241.01636,615.31057)"
+     transform="matrix(0.10335275,0,0,0.5333,241.01636,723.31057)"
      inkscape:label="#button-hovered-0">
     <rect
        height="30"
@@ -15466,7 +15862,7 @@
   </g>
   <g
      id="header-toggled-top"
-     transform="matrix(0,-1.067,-0.795,0,383.63612,1045.7166)"
+     transform="matrix(0,-1.067,-0.795,0,383.63612,1153.7166)"
      inkscape:label="#header-hovered-top-8">
     <rect
        height="15.09"
@@ -15499,7 +15895,7 @@
   </g>
   <g
      id="header-toggled-bottom"
-     transform="matrix(0,1.067,-0.8,0,383.73612,681.71659)"
+     transform="matrix(0,1.067,-0.8,0,383.73612,789.71659)"
      inkscape:label="#header-hovered-bottom-4">
     <rect
        height="15"
@@ -15525,7 +15921,7 @@
   </g>
   <g
      id="header-toggled-left"
-     transform="matrix(1.067,0,0,1.067,142.73612,828.71659)"
+     transform="matrix(1.067,0,0,1.067,142.73612,936.71659)"
      inkscape:label="#header-hovered-left-0">
     <rect
        height="15"
@@ -15551,7 +15947,7 @@
   </g>
   <g
      id="header-toggled-right"
-     transform="matrix(1.067,0,0,1.067,172.73612,828.71659)"
+     transform="matrix(1.067,0,0,1.067,172.73612,936.71659)"
      inkscape:label="#header-hovered-right-4">
     <rect
        height="15"
@@ -15577,7 +15973,7 @@
   </g>
   <g
      id="header-toggled-topleft"
-     transform="matrix(0,-1.067,-0.265,0,357.33612,1045.7166)"
+     transform="matrix(0,-1.067,-0.265,0,357.33612,1153.7166)"
      inkscape:label="#header-hovered-topleft-0">
     <rect
        height="15.09"
@@ -15610,7 +16006,7 @@
   </g>
   <g
      id="header-toggled-topright"
-     transform="matrix(0,-1.067,-0.265,0,375.33612,1045.7166)"
+     transform="matrix(0,-1.067,-0.265,0,375.33612,1153.7166)"
      inkscape:label="#header-hovered-topright-3">
     <rect
        height="15.09"
@@ -15643,7 +16039,7 @@
   </g>
   <g
      id="header-toggled-bottomleft"
-     transform="matrix(0,1.067,-0.2667,0,357.43612,681.71659)"
+     transform="matrix(0,1.067,-0.2667,0,357.43612,789.71659)"
      inkscape:label="#header-hovered-bottomleft-4">
     <rect
        height="15"
@@ -15669,7 +16065,7 @@
   </g>
   <g
      id="header-toggled-bottomright"
-     transform="matrix(0,1.067,-0.2667,0,375.43612,681.71659)"
+     transform="matrix(0,1.067,-0.2667,0,375.43612,789.71659)"
      inkscape:label="#header-hovered-bottomright-3">
     <rect
        height="15"
@@ -15695,7 +16091,7 @@
   </g>
   <g
      id="header-toggled"
-     transform="matrix(0.10335275,0,0,0.5333,342.00121,616.29542)"
+     transform="matrix(0.10335275,0,0,0.5333,342.00121,724.29542)"
      inkscape:label="#button-hovered-0">
     <rect
        height="30"
@@ -15715,7 +16111,7 @@
        style="fill:url(#g-8-7)" />
   </g>
   <g
-     transform="translate(295.83574,920.56154)"
+     transform="translate(295.83574,1028.5615)"
      id="g5736-4-1-5-2-0-9-1-8-5-6-7">
     <rect
        id="rect3673-5-0-7-6-3-7-1-4-8-8-1"
@@ -15736,7 +16132,7 @@
   </g>
   <text
      line-height="normal"
-     y="725"
+     y="833"
      x="190"
      id="text4216-0"
      block-progression="tb"
@@ -15744,13 +16140,13 @@
      text-transform="none"
      style="font-size:10px;text-indent:0;line-height:normal;text-transform:none;color:#000000;font-family:cmr10">
     <tspan
-       y="725"
+       y="833"
        x="190"
        id="tspan4218-7">Elapsed</tspan>
   </text>
   <text
      line-height="normal"
-     y="1075"
+     y="1183"
      x="185"
      id="text4216-1"
      block-progression="tb"
@@ -15758,12 +16154,12 @@
      text-transform="none"
      style="font-size:10px;text-indent:0;line-height:normal;text-transform:none;color:#000000;font-family:cmr10">
     <tspan
-       y="1075"
+       y="1183"
        x="185"
        id="tspan4218-5">Alternate</tspan>
   </text>
   <g
-     transform="translate(247.42279,961.92746)"
+     transform="translate(247.42279,1069.9275)"
      id="g5736-4-1-5-2-0-9-1-0-4-2-8-4">
     <rect
        id="rect3673-5-0-7-6-3-7-1-2-3-6-2-7"
@@ -15783,7 +16179,7 @@
        style="fill:#bc2122;fill-rule:evenodd" />
   </g>
   <g
-     transform="translate(297.27128,963.13962)"
+     transform="translate(297.27128,1071.1396)"
      id="g5736-4-1-5-2-0-9-1-8-5-6-6">
     <rect
        id="rect3673-5-0-7-6-3-7-1-4-8-8-4"
@@ -15803,7 +16199,7 @@
        style="fill:#bc2122;fill-rule:evenodd" />
   </g>
   <g
-     transform="translate(347.59855,961.7517)"
+     transform="translate(347.59855,1069.7517)"
      id="g5736-4-1-5-2-0-9-1-0-4-2-8-7">
     <rect
        id="rect3673-5-0-7-6-3-7-1-2-3-6-2-6"
@@ -15823,7 +16219,7 @@
        style="fill:#bc2122;fill-rule:evenodd" />
   </g>
   <g
-     transform="translate(397.44704,962.96386)"
+     transform="translate(397.44704,1070.9639)"
      id="g5736-4-1-5-2-0-9-1-8-5-6-3">
     <rect
        id="rect3673-5-0-7-6-3-7-1-4-8-8-8"
@@ -15844,7 +16240,7 @@
   </g>
   <text
      line-height="normal"
-     y="320"
+     y="428"
      x="185"
      id="text4216-0-0"
      block-progression="tb"
@@ -15852,12 +16248,12 @@
      text-transform="none"
      style="font-size:10px;text-indent:0;line-height:normal;text-transform:none;color:#000000;font-family:cmr10">
     <tspan
-       y="320"
+       y="428"
        x="185"
        id="tspan4218-7-4">Elapsed</tspan>
   </text>
   <g
-     transform="translate(292.83851,168.35103)"
+     transform="translate(292.83851,276.35103)"
      id="g5736-4-1-5-2-0-9-1-9">
     <rect
        id="rect3673-5-0-7-6-3-7-1-1"
@@ -15877,7 +16273,7 @@
        style="fill:#bc2122;fill-rule:evenodd" />
   </g>
   <g
-     transform="translate(342.83851,168.35103)"
+     transform="translate(342.83851,276.35103)"
      id="g5736-4-1-5-2-0-9-6-4-5">
     <rect
        id="rect3673-5-0-7-6-3-7-2-8-2"
@@ -15897,7 +16293,7 @@
        style="fill:#bc2122;fill-rule:evenodd" />
   </g>
   <g
-     transform="translate(242.38396,168.80554)"
+     transform="translate(242.38396,276.80554)"
      id="g5736-4-1-5-2-0-9-1-0-8">
     <rect
        id="rect3673-5-0-7-6-3-7-1-2-8"
@@ -15918,7 +16314,7 @@
   </g>
   <g
      id="scrollbar-normal-top"
-     transform="matrix(0,-1.067,-1.06,0,240.86364,1401.9394)"
+     transform="matrix(0,-1.067,-1.06,0,240.86364,1509.9394)"
      inkscape:label="#slider-normal-top-5">
     <rect
        height="15.09"
@@ -15944,7 +16340,7 @@
   </g>
   <g
      id="scrollbar-normal-bottom"
-     transform="matrix(0,1.067,-1.067,0,241.06364,1029.9394)"
+     transform="matrix(0,1.067,-1.067,0,241.06364,1137.9394)"
      inkscape:label="#slider-normal-bottom-5">
     <rect
        height="15"
@@ -15977,7 +16373,7 @@
   </g>
   <g
      id="scrollbar-normal-right"
-     transform="matrix(-1.067,0,0,1.067,419.36364,1181.2394)"
+     transform="matrix(-1.067,0,0,1.067,419.36364,1289.2394)"
      inkscape:label="#slider-normal-right-9">
     <rect
        transform="scale(1,-1)"
@@ -16012,7 +16408,7 @@
   </g>
   <g
      id="scrollbar-normal-topright"
-     transform="matrix(0.8,0,0,0.8,151.36364,853.6394)"
+     transform="matrix(0.8,0,0,0.8,151.36364,961.6394)"
      inkscape:label="#slider-normal-topright-6">
     <path
        transform="matrix(0,0.2632,-0.3093,0,164.4,393)"
@@ -16047,7 +16443,7 @@
   </g>
   <g
      id="scrollbar-normal-bottomright"
-     transform="matrix(0.8,0,0,-0.8,151.36364,1577.9394)"
+     transform="matrix(0.8,0,0,-0.8,151.36364,1685.9394)"
      inkscape:label="#slider-normal-bottomright-4">
     <path
        transform="matrix(0,0.2632,-0.3093,0,164.4,393)"
@@ -16082,7 +16478,7 @@
   </g>
   <g
      id="scrollbar-normal-bottomleft"
-     transform="matrix(-0.8,0,0,-0.8,261.36364,1577.9394)"
+     transform="matrix(-0.8,0,0,-0.8,261.36364,1685.9394)"
      inkscape:label="#slider-normal-bottomleft-1">
     <path
        transform="matrix(0,0.2632,-0.3093,0,164.4,393)"
@@ -16117,7 +16513,7 @@
   </g>
   <g
      id="scrollbar-normal-left"
-     transform="matrix(1.067,0,0,1.067,-6.6363636,1181.2394)"
+     transform="matrix(1.067,0,0,1.067,-6.6363636,1289.2394)"
      inkscape:label="#slider-normal-left-1">
     <rect
        transform="scale(1,-1)"
@@ -16152,7 +16548,7 @@
   </g>
   <g
      id="scrollbar-normal-topleft"
-     transform="matrix(-0.8,0,0,0.8,261.36364,853.6394)"
+     transform="matrix(-0.8,0,0,0.8,261.36364,961.6394)"
      inkscape:label="#slider-normal-topleft-6">
     <path
        transform="matrix(0,0.2632,-0.3093,0,164.4,393)"
@@ -16187,7 +16583,7 @@
   </g>
   <g
      id="scrollbar-hovered-top"
-     transform="matrix(0,-1.067,-1.06,0,290.86364,1401.9394)"
+     transform="matrix(0,-1.067,-1.06,0,290.86364,1509.9394)"
      inkscape:label="#slider-hovered-top-4">
     <rect
        height="15.09"
@@ -16213,7 +16609,7 @@
   </g>
   <g
      id="scrollbar-hovered-bottom"
-     transform="matrix(0,1.067,-1.067,0,291.06364,1029.9394)"
+     transform="matrix(0,1.067,-1.067,0,291.06364,1137.9394)"
      inkscape:label="#slider-hovered-bottom-6">
     <rect
        height="15"
@@ -16246,7 +16642,7 @@
   </g>
   <g
      id="scrollbar-hovered-left"
-     transform="matrix(1.067,0,0,1.067,41.363636,1181.2394)"
+     transform="matrix(1.067,0,0,1.067,41.363636,1289.2394)"
      inkscape:label="#slider-hovered-left-6">
     <rect
        transform="scale(1,-1)"
@@ -16281,7 +16677,7 @@
   </g>
   <g
      id="scrollbar-hovered-right"
-     transform="matrix(-1.067,0,0,1.067,469.36364,1181.2394)"
+     transform="matrix(-1.067,0,0,1.067,469.36364,1289.2394)"
      inkscape:label="#slider-hovered-right-4">
     <rect
        transform="scale(1,-1)"
@@ -16316,7 +16712,7 @@
   </g>
   <g
      id="scrollbar-hovered-topleft"
-     transform="matrix(-0.8,0,0,0.8,309.36364,853.6394)"
+     transform="matrix(-0.8,0,0,0.8,309.36364,961.6394)"
      inkscape:label="#slider-hovered-topleft-6">
     <path
        transform="matrix(0,0.2632,-0.3093,0,164.4,393)"
@@ -16351,7 +16747,7 @@
   </g>
   <g
      id="scrollbar-hovered-topright"
-     transform="matrix(0.8,0,0,0.8,201.36364,853.6394)"
+     transform="matrix(0.8,0,0,0.8,201.36364,961.6394)"
      inkscape:label="#slider-hovered-topright-0">
     <path
        transform="matrix(0,0.2632,-0.3093,0,164.4,393)"
@@ -16386,7 +16782,7 @@
   </g>
   <g
      id="scrollbar-hovered-bottomleft"
-     transform="matrix(-0.8,0,0,-0.8,309.36364,1577.9394)"
+     transform="matrix(-0.8,0,0,-0.8,309.36364,1685.9394)"
      inkscape:label="#slider-hovered-bottomleft-3">
     <path
        transform="matrix(0,0.2632,-0.3093,0,164.4,393)"
@@ -16421,7 +16817,7 @@
   </g>
   <g
      id="scrollbar-hovered-bottomright"
-     transform="matrix(0.8,0,0,-0.8,201.36364,1577.9394)"
+     transform="matrix(0.8,0,0,-0.8,201.36364,1685.9394)"
      inkscape:label="#slider-hovered-bottomright-8">
     <path
        transform="matrix(0,0.2632,-0.3093,0,164.4,393)"
@@ -16456,7 +16852,7 @@
   </g>
   <g
      id="scrollbar-disabled-top"
-     transform="matrix(0,-1.067,-1.06,0,440.86364,1401.9394)"
+     transform="matrix(0,-1.067,-1.06,0,440.86364,1509.9394)"
      inkscape:label="#slider-disabled-top-9">
     <rect
        height="15.09"
@@ -16482,7 +16878,7 @@
   </g>
   <g
      id="scrollbar-disabled-bottom"
-     transform="matrix(0,1.067,-1.067,0,441.06364,1029.9394)"
+     transform="matrix(0,1.067,-1.067,0,441.06364,1137.9394)"
      inkscape:label="#slider-disabled-bottom-3">
     <rect
        height="15"
@@ -16515,7 +16911,7 @@
   </g>
   <g
      id="scrollbar-disabled-left"
-     transform="matrix(1.067,0,0,1.067,193.36364,1181.2394)"
+     transform="matrix(1.067,0,0,1.067,193.36364,1289.2394)"
      inkscape:label="#slider-disabled-left-5">
     <rect
        transform="scale(1,-1)"
@@ -16550,7 +16946,7 @@
   </g>
   <g
      id="scrollbar-disabled-right"
-     transform="matrix(-1.067,0,0,1.067,619.36364,1181.2394)"
+     transform="matrix(-1.067,0,0,1.067,619.36364,1289.2394)"
      inkscape:label="#slider-disabled-right-4">
     <rect
        transform="scale(1,-1)"
@@ -16585,7 +16981,7 @@
   </g>
   <g
      id="scrollbar-disabled-topleft"
-     transform="matrix(-0.8,0,0,0.8,461.36364,853.6394)"
+     transform="matrix(-0.8,0,0,0.8,461.36364,961.6394)"
      inkscape:label="#slider-disabled-topleft-5">
     <path
        transform="matrix(0,0.2632,-0.3093,0,164.4,393)"
@@ -16620,7 +17016,7 @@
   </g>
   <g
      id="scrollbar-disabled-topright"
-     transform="matrix(0.8,0,0,0.8,351.36364,853.6394)"
+     transform="matrix(0.8,0,0,0.8,351.36364,961.6394)"
      inkscape:label="#slider-disabled-topright-4">
     <path
        transform="matrix(0,0.2632,-0.3093,0,164.4,393)"
@@ -16655,7 +17051,7 @@
   </g>
   <g
      id="scrollbar-disabled-bottomleft"
-     transform="matrix(-0.8,0,0,-0.8,461.36364,1577.9394)"
+     transform="matrix(-0.8,0,0,-0.8,461.36364,1685.9394)"
      inkscape:label="#slider-disabled-bottomleft-2">
     <path
        transform="matrix(0,0.2632,-0.3093,0,164.4,393)"
@@ -16690,7 +17086,7 @@
   </g>
   <g
      id="scrollbar-disabled-bottomright"
-     transform="matrix(0.8,0,0,-0.8,351.36364,1577.9394)"
+     transform="matrix(0.8,0,0,-0.8,351.36364,1685.9394)"
      inkscape:label="#slider-disabled-bottomright-4">
     <path
        transform="matrix(0,0.2632,-0.3093,0,164.4,393)"
@@ -16724,7 +17120,7 @@
        style="fill:#a8a8a8" />
   </g>
   <g
-     transform="translate(348.28478,1084.3288)"
+     transform="translate(348.28478,1192.3288)"
      id="g5736-8-7-8-4-0-6-0">
     <rect
        id="rect3673-69-5-4-8-0-1-6"
@@ -16745,7 +17141,7 @@
   </g>
   <g
      id="scrollbar-disabled"
-     transform="matrix(1.577,0,0,1.577,232.07002,456.14877)"
+     transform="matrix(1.577,0,0,1.577,232.07002,564.14877)"
      inkscape:label="#slider-disabled-1">
     <rect
        height="10.14"
@@ -16757,7 +17153,7 @@
   </g>
   <g
      id="scrollbar-normal"
-     transform="matrix(0.4507,0,0,0.4507,150.27002,1015.1488)"
+     transform="matrix(0.4507,0,0,0.4507,150.27002,1123.1488)"
      inkscape:label="#slider-normal-2">
     <rect
        height="35.5"
@@ -16769,7 +17165,7 @@
   </g>
   <g
      id="scrollbar-hovered"
-     transform="matrix(0.4507,0,0,0.4507,199.27002,1015.1488)"
+     transform="matrix(0.4507,0,0,0.4507,199.27002,1123.1488)"
      inkscape:label="#slider-hovered-8">
     <rect
        height="35.5"
@@ -16781,7 +17177,7 @@
   </g>
   <g
      id="scrollbar-pressed-top"
-     transform="matrix(0,-1.067,-1.06,0,341.7562,1403.1904)"
+     transform="matrix(0,-1.067,-1.06,0,341.7562,1511.1904)"
      inkscape:label="#slider-hovered-top-4">
     <rect
        height="15.09"
@@ -16807,7 +17203,7 @@
   </g>
   <g
      id="scrollbar-pressed-bottom"
-     transform="matrix(0,1.067,-1.067,0,341.9562,1031.1904)"
+     transform="matrix(0,1.067,-1.067,0,341.9562,1139.1904)"
      inkscape:label="#slider-hovered-bottom-6">
     <rect
        height="15"
@@ -16840,7 +17236,7 @@
   </g>
   <g
      id="scrollbar-pressed-left"
-     transform="matrix(1.067,0,0,1.067,92.256197,1182.4904)"
+     transform="matrix(1.067,0,0,1.067,92.256197,1290.4904)"
      inkscape:label="#slider-hovered-left-6">
     <rect
        transform="scale(1,-1)"
@@ -16875,7 +17271,7 @@
   </g>
   <g
      id="scrollbar-pressed-right"
-     transform="matrix(-1.067,0,0,1.067,520.2562,1182.4904)"
+     transform="matrix(-1.067,0,0,1.067,520.2562,1290.4904)"
      inkscape:label="#slider-hovered-right-4">
     <rect
        transform="scale(1,-1)"
@@ -16910,7 +17306,7 @@
   </g>
   <g
      id="scrollbar-pressed-topleft"
-     transform="matrix(-0.8,0,0,0.8,360.2562,854.8904)"
+     transform="matrix(-0.8,0,0,0.8,360.2562,962.8904)"
      inkscape:label="#slider-hovered-topleft-6">
     <path
        transform="matrix(0,0.2632,-0.3093,0,164.4,393)"
@@ -16945,7 +17341,7 @@
   </g>
   <g
      id="scrollbar-pressed-topright"
-     transform="matrix(0.8,0,0,0.8,252.2562,854.8904)"
+     transform="matrix(0.8,0,0,0.8,252.2562,962.8904)"
      inkscape:label="#slider-hovered-topright-0">
     <path
        transform="matrix(0,0.2632,-0.3093,0,164.4,393)"
@@ -16980,7 +17376,7 @@
   </g>
   <g
      id="scrollbar-pressed-bottomleft"
-     transform="matrix(-0.8,0,0,-0.8,360.2562,1579.1904)"
+     transform="matrix(-0.8,0,0,-0.8,360.2562,1687.1904)"
      inkscape:label="#slider-hovered-bottomleft-3">
     <path
        transform="matrix(0,0.2632,-0.3093,0,164.4,393)"
@@ -17015,7 +17411,7 @@
   </g>
   <g
      id="scrollbar-pressed-bottomright"
-     transform="matrix(0.8,0,0,-0.8,252.2562,1579.1904)"
+     transform="matrix(0.8,0,0,-0.8,252.2562,1687.1904)"
      inkscape:label="#slider-hovered-bottomright-8">
     <path
        transform="matrix(0,0.2632,-0.3093,0,164.4,393)"
@@ -17050,7 +17446,7 @@
   </g>
   <g
      id="scrollbar-pressed"
-     transform="matrix(0.70766222,0,0,0.4507,221.40263,1014.7919)"
+     transform="matrix(0.70766222,0,0,0.4507,221.40263,1122.7919)"
      inkscape:label="#slider-hovered-8"
      style="fill:#c87137">
     <rect
@@ -17071,7 +17467,7 @@
        style="fill:url(#g-8-0)" />
   </g>
   <g
-     transform="translate(349.28478,1128.3288)"
+     transform="translate(349.28478,1236.3288)"
      id="g5736-8-7-8-4-0-6-0-9">
     <rect
        id="rect3673-69-5-4-8-0-1-6-7"
@@ -17091,7 +17487,7 @@
        style="fill:#bc2122;fill-rule:evenodd" />
   </g>
   <g
-     transform="translate(348.74909,1170.1124)"
+     transform="translate(348.74909,1278.1124)"
      id="g5736-8-7-8-4-0-6-0-9-5">
     <rect
        id="rect3673-69-5-4-8-0-1-6-7-5"
@@ -17112,7 +17508,7 @@
   </g>
   <text
      line-height="normal"
-     y="1810"
+     y="1918"
      x="90"
      id="text3474-6"
      block-progression="tb"
@@ -17120,8 +17516,696 @@
      text-transform="none"
      style="font-size:10px;text-indent:0;line-height:normal;text-transform:none;color:#000000;font-family:cmr10">
     <tspan
-       y="1810"
+       y="1918"
        x="90"
        id="tspan3476-5">Dial</tspan>
+  </text>
+  <g
+     id="frame-sunken-normal"
+     transform="matrix(0.16,0,0,0.5333,181.22121,32.363605)"
+     inkscape:label="#group-normal-2">
+    <rect
+       transform="scale(1,-1)"
+       height="30"
+       width="100"
+       y="-477.60001"
+       x="98.730003"
+       id="rect4676-4"
+       style="fill:url(#radialGradient6135)" />
+  </g>
+  <g
+     id="frame-sunken-normal-left"
+     transform="matrix(1.067,0,0,1.067,-11.978788,244.36361)"
+     inkscape:label="#group-normal-left-3">
+    <rect
+       height="15"
+       width="7.5"
+       y="25"
+       x="187.5"
+       id="rect4679-1"
+       style="fill:url(#linearGradient6137)" />
+    <rect
+       transform="scale(1,-1)"
+       height="15"
+       width="3.75"
+       y="-40"
+       x="180"
+       id="rect4681-1"
+       style="fill:url(#linearGradient6139)" />
+    <rect
+       height="15"
+       width="3.75"
+       y="25"
+       x="183.8"
+       id="rect4683-9"
+       style="fill:url(#linearGradient6141)" />
+    <rect
+       height="15"
+       width="3"
+       y="25"
+       x="180"
+       id="rect4685-8"
+       style="fill-opacity:0" />
+    <rect
+       transform="scale(-1,-1)"
+       height="15"
+       width="3.75"
+       y="-40"
+       x="-191.2"
+       id="rect4687-2"
+       style="fill:url(#linearGradient6143)" />
+  </g>
+  <g
+     id="frame-sunken-normal-topleft"
+     transform="matrix(1.067,0,0,1.067,116.0212,-200.63639)"
+     inkscape:label="#group-normal-topleft-4">
+    <path
+       inkscape:connector-curvature="0"
+       transform="matrix(0.2632,0,0,0.3093,27.63,356)"
+       d="m 123,272.9 c 0,-26.8 25.5,-48.5 57,-48.5 l 0,48.5 z"
+       id="path4690-1"
+       style="fill-opacity:0" />
+    <path
+       inkscape:connector-curvature="0"
+       transform="matrix(0.1974,0,0,0.232,39.47,377.1)"
+       d="m 123,272.9 c 0,-26.8 25.5,-48.5 57,-48.5 l 0,48.5 z"
+       id="path4692-0"
+       style="fill:#707070" />
+    <path
+       inkscape:connector-curvature="0"
+       transform="matrix(0.1316,0,0,0.1546,51.32,398.2)"
+       d="m 123,272.9 c 0,-26.8 25.5,-48.5 57,-48.5 l 0,48.5 z"
+       id="path4694-3"
+       style="fill:#a8a8a8" />
+    <path
+       inkscape:connector-curvature="0"
+       transform="matrix(0.0658,0,0,0.0773,63.16,419.3)"
+       d="m 123,272.9 c 0,-26.8 25.5,-48.5 57,-48.5 l 0,48.5 z"
+       id="path4696-3"
+       style="fill:url(#linearGradient6145)" />
+  </g>
+  <g
+     id="frame-sunken-normal-topright"
+     transform="matrix(1.067,0,0,1.067,128.7212,-200.63639)"
+     inkscape:label="#group-normal-topright-4">
+    <path
+       inkscape:connector-curvature="0"
+       transform="matrix(0,0.2632,-0.3093,0,164.4,393)"
+       d="m 123,272.9 c 0,-26.8 25.5,-48.5 57,-48.5 l 0,48.5 z"
+       id="path4699-8"
+       style="fill-opacity:0" />
+    <path
+       inkscape:connector-curvature="0"
+       transform="matrix(0,0.2632,-0.3093,0,164.4,393)"
+       d="m 123,272.9 c 0,-26.8 25.5,-48.5 57,-48.5 l 0,48.5 z"
+       id="path4701-0"
+       style="fill-opacity:0" />
+    <path
+       inkscape:connector-curvature="0"
+       transform="matrix(0,0.1974,-0.232,0,143.3,404.8)"
+       d="m 123,272.9 c 0,-26.8 25.5,-48.5 57,-48.5 l 0,48.5 z"
+       id="path4703-3"
+       style="fill:#707070" />
+    <path
+       inkscape:connector-curvature="0"
+       transform="matrix(0,0.1316,-0.1546,0,122.2,416.7)"
+       d="m 123,272.9 c 0,-26.8 25.5,-48.5 57,-48.5 l 0,48.5 z"
+       id="path4705-29"
+       style="fill:#a8a8a8" />
+    <path
+       inkscape:connector-curvature="0"
+       transform="matrix(0,0.0658,-0.0773,0,101.1,428.5)"
+       d="m 123,272.9 c 0,-26.8 25.5,-48.5 57,-48.5 l 0,48.5 z"
+       id="path4707-1"
+       style="fill:url(#linearGradient6147)" />
+  </g>
+  <g
+     id="frame-sunken-normal-bottomright"
+     transform="matrix(1.067,0,0,1.067,128.7212,-187.63639)"
+     inkscape:label="#group-normal-bottomright-7">
+    <path
+       inkscape:connector-curvature="0"
+       transform="matrix(0,-0.2632,-0.3093,0,164.4,494.7)"
+       d="m 123,272.9 c 0,-26.8 25.5,-48.5 57,-48.5 l 0,48.5 z"
+       id="path4710-5"
+       style="fill:#ffffff;fill-opacity:0.62749999" />
+    <path
+       inkscape:connector-curvature="0"
+       transform="matrix(0,-0.1974,-0.232,0,143.3,482.9)"
+       d="m 123,272.9 c 0,-26.8 25.5,-48.5 57,-48.5 l 0,48.5 z"
+       id="path4712-1"
+       style="fill:#828282" />
+    <path
+       inkscape:connector-curvature="0"
+       transform="matrix(0,-0.1316,-0.1546,0,122.2,471)"
+       d="m 123,272.9 c 0,-26.8 25.5,-48.5 57,-48.5 l 0,48.5 z"
+       id="path4714-6"
+       style="fill:#b0b0b0" />
+    <path
+       inkscape:connector-curvature="0"
+       transform="matrix(0,-0.0658,-0.0773,0,101.1,459.2)"
+       d="m 123,272.9 c 0,-26.8 25.5,-48.5 57,-48.5 l 0,48.5 z"
+       id="path4716-7"
+       style="fill:url(#linearGradient6149)" />
+  </g>
+  <g
+     id="frame-sunken-normal-bottom"
+     transform="matrix(0,1.067,-1.067,0,239.7212,97.363605)"
+     inkscape:label="#group-normal-bottom-8">
+    <rect
+       height="15"
+       width="7.5"
+       y="25"
+       x="180"
+       id="rect4719-2"
+       style="fill:#c8c8c8" />
+    <rect
+       height="15"
+       width="3.75"
+       y="25"
+       x="187.5"
+       id="rect4721-9"
+       style="fill:#828282" />
+    <rect
+       height="15"
+       width="3"
+       y="25"
+       x="192"
+       id="rect4723-1"
+       style="fill-opacity:0" />
+    <rect
+       height="15"
+       width="3.75"
+       y="25"
+       x="191.2"
+       id="rect4725-3"
+       style="fill:#ffffff;fill-opacity:0.62749999" />
+    <rect
+       height="15"
+       width="3.75"
+       y="25"
+       x="183.8"
+       id="rect4727-6"
+       style="fill:#b0b0b0" />
+    <rect
+       transform="scale(-1,1)"
+       height="15"
+       width="7.5"
+       y="25"
+       x="-191.2"
+       id="rect4729-3"
+       style="fill:url(#radialGradient6151)" />
+  </g>
+  <g
+     id="frame-sunken-normal-top"
+     transform="matrix(0,-1.067,-1.06,0,239.5212,461.36361)"
+     inkscape:label="#group-normal-top-9">
+    <rect
+       height="15.09"
+       width="7.5"
+       y="25"
+       x="180"
+       id="rect4732-9"
+       style="fill:#a8a8a8" />
+    <rect
+       height="15.09"
+       width="3.75"
+       y="25"
+       x="187.5"
+       id="rect4734-6"
+       style="fill:#707070" />
+    <rect
+       height="15.09"
+       width="3.75"
+       y="25"
+       x="191.2"
+       id="rect4736-2"
+       style="fill:url(#radialGradient6153)" />
+    <rect
+       height="15.09"
+       width="3.75"
+       y="25"
+       x="180"
+       id="rect4738-0"
+       style="fill:url(#radialGradient6155)" />
+  </g>
+  <g
+     id="frame-sunken-normal-right"
+     transform="matrix(-1.067,0,0,1.067,422.02121,244.36361)"
+     inkscape:label="#group-normal-right-5">
+    <rect
+       height="15"
+       width="7.5"
+       y="25"
+       x="187.5"
+       id="rect4741-6"
+       style="fill:url(#linearGradient6157)" />
+    <rect
+       transform="scale(1,-1)"
+       height="15"
+       width="3.75"
+       y="-40"
+       x="180"
+       id="rect4743-4"
+       style="fill:url(#linearGradient6159)" />
+    <rect
+       height="15"
+       width="3.75"
+       y="25"
+       x="183.8"
+       id="rect4745-6"
+       style="fill:url(#linearGradient6161)" />
+    <rect
+       height="15"
+       width="3"
+       y="25"
+       x="180"
+       id="rect4747-9"
+       style="fill-opacity:0" />
+    <rect
+       transform="scale(1,-1)"
+       height="15"
+       width="3.75"
+       y="-40"
+       x="187.5"
+       id="rect4749-7"
+       style="fill:url(#linearGradient6163)" />
+  </g>
+  <g
+     id="frame-sunken-normal-bottomleft"
+     transform="matrix(-1.067,0,0,1.067,281.32121,-187.63639)"
+     inkscape:label="#group-normal-bottomleft-1">
+    <path
+       inkscape:connector-curvature="0"
+       transform="matrix(0,-0.2632,-0.3093,0,164.4,494.7)"
+       d="m 123,272.9 c 0,-26.8 25.5,-48.5 57,-48.5 l 0,48.5 z"
+       id="path4752-3"
+       style="fill:#ffffff;fill-opacity:0.62749999" />
+    <path
+       inkscape:connector-curvature="0"
+       transform="matrix(0,-0.1974,-0.232,0,143.3,482.9)"
+       d="m 123,272.9 c 0,-26.8 25.5,-48.5 57,-48.5 l 0,48.5 z"
+       id="path4754-5"
+       style="fill:#828282" />
+    <path
+       inkscape:connector-curvature="0"
+       transform="matrix(0,-0.1316,-0.1546,0,122.2,471)"
+       d="m 123,272.9 c 0,-26.8 25.5,-48.5 57,-48.5 l 0,48.5 z"
+       id="path4756-1"
+       style="fill:#b0b0b0" />
+    <path
+       inkscape:connector-curvature="0"
+       transform="matrix(0,-0.0658,-0.0773,0,101.1,459.2)"
+       d="m 123,272.9 c 0,-26.8 25.5,-48.5 57,-48.5 l 0,48.5 z"
+       id="path4758-6"
+       style="fill:url(#linearGradient6165)" />
+  </g>
+  <g
+     id="frame-sunken-disabled-top"
+     transform="matrix(0,-1.067,-1.06,0,439.52121,461.36361)"
+     inkscape:label="#group-disabled-top-9">
+    <rect
+       height="15.09"
+       width="7.5"
+       y="25"
+       x="180"
+       id="rect6059-2"
+       style="fill:#a8a8a8" />
+    <rect
+       height="15.09"
+       width="3.75"
+       y="25"
+       x="187.5"
+       id="rect6061-8"
+       style="fill:#707070" />
+    <rect
+       height="15.09"
+       width="3.75"
+       y="25"
+       x="191.2"
+       id="rect6063-6"
+       style="fill:url(#radialGradient6570-4)" />
+    <rect
+       height="15.09"
+       width="3.75"
+       y="25"
+       x="180"
+       id="rect6065-9"
+       style="fill:url(#radialGradient6572-5)" />
+  </g>
+  <g
+     id="frame-sunken-disabled-bottom"
+     transform="matrix(0,1.067,-1.067,0,439.72121,97.363605)"
+     inkscape:label="#group-disabled-bottom-1">
+    <rect
+       height="15"
+       width="7.5"
+       y="25"
+       x="180"
+       id="rect6068-2"
+       style="fill:#c8c8c8" />
+    <rect
+       height="15"
+       width="3.75"
+       y="25"
+       x="187.5"
+       id="rect6070-7"
+       style="fill:#828282" />
+    <rect
+       height="15"
+       width="3"
+       y="25"
+       x="192"
+       id="rect6072-9"
+       style="fill-opacity:0" />
+    <rect
+       height="15"
+       width="3.75"
+       y="25"
+       x="191.2"
+       id="rect6074-6"
+       style="fill:#ffffff;fill-opacity:0.62749999" />
+    <rect
+       height="15"
+       width="3.75"
+       y="25"
+       x="183.8"
+       id="rect6076-8"
+       style="fill:#b0b0b0" />
+    <rect
+       transform="scale(-1,1)"
+       height="15"
+       width="7.5"
+       y="25"
+       x="-191.2"
+       id="rect6078-2"
+       style="fill:url(#radialGradient6568-9)" />
+  </g>
+  <g
+     id="frame-sunken-disabled-left"
+     transform="matrix(1.067,0,0,1.067,188.02121,244.36361)"
+     inkscape:label="#group-disabled-left-1">
+    <rect
+       height="15"
+       width="7.5"
+       y="25"
+       x="187.5"
+       id="rect6081-6"
+       style="fill:url(#linearGradient6167)" />
+    <rect
+       transform="scale(1,-1)"
+       height="15"
+       width="3.75"
+       y="-40"
+       x="180"
+       id="rect6083-7"
+       style="fill:url(#linearGradient6169)" />
+    <rect
+       height="15"
+       width="3.75"
+       y="25"
+       x="183.8"
+       id="rect6085-2"
+       style="fill:url(#linearGradient6171)" />
+    <rect
+       height="15"
+       width="3"
+       y="25"
+       x="180"
+       id="rect6087-6"
+       style="fill-opacity:0" />
+    <rect
+       transform="scale(-1,-1)"
+       height="15"
+       width="3.75"
+       y="-40"
+       x="-191.2"
+       id="rect6089-4"
+       style="fill:url(#linearGradient6173)" />
+  </g>
+  <g
+     id="frame-sunken-disabled-right"
+     transform="matrix(-1.067,0,0,1.067,622.02121,244.36361)"
+     inkscape:label="#group-disabled-right-5">
+    <rect
+       height="15"
+       width="7.5"
+       y="25"
+       x="187.5"
+       id="rect6092-6"
+       style="fill:url(#linearGradient6554-3)" />
+    <rect
+       transform="scale(1,-1)"
+       height="15"
+       width="3.75"
+       y="-40"
+       x="180"
+       id="rect6094-1"
+       style="fill:url(#linearGradient6556-2)" />
+    <rect
+       height="15"
+       width="3.75"
+       y="25"
+       x="183.8"
+       id="rect6096-1"
+       style="fill:url(#linearGradient6558-15)" />
+    <rect
+       height="15"
+       width="3"
+       y="25"
+       x="180"
+       id="rect6098-3"
+       style="fill-opacity:0" />
+    <rect
+       transform="scale(1,-1)"
+       height="15"
+       width="3.75"
+       y="-40"
+       x="187.5"
+       id="rect6100-9"
+       style="fill:url(#linearGradient6560-9)" />
+  </g>
+  <g
+     id="frame-sunken-disabled-topleft"
+     transform="matrix(1.067,0,0,1.067,316.02121,-200.63639)"
+     inkscape:label="#group-disabled-topleft-2">
+    <path
+       inkscape:connector-curvature="0"
+       transform="matrix(0.2632,0,0,0.3093,27.63,356)"
+       d="m 123,272.9 c 0,-26.8 25.5,-48.5 57,-48.5 l 0,48.5 z"
+       id="path6103-0"
+       style="fill-opacity:0" />
+    <path
+       inkscape:connector-curvature="0"
+       transform="matrix(0.1974,0,0,0.232,39.47,377.1)"
+       d="m 123,272.9 c 0,-26.8 25.5,-48.5 57,-48.5 l 0,48.5 z"
+       id="path6105-0"
+       style="fill:#707070" />
+    <path
+       inkscape:connector-curvature="0"
+       transform="matrix(0.1316,0,0,0.1546,51.32,398.2)"
+       d="m 123,272.9 c 0,-26.8 25.5,-48.5 57,-48.5 l 0,48.5 z"
+       id="path6107-5"
+       style="fill:#a8a8a8" />
+    <path
+       inkscape:connector-curvature="0"
+       transform="matrix(0.0658,0,0,0.0773,63.16,419.3)"
+       d="m 123,272.9 c 0,-26.8 25.5,-48.5 57,-48.5 l 0,48.5 z"
+       id="path6109-8"
+       style="fill:url(#linearGradient6175)" />
+  </g>
+  <g
+     id="frame-sunken-disabled-topright"
+     transform="matrix(1.067,0,0,1.067,328.72121,-200.63639)"
+     inkscape:label="#group-disabled-topright-1">
+    <path
+       inkscape:connector-curvature="0"
+       transform="matrix(0,0.2632,-0.3093,0,164.4,393)"
+       d="m 123,272.9 c 0,-26.8 25.5,-48.5 57,-48.5 l 0,48.5 z"
+       id="path6112-2"
+       style="fill-opacity:0" />
+    <path
+       inkscape:connector-curvature="0"
+       transform="matrix(0,0.2632,-0.3093,0,164.4,393)"
+       d="m 123,272.9 c 0,-26.8 25.5,-48.5 57,-48.5 l 0,48.5 z"
+       id="path6114-7"
+       style="fill-opacity:0" />
+    <path
+       inkscape:connector-curvature="0"
+       transform="matrix(0,0.1974,-0.232,0,143.3,404.8)"
+       d="m 123,272.9 c 0,-26.8 25.5,-48.5 57,-48.5 l 0,48.5 z"
+       id="path6116-5"
+       style="fill:#707070" />
+    <path
+       inkscape:connector-curvature="0"
+       transform="matrix(0,0.1316,-0.1546,0,122.2,416.7)"
+       d="m 123,272.9 c 0,-26.8 25.5,-48.5 57,-48.5 l 0,48.5 z"
+       id="path6118-2"
+       style="fill:#a8a8a8" />
+    <path
+       inkscape:connector-curvature="0"
+       transform="matrix(0,0.0658,-0.0773,0,101.1,428.5)"
+       d="m 123,272.9 c 0,-26.8 25.5,-48.5 57,-48.5 l 0,48.5 z"
+       id="path6120-6"
+       style="fill:url(#linearGradient6177)" />
+  </g>
+  <g
+     id="frame-sunken-disabled-bottomleft"
+     transform="matrix(-1.067,0,0,1.067,481.32121,-187.63639)"
+     inkscape:label="#group-disabled-bottomleft-4">
+    <path
+       inkscape:connector-curvature="0"
+       transform="matrix(0,-0.2632,-0.3093,0,164.4,494.7)"
+       d="m 123,272.9 c 0,-26.8 25.5,-48.5 57,-48.5 l 0,48.5 z"
+       id="path6123-3"
+       style="fill:#ffffff;fill-opacity:0.62749999" />
+    <path
+       inkscape:connector-curvature="0"
+       transform="matrix(0,-0.1974,-0.232,0,143.3,482.9)"
+       d="m 123,272.9 c 0,-26.8 25.5,-48.5 57,-48.5 l 0,48.5 z"
+       id="path6125-0"
+       style="fill:#828282" />
+    <path
+       inkscape:connector-curvature="0"
+       transform="matrix(0,-0.1316,-0.1546,0,122.2,471)"
+       d="m 123,272.9 c 0,-26.8 25.5,-48.5 57,-48.5 l 0,48.5 z"
+       id="path6127-3"
+       style="fill:#b0b0b0" />
+    <path
+       inkscape:connector-curvature="0"
+       transform="matrix(0,-0.0658,-0.0773,0,101.1,459.2)"
+       d="m 123,272.9 c 0,-26.8 25.5,-48.5 57,-48.5 l 0,48.5 z"
+       id="path6129-4"
+       style="fill:url(#linearGradient6179)" />
+  </g>
+  <g
+     id="frame-sunken-disabled-bottomright"
+     transform="matrix(1.067,0,0,1.067,328.72121,-187.63639)"
+     inkscape:label="#group-disabled-bottomright-7">
+    <path
+       inkscape:connector-curvature="0"
+       transform="matrix(0,-0.2632,-0.3093,0,164.4,494.7)"
+       d="m 123,272.9 c 0,-26.8 25.5,-48.5 57,-48.5 l 0,48.5 z"
+       id="path6132-3"
+       style="fill:#ffffff;fill-opacity:0.62749999" />
+    <path
+       inkscape:connector-curvature="0"
+       transform="matrix(0,-0.1974,-0.232,0,143.3,482.9)"
+       d="m 123,272.9 c 0,-26.8 25.5,-48.5 57,-48.5 l 0,48.5 z"
+       id="path6134-6"
+       style="fill:#828282" />
+    <path
+       inkscape:connector-curvature="0"
+       transform="matrix(0,-0.1316,-0.1546,0,122.2,471)"
+       d="m 123,272.9 c 0,-26.8 25.5,-48.5 57,-48.5 l 0,48.5 z"
+       id="path6136-8"
+       style="fill:#b0b0b0" />
+    <path
+       inkscape:connector-curvature="0"
+       transform="matrix(0,-0.0658,-0.0773,0,101.1,459.2)"
+       d="m 123,272.9 c 0,-26.8 25.5,-48.5 57,-48.5 l 0,48.5 z"
+       id="path6138-0"
+       style="fill:url(#linearGradient6562-85)" />
+  </g>
+  <g
+     id="frame-sunken-disabled"
+     transform="matrix(0.16,0,0,0.5333,381.22121,32.363605)"
+     inkscape:label="#group-disabled-5">
+    <rect
+       transform="scale(1,-1)"
+       height="30"
+       width="100"
+       y="-477.60001"
+       x="98.730003"
+       id="rect6252-1"
+       style="fill:url(#radialGradient6181)" />
+  </g>
+  <g
+     transform="translate(245.23718,152.52372)"
+     id="g5736-4-14-6-8">
+    <rect
+       id="rect3673-5-6-6-1"
+       x="96.489998"
+       y="77.790001"
+       width="2.5"
+       height="12.5"
+       transform="matrix(0.7071,0.7071,-0.7071,0.7071,0,0)"
+       style="fill:#bc2122;fill-rule:evenodd" />
+    <rect
+       id="rect3675-5-8-2-8"
+       x="91.489998"
+       y="82.779999"
+       width="12.5"
+       height="2.5"
+       transform="matrix(0.7071,0.7071,-0.7071,0.7071,0,0)"
+       style="fill:#bc2122;fill-rule:evenodd" />
+  </g>
+  <g
+     transform="translate(295.23719,152.52372)"
+     id="g5736-4-14-3-42">
+    <rect
+       id="rect3673-5-6-1-1"
+       x="96.489998"
+       y="77.790001"
+       width="2.5"
+       height="12.5"
+       transform="matrix(0.7071,0.7071,-0.7071,0.7071,0,0)"
+       style="fill:#bc2122;fill-rule:evenodd" />
+    <rect
+       id="rect3675-5-8-1-9"
+       x="91.489998"
+       y="82.779999"
+       width="12.5"
+       height="2.5"
+       transform="matrix(0.7071,0.7071,-0.7071,0.7071,0,0)"
+       style="fill:#bc2122;fill-rule:evenodd" />
+  </g>
+  <g
+     transform="translate(344.62362,152.52372)"
+     id="g5736-4-14-3-4-1">
+    <rect
+       id="rect3673-5-6-1-3-4"
+       x="96.489998"
+       y="77.790001"
+       width="2.5"
+       height="12.5"
+       transform="matrix(0.7071,0.7071,-0.7071,0.7071,0,0)"
+       style="fill:#bc2122;fill-rule:evenodd" />
+    <rect
+       id="rect3675-5-8-1-5-0"
+       x="91.489998"
+       y="82.779999"
+       width="12.5"
+       height="2.5"
+       transform="matrix(0.7071,0.7071,-0.7071,0.7071,0,0)"
+       style="fill:#bc2122;fill-rule:evenodd" />
+  </g>
+  <text
+     line-height="normal"
+     y="216"
+     x="115"
+     id="text3697-1"
+     block-progression="tb"
+     text-indent="0"
+     text-transform="none"
+     style="font-size:10px;text-indent:0;line-height:normal;text-transform:none;color:#000000;fill:#000000;font-family:cmr10">
+    <tspan
+       y="216"
+       x="115"
+       id="tspan3699-9">Raised</tspan>
+  </text>
+  <text
+     line-height="normal"
+     y="280"
+     x="115"
+     id="text3697-1-0"
+     block-progression="tb"
+     text-indent="0"
+     text-transform="none"
+     style="font-size:10px;text-indent:0;line-height:normal;text-transform:none;color:#000000;fill:#000000;font-family:cmr10">
+    <tspan
+       y="280"
+       x="115"
+       id="tspan3699-9-4">Sunken</tspan>
   </text>
 </svg>
