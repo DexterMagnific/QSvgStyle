@@ -397,6 +397,9 @@ class QSvgStyle : public QCommonStyle {
     /* Animation frame counter */
     int animationcount;
 
+    /* QSvgStyle debugging capabilities */
+    bool dbgWireframe, dbgOverdraw;
+
     static void SWAP(int &x, int &y) {
       int tmp = x;
       x = y;
