@@ -21,11 +21,14 @@
 #define THEMEBUILDERUI_H
 
 #include <QStringList>
-#include <QMenu>
+#include <QShowEvent>
 
 #include "ui_ThemeBuilderUIBase.h"
 
 class ThemeConfig;
+class QTreeWidget;
+class QTreeWidgetItem;
+
 
 class ThemeBuilderUI : public QMainWindow, private Ui::ThemeBuilderUIBase {
   Q_OBJECT
@@ -35,7 +38,6 @@ class ThemeBuilderUI : public QMainWindow, private Ui::ThemeBuilderUIBase {
     ~ThemeBuilderUI();
 
   public slots:
-    void slot_debugMenuTriggered(QAction *action);
     void slot_loadTheme(const QString &theme);
     void slot_open();
     void slot_save(const QString &widget);
@@ -44,12 +46,20 @@ class ThemeBuilderUI : public QMainWindow, private Ui::ThemeBuilderUIBase {
     void slot_ElementChanged(const QString &);
 
   private:
+    enum {
+      GroupRole = Qt::UserRole + 10,
+    };
+
+    QTreeWidget *drawStackTree;
+    QTreeWidget *resolvedValuesTree;
+    QLabel *statusbarLbl1;
+    QLabel *statusbarLbl2;
+
     ThemeConfig *config;
     ThemeConfig *defaultConfig;
     QString filename;
     QStringList svgElements;
     QString lastElement;
-    QMenu *debugMenu;
 };
 
 #endif // THEMEBUILDERUI_H

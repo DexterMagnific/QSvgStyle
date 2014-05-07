@@ -20,7 +20,7 @@
 #ifndef THEMECONFIG_H
 #define THEMECONFIG_H
 
-#include "../themeconfig/specs.h"
+#include "specs.h"
 
 class QString;
 class QVariant;

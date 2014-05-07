@@ -24,68 +24,220 @@
 #include <QFile>
 #include <QListWidget>
 #include <QFileDialog>
+#include <QTreeWidget>
+#include <QTreeWidgetItem>
 
-#include "../themeconfig/ThemeConfig.h"
+#include "../style/ThemeConfig.h"
 #include <QLineEdit>
+#include <QScrollBar>
 
 ThemeBuilderUI::ThemeBuilderUI(QWidget* parent)
  : QMainWindow(parent), config(NULL)
 {
+  // Setup using auto-generated UIC code
   setupUi(this);
-  
-  // Debug menu
-  QAction *showDrawingStack = new QAction(tr("Drawing call stack"),NULL);
-  showDrawingStack->setCheckable(true);
-  showDrawingStack->setData(QVariant(0));
-  
-  QAction *layoutMode = new QAction(tr("Layout mode"), NULL);
-  layoutMode->setCheckable(true);
-  layoutMode->setData(QVariant(1));
-  
-  QAction *resolvedValues = new QAction(tr("Resolved values"), NULL);
-  resolvedValues->setCheckable(true);
-  resolvedValues->setData(QVariant(2));
-  
-  QAction *widgetInternals = new QAction(tr("Widget internals"), NULL);
-  widgetInternals->setCheckable(true);;
-  widgetInternals->setData(QVariant(3));
-  
-  debugMenu = new QMenu(NULL);
-  debugMenu->addAction(showDrawingStack);
-  debugMenu->addAction(layoutMode);
-  debugMenu->addAction(resolvedValues);
-  debugMenu->addAction(widgetInternals);
-  debugBtn->setMenu(debugMenu);
-  
-  connect(previewBtn,SIGNAL(toggled(bool)),previewTab,SLOT(setVisible(bool)));
-  connect(propertiesBtn,SIGNAL(toggled(bool)),propertiesTab,SLOT(setVisible(bool)));
-  connect(quitBtn,SIGNAL(clicked()),this,SLOT(close()));
-  
-  connect(debugMenu,SIGNAL(triggered(QAction*)),this,SLOT(slot_debugMenuTriggered(QAction*)));
-  
-  previewTab->setVisible(previewBtn->isChecked());
-  propertiesTab->setVisible(propertiesBtn->isChecked());
 
-  callStackTree->header()->setResizeMode(0,QHeaderView::ResizeToContents);
+
+  // populate widget tree views
+  QListWidgetItem *i;
+
+  // FIXME use xx_group() functions from QSvgStyle class to set group role
+  QIcon icon1;
+  icon1.addFile(QString::fromUtf8(":/icon/pixmaps/pushbutton.png"), QSize(), QIcon::Normal, QIcon::Off);
+  i = new QListWidgetItem(buttonList);
+  i->setIcon(icon1);
+  i->setText("Push button");
+  i->setData(GroupRole,"PushButton");
+
+  QIcon icon2;
+  icon2.addFile(QString::fromUtf8(":/icon/pixmaps/toolbutton.png"), QSize(), QIcon::Normal, QIcon::Off);
+  i = new QListWidgetItem(buttonList);
+  i->setIcon(icon2);
+  i->setText("Tool button");
+  i->setData(GroupRole,"ToolButton");
+
+  QIcon icon3;
+  icon3.addFile(QString::fromUtf8(":/icon/pixmaps/radiobutton.png"), QSize(), QIcon::Normal, QIcon::Off);
+  i = new QListWidgetItem(buttonList);
+  i->setIcon(icon3);
+  i->setText("Radio button");
+  i->setData(GroupRole,"RadioButton");
+
+  QIcon icon4;
+  icon4.addFile(QString::fromUtf8(":/icon/pixmaps/checkbox.png"), QSize(), QIcon::Normal, QIcon::Off);
+  i = new QListWidgetItem(buttonList);
+  i->setIcon(icon4);
+  i->setText("Check box");
+  i->setData(GroupRole,"CheckBox");
+
+  QIcon icon5;
+  icon5.addFile(QString::fromUtf8(":/icon/pixmaps/lineedit.png"), QSize(), QIcon::Normal, QIcon::Off);
+  i = new QListWidgetItem(inputList);
+  i->setIcon(icon5);
+  i->setText("Line edit");
+  i->setData(GroupRole,"LineEdit");
+
+  QIcon icon6;
+  icon6.addFile(QString::fromUtf8(":/icon/pixmaps/spinbox.png"), QSize(), QIcon::Normal, QIcon::Off);
+  i = new QListWidgetItem(inputList);
+  i->setIcon(icon6);
+  i->setText("Spin box");
+  i->setData(GroupRole,"SpinBox");
+
+  QIcon icon7;
+  icon7.addFile(QString::fromUtf8(":/icon/pixmaps/vscrollbar.png"), QSize(), QIcon::Normal, QIcon::Off);
+  i = new QListWidgetItem(inputList);
+  i->setIcon(icon7);
+  i->setText("Scroll bar");
+  i->setData(GroupRole,"ScrollBar");
+
+  QIcon icon8;
+  icon8.addFile(QString::fromUtf8(":/icon/pixmaps/hslider.png"), QSize(), QIcon::Normal, QIcon::Off);
+  i = new QListWidgetItem(inputList);
+  i->setIcon(icon8);
+  i->setText("Slider");
+  i->setData(GroupRole,"Slider");
+
+  QIcon icon9;
+  icon9.addFile(QString::fromUtf8(":/icon/pixmaps/dial.png"), QSize(), QIcon::Normal, QIcon::Off);
+  i = new QListWidgetItem(inputList);
+  i->setIcon(icon9);
+  i->setText("Dial");
+  i->setData(GroupRole,"Dial");
+
+  QIcon icon10;
+  icon10.addFile(QString::fromUtf8(":/icon/pixmaps/progress.png"), QSize(), QIcon::Normal, QIcon::Off);
+  i = new QListWidgetItem(displayList);
+  i->setIcon(icon10);
+  i->setText("Progress bar");
+  i->setData(GroupRole,"ProgressBar");
+
+  QIcon icon11;
+  icon11.addFile(QString::fromUtf8(":/icon/pixmaps/edithlayout.png"), QSize(), QIcon::Normal, QIcon::Off);
+  i = new QListWidgetItem(displayList);
+  i->setIcon(icon11);
+  i->setText("Splitter");
+  i->setData(GroupRole,"Splitter");
+
+  QIcon icon12;
+  icon12.addFile(QString::fromUtf8(":/icon/pixmaps/groupbox.png"), QSize(), QIcon::Normal, QIcon::Off);
+  i = new QListWidgetItem(containerList);
+  i->setIcon(icon12);
+  i->setText("Group box");
+  i->setData(GroupRole,"GroupBox");
+
+  QIcon icon13;
+  icon13.addFile(QString::fromUtf8(":/icon/pixmaps/toolbox.png"), QSize(), QIcon::Normal, QIcon::Off);
+  i = new QListWidgetItem(containerList);
+  i->setIcon(icon13);
+  i->setText("Tool box");
+  i->setData(GroupRole,"ToolBox");
+
+  QIcon icon14;
+  icon14.addFile(QString::fromUtf8(":/icon/pixmaps/tabwidget.png"), QSize(), QIcon::Normal, QIcon::Off);
+  i = new QListWidgetItem(containerList);
+  i->setIcon(icon14);
+  i->setText("Tab widget");
+  i->setData(GroupRole,"TabWidget");
+
+  QIcon icon15;
+  icon15.addFile(QString::fromUtf8(":/icon/pixmaps/frame.png"), QSize(), QIcon::Normal, QIcon::Off);
+  i = new QListWidgetItem(containerList);
+  i->setIcon(icon15);
+  i->setText("Frame");
+  i->setData(GroupRole,"Frame");
+
+  QIcon icon16;
+  icon16.addFile(QString::fromUtf8(":/icon/pixmaps/dockwidget.png"), QSize(), QIcon::Normal, QIcon::Off);
+  i = new QListWidgetItem(containerList);
+  i->setIcon(icon16);
+  i->setText("Dock widget");
+  i->setData(GroupRole,"DockWidget");
+
+  QIcon icon17;
+  icon17.addFile(QString::fromUtf8(":/icon/pixmaps/toolbox.png"), QSize(), QIcon::Normal, QIcon::Off);
+  i = new QListWidgetItem(containerList);
+  //i->setIcon(icon17);
+  i->setText("Tool bar");
+  i->setData(GroupRole,"ToolBar");
+
+  QIcon icon18;
+  icon18.addFile(QString::fromUtf8(":/icon/pixmaps/menubar.png"), QSize(), QIcon::Normal, QIcon::Off);
+  i = new QListWidgetItem(containerList);
+  i->setIcon(icon18);
+  i->setText("Menu bar item");
+  i->setData(GroupRole,"MenuBarItem");
+
+  QIcon icon19;
+  icon19.addFile(QString::fromUtf8(":/icon/pixmaps/toolbox.png"), QSize(), QIcon::Normal, QIcon::Off);
+  i = new QListWidgetItem(containerList);
+  //i->setIcon(icon19);
+  i->setText("Menu item");
+  i->setData(GroupRole,"MenuItem");
+
+  QIcon icon20;
+  icon20.addFile(QString::fromUtf8(":/icon/pixmaps/toolbox.png"), QSize(), QIcon::Normal, QIcon::Off);
+  i = new QListWidgetItem(miscList);
+  //i->setIcon(icon20);
+  i->setText("Metrics");
+  //i->setData(GroupRole,"ToolBox");
+
+  // Adjust toolBox size
+  // Shitty QListWidget size policies do not work
+  int maxW = buttonList->sizeHintForColumn(0);
+  maxW = qMax(maxW,inputList->sizeHintForColumn(0));
+  maxW = qMax(maxW,displayList->sizeHintForColumn(0));
+  maxW = qMax(maxW,containerList->sizeHintForColumn(0));
+  maxW = qMax(maxW,miscList->sizeHintForColumn(0));
+  maxW += 30; // be comfortable
+
+  buttonList->setFixedWidth(maxW);
+  inputList->setFixedWidth(maxW);
+  displayList->setFixedWidth(maxW);
+  containerList->setFixedWidth(maxW);
+  miscList->setFixedWidth(maxW);
+
+  toolBox->setSizePolicy(QSizePolicy::Fixed,QSizePolicy::Expanding);
+
+  // add tree widgets after window creation to get minimal window size
+  drawStackTree = new QTreeWidget(dbgTab);
+  drawStackTree->setObjectName(QString::fromUtf8("drawStackTree"));
+  drawStackTree->setAlternatingRowColors(true);
+  drawStackTree->headerItem()->setText(0,"Function");
+  drawStackTree->headerItem()->setText(1,"Args");
+  dbgLayout->addWidget(drawStackTree, 3, 0, 1, 1);
+
+  resolvedValuesTree = new QTreeWidget(dbgTab);
+  resolvedValuesTree->setObjectName(QString::fromUtf8("resolvedValuesTree"));
+  resolvedValuesTree->headerItem()->setText(0,"Name");
+  resolvedValuesTree->headerItem()->setText(1,"File value");
+  resolvedValuesTree->headerItem()->setText(2,"Resolved value");
+  dbgLayout->addWidget(resolvedValuesTree, 5, 0, 1, 1);
+
+  drawStackTree->header()->setResizeMode(0,QHeaderView::ResizeToContents);
   resolvedValuesTree->header()->setResizeMode(QHeaderView::ResizeToContents);
-  
-  slot_debugMenuTriggered(showDrawingStack);
-  slot_debugMenuTriggered(resolvedValues);
+
+  // insert appropriate widget into status bar
+  statusbarLbl1 = new QLabel(this);
+  statusbarLbl2 = new QLabel(this);
+  statusBar()->insertWidget(0,statusbarLbl1);
+  statusBar()->insertWidget(1,statusbarLbl2);
+
+  // Enable/disable some widgets
+  tabWidget->setTabEnabled(1,false);
+  tabWidget2->setTabEnabled(0,false);
+  tabWidget2->setTabEnabled(1,false);
+  tabWidget2->setTabEnabled(2,false);
+
+  // connections
+  connect(quitBtn,SIGNAL(clicked()),this,SLOT(close()));
+
+  // set minimal and sufficient window size
+  resize(minimumSizeHint());
 }
 
 ThemeBuilderUI::~ThemeBuilderUI()
 {
-}
-
-void ThemeBuilderUI::slot_debugMenuTriggered ( QAction* action )
-{
-  if (action->data() == 0) {
-    callStackTree->setVisible(action->isChecked());
-    label_4->setVisible(action->isChecked());
-  }
-  if (action->data() == 2) {
-    resolvedValuesTree->setVisible(action->isChecked());
-  }
 }
 
 void ThemeBuilderUI::slot_quit()

@@ -25,7 +25,7 @@
 #include <QListWidget>
 #include <QFileDialog>
 
-#include "../themeconfig/ThemeConfig.h"
+#include "../style/ThemeConfig.h"
 #include <QLineEdit>
 
 /* Helper macros */

@@ -23,10 +23,7 @@
 #include <QCommonStyle>
 #include <QString>
 
-#include "../themeconfig/specs.h"
-
-/** Define this to allow style instrumentation */
-//#define QS_INSTRUMENTATION
+#include "specs.h"
 
 class QWidget;
 class QSvgRenderer;

@@ -1,9 +1,10 @@
-SUBDIRS += style \
- themebuilder \
- themeviewer \
- experimental
 TEMPLATE = subdirs
-CONFIG += warn_on \
-          qt \
-          thread \
-          debug
+SUBDIRS += \
+  style        \
+  themebuilder \
+  themeviewer  \
+  experimental
+
+CONFIG += \
+  warn_on \
+  ordered

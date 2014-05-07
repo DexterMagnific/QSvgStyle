@@ -56,7 +56,7 @@
 #include <QScrollBar>
 #include <QTreeWidget>
 
-#include "../themeconfig/ThemeConfig.h"
+#include "ThemeConfig.h"
 
 QSvgStyle::QSvgStyle()
   : QCommonStyle(),
