@@ -6,19 +6,23 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1082</width>
-    <height>505</height>
+    <width>1115</width>
+    <height>574</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>QSvgStyle theme builder</string>
+  </property>
+  <property name="windowIcon">
+   <iconset resource="ThemeBuilderUIBase.qrc">
+    <normaloff>:/icon/pixmaps/welcome.png</normaloff>:/icon/pixmaps/welcome.png</iconset>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout">
     <item row="2" column="2">
      <widget class="QTabWidget" name="tabWidget2">
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="propsTab">
        <attribute name="icon">
@@ -67,7 +71,7 @@
             </widget>
            </item>
            <item row="2" column="1">
-            <widget class="QLineEdit" name="descEdit">
+            <widget class="QLineEdit" name="descrEdit">
              <property name="placeholderText">
               <string>Short description of the theme</string>
              </property>
@@ -106,226 +110,11 @@
        <attribute name="title">
         <string>Preview</string>
        </attribute>
-       <layout class="QGridLayout" name="gridLayout_15">
-        <item row="0" column="0">
-         <layout class="QGridLayout" name="gridLayout_3">
-          <item row="0" column="1">
-           <widget class="QToolButton" name="sizeAdjBtn">
-            <property name="text">
-             <string>Adjust size</string>
-            </property>
-            <property name="icon">
-             <iconset resource="ThemeBuilderUIBase.qrc">
-              <normaloff>:/icon/pixmaps/adjustsize.png</normaloff>:/icon/pixmaps/adjustsize.png</iconset>
-            </property>
-            <property name="toolButtonStyle">
-             <enum>Qt::ToolButtonTextBesideIcon</enum>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="3">
-           <spacer name="horizontalSpacer_8">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>0</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-          <item row="0" column="2">
-           <widget class="QToolButton" name="rtlBtn">
-            <property name="text">
-             <string>RTL layout</string>
-            </property>
-            <property name="icon">
-             <iconset resource="ThemeBuilderUIBase.qrc">
-              <normaloff>:/icon/pixmaps/righttoleft.png</normaloff>:/icon/pixmaps/righttoleft.png</iconset>
-            </property>
-            <property name="checkable">
-             <bool>true</bool>
-            </property>
-            <property name="toolButtonStyle">
-             <enum>Qt::ToolButtonTextBesideIcon</enum>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="0">
-           <widget class="QToolButton" name="repaintBtn">
-            <property name="text">
-             <string>Repaint</string>
-            </property>
-            <property name="icon">
-             <iconset resource="ThemeBuilderUIBase.qrc">
-              <normaloff>:/icon/pixmaps/insertimage.png</normaloff>:/icon/pixmaps/insertimage.png</iconset>
-            </property>
-            <property name="toolButtonStyle">
-             <enum>Qt::ToolButtonTextBesideIcon</enum>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </item>
-        <item row="1" column="0">
-         <widget class="QSplitter" name="splitter_2">
-          <property name="enabled">
-           <bool>true</bool>
-          </property>
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-          <widget class="QScrollArea" name="previewArea">
-           <property name="widgetResizable">
-            <bool>true</bool>
-           </property>
-           <property name="alignment">
-            <set>Qt::AlignCenter</set>
-           </property>
-           <widget class="QWidget" name="scrollAreaWidgetContents">
-            <property name="geometry">
-             <rect>
-              <x>0</x>
-              <y>0</y>
-              <width>518</width>
-              <height>61</height>
-             </rect>
-            </property>
-           </widget>
-          </widget>
-         </widget>
-        </item>
-        <item row="2" column="0">
-         <spacer name="verticalSpacer">
-          <property name="orientation">
-           <enum>Qt::Vertical</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>20</width>
-            <height>0</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-       </layout>
-      </widget>
-      <widget class="QWidget" name="dbgTab">
-       <attribute name="icon">
-        <iconset resource="ThemeBuilderUIBase.qrc">
-         <normaloff>:/icon/pixmaps/debug.png</normaloff>:/icon/pixmaps/debug.png</iconset>
-       </attribute>
-       <attribute name="title">
-        <string>Debugging</string>
-       </attribute>
-       <layout class="QGridLayout" name="dbgLayout">
+       <layout class="QGridLayout" name="previewLayout">
         <item row="5" column="0">
          <widget class="QLabel" name="placeholder2">
           <property name="text">
-           <string>Placeholder</string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="0">
-         <layout class="QGridLayout" name="gridLayout_5">
-          <item row="0" column="5">
-           <spacer name="horizontalSpacer_9">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>40</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-          <item row="0" column="1">
-           <widget class="QToolButton" name="repaintDbgBtn">
-            <property name="text">
-             <string>Repaint</string>
-            </property>
-            <property name="icon">
-             <iconset resource="ThemeBuilderUIBase.qrc">
-              <normaloff>:/icon/pixmaps/insertimage.png</normaloff>:/icon/pixmaps/insertimage.png</iconset>
-            </property>
-            <property name="toolButtonStyle">
-             <enum>Qt::ToolButtonTextBesideIcon</enum>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="3">
-           <widget class="QToolButton" name="drawStackBtn">
-            <property name="text">
-             <string>Draw stack</string>
-            </property>
-            <property name="checkable">
-             <bool>true</bool>
-            </property>
-            <property name="toolButtonStyle">
-             <enum>Qt::ToolButtonTextBesideIcon</enum>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="4">
-           <widget class="QToolButton" name="resolvedValuesBtn">
-            <property name="text">
-             <string>Resolved values</string>
-            </property>
-            <property name="checkable">
-             <bool>true</bool>
-            </property>
-            <property name="toolButtonStyle">
-             <enum>Qt::ToolButtonTextBesideIcon</enum>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="2">
-           <widget class="QToolButton" name="overDrawBtn">
-            <property name="text">
-             <string>Overdraw mode</string>
-            </property>
-            <property name="toolButtonStyle">
-             <enum>Qt::ToolButtonTextBesideIcon</enum>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </item>
-        <item row="1" column="0">
-         <widget class="QScrollArea" name="dbgPreviewArea">
-          <property name="widgetResizable">
-           <bool>true</bool>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-          <widget class="QWidget" name="scrollAreaWidgetContents_2">
-           <property name="geometry">
-            <rect>
-             <x>0</x>
-             <y>0</y>
-             <width>518</width>
-             <height>116</height>
-            </rect>
-           </property>
-          </widget>
-         </widget>
-        </item>
-        <item row="2" column="0">
-         <widget class="QLabel" name="drawStackLbl">
-          <property name="text">
-           <string>Drawing call stack</string>
-          </property>
-         </widget>
-        </item>
-        <item row="4" column="0">
-         <widget class="QLabel" name="resolvedValuesLbl">
-          <property name="text">
-           <string>Resolved values</string>
+           <string>Placeholder for resolvedValuesTree</string>
           </property>
          </widget>
         </item>
@@ -342,11 +131,174 @@
           </property>
          </spacer>
         </item>
+        <item row="0" column="0">
+         <layout class="QGridLayout" name="gridLayout_8">
+          <item row="0" column="1">
+           <widget class="QToolButton" name="rtlBtn">
+            <property name="toolTip">
+             <string>Right to left layout</string>
+            </property>
+            <property name="icon">
+             <iconset resource="ThemeBuilderUIBase.qrc">
+              <normaloff>:/icon/pixmaps/righttoleft.png</normaloff>:/icon/pixmaps/righttoleft.png</iconset>
+            </property>
+            <property name="checkable">
+             <bool>true</bool>
+            </property>
+            <property name="toolButtonStyle">
+             <enum>Qt::ToolButtonTextBesideIcon</enum>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="8">
+           <spacer name="horizontalSpacer_12">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeType">
+             <enum>QSizePolicy::MinimumExpanding</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>20</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item row="0" column="0">
+           <widget class="QToolButton" name="repaintBtn">
+            <property name="toolTip">
+             <string>Repaint</string>
+            </property>
+            <property name="icon">
+             <iconset resource="ThemeBuilderUIBase.qrc">
+              <normaloff>:/icon/pixmaps/insertimage.png</normaloff>:/icon/pixmaps/insertimage.png</iconset>
+            </property>
+            <property name="toolButtonStyle">
+             <enum>Qt::ToolButtonTextBesideIcon</enum>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="4">
+           <widget class="QToolButton" name="drawModeBtn">
+            <property name="toolTip">
+             <string>(N)ormal, (W)ireframe, (O)verdraw modes</string>
+            </property>
+            <property name="text">
+             <string>N</string>
+            </property>
+            <property name="icon">
+             <iconset resource="ThemeBuilderUIBase.qrc">
+              <normaloff>:/icon/pixmaps/debug.png</normaloff>:/icon/pixmaps/debug.png</iconset>
+            </property>
+            <property name="toolButtonStyle">
+             <enum>Qt::ToolButtonTextBesideIcon</enum>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="6">
+           <widget class="QSpinBox" name="fontSizeSpin">
+            <property name="toolTip">
+             <string>Font size</string>
+            </property>
+            <property name="minimum">
+             <number>1</number>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="10">
+           <widget class="QToolButton" name="detachBtn">
+            <property name="text">
+             <string>Detach</string>
+            </property>
+            <property name="icon">
+             <iconset resource="ThemeBuilderUIBase.qrc">
+              <normaloff>:/icon/pixmaps/widget.png</normaloff>:/icon/pixmaps/widget.png</iconset>
+            </property>
+            <property name="toolButtonStyle">
+             <enum>Qt::ToolButtonTextBesideIcon</enum>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="3">
+           <widget class="QToolButton" name="previewVariantBtn">
+            <property name="toolTip">
+             <string>Preview variant</string>
+            </property>
+            <property name="text">
+             <string>1/1</string>
+            </property>
+            <property name="icon">
+             <iconset resource="ThemeBuilderUIBase.qrc">
+              <normaloff>:/icon/pixmaps/widgetstack.png</normaloff>:/icon/pixmaps/widgetstack.png</iconset>
+            </property>
+            <property name="toolButtonStyle">
+             <enum>Qt::ToolButtonTextBesideIcon</enum>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="2">
+           <widget class="QToolButton" name="enableBtn">
+            <property name="toolTip">
+             <string>Enable/Disable</string>
+            </property>
+            <property name="icon">
+             <iconset resource="ThemeBuilderUIBase.qrc">
+              <normaloff>:/icon/pixmaps/checkbox.png</normaloff>:/icon/pixmaps/checkbox.png</iconset>
+            </property>
+            <property name="checkable">
+             <bool>true</bool>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+            <property name="toolButtonStyle">
+             <enum>Qt::ToolButtonTextBesideIcon</enum>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
         <item row="3" column="0">
          <widget class="QLabel" name="placeholder1">
           <property name="text">
-           <string>Placeholder</string>
+           <string>Placeholder for drawStackTree</string>
           </property>
+         </widget>
+        </item>
+        <item row="2" column="0">
+         <widget class="QLabel" name="drawStackLbl">
+          <property name="text">
+           <string>Drawing call stack</string>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="0">
+         <widget class="QLabel" name="resolvedValuesLbl">
+          <property name="text">
+           <string>Resolved values</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QScrollArea" name="previewArea">
+          <property name="widgetResizable">
+           <bool>true</bool>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+          <widget class="QWidget" name="scrollAreaWidgetContents_2">
+           <property name="geometry">
+            <rect>
+             <x>0</x>
+             <y>0</y>
+             <width>518</width>
+             <height>150</height>
+            </rect>
+           </property>
+          </widget>
          </widget>
         </item>
        </layout>
@@ -360,6 +312,22 @@
         <string>About</string>
        </attribute>
        <layout class="QGridLayout" name="gridLayout_13">
+        <item row="1" column="2">
+         <spacer name="horizontalSpacer_7">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeType">
+           <enum>QSizePolicy::Fixed</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
         <item row="1" column="0">
          <spacer name="horizontalSpacer_6">
           <property name="orientation">
@@ -377,7 +345,7 @@
          </spacer>
         </item>
         <item row="1" column="1">
-         <widget class="QFrame" name="frame_6">
+         <widget class="QFrame" name="aboutFrame">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
             <horstretch>0</horstretch>
@@ -423,22 +391,6 @@
           </property>
          </spacer>
         </item>
-        <item row="1" column="2">
-         <spacer name="horizontalSpacer_7">
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-          <property name="sizeType">
-           <enum>QSizePolicy::Fixed</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>20</width>
-            <height>20</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
         <item row="2" column="1">
          <spacer name="verticalSpacer_6">
           <property name="orientation">
@@ -459,378 +411,11 @@
       </widget>
      </widget>
     </item>
-    <item row="2" column="1">
-     <widget class="QTabWidget" name="tabWidget">
+    <item row="2" column="0">
+     <widget class="QToolBox" name="toolBox">
       <property name="enabled">
        <bool>false</bool>
       </property>
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="currentIndex">
-       <number>0</number>
-      </property>
-      <widget class="QWidget" name="commonPage">
-       <attribute name="icon">
-        <iconset resource="ThemeBuilderUIBase.qrc">
-         <normaloff>:/icon/pixmaps/color.png</normaloff>:/icon/pixmaps/color.png</iconset>
-       </attribute>
-       <attribute name="title">
-        <string>Common</string>
-       </attribute>
-       <layout class="QGridLayout" name="gridLayout_14">
-        <item row="4" column="0">
-         <spacer name="verticalSpacer_4">
-          <property name="orientation">
-           <enum>Qt::Vertical</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>20</width>
-            <height>0</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-        <item row="0" column="0">
-         <widget class="QFrame" name="frame">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="frameShape">
-           <enum>QFrame::StyledPanel</enum>
-          </property>
-          <property name="frameShadow">
-           <enum>QFrame::Sunken</enum>
-          </property>
-          <layout class="QGridLayout" name="gridLayout_17">
-           <item row="0" column="0">
-            <widget class="QCheckBox" name="inheritCb">
-             <property name="text">
-              <string>Globally inherit</string>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="1">
-            <widget class="QComboBox" name="inheritCombo">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </widget>
-        </item>
-        <item row="3" column="0">
-         <widget class="QFrame" name="frame_2">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="frameShape">
-           <enum>QFrame::StyledPanel</enum>
-          </property>
-          <property name="frameShadow">
-           <enum>QFrame::Sunken</enum>
-          </property>
-          <layout class="QGridLayout" name="gridLayout_12">
-           <item row="1" column="0">
-            <widget class="QCheckBox" name="labelMarginCb">
-             <property name="text">
-              <string>Label margins</string>
-             </property>
-             <property name="tristate">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="2">
-            <widget class="QLabel" name="label">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="text">
-              <string>H</string>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="3">
-            <widget class="QSpinBox" name="labelMarginHSpin"/>
-           </item>
-           <item row="2" column="2">
-            <widget class="QLabel" name="label_2">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="text">
-              <string>V</string>
-             </property>
-            </widget>
-           </item>
-           <item row="2" column="3">
-            <widget class="QSpinBox" name="labelMarginVSpin"/>
-           </item>
-           <item row="0" column="0">
-            <widget class="QCheckBox" name="labelSpacingCb">
-             <property name="text">
-              <string>Text/icon spacing</string>
-             </property>
-             <property name="tristate">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="3">
-            <widget class="QSpinBox" name="labelSpacingSpin"/>
-           </item>
-           <item row="0" column="1" rowspan="3">
-            <spacer name="horizontalSpacer_5">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeType">
-              <enum>QSizePolicy::Fixed</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>20</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-          </layout>
-         </widget>
-        </item>
-        <item row="1" column="0">
-         <widget class="QFrame" name="frame_3">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="frameShape">
-           <enum>QFrame::StyledPanel</enum>
-          </property>
-          <property name="frameShadow">
-           <enum>QFrame::Sunken</enum>
-          </property>
-          <layout class="QGridLayout" name="gridLayout_7">
-           <item row="2" column="2">
-            <widget class="QSpinBox" name="frameWidthSpin"/>
-           </item>
-           <item row="1" column="0">
-            <widget class="QCheckBox" name="frameIdCb">
-             <property name="text">
-              <string>SVG id</string>
-             </property>
-             <property name="tristate">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="2">
-            <widget class="QComboBox" name="frameIdCombo">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="editable">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="0" colspan="3">
-            <widget class="QCheckBox" name="frameCb">
-             <property name="text">
-              <string>Draw frame</string>
-             </property>
-             <property name="icon">
-              <iconset resource="ThemeBuilderUIBase.qrc">
-               <normaloff>:/icon/pixmaps/frame.png</normaloff>:/icon/pixmaps/frame.png</iconset>
-             </property>
-             <property name="tristate">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item row="2" column="0">
-            <widget class="QCheckBox" name="fameWidthCb">
-             <property name="text">
-              <string>Width</string>
-             </property>
-             <property name="tristate">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="1" rowspan="2">
-            <spacer name="horizontalSpacer_4">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeType">
-              <enum>QSizePolicy::Fixed</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>20</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-          </layout>
-         </widget>
-        </item>
-        <item row="2" column="0">
-         <widget class="QFrame" name="frame_5">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="frameShape">
-           <enum>QFrame::StyledPanel</enum>
-          </property>
-          <property name="frameShadow">
-           <enum>QFrame::Sunken</enum>
-          </property>
-          <layout class="QGridLayout" name="gridLayout_8">
-           <item row="2" column="3">
-            <widget class="QSpinBox" name="interiorRepeatXSpin"/>
-           </item>
-           <item row="2" column="2">
-            <widget class="QLabel" name="label_6">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="text">
-              <string>X</string>
-             </property>
-            </widget>
-           </item>
-           <item row="3" column="2">
-            <widget class="QLabel" name="label_12">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="text">
-              <string>Y</string>
-             </property>
-            </widget>
-           </item>
-           <item row="3" column="3">
-            <widget class="QSpinBox" name="interiorRepeatYSpin"/>
-           </item>
-           <item row="2" column="0">
-            <widget class="QCheckBox" name="interiorRepeatCb">
-             <property name="text">
-              <string>Repeat</string>
-             </property>
-             <property name="tristate">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="0" colspan="4">
-            <widget class="QCheckBox" name="interiorCb">
-             <property name="text">
-              <string>Draw interior</string>
-             </property>
-             <property name="icon">
-              <iconset resource="ThemeBuilderUIBase.qrc">
-               <normaloff>:/icon/pixmaps/widget.png</normaloff>:/icon/pixmaps/widget.png</iconset>
-             </property>
-             <property name="tristate">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="0">
-            <widget class="QCheckBox" name="interiorIdCb">
-             <property name="text">
-              <string>SVG id</string>
-             </property>
-             <property name="tristate">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="3">
-            <widget class="QComboBox" name="interiorIdCombo">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="editable">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="1" rowspan="3">
-            <spacer name="horizontalSpacer_3">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeType">
-              <enum>QSizePolicy::Fixed</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>20</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-          </layout>
-         </widget>
-        </item>
-       </layout>
-      </widget>
-      <widget class="QWidget" name="specificPage">
-       <attribute name="icon">
-        <iconset resource="ThemeBuilderUIBase.qrc">
-         <normaloff>:/icon/pixmaps/hslider.png</normaloff>:/icon/pixmaps/hslider.png</iconset>
-       </attribute>
-       <attribute name="title">
-        <string>Specific</string>
-       </attribute>
-      </widget>
-     </widget>
-    </item>
-    <item row="2" column="0">
-     <widget class="QToolBox" name="toolBox">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
         <horstretch>0</horstretch>
@@ -852,7 +437,7 @@
          <x>0</x>
          <y>0</y>
          <width>256</width>
-         <height>251</height>
+         <height>320</height>
         </rect>
        </property>
        <attribute name="label">
@@ -880,7 +465,7 @@
          <x>0</x>
          <y>0</y>
          <width>256</width>
-         <height>251</height>
+         <height>320</height>
         </rect>
        </property>
        <attribute name="label">
@@ -908,7 +493,7 @@
          <x>0</x>
          <y>0</y>
          <width>256</width>
-         <height>251</height>
+         <height>320</height>
         </rect>
        </property>
        <attribute name="label">
@@ -936,7 +521,7 @@
          <x>0</x>
          <y>0</y>
          <width>256</width>
-         <height>251</height>
+         <height>320</height>
         </rect>
        </property>
        <attribute name="label">
@@ -964,7 +549,7 @@
          <x>0</x>
          <y>0</y>
          <width>256</width>
-         <height>251</height>
+         <height>320</height>
         </rect>
        </property>
        <attribute name="label">
@@ -990,9 +575,6 @@
     </item>
     <item row="0" column="0" colspan="3">
      <layout class="QGridLayout" name="gridLayout_4">
-      <property name="verticalSpacing">
-       <number>1</number>
-      </property>
       <item row="0" column="6">
        <widget class="QToolButton" name="saveBtn">
         <property name="enabled">
@@ -1115,6 +697,7 @@
         </property>
         <property name="font">
          <font>
+          <pointsize>14</pointsize>
           <weight>75</weight>
           <bold>true</bold>
          </font>
@@ -1198,6 +781,414 @@
        </size>
       </property>
      </spacer>
+    </item>
+    <item row="2" column="1">
+     <widget class="QTabWidget" name="tabWidget">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="currentIndex">
+       <number>0</number>
+      </property>
+      <widget class="QWidget" name="commonPage">
+       <attribute name="icon">
+        <iconset resource="ThemeBuilderUIBase.qrc">
+         <normaloff>:/icon/pixmaps/color.png</normaloff>:/icon/pixmaps/color.png</iconset>
+       </attribute>
+       <attribute name="title">
+        <string>Common</string>
+       </attribute>
+       <layout class="QGridLayout" name="gridLayout_7">
+        <item row="14" column="2">
+         <widget class="QSpinBox" name="interiorRepeatXSpin">
+          <property name="specialValueText">
+           <string>&lt;inherit&gt;</string>
+          </property>
+          <property name="minimum">
+           <number>-1</number>
+          </property>
+          <property name="value">
+           <number>-1</number>
+          </property>
+         </widget>
+        </item>
+        <item row="17" column="0" colspan="3">
+         <spacer name="verticalSpacer_10">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeType">
+           <enum>QSizePolicy::Fixed</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item row="7" column="2">
+         <widget class="QLineEdit" name="interiorEdit"/>
+        </item>
+        <item row="26" column="0" colspan="3">
+         <spacer name="verticalSpacer_4">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>0</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item row="18" column="2">
+         <widget class="QComboBox" name="indicatorIdCombo">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="editable">
+           <bool>true</bool>
+          </property>
+          <property name="insertPolicy">
+           <enum>QComboBox::InsertAlphabetically</enum>
+          </property>
+         </widget>
+        </item>
+        <item row="7" column="0">
+         <widget class="QCheckBox" name="interiorCb">
+          <property name="text">
+           <string>Draw interior</string>
+          </property>
+          <property name="tristate">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="2">
+         <widget class="QComboBox" name="inheritCombo">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="0" colspan="3">
+         <spacer name="verticalSpacer_8">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeType">
+           <enum>QSizePolicy::Fixed</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item row="21" column="0">
+         <widget class="QCheckBox" name="labelMarginCb">
+          <property name="text">
+           <string>Label margins</string>
+          </property>
+          <property name="tristate">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="11" column="1">
+         <widget class="QLabel" name="label_12">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="text">
+           <string>Y</string>
+          </property>
+         </widget>
+        </item>
+        <item row="5" column="2">
+         <widget class="QSpinBox" name="frameWidthSpin">
+          <property name="specialValueText">
+           <string>&lt;inherit&gt;</string>
+          </property>
+          <property name="minimum">
+           <number>-1</number>
+          </property>
+          <property name="value">
+           <number>-1</number>
+          </property>
+         </widget>
+        </item>
+        <item row="24" column="1">
+         <widget class="QLabel" name="label_2">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="text">
+           <string>V</string>
+          </property>
+         </widget>
+        </item>
+        <item row="14" column="1">
+         <widget class="QLabel" name="label_6">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="text">
+           <string>X</string>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="2">
+         <widget class="QComboBox" name="frameIdCombo">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="editable">
+           <bool>true</bool>
+          </property>
+          <property name="insertPolicy">
+           <enum>QComboBox::InsertAlphabetically</enum>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="2">
+         <widget class="QLineEdit" name="frameEdit">
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QCheckBox" name="inheritCb">
+          <property name="text">
+           <string>Globally inherit</string>
+          </property>
+         </widget>
+        </item>
+        <item row="20" column="0">
+         <widget class="QCheckBox" name="labelSpacingCb">
+          <property name="text">
+           <string>Text/icon spacing</string>
+          </property>
+          <property name="tristate">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="21" column="1">
+         <widget class="QLabel" name="label">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="text">
+           <string>H</string>
+          </property>
+         </widget>
+        </item>
+        <item row="11" column="2">
+         <widget class="QSpinBox" name="interiorRepeatYSpin">
+          <property name="specialValueText">
+           <string>&lt;inherit&gt;</string>
+          </property>
+          <property name="minimum">
+           <number>-1</number>
+          </property>
+          <property name="value">
+           <number>-1</number>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="0">
+         <widget class="QCheckBox" name="frameCb">
+          <property name="text">
+           <string>Draw frame</string>
+          </property>
+          <property name="tristate">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="5" column="0">
+         <widget class="QCheckBox" name="frameWidthCb">
+          <property name="text">
+           <string>Width</string>
+          </property>
+          <property name="tristate">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="8" column="0">
+         <widget class="QCheckBox" name="interiorIdCb">
+          <property name="text">
+           <string>SVG id</string>
+          </property>
+          <property name="tristate">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="8" column="2">
+         <widget class="QComboBox" name="interiorIdCombo">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="editable">
+           <bool>true</bool>
+          </property>
+          <property name="insertPolicy">
+           <enum>QComboBox::InsertAlphabetically</enum>
+          </property>
+         </widget>
+        </item>
+        <item row="21" column="2">
+         <widget class="QSpinBox" name="labelMarginVSpin">
+          <property name="specialValueText">
+           <string>&lt;inherit&gt;</string>
+          </property>
+          <property name="minimum">
+           <number>-1</number>
+          </property>
+          <property name="value">
+           <number>-1</number>
+          </property>
+         </widget>
+        </item>
+        <item row="20" column="2">
+         <widget class="QSpinBox" name="labelSpacingSpin">
+          <property name="specialValueText">
+           <string>&lt;inherit&gt;</string>
+          </property>
+          <property name="minimum">
+           <number>-1</number>
+          </property>
+          <property name="value">
+           <number>-1</number>
+          </property>
+         </widget>
+        </item>
+        <item row="24" column="2">
+         <widget class="QSpinBox" name="labelMarginHSpin">
+          <property name="specialValueText">
+           <string>&lt;inherit&gt;</string>
+          </property>
+          <property name="minimum">
+           <number>-1</number>
+          </property>
+          <property name="value">
+           <number>-1</number>
+          </property>
+         </widget>
+        </item>
+        <item row="11" column="0">
+         <widget class="QCheckBox" name="interiorRepeatCb">
+          <property name="text">
+           <string>Repeat</string>
+          </property>
+          <property name="tristate">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="6" column="0" colspan="3">
+         <spacer name="verticalSpacer_9">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeType">
+           <enum>QSizePolicy::Fixed</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item row="18" column="0">
+         <widget class="QCheckBox" name="indicatorIdCb">
+          <property name="text">
+           <string>Indicator SVG id</string>
+          </property>
+          <property name="tristate">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="0">
+         <widget class="QCheckBox" name="frameIdCb">
+          <property name="text">
+           <string>SVG id</string>
+          </property>
+          <property name="tristate">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="19" column="0" colspan="3">
+         <spacer name="verticalSpacer_11">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeType">
+           <enum>QSizePolicy::Fixed</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="specificPage">
+       <attribute name="icon">
+        <iconset resource="ThemeBuilderUIBase.qrc">
+         <normaloff>:/icon/pixmaps/hslider.png</normaloff>:/icon/pixmaps/hslider.png</iconset>
+       </attribute>
+       <attribute name="title">
+        <string>Specific</string>
+       </attribute>
+      </widget>
+     </widget>
     </item>
    </layout>
   </widget>

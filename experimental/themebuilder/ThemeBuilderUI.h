@@ -24,11 +24,12 @@
 #include <QShowEvent>
 
 #include "ui_ThemeBuilderUIBase.h"
+#include <../style/specs.h>
 
 class ThemeConfig;
 class QTreeWidget;
 class QTreeWidgetItem;
-
+class QSvgStyle;
 
 class ThemeBuilderUI : public QMainWindow, private Ui::ThemeBuilderUIBase {
   Q_OBJECT
@@ -38,28 +39,118 @@ class ThemeBuilderUI : public QMainWindow, private Ui::ThemeBuilderUIBase {
     ~ThemeBuilderUI();
 
   public slots:
-    void slot_loadTheme(const QString &theme);
-    void slot_open();
-    void slot_save(const QString &widget);
-    void slot_new();
+    // Called on main button clicks
+    void slot_openTheme();
+    void slot_saveTheme();
+    void slot_saveAsTheme();
     void slot_quit();
-    void slot_ElementChanged(const QString &);
+
+    // Called when the current widget in the same QTreeView has changed
+    void slot_widgetChanged(QListWidgetItem *current, QListWidgetItem *previous);
+    // Called when the current toolbox tab has changed
+    void slot_toolboxTabChanged(int index);
+
+    // called on common tab changes
+    void slot_inheritCbChanged(int state);
+
+    void slot_frameCbChanged(int state);
+    void slot_frameIdCbChanged(int state);
+    void slot_frameWidthCbChanged(int state);
+
+    void slot_interiorCbChanged(int state);
+    void slot_interiorIdCbChanged(int state);
+    void slot_interiorRepeatCbChanged(int state);
+
+    void slot_labelSpacingCbChanged(int state);
+    void slot_labelMarginCbChanged(int state);
+
+    void slot_indicatorIdCbChanged(int state);
+
+    // called on preview tab changes
+    void slot_repaintBtnClicked(bool checked);
+    //void slot_sizeAdjBtnClicked(bool checked);
+    void slot_rtlBtnClicked(bool checked);
+    void slot_drawModeBtnClicked(bool checked);
+    void slot_detachBtnClicked(bool checked);
+    void slot_enableBtnClicked(bool checked);
+    void slot_previewVariantBtnClicked(bool checked);
+    void slot_fontSizeChanged(int val);
+
+    // Callbacks from QSvgStyle that are triggered when it renders widgets
+    void slot_drawPrimitive_begin(const QString &s);
+    void slot_drawPrimitive_end(const QString &s);
+    void slot_drawControl_begin(const QString &s);
+    void slot_drawControl_end(const QString &s);
+    void slot_drawComplexControl_begin(const QString &s);
+    void slot_drawComplexControl_end(const QString &s);
+    void slot_renderFrame_begin(const QString &s);
+    void slot_renderFrame_end(const QString &s);
+    void slot_renderInterior_begin(const QString &s);
+    void slot_renderInterior_end(const QString &s);
+    void slot_renderIndicator_begin(const QString &s);
+    void slot_renderIndicator_end(const QString &s);
+    void slot_renderLabel_begin(const QString &s);
+    void slot_renderLabel_end(const QString &s);
+    void slot_renderElement_begin(const QString &s);
+    void slot_renderElement_end(const QString &s);
+    void slot_sizeFromContents_begin(const QString &s);
+    void slot_sizeFromContents_end(const QString &s);
+
+    // intercept some events from previewArea and previewWidget
+    virtual bool eventFilter(QObject *o, QEvent *e);
 
   private:
+    // enum that allow us to attach arbitrary data to QTreeViewItem items
+    // using @ref QTreeViewItem::setData()
     enum {
-      GroupRole = Qt::UserRole + 10,
+      GroupRole = Qt::UserRole + 10, // the theme configuration group for the
+                                     // selected widget
     };
+
+    // Resets the entire UI as if theme builder has just been started
+    void resetUi();
+
+    // Setup the UI to reflect the settings for the given item
+    void setupUiForWidget(const QListWidgetItem* current);
+    // Setup the preview widget to reflect the given item
+    void setupPreviewForWidget(const QListWidgetItem* current);
+    // wrapper around slot_XXXX_begin
+    void noteStyleOperation_begin(const QString &op, const QString &args);
+    void noteStyleOperation_end(const QString &op, const QString &args);
+    // clear drawStackTree, delete all its items
+    void clearDrawStackTree();
+    // Sets the given style for the given widget and all its children
+    void setStyleForWidgetAndChildren(QStyle* style, QWidget* w);
 
     QTreeWidget *drawStackTree;
     QTreeWidget *resolvedValuesTree;
-    QLabel *statusbarLbl1;
-    QLabel *statusbarLbl2;
 
+    // widgets to be inserted inside the status bar
+    QLabel *statusbarLbl1, *statusbarLbl2;
+
+    // current opened theme config
     ThemeConfig *config;
-    ThemeConfig *defaultConfig;
-    QString filename;
-    QStringList svgElements;
-    QString lastElement;
+    // current element spec
+    element_spec_t es;
+
+    // an instance of QSvgStyle
+    QSvgStyle *style;
+
+    // current widget being previewed
+    QWidget *previewWidget;
+
+    // state save
+    int currentToolboxTab;
+    // current selected item in toolbox
+    QListWidgetItem *currentWidget;
+    // last inserted item inside drawStackTree
+    QTreeWidgetItem *currentDrawStackItem;
+    // preview mode
+    int currentDrawMode; // 0=normal, 1=wireframe, 2=overdraw
+    // current widget variant
+    int currentPreviewVariant;
+    // geometry of detached preview
+    QRect detachedPeviewGeometry;
 };
 
 #endif // THEMEBUILDERUI_H

@@ -1,5 +1,6 @@
 <RCC>
   <qresource prefix="icon">
+    <file>pixmaps/widgetstack.png</file>
     <file>pixmaps/cleartext.png</file>
     <file>pixmaps/color.png</file>
     <file>pixmaps/righttoleft.png</file>

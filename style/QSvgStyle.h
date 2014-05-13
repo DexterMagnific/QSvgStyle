@@ -77,7 +77,6 @@ class QSvgStyle : public QCommonStyle {
     virtual void drawControl(ControlElement element, const QStyleOption * option, QPainter * painter, const QWidget * widget = 0 ) const;
     virtual void drawComplexControl(ComplexControl control, const QStyleOptionComplex * option, QPainter * painter, const QWidget * widget = 0 ) const;
     virtual int styleHint(StyleHint hint, const QStyleOption * option = 0, const QWidget * widget = 0, QStyleHintReturn * returnData = 0 ) const;
-    virtual SubControl hitTestComplexControl (ComplexControl control, const QStyleOptionComplex * option, const QPoint & position, const QWidget * widget = 0 ) const;
 
   protected slots:
     QIcon standardIconImplementation ( StandardPixmap standardIcon, const QStyleOption * option = 0, const QWidget * widget = 0 ) const;
@@ -291,6 +290,7 @@ class QSvgStyle : public QCommonStyle {
      * Returns a QRect for drawing the interior inside the given @ref bounds
      * with regards to the frame spec @ref f
      * QSvgStyle draws interiors immediately after the frame with no margins
+     * BUG This function does not take into account capsules
      */
     QRect interiorRect(const QRect &bounds,
                        frame_spec_t f,
@@ -340,15 +340,16 @@ class QSvgStyle : public QCommonStyle {
     QString SC_str(ComplexControl control, SubControl subControl) const;
     QString CT_str(ContentsType type) const;
 
+    friend class ThemeBuilderUI;
     /**
      * Helper functions that determine the appriopriate QSvgStyle
      * configuration group to draw a given element
      */
-    QString PE_group(PrimitiveElement element) const;
-    QString SE_group(SubElement element) const;
-    QString CE_group(ControlElement element) const;
-    QString CC_group(ComplexControl element) const;
-    QString CT_group(ContentsType type) const;
+    static QString PE_group(PrimitiveElement element);
+    static QString SE_group(SubElement element);
+    static QString CE_group(ControlElement element);
+    static QString CC_group(ComplexControl element);
+    static QString CT_group(ContentsType type);
 
     /**
      * Helper function that converts a QStyle::State value to a string

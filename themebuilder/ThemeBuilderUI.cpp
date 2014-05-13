@@ -107,7 +107,7 @@ void ThemeBuilderUI::slot_loadTheme(const QString& theme)
     // general
     theme_spec_t tspec = config->getThemeSpec();
     authorLineEdit->setText(tspec.author);
-    commentLineEdit->setText(tspec.comment);
+    commentLineEdit->setText(tspec.descr);
     animateThemeCb->setChecked(tspec.animated);
     stepSb->setValue(tspec.step);
 
@@ -135,7 +135,7 @@ void ThemeBuilderUI::slot_ElementChanged(const QString& element)
 
   // theme
   authorLineEdit->setText(tspec.author);
-  commentLineEdit->setText(tspec.comment);
+  commentLineEdit->setText(tspec.descr);
   animateThemeCb->setChecked(tspec.animated);
   stepSb->setValue(tspec.step);
 
@@ -291,7 +291,7 @@ void ThemeBuilderUI::slot_save(const QString& widget)
 
   theme_spec_t tspec;
   tspec.author = authorLineEdit->text();
-  tspec.comment = commentLineEdit->text();
+  tspec.descr = commentLineEdit->text();
   tspec.animated = animateThemeCb->isChecked();
   tspec.step = stepSb->value();
 

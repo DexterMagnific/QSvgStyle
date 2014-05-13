@@ -61,8 +61,9 @@ public:
 
 /** Generic information about a theme */
 typedef struct {
+  value_t<QString> name;
   value_t<QString> author;
-  value_t<QString> comment;
+  value_t<QString> descr;
   /* Animations enabled */
   value_t<bool> animated;
   /* Animation step in msecs */
@@ -80,6 +81,7 @@ typedef struct {
   /* Allow capsule grouping ? */
   value_t<bool> hasCapsule;
   /* frame size */
+  value_t<int> width;
   value_t<int> top,bottom,left,right;
   /* widget position in a capsule, used internally */
   value_t<int> capsuleH,capsuleV; // 0 : middle, -1 : left,top, 1 : right,bottom, 2 : left+right,top+bottom
@@ -89,10 +91,6 @@ typedef struct {
   value_t<int> animationFrames;
   /* loop animation */
   value_t<int> loopAnimation;
-
-  inline int width() {
-    return qMax(qMax(top,bottom),qMax(left,right));
-  }
 } frame_spec_t;
 
 /** Generic information about a frame interior */
@@ -149,6 +147,7 @@ typedef struct {
   /* has margins ? */
   value_t<bool> hasMargin;
   /* text margins */
+  value_t<int> hmargin,vmargin;
   value_t<int> top,bottom,left,right;
   /* text-icon spacing */
   value_t<int> tispace;
@@ -235,7 +234,7 @@ static inline void default_element_spec(element_spec_t &espec) {
 /** Fills the widget spec with default values */
 static inline void default_theme_spec(theme_spec_t &tspec) {
   tspec.author = QString::null;
-  tspec.comment = QString::null;
+  tspec.descr = QString::null;
   tspec.animated = false;
   tspec.step = 250;
 }

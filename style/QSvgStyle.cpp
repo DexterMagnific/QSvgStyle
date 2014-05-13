@@ -1734,7 +1734,7 @@ int QSvgStyle::pixelMetric(PixelMetric metric, const QStyleOption * option, cons
     case PM_LayoutVerticalSpacing : return 2;
 
     case PM_MenuBarPanelWidth :
-      return getFrameSpec(PE_group(PE_PanelMenuBar)).width();
+      return getFrameSpec(PE_group(PE_PanelMenuBar)).width;
 
     // These are the 'interior' margins of the menu bar
     case PM_MenuBarVMargin :
@@ -1746,7 +1746,7 @@ int QSvgStyle::pixelMetric(PixelMetric metric, const QStyleOption * option, cons
     case PM_MenuTearoffHeight : return 7;
 
     case PM_ToolBarFrameWidth :
-      return getFrameSpec(PE_group(PE_PanelToolBar)).width();
+      return getFrameSpec(PE_group(PE_PanelToolBar)).width;
     // No margin between toolbar frame and contents
     case PM_ToolBarItemMargin : return 0;
     // The "move" handle of a toolbar
@@ -1793,17 +1793,17 @@ int QSvgStyle::pixelMetric(PixelMetric metric, const QStyleOption * option, cons
     case PM_DefaultFrameWidth :
       // NOTE used by QLineEdit, QTabWidget and QMdiArea
       if ( qobject_cast< const QLineEdit* >(widget) )
-        return getFrameSpec(PE_group(PE_FrameLineEdit)).width();
+        return getFrameSpec(PE_group(PE_FrameLineEdit)).width;
       else if ( qobject_cast< const QTabWidget* >(widget) )
-        return getFrameSpec(PE_group(PE_FrameTabWidget)).width();
+        return getFrameSpec(PE_group(PE_FrameTabWidget)).width;
       else
-        return getFrameSpec(PE_group(PE_Frame)).width();
+        return getFrameSpec(PE_group(PE_Frame)).width;
 
     case PM_MenuPanelWidth :
-      return getFrameSpec(PE_group(PE_FrameMenu)).width();
+      return getFrameSpec(PE_group(PE_FrameMenu)).width;
 
     case PM_DockWidgetFrameWidth :
-      return getFrameSpec(PE_group(PE_FrameDockWidget)).width();
+      return getFrameSpec(PE_group(PE_FrameDockWidget)).width;
 
     case PM_DockWidgetTitleMargin :
       // NOTE used by QDockWidgetLayout to compute title size
@@ -1828,11 +1828,6 @@ int QSvgStyle::styleHint(StyleHint hint, const QStyleOption * option, const QWid
 
     default : return QCommonStyle::styleHint(hint,option,widget,returnData);
   }
-}
-
-QCommonStyle::SubControl QSvgStyle::hitTestComplexControl ( ComplexControl control, const QStyleOptionComplex * option, const QPoint & position, const QWidget * widget) const
-{
-  return QCommonStyle::hitTestComplexControl(control,option,position,widget);
 }
 
 QSize QSvgStyle::sizeFromContents ( ContentsType type, const QStyleOption * option, const QSize & csz, const QWidget * widget) const
@@ -1887,9 +1882,9 @@ QSize QSvgStyle::sizeFromContents ( ContentsType type, const QStyleOption * opti
     }
 
     case CT_SpinBox : {
-        s = csz;
-        // add buttons
-        s += QSize(40,0);
+      s = csz;
+      // add buttons
+      //s += QSize(40,0);
 
       break;
     }
@@ -2311,13 +2306,16 @@ QRect QSvgStyle::subControlRect(ComplexControl control, const QStyleOptionComple
           ret = r;
           break;
         case SC_SpinBoxEditField :
+          // FIXME
           // do not remove -fs.right: merge with spin box button at right
           ret = r.adjusted(0,0,-40,0);
           break;
         case SC_SpinBoxUp :
+          // FIXME
           ret = QRect(x+w-20-fs.right,y,20,h);
           break;
         case SC_SpinBoxDown :
+          // FIXME
           ret = QRect(x+w-40-fs.right,y,20,h);
           break;
         default :
@@ -2914,14 +2912,14 @@ void QSvgStyle::renderFrame(QPainter *p,
       drawRealRect(p,bottomright);
     }
     if ( dbgOverdraw ) {
-      p->fillRect(top,QBrush(QColor(255,0,0,30)));
-      p->fillRect(bottom,QBrush(QColor(255,0,0,30)));
-      p->fillRect(left,QBrush(QColor(255,0,0,30)));
-      p->fillRect(right,QBrush(QColor(255,0,0,30)));
-      p->fillRect(topleft,QBrush(QColor(255,0,0,30)));
-      p->fillRect(topright,QBrush(QColor(255,0,0,30)));
-      p->fillRect(bottomleft,QBrush(QColor(255,0,0,30)));
-      p->fillRect(bottomright,QBrush(QColor(255,0,0,30)));
+      p->fillRect(top,QBrush(QColor(255,0,0,100)));
+      p->fillRect(bottom,QBrush(QColor(255,0,0,100)));
+      p->fillRect(left,QBrush(QColor(255,0,0,100)));
+      p->fillRect(right,QBrush(QColor(255,0,0,100)));
+      p->fillRect(topleft,QBrush(QColor(255,0,0,100)));
+      p->fillRect(topright,QBrush(QColor(255,0,0,100)));
+      p->fillRect(bottomleft,QBrush(QColor(255,0,0,100)));
+      p->fillRect(bottomright,QBrush(QColor(255,0,0,100)));
     }
     p->restore();
   }
@@ -2981,7 +2979,7 @@ void QSvgStyle::renderInterior(QPainter *p,
       drawRealRect(p,r);
     }
     if ( dbgOverdraw ) {
-      p->fillRect(r,QBrush(QColor(255,0,0,30)));
+      p->fillRect(r,QBrush(QColor(255,0,0,100)));
     }
     p->restore();
   }
@@ -3015,7 +3013,7 @@ void QSvgStyle::renderIndicator(QPainter *p,
       drawRealRect(p,r);
     }
     if ( dbgOverdraw ) {
-      p->fillRect(r,QBrush(QColor(255,0,0,30)));
+      p->fillRect(r,QBrush(QColor(255,0,0,100)));
     }
     p->restore();
   }
@@ -3035,7 +3033,8 @@ void QSvgStyle::renderLabel(QPainter* p,
                             const QPixmap& icon,
                             const Qt::ToolButtonStyle tialign) const
 {
-  emit(sig_renderLabel_begin("text:"+text+"/icon:"+(icon.isNull() ? "yes":"no")));
+  emit(sig_renderLabel_begin("text:"+(text.isEmpty() ? "<none>" : "\""+text+"\"")+
+                             "/icon:"+(icon.isNull() ? "no" : "yes")));
 
   // compute text and icon rect
   QRect r(labelRect(bounds,fs,is,ls));
@@ -3109,7 +3108,8 @@ void QSvgStyle::renderLabel(QPainter* p,
       }
     }
     if ( dbgOverdraw ) {
-      p->fillRect(r,QBrush(QColor(255,0,0,30)));
+//      p->setCompositionMode(QPainter::CompositionMode_Darken);
+      p->fillRect(r,QBrush(QColor(255,0,0,100)));
     }
     p->restore();
   }
@@ -3641,7 +3641,7 @@ QString QSvgStyle::CT_str(QStyle::ContentsType type) const
 
 /* !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! */
 
-QString QSvgStyle::PE_group(PrimitiveElement element) const
+QString QSvgStyle::PE_group(QStyle::PrimitiveElement element)
 {
   switch (element) {
     // Frames
@@ -3702,7 +3702,7 @@ QString QSvgStyle::PE_group(PrimitiveElement element) const
   return QString();
 }
 
-QString QSvgStyle::CE_group(ControlElement element) const
+QString QSvgStyle::CE_group(QStyle::ControlElement element)
 {
   switch(element) {
     case CE_PushButton : return "PushButton";
@@ -3755,7 +3755,7 @@ QString QSvgStyle::CE_group(ControlElement element) const
   return QString();
 }
 
-QString QSvgStyle::CT_group(QStyle::ContentsType type) const
+QString QSvgStyle::CT_group(QStyle::ContentsType type)
 {
   switch (type) {
     case CT_PushButton : return "PushButton";
@@ -3782,7 +3782,7 @@ QString QSvgStyle::CT_group(QStyle::ContentsType type) const
   return QString();
 }
 
-QString QSvgStyle::SE_group(SubElement element) const
+QString QSvgStyle::SE_group(QStyle::SubElement element)
 {
   switch(element) {
     case SE_PushButtonContents : return "PushButton";
@@ -3830,7 +3830,7 @@ QString QSvgStyle::SE_group(SubElement element) const
   return QString();
 }
 
-QString QSvgStyle::CC_group(QStyle::ComplexControl element) const
+QString QSvgStyle::CC_group(QStyle::ComplexControl element)
 {
   switch (element) {
     case CC_SpinBox : return "SpinBox";

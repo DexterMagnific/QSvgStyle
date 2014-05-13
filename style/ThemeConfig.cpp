@@ -192,6 +192,11 @@ frame_spec_t ThemeConfig::getFrameSpec(const QString &elementName, bool expand) 
       v = getValue(elementName,"frame.right", &ok, l,parent);
       if (ok)
         r.right = v.toInt();
+      v = getValue(elementName,"frame.width", &ok, l,parent);
+      if (ok)
+        r.width = v.toInt();
+      else
+        r.width = qMax(qMax(r.top,r.bottom),qMax(r.left,r.right));
 
       v = getValue(elementName,"frame.capsule", &ok, l,parent);
       if (ok)
@@ -399,6 +404,16 @@ label_spec_t ThemeConfig::getLabelSpec(const QString &elementName, bool expand) 
       v = getValue(elementName,"text.margin.right", &ok, l,parent);
       if (ok)
         r.right = v.toInt();
+      v = getValue(elementName,"text.margin.h", &ok, l,parent);
+      if (ok)
+        r.hmargin = v.toInt();
+      else
+        r.hmargin = qMax(r.left,r.right);
+      v = getValue(elementName,"text.margin.v", &ok, l,parent);
+      if (ok)
+        r.vmargin = v.toInt();
+      else
+        r.vmargin = qMax(r.top,r.bottom);
     }
   }
 
@@ -511,7 +526,7 @@ theme_spec_t ThemeConfig::getThemeSpec() const
 
   v = getValue("General","comment", &ok);
   if (ok)
-    r.comment = v.toString();
+    r.descr = v.toString();
 
   v = getValue("General","animated", &ok);
   if (ok)
@@ -527,7 +542,7 @@ theme_spec_t ThemeConfig::getThemeSpec() const
 void ThemeConfig::setThemeSpec(const theme_spec_t& tspec) const
 {
   setValue("General","author", tspec.author);
-  setValue("General","comment", tspec.comment);
+  setValue("General","comment", tspec.descr);
   setValue("General","animated", QString("%1").arg(tspec.animated));
   setValue("General","animation.step", QString("%1").arg(tspec.step));
 }

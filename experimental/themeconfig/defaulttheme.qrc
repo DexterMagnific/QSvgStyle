@@ -1,6 +1,0 @@
-<RCC>
-  <qresource prefix="/" >
-    <file>default.svg</file>
-    <file>default.cfg</file>
-  </qresource>
-</RCC>
