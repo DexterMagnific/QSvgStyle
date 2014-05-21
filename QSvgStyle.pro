@@ -2,8 +2,7 @@ TEMPLATE = subdirs
 SUBDIRS += \
   style        \
   themebuilder \
-  themeviewer  \
-  experimental
+  themeviewer
 
 CONFIG += \
   warn_on \

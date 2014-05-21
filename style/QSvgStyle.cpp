@@ -41,6 +41,7 @@
 #include <QTimer>
 #include <QList>
 #include <QMap>
+#include <QDebug>
 
 #include <QSpinBox>
 #include <QToolButton>
@@ -66,27 +67,18 @@ QSvgStyle::QSvgStyle()
     defaultSettings(NULL),
     themeSettings(NULL),
     settings(NULL),
-    timer(NULL),
     progresstimer(NULL),
-    animationEnabled(false),
-    animationcount(0),
     dbgWireframe(false),
     dbgOverdraw(false)
 {
   setBuiltinTheme();
   setUserTheme();
 
-  timer = new QTimer(this);
   progresstimer = new QTimer(this);
 
-  connect(timer,SIGNAL(timeout()), this,SLOT(slot_animate()));
   connect(progresstimer,SIGNAL(timeout()), this,SLOT(slot_animateProgressBars()));
 
   theme_spec_t tspec = settings->getThemeSpec();
-  if (tspec.step.present)
-    timer->start(tspec.step);
-  else
-    timer->start(250);
 }
 
 QSvgStyle::~QSvgStyle()
@@ -158,7 +150,6 @@ void QSvgStyle::setTheme(const QString& theme)
     themeRndr = new QSvgRenderer();
     themeRndr->load(QString("%1/QSvgStyle/%2/%2.svg").arg(xdg_cfg).arg(theme));
 
-    themeSettings->setParent(defaultSettings);
     settings = themeSettings;
 
     qDebug() << "["+cls+"]" << "Loaded user theme " << theme;
@@ -264,24 +255,8 @@ void QSvgStyle::unpolish(QWidget * widget)
   if ( qobject_cast< const QProgressBar* >(widget) ) {
     progressbars.remove(widget);
   }
-}
 
-void QSvgStyle::slot_animate()
-{
-#ifdef QS_INSTRUMENTATION
-  printf("\n");
-#endif
-
-  if ( !animationEnabled )
-    return;
-
-  animationcount++;
-
-  foreach (QWidget *widget, animatedWidgets) {
-    if (widget->testAttribute(Qt::WA_UnderMouse)) {
-      widget->update();
-    }
-  }
+  widget->removeEventFilter(this);
 }
 
 void QSvgStyle::slot_animateProgressBars()
@@ -290,7 +265,8 @@ void QSvgStyle::slot_animateProgressBars()
   for (it=progressbars.begin(); it!=progressbars.end(); ++it) {
 
     QWidget *widget = it.key();
-    if (widget->isVisible()) {
+    if (widget->isVisible() && (qobject_cast< const QProgressBar* >(widget)->value() <= 0)) {
+      // only update busy progress bars
       it.value() += 2;
       widget->update();
     }
@@ -353,7 +329,6 @@ void QSvgStyle::drawPrimitive(PrimitiveElement e, const QStyleOption * option, Q
   interior_spec_t is;
   label_spec_t ls;
   indicator_spec_t ds;
-  size_spec_t ss;
 
   if ( g.isEmpty() ) {
     // element not currently supported by QSvgStyle
@@ -366,7 +341,6 @@ void QSvgStyle::drawPrimitive(PrimitiveElement e, const QStyleOption * option, Q
   is = getInteriorSpec(g);
   ls = getLabelSpec(g);
   ds = getIndicatorSpec(g);
-  ss = getSizeSpec(g);
 
   // Draw
   switch(e) {
@@ -412,7 +386,13 @@ void QSvgStyle::drawPrimitive(PrimitiveElement e, const QStyleOption * option, Q
       renderFrame(p,r,fs,fs.element+"-"+st);
       break;
     }
+    case PE_PanelTipLabel : {
+      // frame and interior for tool tips
+      renderFrame(p,r,fs,fs.element+"-"+st);
+      renderInterior(p,r,fs,is,is.element+"-"+st);
+    }
     case PE_IndicatorRadioButton : {
+      ds.size = pixelMetric(PM_IndicatorHeight);
       // a radio button (exclusive choice)
       // QSvgStyle: no pressed or toggled status for radio buttons
       st = (option->state & State_Enabled) ?
@@ -426,6 +406,7 @@ void QSvgStyle::drawPrimitive(PrimitiveElement e, const QStyleOption * option, Q
     case PE_IndicatorViewItemCheck :
       // a check box inside view items
     case PE_IndicatorCheckBox : {
+      ds.size = pixelMetric(PM_IndicatorHeight);
       // a check box (multiple choices)
       // QSvgStyle: no pressed or toggled status for check boxes
       st = (option->state & State_Enabled) ?
@@ -711,7 +692,6 @@ void QSvgStyle::drawControl(ControlElement e, const QStyleOption * option, QPain
   interior_spec_t is;
   label_spec_t ls;
   indicator_spec_t ds;
-  size_spec_t ss;
 
   if ( g.isEmpty() ) {
     // element not currently supported by QSvgStyle
@@ -724,7 +704,6 @@ void QSvgStyle::drawControl(ControlElement e, const QStyleOption * option, QPain
   is = getInteriorSpec(g);
   ls = getLabelSpec(g);
   ds = getIndicatorSpec(g);
-  ss = getSizeSpec(g);
 
   switch (e) {
     case CE_PushButtonBevel : {
@@ -779,9 +758,9 @@ void QSvgStyle::drawControl(ControlElement e, const QStyleOption * option, QPain
             rtext = rtext.adjusted(0,0,-ls.tispace-ds.size,0);
 
           rarrow = QRect(r.topRight(),QSize(ds.size,h))
-                    .translated(-ds.size-fs.right-ls.right,0);
+                    .translated(-ds.size-fs.right-ls.hmargin,0);
           rcheckmark = QRect(r.topRight(),QSize(pixelMetric(PM_IndicatorWidth),h))
-                    .translated(-pixelMetric(PM_IndicatorWidth)-fs.right-ls.right,0);
+                    .translated(-pixelMetric(PM_IndicatorWidth)-fs.right-ls.hmargin,0);
 
           if (opt->menuItemType == QStyleOptionMenuItem::SubMenu)
             rcheckmark.translate(-ds.size-ls.tispace,0);
@@ -1265,6 +1244,7 @@ void QSvgStyle::drawControl(ControlElement e, const QStyleOption * option, QPain
     }
 
     case CE_ToolButtonLabel : {
+      ds = getIndicatorSpec(PE_group(PE_IndicatorArrowDown));
       if ( const QStyleOptionToolButton *opt =
           qstyleoption_cast<const QStyleOptionToolButton *>(option) ) {
 
@@ -1341,12 +1321,12 @@ void QSvgStyle::drawControl(ControlElement e, const QStyleOption * option, QPain
           renderElement(p,
                         fs.element+"-"+"hsep",
                         option->rect,
-                        0,0,Qt::Horizontal,animationcount%fs.animationFrames);
+                        0,0);
         } else if (opt && (opt->frameShape == QFrame::VLine) ) {
           renderElement(p,
                         fs.element+"-"+"vsep",
                         option->rect,
-                        0,0,Qt::Horizontal,animationcount%fs.animationFrames);
+                        0,0);
         } else if (opt && (opt->frameShape != QFrame::NoFrame) ) {
           drawPrimitive(PE_Frame,opt,p,widget);
         }
@@ -1391,7 +1371,6 @@ void QSvgStyle::drawComplexControl(ComplexControl control, const QStyleOptionCom
   interior_spec_t is;
   label_spec_t ls;
   indicator_spec_t ds;
-  size_spec_t ss;
 
   if ( g.isEmpty() ) {
     // element not currently supported by QSvgStyle
@@ -1404,7 +1383,6 @@ void QSvgStyle::drawComplexControl(ComplexControl control, const QStyleOptionCom
   is = getInteriorSpec(g);
   ls = getLabelSpec(g);
   ds = getIndicatorSpec(g);
-  ss = getSizeSpec(g);
 
   switch (control) {
     case CC_ToolButton : {
@@ -1436,11 +1414,11 @@ void QSvgStyle::drawComplexControl(ComplexControl control, const QStyleOptionCom
 
         // Draw arrow
         o.rect = subControlRect(CC_ToolButton,opt,SC_ToolButtonMenu,widget);
-        if (opt->features & QStyleOptionToolButton::Menu) {
+        if (opt->features & QStyleOptionToolButton::Menu)
           // FIXME draw drop down button separator
           // Tool button with independant drop down button
           drawPrimitive(PE_IndicatorButtonDropDown,&o,p,widget);
-        } else if (opt->features & QStyleOptionToolButton::HasMenu)
+        else if (opt->features & QStyleOptionToolButton::HasMenu)
           // Simple down arrow for tool buttons with menus
           drawPrimitive(PE_IndicatorArrowDown,&o,p,widget);
       }
@@ -1805,9 +1783,12 @@ int QSvgStyle::pixelMetric(PixelMetric metric, const QStyleOption * option, cons
     case PM_DockWidgetFrameWidth :
       return getFrameSpec(PE_group(PE_FrameDockWidget)).width;
 
+    case PM_ToolTipLabelFrameWidth :
+      return getFrameSpec(PE_group(PE_PanelTipLabel)).width;
+
     case PM_DockWidgetTitleMargin :
       // NOTE used by QDockWidgetLayout to compute title size
-      return getLabelSpec(CE_group(CE_DockWidgetTitle)).margin();
+      return getLabelSpec(CE_group(CE_DockWidgetTitle)).margin;
 
     case PM_TextCursorWidth : return 1;
 
@@ -1855,7 +1836,6 @@ QSize QSvgStyle::sizeFromContents ( ContentsType type, const QStyleOption * opti
   interior_spec_t is;
   label_spec_t ls;
   indicator_spec_t ds;
-  size_spec_t ss;
 
   if ( g.isEmpty() ) {
     // element not currently supported by QSvgStyle
@@ -1869,7 +1849,6 @@ QSize QSvgStyle::sizeFromContents ( ContentsType type, const QStyleOption * opti
   is = getInteriorSpec(g);
   ls = getLabelSpec(g);
   ds = getIndicatorSpec(g);
-  ss = getSizeSpec(g);
 
   switch (type) {
     case CT_LineEdit : {
@@ -1893,7 +1872,7 @@ QSize QSvgStyle::sizeFromContents ( ContentsType type, const QStyleOption * opti
       if ( const QStyleOptionComboBox *opt =
            qstyleoption_cast<const QStyleOptionComboBox *>(option) ) {
         Q_UNUSED(opt);
-        s = sizeFromContents(fm,fs,is,ls,ss,
+        s = sizeFromContents(fm,fs,is,ls,
                              "W",
                             QPixmap(QSize(pixelMetric(PM_SmallIconSize),pixelMetric(PM_SmallIconSize))));
 
@@ -1908,7 +1887,7 @@ QSize QSvgStyle::sizeFromContents ( ContentsType type, const QStyleOption * opti
       if ( const QStyleOptionButton *opt =
            qstyleoption_cast<const QStyleOptionButton *>(option) ) {
 
-        s = sizeFromContents(fm,fs,is,ls,ss,
+        s = sizeFromContents(fm,fs,is,ls,
                              (opt->text.isEmpty() && opt->icon.isNull()) ? "W"
                                : opt->text,
                              opt->icon.pixmap(opt->iconSize));
@@ -1924,7 +1903,7 @@ QSize QSvgStyle::sizeFromContents ( ContentsType type, const QStyleOption * opti
       if ( const QStyleOptionButton *opt =
            qstyleoption_cast<const QStyleOptionButton *>(option) ) {
 
-        s = sizeFromContents(fm,fs,is,ls,ss,
+        s = sizeFromContents(fm,fs,is,ls,
                              opt->text,
                              opt->icon.pixmap(opt->iconSize));
         s += QSize(pixelMetric(PM_CheckBoxLabelSpacing)+pixelMetric(PM_IndicatorWidth),0);
@@ -1945,7 +1924,7 @@ QSize QSvgStyle::sizeFromContents ( ContentsType type, const QStyleOption * opti
         if (opt->menuItemType == QStyleOptionMenuItem::Separator)
           s = QSize(csw,2); /* there is no PM_MenuSeparatorHeight pixel metric */
         else {
-          s = sizeFromContents(fm,fs,is,ls,ss,opt->text,opt->icon.pixmap(opt->maxIconWidth));
+          s = sizeFromContents(fm,fs,is,ls,opt->text,opt->icon.pixmap(opt->maxIconWidth));
         }
 
         // No icon ? add icon width nevertheless
@@ -1977,7 +1956,7 @@ QSize QSvgStyle::sizeFromContents ( ContentsType type, const QStyleOption * opti
         fs.hasFrame = false;
         fs.left = fs.right = fs.top = fs.bottom = 0;
 
-        s = sizeFromContents(fm,fs,is,ls,ss,
+        s = sizeFromContents(fm,fs,is,ls,
                              opt->text,
                              opt->icon.pixmap(opt->maxIconWidth));
       }
@@ -1989,7 +1968,7 @@ QSize QSvgStyle::sizeFromContents ( ContentsType type, const QStyleOption * opti
       if ( const QStyleOptionProgressBar *opt =
            qstyleoption_cast<const QStyleOptionProgressBar *>(option) )  {
 
-        s = sizeFromContents(fm,fs,is,ls,ss,
+        s = sizeFromContents(fm,fs,is,ls,
                              (opt->textVisible &&
                               opt->text.isEmpty()) ? "W" : opt->text,
                              QPixmap());
@@ -2002,28 +1981,33 @@ QSize QSvgStyle::sizeFromContents ( ContentsType type, const QStyleOption * opti
       if ( const QStyleOptionToolButton *opt =
            qstyleoption_cast<const QStyleOptionToolButton *>(option) ) {
 
+        // fix indicator size
+        ds = getIndicatorSpec(PE_group(PE_IndicatorArrowDown));
+
+        QStyleOptionToolButton o(*opt);
+
 	// minimum size
 	QSize ms;
 	if ( opt->text.isEmpty() && (opt->toolButtonStyle == Qt::ToolButtonTextOnly) )
-	  ms = sizeFromContents(fm,fs,is,ls,ss,
+	  ms = sizeFromContents(fm,fs,is,ls,
                                 "W",
                                 opt->icon.pixmap(opt->iconSize),
                                 Qt::ToolButtonTextOnly);
 	if ( opt->icon.isNull() && (opt->toolButtonStyle == Qt::ToolButtonIconOnly) )
-	  ms = sizeFromContents(fm,fs,is,ls,ss,
+	  ms = sizeFromContents(fm,fs,is,ls,
                                 "W",
                                 opt->icon.pixmap(opt->iconSize),
                                 Qt::ToolButtonTextOnly);
 	if ( opt->text.isEmpty() && opt->icon.isNull() )
-	  ms = sizeFromContents(fm,fs,is,ls,ss,
+	  ms = sizeFromContents(fm,fs,is,ls,
                                 "W",
                                 opt->icon.pixmap(opt->iconSize),
                                 Qt::ToolButtonTextOnly);
 
-	s = sizeFromContents(fm,fs,is,ls,ss,
+	s = sizeFromContents(fm,fs,is,ls,
                              opt->text,
                              opt->icon.pixmap(opt->iconSize),
-                             opt->toolButtonStyle);
+                             opt->toolButtonStyle).expandedTo(ms);
 
         if (opt->arrowType != Qt::NoArrow) {
           // add room for arrow
@@ -2035,8 +2019,6 @@ QSize QSvgStyle::sizeFromContents ( ContentsType type, const QStyleOption * opti
 	  else if ( (opt->toolButtonStyle != Qt::ToolButtonTextOnly) &&
                !opt->icon.isNull() )
 	    s = s + QSize(ls.tispace,0);
-
-	  ms = ms+QSize(ls.tispace+ds.size,0);
 	}
 
 	// add room for simple down arrow or drop down arrow
@@ -2047,8 +2029,6 @@ QSize QSvgStyle::sizeFromContents ( ContentsType type, const QStyleOption * opti
           // Tool button with down arrow
           s.rwidth() += ls.tispace+ds.size;
         }
-
-        s = s.expandedTo(ms);
       }
       break;
     }
@@ -2057,7 +2037,7 @@ QSize QSvgStyle::sizeFromContents ( ContentsType type, const QStyleOption * opti
       if ( const QStyleOptionTabV3 *opt =
            qstyleoption_cast<const QStyleOptionTabV3 *>(option) ) {
 
-        s = sizeFromContents(fm,fs,is,ls,ss,
+        s = sizeFromContents(fm,fs,is,ls,
                              opt->text,
                              opt->icon.pixmap(pixelMetric(PM_ToolBarIconSize)));
 
@@ -2073,7 +2053,7 @@ QSize QSvgStyle::sizeFromContents ( ContentsType type, const QStyleOption * opti
       if ( const QStyleOptionHeader *opt =
            qstyleoption_cast<const QStyleOptionHeader *>(option) ) {
 
-        s = sizeFromContents(fm,fs,is,ls,ss,
+        s = sizeFromContents(fm,fs,is,ls,
                              opt->text,opt->icon.pixmap(pixelMetric(PM_SmallIconSize)));
         if ( opt->sortIndicator != QStyleOptionHeader::None )
           s += QSize(ls.tispace+ds.size,0);
@@ -2096,9 +2076,9 @@ QSize QSvgStyle::sizeFromContents ( ContentsType type, const QStyleOption * opti
            qstyleoption_cast<const QStyleOptionGroupBox *>(option) ) {
 
 	if ( opt->subControls & SC_GroupBoxCheckBox )
-          s = sizeFromContents(fm,fs,is,ls,ss,opt->text,QPixmap())+QSize(pixelMetric(PM_CheckBoxLabelSpacing)+pixelMetric(PM_IndicatorWidth),0);
+          s = sizeFromContents(fm,fs,is,ls,opt->text,QPixmap())+QSize(pixelMetric(PM_CheckBoxLabelSpacing)+pixelMetric(PM_IndicatorWidth),0);
         else
-	  s = sizeFromContents(fm,fs,is,ls,ss,opt->text,QPixmap());
+	  s = sizeFromContents(fm,fs,is,ls,opt->text,QPixmap());
 
         // add contents to st, 30 is title shift (left and right)
 	s = QSize(qMax(s.width()+30+30,csz.width()+fs.left+fs.right),
@@ -2127,7 +2107,6 @@ QSize QSvgStyle::sizeFromContents(const QFontMetrics &fm,
                      /* frame spec */ const frame_spec_t &fs,
                      /* interior spec */ const interior_spec_t &is,
                      /* label spec */ const label_spec_t &ls,
-                     /* size spec */ const size_spec_t &ss,
                      /* text */ const QString &text,
                      /* icon */ const QPixmap &icon,
                      /* text-icon alignment */ const Qt::ToolButtonStyle tialign) const
@@ -2135,8 +2114,8 @@ QSize QSvgStyle::sizeFromContents(const QFontMetrics &fm,
   Q_UNUSED(is);
 
   QSize s;
-  s.setWidth(fs.left+fs.right+ls.left+ls.right);
-  s.setHeight(fs.top+fs.bottom+ls.top+ls.bottom);
+  s.setWidth(fs.left+fs.right+2*ls.hmargin);
+  s.setHeight(fs.top+fs.bottom+2*ls.vmargin);
   if (ls.hasShadow) {
     s.rwidth() += ls.xshift+ls.depth;
     s.rheight() += ls.yshift+ls.depth;
@@ -2160,18 +2139,6 @@ QSize QSvgStyle::sizeFromContents(const QFontMetrics &fm,
     s.rwidth() += qMax(icon.width(),tw);
     s.rheight() += icon.height() + (icon.isNull() ? 0 : ls.tispace) + th;
   }
-
-  if ( (ss.minH > 0) && (s.height() < ss.minH) )
-    s.setHeight(ss.minH);
-
-  if ( (ss.minW > 0) && (s.width() < ss.minW) )
-    s.setWidth(ss.minW);
-
-  if (ss.fixedH > 0)
-    s.setHeight(ss.fixedH);
-
-  if (ss.fixedW > 0)
-    s.setWidth(ss.fixedW);
 
   return s;
 }
@@ -2200,7 +2167,6 @@ QRect QSvgStyle::subElementRect(SubElement e, const QStyleOption * option, const
   interior_spec_t is;
   label_spec_t ls;
   indicator_spec_t ds;
-  size_spec_t ss;
 
   if ( g.isEmpty() ) {
     // element not currently supported by QSvgStyle
@@ -2213,7 +2179,6 @@ QRect QSvgStyle::subElementRect(SubElement e, const QStyleOption * option, const
   is = getInteriorSpec(g);
   ls = getLabelSpec(g);
   ds = getIndicatorSpec(g);
-  ss = getSizeSpec(g);
 
   switch (e) {
     case SE_ProgressBarGroove :
@@ -2283,7 +2248,6 @@ QRect QSvgStyle::subControlRect(ComplexControl control, const QStyleOptionComple
   interior_spec_t is;
   label_spec_t ls;
   indicator_spec_t ds;
-  size_spec_t ss;
 
   if ( g.isEmpty() ) {
     // element not currently supported by QSvgStyle
@@ -2296,7 +2260,6 @@ QRect QSvgStyle::subControlRect(ComplexControl control, const QStyleOptionComple
   is = getInteriorSpec(g);
   ls = getLabelSpec(g);
   ds = getIndicatorSpec(g);
-  ss = getSizeSpec(g);
 
   switch (control) {
     case CC_SpinBox :
@@ -2480,6 +2443,7 @@ QRect QSvgStyle::subControlRect(ComplexControl control, const QStyleOptionComple
 
     case CC_ToolButton : {
       // OK
+      ds = getIndicatorSpec(PE_group(PE_IndicatorArrowDown));
       switch (subControl) {
         case SC_ToolButton : {
           if ( const QStyleOptionToolButton *opt =
@@ -2487,9 +2451,9 @@ QRect QSvgStyle::subControlRect(ComplexControl control, const QStyleOptionComple
 
             // remove room for drop down buttons or down arrows
             if (opt->features & QStyleOptionToolButton::Menu)
-                  ret = r.adjusted(0,0,-20,0);
-            if (opt->features & QStyleOptionToolButton::HasMenu)
-                  ret = r.adjusted(0,0,-ds.size-ls.tispace,0);
+              ret = r.adjusted(0,0,-20,0);
+            else if (opt->features & QStyleOptionToolButton::HasMenu)
+              ret = r.adjusted(0,0,-ds.size-ls.tispace,0);
           }
           break;
         }
@@ -2498,9 +2462,9 @@ QRect QSvgStyle::subControlRect(ComplexControl control, const QStyleOptionComple
                qstyleoption_cast<const QStyleOptionToolButton *>(option) ) {
 
             if (opt->features & QStyleOptionToolButton::Menu)
-              ret = r.adjusted(x+w-20,0,0,0);
+              ret = r.adjusted(x+w-20-fs.right,fs.top,-fs.right,-fs.bottom);
             else if (opt->features & QStyleOptionToolButton::HasMenu)
-              ret = QRect(x+w-ls.tispace-ds.size-fs.right,y+10,ds.size,h-10);
+              ret = QRect(x+w-ds.size-fs.right,y+h-ds.size-fs.bottom,ds.size,ds.size);
           }
           break;
         }
@@ -2519,7 +2483,7 @@ QRect QSvgStyle::subControlRect(ComplexControl control, const QStyleOptionComple
           qstyleoption_cast<const QStyleOptionGroupBox *>(option) ) {
 
         // title size
-        stitle = sizeFromContents(fm,fs,is,ls,ss,
+        stitle = sizeFromContents(fm,fs,is,ls,
                                   opt->text,QPixmap());
         if ( opt->subControls & SC_GroupBoxCheckBox ) {
           // ensure checkbox indicator fits within title interior
@@ -2539,7 +2503,7 @@ QRect QSvgStyle::subControlRect(ComplexControl control, const QStyleOptionComple
           // align checkbox inside label rect
           ret = alignedRect(Qt::LeftToRight,Qt::AlignLeft | Qt::AlignVCenter,
                             QSize(pixelMetric(PM_IndicatorWidth),pixelMetric(PM_IndicatorHeight)),
-                            labelRect.adjusted(fs.left+ls.left,fs.top,-fs.right-ls.right,-fs.bottom));
+                            labelRect.adjusted(fs.left+ls.hmargin,fs.top,-fs.right-ls.hmargin,-fs.bottom));
           break;
         }
         case SC_GroupBoxLabel : {
@@ -2697,7 +2661,7 @@ QRect QSvgStyle::squaredRect(const QRect& r) const {
   return QRect(r.x(),r.y(),e,e);
 }
 
-void QSvgStyle::renderElement(QPainter* painter, const QString& element, const QRect& bounds, int hsize, int vsize, Qt::Orientation orientation, int frameno) const
+void QSvgStyle::renderElement(QPainter* painter, const QString& element, const QRect& bounds, int hsize, int vsize, Qt::Orientation orientation) const
 {
   int x,y,h,w;
   bounds.getRect(&x,&y,&w,&h);
@@ -2717,16 +2681,6 @@ void QSvgStyle::renderElement(QPainter* painter, const QString& element, const Q
     // Fall back to default rendering
     if (defaultRndr && defaultRndr->isValid() && defaultRndr->elementExists(element))
       renderer = defaultRndr;
-  }
-
-  QString _element = element;
-  if ( (frameno != -1) && (frameno != 0) && renderer ) {
-    for (int i=frameno; i>=1; i--) {
-      if ( renderer->elementExists(QString(element+"-frame%1").arg(i)) ) {
-        _element = QString(element+"-frame%1").arg(i);
-        break;
-      }
-    }
   }
 
   if ( orientation == Qt::Vertical ) {
@@ -2756,7 +2710,7 @@ void QSvgStyle::renderElement(QPainter* painter, const QString& element, const Q
         p->save();
         p->setClipRect(QRect(x,y,w,h));
         for (int i=0; i<hpatterns; i++)
-          renderer->render(p,_element,QRect(x+i*hsize,y,hsize,h));
+          renderer->render(p,element,QRect(x+i*hsize,y,hsize,h));
         p->restore();
       }
 
@@ -2766,7 +2720,7 @@ void QSvgStyle::renderElement(QPainter* painter, const QString& element, const Q
         p->save();
         p->setClipRect(QRect(x,y,w,h));
         for (int i=0; i<vpatterns; i++)
-          renderer->render(p,_element,QRect(x,y+i*vsize,w,vsize));
+          renderer->render(p,element,QRect(x,y+i*vsize,w,vsize));
         p->restore();
       }
 
@@ -2778,11 +2732,11 @@ void QSvgStyle::renderElement(QPainter* painter, const QString& element, const Q
         p->setClipRect(bounds);
         for (int i=0; i<hpatterns; i++)
           for (int j=0; j<vpatterns; j++)
-            renderer->render(p,_element,QRect(x+i*hsize,y+j*vsize,hsize,vsize));
+            renderer->render(p,element,QRect(x+i*hsize,y+j*vsize,hsize,vsize));
         p->restore();
       }
     } else {
-      renderer->render(p,_element,QRect(x,y,w,h));
+      renderer->render(p,element,QRect(x,y,w,h));
     }
 
     if ( orientation == Qt::Vertical ) {
@@ -2888,14 +2842,14 @@ void QSvgStyle::renderFrame(QPainter *p,
   }
 
   // Render !
-  renderElement(p,e+"-top",top,0,0,Qt::Horizontal,animationcount%fs.animationFrames);
-  renderElement(p,e+"-bottom",bottom,0,0,Qt::Horizontal,animationcount%fs.animationFrames);
-  renderElement(p,e+"-left",left,0,0,Qt::Horizontal,animationcount%fs.animationFrames);
-  renderElement(p,e+"-right",right,0,0,Qt::Horizontal,animationcount%fs.animationFrames);
-  renderElement(p,e+"-topleft",topleft,0,0,Qt::Horizontal,animationcount%fs.animationFrames);
-  renderElement(p,e+"-topright",topright,0,0,Qt::Horizontal,animationcount%fs.animationFrames);
-  renderElement(p,e+"-bottomleft",bottomleft,0,0,Qt::Horizontal,animationcount%fs.animationFrames);
-  renderElement(p,e+"-bottomright",bottomright,0,0,Qt::Horizontal,animationcount%fs.animationFrames);
+  renderElement(p,e+"-top",top,0,0);
+  renderElement(p,e+"-bottom",bottom,0,0);
+  renderElement(p,e+"-left",left,0,0);
+  renderElement(p,e+"-right",right,0,0);
+  renderElement(p,e+"-topleft",topleft,0,0);
+  renderElement(p,e+"-topright",topright,0,0);
+  renderElement(p,e+"-bottomleft",bottomleft,0,0);
+  renderElement(p,e+"-bottomright",bottomright,0,0);
 
   // debugging facilities
   if ( dbgWireframe || dbgOverdraw ) {
@@ -2969,7 +2923,7 @@ void QSvgStyle::renderInterior(QPainter *p,
   }
 
   // render
-  renderElement(p,e,r,is.px,is.py,orientation,animationcount%is.animationFrames);
+  renderElement(p,e,r,is.px,is.py,orientation);
 
   // debugging facilities
   if ( dbgWireframe || dbgOverdraw ) {
@@ -2992,7 +2946,7 @@ void QSvgStyle::renderIndicator(QPainter *p,
                        /* frame spec */ const frame_spec_t &fs,
                        /* interior spec */ const interior_spec_t &is,
                        /* indicator spec */ const indicator_spec_t &ds,
-                       /* indocator SVG element */ const QString &e,
+                       /* indicator SVG element */ const QString &e,
                        Qt::Alignment alignment) const
 {
   emit(sig_renderIndicator_begin(e));
@@ -3002,15 +2956,14 @@ void QSvgStyle::renderIndicator(QPainter *p,
   int s = (r.width() > ds.size) ? ds.size : r.width();
   r = alignedRect(Qt::LeftToRight,alignment,QSize(s,s),interiorRect(bounds,fs,is));
 
-  renderElement(p,e,r,
-                0,0,Qt::Horizontal,animationcount%ds.animationFrames);
+  renderElement(p,e,r,0,0);
 
   // debugging facilities
   if ( dbgWireframe || dbgOverdraw ) {
     p->save();
     if ( dbgWireframe) {
       p->setPen(QPen(Qt::cyan));
-      drawRealRect(p,r);
+      drawRealRect(p,bounds);
     }
     if ( dbgOverdraw ) {
       p->fillRect(r,QBrush(QColor(255,0,0,100)));
@@ -3068,13 +3021,13 @@ void QSvgStyle::renderLabel(QPainter* p,
 
   if (tialign != Qt::ToolButtonIconOnly) {
     if ( !text.isNull() && !text.isEmpty() ) {
-      if (ls.hasShadow) {
-        p->save();
-        p->setPen(QPen(QColor(ls.r,ls.g,ls.b,ls.a)));
-        for (int i=0; i<ls.depth; i++)
-          p->drawText(rtext.adjusted(ls.xshift+i,ls.yshift+i,0,0),talign,text);
-        p->restore();
-      }
+//       if (ls.hasShadow) {
+//         p->save();
+//         p->setPen(QPen(QColor(ls.r,ls.g,ls.b,ls.a)));
+//         for (int i=0; i<ls.depth; i++)
+//           p->drawText(rtext.adjusted(ls.xshift+i,ls.yshift+i,0,0),talign,text);
+//         p->restore();
+//       }
       p->drawText(rtext,talign,text);
     }
   }
@@ -3135,11 +3088,6 @@ inline indicator_spec_t QSvgStyle::getIndicatorSpec(const QString& group) const
 inline label_spec_t QSvgStyle::getLabelSpec(const QString& group) const
 {
   return settings->getLabelSpec(group);
-}
-
-inline size_spec_t QSvgStyle::getSizeSpec(const QString& group) const
-{
-  return settings->getSizeSpec(group);
 }
 
 void QSvgStyle::capsulePosition(const QWidget *widget, bool &capsule, int &h, int &v) const
@@ -3665,7 +3613,7 @@ QString QSvgStyle::PE_group(QStyle::PrimitiveElement element)
     case PE_PanelMenuBar : return "MenuBarItem";
     case PE_PanelToolBar : return "ToolBar";
     case PE_PanelLineEdit : return "LineEdit";
-    case PE_PanelTipLabel : return "Tip";
+    case PE_PanelTipLabel : return "Tooltip";
     case PE_PanelScrollAreaCorner : return "PE_PanelScrollAreaCorner";
     case PE_PanelItemViewItem : return "ViewItem";
     case PE_PanelItemViewRow : return "ViewItem";

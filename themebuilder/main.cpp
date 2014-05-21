@@ -27,6 +27,5 @@ int main(int argc, char *argv[]) {
   QApplication builder(argc,argv);
   ThemeBuilderUI t(NULL);
   t.show();
-  QObject::connect(&builder,SIGNAL(lastWindowClosed()),&t,SLOT(slot_quit()));
   return builder.exec();
 }

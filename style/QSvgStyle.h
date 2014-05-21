@@ -154,9 +154,7 @@ class QSvgStyle : public QCommonStyle {
      * (the element is stretched/collapsed if necessary)
      * If \ref pattern is true, the element is taken as a pattern to repeat
      * either horizontally, vertically or both, depending of \ref h and \ref v
-     * The \ref frameno parameter indicates the frame number in an animated
-     * sequence. If it is -1, animation is disabled
-     * if \ref orientation is Qt::Vertical, the element is drawn rotated by an angle
+     * if \ref orientation if Qt::Vertical, the element is drawn rotated by an angle
      * of -90 degrees.
      * FIXME @warning if orientation is Vertical, rendering is three times
      * slower than Horizontal.
@@ -166,8 +164,7 @@ class QSvgStyle : public QCommonStyle {
                        const QRect &bounds,
                        int hsize = 0,
                        int vsize = 0,
-                       Qt::Orientation orientation = Qt::Horizontal,
-                       int frameno = -1) const;
+                       Qt::Orientation orientation = Qt::Horizontal) const;
 
     /**
      * Returns the frame spec of the given group
@@ -185,10 +182,6 @@ class QSvgStyle : public QCommonStyle {
      * Returns the label (text+icon) spec of the given group
      */
     inline label_spec_t getLabelSpec(const QString &group) const;
-    /**
-     * Returns the size spec of the given group
-     */
-    inline size_spec_t getSizeSpec(const QString &group) const;
 
     /**
      * QSvgStyle support for capsule grouping
@@ -267,7 +260,6 @@ class QSvgStyle : public QCommonStyle {
                      /* frame spec */ const frame_spec_t &fspec,
                      /* interior spec */ const interior_spec_t &ispec,
                      /* label spec */ const label_spec_t &lspec,
-                     /* size spec */ const size_spec_t &sspec,
                      /* text */ const QString &text,
                      /* icon */ const QPixmap &icon,
                      /* text-icon alignment */ const Qt::ToolButtonStyle tialign = Qt::ToolButtonTextBesideIcon) const;
@@ -318,7 +310,7 @@ class QSvgStyle : public QCommonStyle {
                     frame_spec_t f,
                     interior_spec_t i,
                     label_spec_t t) const {
-      QRect r = interiorRect(bounds,f,i).adjusted(t.left,t.top,-t.right,-t.bottom);
+      QRect r = interiorRect(bounds,f,i).adjusted(t.hmargin,t.vmargin,-t.hmargin,-t.vmargin);
       if ( r.width() < 0 )
         r.setWidth(0);
       if ( r.height() < 0 )
@@ -366,10 +358,6 @@ class QSvgStyle : public QCommonStyle {
 
   private slots:
     /**
-     * Slot called on timer timeout to animate widgets
-     */
-    void slot_animate();
-    /**
      * Slot called on timer timeout to animate busy progress bars
      */
     void slot_animateProgressBars();
@@ -379,8 +367,7 @@ class QSvgStyle : public QCommonStyle {
     QSvgRenderer *defaultRndr, *themeRndr;
     ThemeConfig *defaultSettings, *themeSettings, *settings;
 
-    /* timer used for animated themes */
-    QTimer *timer;
+    /* timer used for progress bars */
     QTimer *progresstimer;
 
     /* List of registered widgets for a animations */
@@ -388,12 +375,6 @@ class QSvgStyle : public QCommonStyle {
 
     /* List of busy progress bars */
     QMap<QWidget *,int> progressbars;
-
-    /* Animation status */
-    bool animationEnabled;
-
-    /* Animation frame counter */
-    int animationcount;
 
     /* QSvgStyle debugging capabilities */
     bool dbgWireframe, dbgOverdraw;

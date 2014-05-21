@@ -19,394 +19,1681 @@
  ***************************************************************************/
 #include "ThemeBuilderUI.h"
 
-#include <QComboBox>
-#include <QSettings>
+#include <QDebug>
+
+// UI
 #include <QFile>
 #include <QListWidget>
 #include <QFileDialog>
+#include <QTreeWidget>
+#include <QTreeWidgetItem>
+#include <QFileInfo>
+#include <QStyleFactory>
+
+// Includes for preview
+#include <QPushButton>
+#include <QToolButton>
+#include <QMenu>
+#include <QRadioButton>
+#include <QCheckBox>
+#include <QScrollBar>
+#include <QProgressBar>
+#include <QGroupBox>
+#include <QLayout>
+#include <QDockWidget>
+#include <QToolBar>
+#include <QMenuBar>
+#include <QToolTip>
 
 #include "../style/ThemeConfig.h"
-#include <QLineEdit>
-
-/* Helper macros */
-#define readInt(group,id,key) \
-  group ## id ## Cb->setChecked(espec.group.key.present); \
-  if (espec.group.key.present) \
-    group ## id ## Sb->setValue(espec.group.key ); \
-  else \
-    group ## id ## Sb->setValue(0);
-
-#define writeInt(group,id,key) \
-  if ( group ## id ## Cb->isChecked() ) \
-    espec.group.key = group ## id ## Sb->value(); \
-  else \
-    espec.group.key.present = false;
+#include "../style/QSvgStyle.h"
 
 ThemeBuilderUI::ThemeBuilderUI(QWidget* parent)
- : QWidget(parent), config(NULL)
+ : QMainWindow(parent), config(0), style(0), previewWidget(0),
+   currentWidget(0),
+   currentDrawStackItem(0), currentDrawMode(0), currentPreviewVariant(0)
 {
+  // Setup using auto-generated UIC code
   setupUi(this);
 
-  config = new ThemeConfig();
-  defaultConfig = new ThemeConfig(":default.cfg");
+  // populate widget tree views
+  QListWidgetItem *i;
 
-  QObject::connect(elementList,SIGNAL(currentTextChanged(const QString &)), this,SLOT(slot_ElementChanged(const QString &)));
-  QObject::connect(quitButton,SIGNAL(clicked()), this,SLOT(close()));
-  QObject::connect(loadButton,SIGNAL(clicked()), this,SLOT(slot_open()));
-  QObject::connect(newButton,SIGNAL(clicked()), this,SLOT(slot_new()));
+  // Use xx_group() functions from QSvgStyle class to set group role
+  QIcon icon1;
+  icon1.addFile(QString::fromUtf8(":/icon/pixmaps/pushbutton.png"), QSize(), QIcon::Normal, QIcon::Off);
+  i = new QListWidgetItem(buttonList);
+  i->setIcon(icon1);
+  i->setText("Push button");
+  i->setData(GroupRole,QSvgStyle::CE_group(QStyle::CE_PushButton));
 
-  elementList->addItems(ThemeConfig::getManagedElements());
-  inheritElementCombo->addItems(ThemeConfig::getManagedElements());
-  inheritFrameCombo->addItems(ThemeConfig::getManagedElements());
-  inheritInteriorCombo->addItems(ThemeConfig::getManagedElements());
-  inheritIndicatorCombo->addItems(ThemeConfig::getManagedElements());
+  QIcon icon2;
+  icon2.addFile(QString::fromUtf8(":/icon/pixmaps/toolbutton.png"), QSize(), QIcon::Normal, QIcon::Off);
+  i = new QListWidgetItem(buttonList);
+  i->setIcon(icon2);
+  i->setText("Tool button");
+  i->setData(GroupRole,QSvgStyle::CC_group(QStyle::CC_ToolButton));
+
+  QIcon icon3;
+  icon3.addFile(QString::fromUtf8(":/icon/pixmaps/radiobutton.png"), QSize(), QIcon::Normal, QIcon::Off);
+  i = new QListWidgetItem(buttonList);
+  i->setIcon(icon3);
+  i->setText("Radio button");
+  i->setData(GroupRole,QSvgStyle::CE_group(QStyle::CE_RadioButton));
+
+  QIcon icon4;
+  icon4.addFile(QString::fromUtf8(":/icon/pixmaps/checkbox.png"), QSize(), QIcon::Normal, QIcon::Off);
+  i = new QListWidgetItem(buttonList);
+  i->setIcon(icon4);
+  i->setText("Check box");
+  i->setData(GroupRole,QSvgStyle::CE_group(QStyle::CE_CheckBox));
+
+  QIcon icon5;
+  icon5.addFile(QString::fromUtf8(":/icon/pixmaps/lineedit.png"), QSize(), QIcon::Normal, QIcon::Off);
+  i = new QListWidgetItem(inputList);
+  i->setIcon(icon5);
+  i->setText("Line edit");
+  i->setData(GroupRole,QSvgStyle::PE_group(QStyle::PE_FrameLineEdit));
+
+  QIcon icon6;
+  icon6.addFile(QString::fromUtf8(":/icon/pixmaps/spinbox.png"), QSize(), QIcon::Normal, QIcon::Off);
+  i = new QListWidgetItem(inputList);
+  i->setIcon(icon6);
+  i->setText("Spin box");
+  i->setData(GroupRole,QSvgStyle::CC_group(QStyle::CC_SpinBox));
+
+  QIcon icon7;
+  icon7.addFile(QString::fromUtf8(":/icon/pixmaps/vscrollbar.png"), QSize(), QIcon::Normal, QIcon::Off);
+  i = new QListWidgetItem(inputList);
+  i->setIcon(icon7);
+  i->setText("Scroll bar");
+  i->setData(GroupRole,QSvgStyle::CC_group(QStyle::CC_ScrollBar));
+
+  QIcon icon8;
+  icon8.addFile(QString::fromUtf8(":/icon/pixmaps/hslider.png"), QSize(), QIcon::Normal, QIcon::Off);
+  i = new QListWidgetItem(inputList);
+  i->setIcon(icon8);
+  i->setText("Slider");
+  i->setData(GroupRole,QSvgStyle::CC_group(QStyle::CC_Slider));
+
+//   QIcon icon9;
+//   icon9.addFile(QString::fromUtf8(":/icon/pixmaps/dial.png"), QSize(), QIcon::Normal, QIcon::Off);
+//   i = new QListWidgetItem(inputList);
+//   i->setIcon(icon9);
+//   i->setText("Dial");
+//   i->setData(GroupRole,QSvgStyle::CC_group(QStyle::CC_Dial));
+
+  QIcon icon10;
+  icon10.addFile(QString::fromUtf8(":/icon/pixmaps/progress.png"), QSize(), QIcon::Normal, QIcon::Off);
+  i = new QListWidgetItem(displayList);
+  i->setIcon(icon10);
+  i->setText("Progress bar");
+  i->setData(GroupRole,QSvgStyle::CE_group(QStyle::CE_ProgressBar));
+
+  QIcon icon11;
+  icon11.addFile(QString::fromUtf8(":/icon/pixmaps/edithlayout.png"), QSize(), QIcon::Normal, QIcon::Off);
+  i = new QListWidgetItem(displayList);
+  i->setIcon(icon11);
+  i->setText("Splitter");
+  i->setData(GroupRole,QSvgStyle::CE_group(QStyle::CE_Splitter));
+
+  QIcon icon111;
+  icon11.addFile(QString::fromUtf8(":/icon/pixmaps/edithlayout.png"), QSize(), QIcon::Normal, QIcon::Off);
+  i = new QListWidgetItem(displayList);
+  i->setIcon(icon111);
+  i->setText("Tooltip");
+  i->setData(GroupRole,QSvgStyle::PE_group(QStyle::PE_PanelTipLabel));
+
+  QIcon icon12;
+  icon12.addFile(QString::fromUtf8(":/icon/pixmaps/groupbox.png"), QSize(), QIcon::Normal, QIcon::Off);
+  i = new QListWidgetItem(containerList);
+  i->setIcon(icon12);
+  i->setText("Group box");
+  i->setData(GroupRole,QSvgStyle::CC_group(QStyle::CC_GroupBox));
+
+  QIcon icon13;
+  icon13.addFile(QString::fromUtf8(":/icon/pixmaps/toolbox.png"), QSize(), QIcon::Normal, QIcon::Off);
+  i = new QListWidgetItem(containerList);
+  i->setIcon(icon13);
+  i->setText("Tool box");
+  i->setData(GroupRole,QSvgStyle::CE_group(QStyle::CE_ToolBoxTab));
+
+  QIcon icon14;
+  icon14.addFile(QString::fromUtf8(":/icon/pixmaps/tabwidget.png"), QSize(), QIcon::Normal, QIcon::Off);
+  i = new QListWidgetItem(containerList);
+  i->setIcon(icon14);
+  i->setText("Tab widget");
+  i->setData(GroupRole,QSvgStyle::CE_group(QStyle::CE_TabBarTab));
+
+  QIcon icon15;
+  icon15.addFile(QString::fromUtf8(":/icon/pixmaps/frame.png"), QSize(), QIcon::Normal, QIcon::Off);
+  i = new QListWidgetItem(containerList);
+  i->setIcon(icon15);
+  i->setText("Frame");
+  i->setData(GroupRole,QSvgStyle::PE_group(QStyle::PE_Frame));
+
+  QIcon icon16;
+  icon16.addFile(QString::fromUtf8(":/icon/pixmaps/dockwidget.png"), QSize(), QIcon::Normal, QIcon::Off);
+  i = new QListWidgetItem(containerList);
+  i->setIcon(icon16);
+  i->setText("Dock widget");
+  i->setData(GroupRole,QSvgStyle::CE_group(QStyle::CE_DockWidgetTitle));
+
+  QIcon icon17;
+  icon17.addFile(QString::fromUtf8(":/icon/pixmaps/toolbox.png"), QSize(), QIcon::Normal, QIcon::Off);
+  i = new QListWidgetItem(containerList);
+  //i->setIcon(icon17);
+  i->setText("Tool bar");
+  i->setData(GroupRole,QSvgStyle::CE_group(QStyle::CE_ToolBar));
+
+  QIcon icon18;
+  icon18.addFile(QString::fromUtf8(":/icon/pixmaps/menubar.png"), QSize(), QIcon::Normal, QIcon::Off);
+  i = new QListWidgetItem(containerList);
+  i->setIcon(icon18);
+  i->setText("Menu bar item");
+  i->setData(GroupRole,QSvgStyle::CE_group(QStyle::CE_MenuBarItem));
+
+  QIcon icon19;
+  icon19.addFile(QString::fromUtf8(":/icon/pixmaps/toolbox.png"), QSize(), QIcon::Normal, QIcon::Off);
+  i = new QListWidgetItem(containerList);
+  //i->setIcon(icon19);
+  i->setText("Menu item");
+  i->setData(GroupRole,QSvgStyle::CE_group(QStyle::CE_MenuItem));
+
+  QIcon icon20;
+  icon20.addFile(QString::fromUtf8(":/icon/pixmaps/righttoleft.png"), QSize(), QIcon::Normal, QIcon::Off);
+  i = new QListWidgetItem(miscList);
+  i->setIcon(icon20);
+  i->setText("Indicators");
+  i->setData(GroupRole,QSvgStyle::PE_group(QStyle::PE_IndicatorArrowDown));
+
+  QIcon icon21;
+  icon21.addFile(QString::fromUtf8(":/icon/pixmaps/optimize.png"), QSize(), QIcon::Normal, QIcon::Off);
+  i = new QListWidgetItem(miscList);
+  i->setIcon(icon21);
+  i->setText("Metrics");
+  //i->setData(GroupRole,"ToolBox");
+
+  // Adjust toolBox size
+  // Shitty QListWidget size policies do not work
+  int maxW = buttonList->sizeHintForColumn(0);
+  maxW = qMax(maxW,inputList->sizeHintForColumn(0));
+  maxW = qMax(maxW,displayList->sizeHintForColumn(0));
+  maxW = qMax(maxW,containerList->sizeHintForColumn(0));
+  maxW = qMax(maxW,miscList->sizeHintForColumn(0));
+  maxW += 30; // be comfortable
+
+  buttonList->setFixedWidth(maxW);
+  inputList->setFixedWidth(maxW);
+  displayList->setFixedWidth(maxW);
+  containerList->setFixedWidth(maxW);
+  miscList->setFixedWidth(maxW);
+
+  toolBox->setSizePolicy(QSizePolicy::Fixed,QSizePolicy::Expanding);
+
+  // also populate inherit combo box
+  foreach(QListWidgetItem *i, buttonList->findItems("*",Qt::MatchWildcard)) {
+    inheritCombo->addItem(i->icon(),i->text(),i->data(GroupRole));
+  }
+  foreach(QListWidgetItem *i, inputList->findItems("*",Qt::MatchWildcard)) {
+    inheritCombo->addItem(i->icon(),i->text(),i->data(GroupRole));
+  }
+  foreach(QListWidgetItem *i, displayList->findItems("*",Qt::MatchWildcard)) {
+    inheritCombo->addItem(i->icon(),i->text(),i->data(GroupRole));
+  }
+  foreach(QListWidgetItem *i, containerList->findItems("*",Qt::MatchWildcard)) {
+    inheritCombo->addItem(i->icon(),i->text(),i->data(GroupRole));
+  }
+
+  // add tree widgets after window creation to get minimal window size
+  drawStackTree = new QTreeWidget(previewTab);
+  drawStackTree->setObjectName(QString::fromUtf8("drawStackTree"));
+  drawStackTree->setAlternatingRowColors(true);
+  drawStackTree->headerItem()->setText(0,"Function");
+  drawStackTree->headerItem()->setText(1,"Args");
+  previewLayout->addWidget(drawStackTree, 3, 0, 1, 1);
+
+//   resolvedValuesTree = new QTreeWidget(previewTab);
+//   resolvedValuesTree->setObjectName(QString::fromUtf8("resolvedValuesTree"));
+//   resolvedValuesTree->headerItem()->setText(0,"Name");
+//   resolvedValuesTree->headerItem()->setText(1,"File value");
+//   resolvedValuesTree->headerItem()->setText(2,"Resolved value");
+//   previewLayout->addWidget(resolvedValuesTree, 5, 0, 1, 1);
+
+  drawStackTree->header()->setResizeMode(0,QHeaderView::ResizeToContents);
+//   resolvedValuesTree->header()->setResizeMode(QHeaderView::ResizeToContents);
+
+  // insert appropriate widget into status bar
+  statusbarLbl1 = new QLabel(this);
+  statusbarLbl2 = new QLabel(this);
+  statusBar()->insertWidget(0,statusbarLbl1);
+  statusBar()->insertWidget(1,statusbarLbl2);
+
+  // setup font size spin
+  fontSizeSpin->setValue(font().pointSize());
+
+  // Get an instance of QSvgStyle
+  if ( !style ) {
+    style = (QSvgStyle *) QStyleFactory::create("QSvgStyle");
+    if ( !style )
+      qWarning() << "Could not load QSvgStyle style, preview will not be available !";
+  }
+
+  // install event filter on previewArea so that we can react to size changes
+  // and center the previewed widget
+  previewArea->installEventFilter(this);
+
+  // connections
+  // main buttons
+  connect(quitBtn,SIGNAL(clicked()),this,SLOT(slot_quit()));
+  connect(openBtn,SIGNAL(clicked()), this,SLOT(slot_openTheme()));
+  connect(saveBtn,SIGNAL(clicked()), this,SLOT(slot_saveTheme()));
+  connect(saveAsBtn,SIGNAL(clicked()), this,SLOT(slot_saveAsTheme()));
+
+  // Change of selected widget to edit
+  connect(buttonList,SIGNAL(currentItemChanged(QListWidgetItem*,QListWidgetItem*)),
+          this,SLOT(slot_widgetChanged(QListWidgetItem*,QListWidgetItem*)));
+  connect(inputList,SIGNAL(currentItemChanged(QListWidgetItem*,QListWidgetItem*)),
+          this,SLOT(slot_widgetChanged(QListWidgetItem*,QListWidgetItem*)));
+  connect(displayList,SIGNAL(currentItemChanged(QListWidgetItem*,QListWidgetItem*)),
+          this,SLOT(slot_widgetChanged(QListWidgetItem*,QListWidgetItem*)));
+  connect(containerList,SIGNAL(currentItemChanged(QListWidgetItem*,QListWidgetItem*)),
+          this,SLOT(slot_widgetChanged(QListWidgetItem*,QListWidgetItem*)));
+  connect(miscList,SIGNAL(currentItemChanged(QListWidgetItem*,QListWidgetItem*)),
+          this,SLOT(slot_widgetChanged(QListWidgetItem*,QListWidgetItem*)));
+  connect(toolBox,SIGNAL(currentChanged(int)),
+          this,SLOT(slot_toolboxTabChanged(int)));
+
+  // Changes inside the common tab
+  connect(inheritCb,SIGNAL(stateChanged(int)),
+          this,SLOT(slot_inheritCbChanged(int)));
+  connect(frameCb,SIGNAL(stateChanged(int)),
+          this,SLOT(slot_frameCbChanged(int)));
+  connect(frameIdCb,SIGNAL(stateChanged(int)),
+          this,SLOT(slot_frameIdCbChanged(int)));
+  connect(frameWidthCb,SIGNAL(stateChanged(int)),
+          this,SLOT(slot_frameWidthCbChanged(int)));
+  connect(interiorCb,SIGNAL(stateChanged(int)),
+          this,SLOT(slot_interiorCbChanged(int)));
+  connect(interiorIdCb,SIGNAL(stateChanged(int)),
+          this,SLOT(slot_interiorIdCbChanged(int)));
+  connect(interiorRepeatCb,SIGNAL(stateChanged(int)),
+          this,SLOT(slot_interiorRepeatCbChanged(int)));
+  connect(indicatorIdCb,SIGNAL(stateChanged(int)),
+          this,SLOT(slot_indicatorIdCbChanged(int)));
+  connect(labelSpacingCb,SIGNAL(stateChanged(int)),
+          this,SLOT(slot_labelSpacingCbChanged(int)));
+  connect(labelMarginCb,SIGNAL(stateChanged(int)),
+          this,SLOT(slot_labelMarginCbChanged(int)));
+
+  // Preview tab
+  connect(repaintBtn,SIGNAL(clicked(bool)),
+          this,SLOT(slot_repaintBtnClicked(bool)));
+  connect(rtlBtn,SIGNAL(clicked(bool)),
+          this,SLOT(slot_rtlBtnClicked(bool)));
+  connect(drawModeBtn,SIGNAL(clicked(bool)),
+          this,SLOT(slot_drawModeBtnClicked(bool)));
+  connect(detachBtn,SIGNAL(clicked(bool)),
+          this,SLOT(slot_detachBtnClicked(bool)));
+  connect(fontSizeSpin,SIGNAL(valueChanged(int)),
+          this,SLOT(slot_fontSizeChanged(int)));
+  connect(enableBtn,SIGNAL(clicked(bool)),
+          this,SLOT(slot_enableBtnClicked(bool)));
+  connect(previewVariantBtn,SIGNAL(clicked(bool)),
+          this,SLOT(slot_previewVariantBtnClicked(bool)));
+
+  // style callbacks
+  if ( style ) {
+    // NOTE connect/disconnect both begin and end
+    connect(style,SIGNAL(sig_drawPrimitive_begin(QString)),
+            this,SLOT(slot_drawPrimitive_begin(QString)));
+    connect(style,SIGNAL(sig_drawPrimitive_end(QString)),
+            this,SLOT(slot_drawPrimitive_end(QString)));
+
+    connect(style,SIGNAL(sig_drawControl_begin(QString)),
+            this,SLOT(slot_drawControl_begin(QString)));
+    connect(style,SIGNAL(sig_drawControl_end(QString)),
+            this,SLOT(slot_drawControl_end(QString)));
+
+    connect(style,SIGNAL(sig_drawComplexControl_begin(QString)),
+            this,SLOT(slot_drawComplexControl_begin(QString)));
+    connect(style,SIGNAL(sig_drawComplexControl_end(QString)),
+            this,SLOT(slot_drawComplexControl_end(QString)));
+
+    connect(style,SIGNAL(sig_renderFrame_begin(QString)),
+            this,SLOT(slot_renderFrame_begin(QString)));
+    connect(style,SIGNAL(sig_renderFrame_end(QString)),
+            this,SLOT(slot_renderFrame_end(QString)));
+
+    connect(style,SIGNAL(sig_renderInterior_begin(QString)),
+            this,SLOT(slot_renderInterior_begin(QString)));
+    connect(style,SIGNAL(sig_renderInterior_end(QString)),
+            this,SLOT(slot_renderInterior_end(QString)));
+
+    connect(style,SIGNAL(sig_renderLabel_begin(QString)),
+            this,SLOT(slot_renderLabel_begin(QString)));
+    connect(style,SIGNAL(sig_renderLabel_end(QString)),
+            this,SLOT(slot_renderLabel_end(QString)));
+
+    connect(style,SIGNAL(sig_renderIndicator_begin(QString)),
+            this,SLOT(slot_renderIndicator_begin(QString)));
+    connect(style,SIGNAL(sig_renderIndicator_end(QString)),
+            this,SLOT(slot_renderIndicator_end(QString)));
+
+    connect(style,SIGNAL(sig_renderElement_begin(QString)),
+            this,SLOT(slot_renderElement_begin(QString)));
+    connect(style,SIGNAL(sig_renderElement_end(QString)),
+            this,SLOT(slot_renderElement_end(QString)));
+
+    connect(style,SIGNAL(sig_sizeFromContents_begin(QString)),
+            this,SLOT(slot_sizeFromContents_begin(QString)));
+    connect(style,SIGNAL(sig_sizeFromContents_end(QString)),
+            this,SLOT(slot_sizeFromContents_end(QString)));
+  }
+
+  // Reset UI
+  resetUi();
+
+  // TESTING remove me in release
+  aboutFrame->hide();
+  //toolBox->setEnabled(true);
+  // TESTING end
+
+  // set minimal and sufficient window size
+  resize(minimumSizeHint());
 }
 
 ThemeBuilderUI::~ThemeBuilderUI()
 {
-  delete config;
-  delete defaultConfig;
+  if ( config )
+    delete config;
+
+  if ( style )
+    delete style;
+}
+
+bool ThemeBuilderUI::eventFilter(QObject* o, QEvent* e)
+{
+  // previewArea
+  if ( (o == previewArea) && previewWidget && (e->type() == QEvent::Resize) ) {
+    // save detached preview area geometry
+    if ( previewArea->isTopLevel() ) {
+      detachedPeviewGeometry = previewArea->geometry();
+    }
+  }
+
+  if ( (o == previewArea) && (e->type() == QEvent::Close) ) {
+    // detached preview area closed -> re-attach to main window
+    slot_detachBtnClicked(false);
+  }
+
+  if ( (o == previewWidget) && previewWidget &&
+       ( (e->type() == QEvent::Paint) || (e->type() == QEvent::Destroy)) ) {
+    // previewWidget is about to be repainted or destroyed -> clear drawStackTree table
+    clearDrawStackTree();
+  }
+
+  // always process the event
+  return QObject::eventFilter(o, e);
+}
+
+void ThemeBuilderUI::clearDrawStackTree()
+{
+  foreach(QTreeWidgetItem *i, drawStackTree->findItems("*",Qt::MatchWildcard)) {
+    delete i;
+  }
+  currentDrawStackItem = 0;
+}
+
+void ThemeBuilderUI::setStyleForWidgetAndChildren(QStyle* style, QWidget* w)
+{
+  if ( !style || !w )
+    return;
+
+  w->setStyle(style);
+
+  // iterate through children
+  foreach(QObject *o, w->children()) {
+    // lookup for immediate children
+    QWidget *c = qobject_cast< QWidget* >(o);
+    if ( c ) {
+      c->setStyle(style);
+    }
+
+    // layout of level 1: iterate through layout items and set style
+    // NOTE we don't go beyond level 1 layouts
+    QLayout *l = qobject_cast< QLayout* >(o);
+    if ( l ) {
+      for (int i=0; i<l->count(); ++i) {
+        QWidget *lc = l->itemAt(i)->widget(); // child widget inside layout
+        if ( lc )
+          lc->setStyle(style);
+      }
+    }
+  }
+}
+
+void ThemeBuilderUI::noteStyleOperation_begin(const QString& op, const QString& args)
+{
+  QTreeWidgetItem *i = new QTreeWidgetItem(currentDrawStackItem);
+  i->setText(0,op);
+  i->setText(1,args);
+  if ( !currentDrawStackItem )
+    drawStackTree->addTopLevelItem(i);
+  else
+    currentDrawStackItem->setExpanded(true);
+
+  currentDrawStackItem = i;
+}
+
+void ThemeBuilderUI::noteStyleOperation_end(const QString& op, const QString& args)
+{
+  Q_UNUSED(op);
+  Q_UNUSED(args);
+
+  if ( currentDrawStackItem )
+    currentDrawStackItem = currentDrawStackItem->parent();
+}
+
+void ThemeBuilderUI::resetUi()
+{
+  // Enable/disable some widgets
+  toolBox->setEnabled(false);
+  tabWidget->setTabEnabled(1,false);
+  tabWidget2->setTabEnabled(0,false);
+  tabWidget2->setTabEnabled(1,false);
+  tabWidget2->setCurrentIndex(2);
+
+  // clear theme file name
+  themeNameLbl->clear();
+  themeNameLbl->setToolTip(QString());
+
+  // clear common settings
+  inheritCb->setChecked(false);
+  inheritCombo->setCurrentIndex(-1);
+  frameCb->setCheckState(Qt::PartiallyChecked);
+  frameIdCb->setCheckState(Qt::PartiallyChecked);
+  frameWidthCb->setCheckState(Qt::PartiallyChecked);
+  interiorCb->setCheckState(Qt::PartiallyChecked);
+  interiorIdCb->setCheckState(Qt::PartiallyChecked);
+  interiorRepeatCb->setCheckState(Qt::PartiallyChecked);
+  labelSpacingCb->setCheckState(Qt::PartiallyChecked);
+  labelMarginCb->setCheckState(Qt::PartiallyChecked);
+
+  currentToolboxTab = toolBox->currentIndex();
+}
+
+void ThemeBuilderUI::slot_openTheme()
+{
+  QString s = QFileDialog::getOpenFileName(NULL,"Load Theme","",
+                                           "QSvgStyle configuration files(*.cfg);;All files(*)");
+  if ( s.isNull() )
+    return;
+
+  // FIXME ask to save current theme
+  config = new ThemeConfig(s);
+
+  if ( !config ) {
+    qWarning() << "Could not load " << s;
+    return;
+  }
+
+  toolBox->setEnabled(true);
+  tabWidget2->setTabEnabled(0,true);
+  tabWidget2->setTabEnabled(1,true);
+  tabWidget2->setCurrentIndex(0);
+  themeNameLbl->setText(QFileInfo(s).fileName());
+  themeNameLbl->setToolTip(s);
+
+  // fill in properties form
+  theme_spec_t ts = config->getThemeSpec();
+
+  // properties tab
+  themeNameEdit->setText(ts.name);
+  authorEdit->setText(ts.author);
+  descrEdit->setText(ts.descr);
+
+  slot_toolboxTabChanged(toolBox->currentIndex());
+}
+
+void ThemeBuilderUI::slot_saveAsTheme()
+{
+}
+
+void ThemeBuilderUI::slot_saveTheme()
+{
 }
 
 void ThemeBuilderUI::slot_quit()
 {
-  slot_save(lastElement);
+  QApplication::closeAllWindows();
 }
 
-void ThemeBuilderUI::slot_loadTheme(const QString& theme)
+void ThemeBuilderUI::setupUiForWidget(const QListWidgetItem* current)
 {
-  slot_save(lastElement);
-  elementList->clear();
-  svgElements.clear();
-  config->load(theme);
+  if ( !config )
+    return;
 
-  if (config->isValid()) {
-    QStringList f = theme.split("/");
-    if (f.size() > 0)
-      themeLabel->setText(f[f.size()-1]);
+  if ( current ) {
+    QString group = current->data(GroupRole).toString();
 
-    QStringList l = config->getManagedElements();
-    QStringList::iterator it;
-    elementList->addItems(l);
+    tabWidget->setEnabled(true);
 
-    for (it=l.begin(); it!=l.end(); ++it) {
-      element_spec_t espec = config->getElementSpec(*it, false);
-      if (!((QString) espec.frame.element).isNull())
-        if (!svgElements.contains(espec.frame.element))
-          svgElements.insert(0,espec.frame.element);
+    // get spec as exactly set in the config file, without inheritance resolution
+    raw_es = config->getRawElementSpec(group);
+    // now get the resolved spec
+    es = config->getElementSpec(group);
 
-      if (!((QString)espec.interior.element).isNull())
-        if (!svgElements.contains(espec.interior.element))
-          svgElements.insert(0,espec.interior.element);
-
-      if (!((QString)espec.indicator.element).isNull())
-        if (!svgElements.contains(espec.indicator.element))
-          svgElements.insert(0,espec.indicator.element);
+    // common tab
+    // inherit cb and combo
+    if ( raw_es.inherits.present ) {
+      inheritCb->setCheckState(Qt::Checked);
+    } else {
+      inheritCb->setCheckState(Qt::Unchecked);
     }
 
-    // general
-    theme_spec_t tspec = config->getThemeSpec();
-    authorLineEdit->setText(tspec.author);
-    commentLineEdit->setText(tspec.descr);
-    animateThemeCb->setChecked(tspec.animated);
-    stepSb->setValue(tspec.step);
+    slot_inheritCbChanged(inheritCb->checkState());
 
-    mainTab->setEnabled(true);
+    // frame stuff
+    if ( raw_es.frame.hasFrame.present ) {
+      frameCb->setChecked(raw_es.frame.hasFrame);
+    } else {
+      frameCb->setCheckState(Qt::PartiallyChecked);
+    }
+
+    slot_frameCbChanged(frameCb->checkState());
+
+    if ( raw_es.frame.element.present ) {
+      if ( QString(raw_es.frame.element).isEmpty() ) {
+        frameIdCb->setCheckState(Qt::Unchecked);
+      } else {
+        frameIdCb->setCheckState(Qt::Checked);
+      }
+    } else {
+      frameIdCb->setCheckState(Qt::PartiallyChecked);
+    }
+
+    slot_frameIdCbChanged(frameIdCb->checkState());
+
+    if ( raw_es.frame.width.present ) {
+      if ( QString("%1").arg(raw_es.frame.width).isEmpty() ) {
+        frameWidthCb->setCheckState(Qt::Unchecked);
+      } else {
+        frameWidthCb->setCheckState(Qt::Checked);
+      }
+    } else {
+      frameWidthCb->setCheckState(Qt::PartiallyChecked);
+    }
+
+    slot_frameWidthCbChanged(frameWidthCb->checkState());
+
+    // interior stuff
+    if ( raw_es.interior.hasInterior.present ) {
+      interiorCb->setChecked(raw_es.interior.hasInterior);
+    } else {
+      interiorCb->setCheckState(Qt::PartiallyChecked);
+    }
+
+    slot_interiorCbChanged(interiorCb->checkState());
+
+    if ( raw_es.interior.element.present ) {
+      if ( QString(raw_es.interior.element).isEmpty() ) {
+        interiorIdCb->setCheckState(Qt::Unchecked);
+      } else {
+        interiorIdCb->setCheckState(Qt::Checked);
+      }
+    } else {
+      interiorIdCb->setCheckState(Qt::PartiallyChecked);
+    }
+
+    slot_interiorIdCbChanged(interiorIdCb->checkState());
+
+    if ( raw_es.interior.px.present || raw_es.interior.py.present ) {
+      interiorRepeatCb->setCheckState(Qt::Unchecked);
+    } else {
+      interiorRepeatCb->setCheckState(Qt::PartiallyChecked);
+    }
+
+    slot_interiorRepeatCbChanged(interiorRepeatCb->checkState());
+
+    // label stuff
+    if ( raw_es.label.tispace.present ) {
+      labelSpacingCb->setCheckState(Qt::Checked);
+    } else {
+      labelSpacingCb->setCheckState(Qt::PartiallyChecked);
+    }
+
+    slot_labelSpacingCbChanged(labelSpacingCb->checkState());
+
+    if ( raw_es.label.hmargin.present || raw_es.label.vmargin.present ) {
+      labelMarginCb->setCheckState(Qt::Checked);
+    } else {
+      labelMarginCb->setCheckState(Qt::PartiallyChecked);
+    }
+
+    slot_labelMarginCbChanged(labelMarginCb->checkState());
+
+    // indicator stuff
+    if ( raw_es.indicator.element.present ) {
+      if ( QString(raw_es.indicator.element).isEmpty() ) {
+        indicatorIdCb->setCheckState(Qt::Unchecked);
+      } else {
+        indicatorIdCb->setCheckState(Qt::Checked);
+      }
+    } else {
+      indicatorIdCb->setCheckState(Qt::PartiallyChecked);
+    }
+
+    slot_indicatorIdCbChanged(indicatorIdCb->checkState());
   } else {
-    mainTab->setEnabled(false);
+    tabWidget->setEnabled(false);
   }
 }
 
-void ThemeBuilderUI::slot_ElementChanged(const QString& element)
+void ThemeBuilderUI::setupPreviewForWidget(const QListWidgetItem* current)
 {
-  if (!config->isValid())
-    return;
+  if ( previewWidget ) {
+    delete previewWidget;
+    previewWidget = 0;
+    clearDrawStackTree();
+  }
 
-  slot_save(lastElement);
+  // max variants that can be shown for this widget
+  int variants = 1;
+  // size policy for shown widget. By default, we do not occupy more room than we
+  // should, thus the sizeHint() returned by the widget is a maximum
+  QSizePolicy qsz = QSizePolicy(QSizePolicy::Maximum,QSizePolicy::Maximum);
 
-  lastElement = QString();
+  QIcon icon;
+  QString group;
 
-  if (element.isEmpty())
-    return;
+  if ( !current )
+    goto end;
 
-  lastElement = element;
+  // prepare icon
+  icon.addFile(QString::fromUtf8(":/icon/pixmaps/insertimage.png"), QSize(), QIcon::Normal, QIcon::Off);
 
-  theme_spec_t tspec = config->getThemeSpec();
+  // get group
+  group = current->data(GroupRole).toString();
 
-  // theme
-  authorLineEdit->setText(tspec.author);
-  commentLineEdit->setText(tspec.descr);
-  animateThemeCb->setChecked(tspec.animated);
-  stepSb->setValue(tspec.step);
+  // NOTE strictly use the same XX_group(XXX) calls as the ones
+  // used to setup the UI in the constructor
 
-  element_spec_t espec = config->getElementSpec(element, false);
+  // Push button
+  if ( group == QSvgStyle::CE_group(QStyle::CE_PushButton) ) {
+    variants = 4;
 
-  // general
-  if ( !((QString)espec.inherits).isNull() && !((QString)espec.inherits).isEmpty() )
-  {
-    inheritElementCb->setChecked(true);
-    inheritElementCombo->setCurrentIndex(inheritElementCombo->findText(espec.inherits));
+    QPushButton *widget = new QPushButton();
+
+    switch (currentPreviewVariant % variants ) {
+      case 0:
+        widget->setText("This is a push button");
+        widget->setIcon(icon);
+        break;
+      case 1:
+        widget->setText("This is a push button");
+        break;
+      case 2:
+        widget->setIcon(icon);
+        break;
+      case 3:
+        break;
+    }
+
+    previewWidget = widget;
+  }
+
+  // Tool button
+  if ( group == QSvgStyle::CC_group(QStyle::CC_ToolButton) ) {
+    variants = 20;
+
+    QToolButton *widget = new QToolButton();
+
+    switch (currentPreviewVariant % variants ) {
+      // Normal
+      case 0:
+        widget->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+        widget->setText("text+icon");
+        widget->setIcon(icon);
+        break;
+      case 1:
+        widget->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
+        widget->setText("text under icon");
+        widget->setIcon(icon);
+        break;
+      case 2:
+        widget->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+        widget->setText("text only");
+        break;
+      case 3:
+        widget->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+        widget->setIcon(icon);
+        break;
+      case 4:
+        break;
+
+      // with arrow
+      case 5:
+        widget->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+        widget->setText("text+icon");
+        widget->setIcon(icon);
+        widget->setArrowType(Qt::UpArrow);
+        break;
+      case 6:
+        widget->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
+        widget->setText("text under icon");
+        widget->setIcon(icon);
+        widget->setArrowType(Qt::UpArrow);
+        break;
+      case 7:
+        widget->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+        widget->setText("text only");
+        widget->setArrowType(Qt::UpArrow);
+        break;
+      case 8:
+        widget->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+        widget->setIcon(icon);
+        widget->setArrowType(Qt::UpArrow);
+        break;
+      case 9:
+        widget->setArrowType(Qt::UpArrow);
+        break;
+
+      // with instant popup
+      case 10: {
+        widget->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+        widget->setPopupMode(QToolButton::InstantPopup);
+        widget->setText("text+icon");
+        widget->setIcon(icon);
+        QMenu *m = new QMenu("popup menu",widget);
+        m->addAction("menu item");
+        widget->setMenu(m);
+      }
+        break;
+      case 11: {
+        widget->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
+        widget->setPopupMode(QToolButton::InstantPopup);
+        widget->setText("text under icon");
+        widget->setIcon(icon);
+        QMenu *m = new QMenu("popup menu",widget);
+        m->addAction("menu item");
+        widget->setMenu(m);
+      }
+        break;
+      case 12: {
+        widget->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+        widget->setPopupMode(QToolButton::InstantPopup);
+        widget->setText("text only");
+        QMenu *m = new QMenu("popup menu",widget);
+        m->addAction("menu item");
+        widget->setMenu(m);
+      }
+        break;
+      case 13: {
+        widget->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+        widget->setPopupMode(QToolButton::InstantPopup);
+        widget->setIcon(icon);
+        QMenu *m = new QMenu("popup menu",widget);
+        m->addAction("menu item");
+        widget->setMenu(m);
+      }
+        break;
+      case 14: {
+        widget->setPopupMode(QToolButton::InstantPopup);
+        QMenu *m = new QMenu("popup menu",widget);
+        m->addAction("menu item");
+        widget->setMenu(m);
+      }
+        break;
+
+      // with drop down menu
+      case 15: {
+        widget->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+        widget->setPopupMode(QToolButton::MenuButtonPopup);
+        widget->setText("text+icon");
+        widget->setIcon(icon);
+        QMenu *m = new QMenu("popup menu",widget);
+        m->addAction("menu item");
+        widget->setMenu(m);
+      }
+      break;
+      case 16: {
+        widget->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
+        widget->setPopupMode(QToolButton::MenuButtonPopup);
+        widget->setText("text under icon");
+        widget->setIcon(icon);
+        QMenu *m = new QMenu("popup menu",widget);
+        m->addAction("menu item");
+        widget->setMenu(m);
+      }
+      break;
+      case 17: {
+        widget->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+        widget->setPopupMode(QToolButton::MenuButtonPopup);
+        widget->setText("text only");
+        QMenu *m = new QMenu("popup menu",widget);
+        m->addAction("menu item");
+        widget->setMenu(m);
+      }
+      break;
+      case 18: {
+        widget->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+        widget->setPopupMode(QToolButton::MenuButtonPopup);
+        widget->setIcon(icon);
+        QMenu *m = new QMenu("popup menu",widget);
+        m->addAction("menu item");
+        widget->setMenu(m);
+      }
+      break;
+      case 19: {
+        widget->setPopupMode(QToolButton::MenuButtonPopup);
+        QMenu *m = new QMenu("popup menu",widget);
+        m->addAction("menu item");
+        widget->setMenu(m);
+      }
+      break;
+    }
+
+    previewWidget = widget;
+  }
+
+  if ( group == QSvgStyle::CE_group(QStyle::CE_RadioButton) ) {
+    variants = 3;
+
+    QRadioButton *widget = new QRadioButton();
+
+    switch ( currentPreviewVariant % variants ) {
+      case 0:
+        widget->setText("This is a radio button");
+        widget->setIcon(icon);
+        break;
+      case 1:
+        widget->setText("This is a radio button");
+        break;
+      case 2:
+        break;
+    }
+
+    previewWidget = widget;
+  }
+
+  if ( group == QSvgStyle::CE_group(QStyle::CE_CheckBox) ) {
+    variants = 3;
+
+    QCheckBox *widget = new QCheckBox();
+    widget->setTristate(true);
+
+    switch ( currentPreviewVariant % variants ) {
+      case 0:
+        widget->setText("This is a check box");
+        widget->setIcon(icon);
+        break;
+      case 1:
+        widget->setText("This is a check box");
+        break;
+      case 2:
+        break;
+    }
+
+    previewWidget = widget;
+  }
+
+  if ( group == QSvgStyle::PE_group(QStyle::PE_FrameLineEdit) ) {
+    variants = 1;
+
+    QLineEdit *widget = new QLineEdit();
+    widget->setText("This is a line edit");
+    widget->setPlaceholderText("type some text here");
+
+    previewWidget = widget;
+  }
+
+  if ( group == QSvgStyle::CC_group(QStyle::CC_SpinBox) ) {
+    variants = 1;
+
+    QSpinBox *widget = new QSpinBox();
+    widget->setSuffix(" suffix");
+    widget->setPrefix("prefix ");
+
+    previewWidget = widget;
+  }
+
+  if ( group == QSvgStyle::CC_group(QStyle::CC_ScrollBar) ) {
+    variants = 2;
+
+    QScrollBar *widget = new QScrollBar();
+
+    switch (currentPreviewVariant % variants) {
+      case 0:
+        widget->setOrientation(Qt::Horizontal);
+        break;
+      case 1:
+        break;
+    }
+
+    previewWidget = widget;
+    qsz = widget->sizePolicy();
+  }
+
+  if ( group == QSvgStyle::CC_group(QStyle::CC_Slider) ) {
+    variants = 2;
+
+    QSlider *widget = new QSlider();
+
+    switch (currentPreviewVariant % variants) {
+      case 0:
+        widget->setOrientation(Qt::Horizontal);
+        break;
+      case 1:
+        break;
+    }
+
+    previewWidget = widget;
+    qsz = widget->sizePolicy();
+  }
+
+  if ( group == QSvgStyle::CE_group(QStyle::CE_ProgressBar) ) {
+    variants = 4;
+
+    QProgressBar *widget = new QProgressBar();
+    widget->setTextVisible(true);
+
+    switch (currentPreviewVariant % variants) {
+      case 0:
+        break;
+      case 1:
+        widget->setOrientation(Qt::Vertical);
+        break;
+      case 2:
+        widget->setRange(0,100);
+        widget->setValue(25);
+        break;
+      case 3:
+        widget->setOrientation(Qt::Vertical);
+        widget->setRange(0,100);
+        widget->setValue(25);
+        break;
+    }
+
+    previewWidget = widget;
+    qsz = widget->sizePolicy();
+  }
+
+  if ( group == QSvgStyle::CC_group(QStyle::CC_GroupBox) ) {
+    variants = 6;
+
+    QGroupBox *widget = new QGroupBox();
+    widget->setTitle("This is a group box");
+
+    switch (currentPreviewVariant % variants) {
+      case 0:
+        widget->setAlignment(Qt::AlignCenter);
+        break;
+      case 1:
+        widget->setAlignment(Qt::AlignLeft);
+        break;
+      case 2:
+        widget->setAlignment(Qt::AlignRight);
+        break;
+      case 3:
+        widget->setAlignment(Qt::AlignCenter);
+        widget->setCheckable(true);
+        break;
+      case 4:
+        widget->setAlignment(Qt::AlignLeft);
+        widget->setCheckable(true);
+        break;
+      case 5:
+        widget->setAlignment(Qt::AlignRight);
+        widget->setCheckable(true);
+        break;
+    }
+
+    previewWidget = widget;
+  }
+
+  if ( group == QSvgStyle::CE_group(QStyle::CE_ToolBoxTab) ) {
+    variants = 1;
+
+    QToolBox *widget = new QToolBox();
+    widget->setFrameShape(QFrame::QFrame::StyledPanel);
+    widget->setFrameShadow(QFrame::QFrame::Sunken);
+
+    widget->addItem(new QLabel("content 1"),icon,"Page 1");
+    widget->addItem(new QLabel("content 2"),"Page 2");
+
+    previewWidget = widget;
+  }
+
+  if ( group == QSvgStyle::CE_group(QStyle::CE_TabBarTab) ) {
+    variants = 4;
+
+    QTabWidget *widget = new QTabWidget();
+
+    widget->addTab(new QLabel("content 1"),icon,"Tab 1");
+    widget->addTab(new QLabel("content 2"),"Tab 2");
+
+    switch (currentPreviewVariant % variants) {
+      case 0:
+        break;
+      case 1:
+        widget->setTabPosition(QTabWidget::South);
+        break;
+      case 2:
+        widget->setTabPosition(QTabWidget::East);
+        break;
+      case 3:
+        widget->setTabPosition(QTabWidget::West);
+        break;
+    }
+
+    previewWidget = widget;
+    qsz = widget->sizePolicy();
+  }
+
+  if ( group == QSvgStyle::PE_group(QStyle::PE_Frame) ) {
+    variants = 2;
+
+    QFrame *widget = new QFrame();
+    widget->setFrameShape(QFrame::StyledPanel);
+
+    switch (currentPreviewVariant % variants) {
+      case 0:
+        widget->setFrameShadow(QFrame::Raised);
+        break;
+      case 1:
+        widget->setFrameShadow(QFrame::Sunken);
+        break;
+    }
+
+    previewWidget = widget;
+    qsz = widget->sizePolicy();
+  }
+
+  if ( group == QSvgStyle::CE_group(QStyle::CE_DockWidgetTitle) ) {
+    variants = 1;
+
+    QDockWidget *widget = new QDockWidget();
+    widget->setWidget(new QLabel("contents", widget));
+    widget->setWindowTitle("This is a dock widget");
+
+    previewWidget = widget;
+    qsz = widget->sizePolicy();
+  }
+
+  if ( group == QSvgStyle::CE_group(QStyle::CE_ToolBar) ) {
+    variants = 1;
+
+    QToolBar *widget = new QToolBar(this);
+    widget->setMovable(true);
+    //widget->setFloatable(true);
+    widget->addAction(icon,"action1");
+    widget->addAction(icon,"action2");
+    widget->addSeparator();
+    widget->addAction(icon,"action3");
+
+    previewWidget = widget;
+    previewWidget->show();
+  }
+
+  if ( group == QSvgStyle::CE_group(QStyle::CE_MenuBarItem) ) {
+    variants = 1;
+
+    QMenuBar *widget = new QMenuBar();
+    widget->addAction("Menu1");
+    widget->addAction("Menu2");
+
+    previewWidget = widget;
+    qsz = QSizePolicy(QSizePolicy::Expanding,QSizePolicy::Fixed);
+  }
+
+  if ( group == QSvgStyle::CE_group(QStyle::CE_MenuItem) ) {
+    variants = 1;
+
+    QMenu *widget = new QMenu("this is a menu");
+    widget->addAction("Menu item 1");
+    widget->addAction(icon,"Menu item 2");
+    widget->addSeparator();
+    widget->addAction(icon,"Menu item 3", NULL,NULL,QKeySequence("ALT+F1"));
+    widget->actions()[3]->setCheckable(true);
+    widget->addAction("Menu item 4");
+    widget->actions()[4]->setEnabled(false);
+
+    QMenu *submenu = new QMenu("a sub menu");
+    submenu->addAction("sub menu 1");
+    submenu->addAction("sub menu 2");
+    widget->addMenu(submenu);
+    widget->actions()[5]->setCheckable(true);
+    widget->actions()[5]->setShortcut(QKeySequence("CTRL+Q"));
+
+    previewWidget = widget;
+  }
+end:
+  if ( previewWidget ) {
+    repaintBtn->setEnabled(true);
+    rtlBtn->setEnabled(true);
+    drawModeBtn->setEnabled(true);
+    fontSizeSpin->setEnabled(true);
+    enableBtn->setEnabled(true);
+    drawStackTree->setEnabled(true);
+//     resolvedValuesTree->setEnabled(true);
+    previewArea->setEnabled(true);
+    previewVariantBtn->setEnabled(true);
+
+    currentPreviewVariant = currentPreviewVariant % variants;
+    previewVariantBtn->setText(QString("%1/%2").arg(currentPreviewVariant+1).arg(variants));
+
+    previewWidget->installEventFilter(this);
+    setStyleForWidgetAndChildren(style, previewWidget);
+
+    if ( !qobject_cast< const QToolBar* >(previewWidget) ) {
+      previewWidget->setSizePolicy(qsz);
+      previewArea->setWidget(previewWidget);
+    }
+
+    slot_enableBtnClicked(enableBtn->isChecked());
+    slot_rtlBtnClicked(rtlBtn->isChecked());
+    slot_fontSizeChanged(fontSizeSpin->value());
   } else {
-    inheritElementCb->setChecked(false);
-    inheritElementCombo->setCurrentIndex(-1);
+    repaintBtn->setEnabled(false);
+    rtlBtn->setEnabled(false);
+    enableBtn->setEnabled(false);
+    drawModeBtn->setEnabled(false);
+    fontSizeSpin->setEnabled(false);
+    drawStackTree->setEnabled(false);
+//     resolvedValuesTree->setEnabled(false);
+    previewVariantBtn->setEnabled(false);
+
+    previewWidget = new QLabel("There is no preview available for this element");
+    previewWidget->setSizePolicy(qsz);
+    previewArea->setWidget(previewWidget);
   }
+}
 
-  printf("load %s\n",(const char *)(element.toAscii()));
+void ThemeBuilderUI::slot_repaintBtnClicked(bool checked)
+{
+  Q_UNUSED(checked);
 
-  if (espec.frame.hasCapsule.present && espec.frame.hasCapsule)
-    capsuleCb->setChecked(true);
-  else
-    capsuleCb->setChecked(false);
+  if ( previewWidget )
+    previewWidget->repaint();
+}
 
-  // frame
-  if ( !((QString)espec.frame.inherits).isNull() && !((QString)espec.frame.inherits).isEmpty() )
-  {
-    inheritFrameCb->setChecked(true);
-    inheritFrameCombo->setCurrentIndex(inheritFrameCombo->findText(espec.frame.inherits));
-  } else {
-    inheritFrameCb->setChecked(false);
-    inheritFrameCombo->setCurrentIndex(-1);
-  }
-
-  frameSvgCombo->clear();
-  frameSvgCombo->addItems(svgElements);
-  frameCb->setChecked(espec.frame.hasFrame);
-  frameSvgCombo->setCurrentIndex(frameSvgCombo->findText(espec.frame.element));
-
-  readInt(frame, Top, top);
-  readInt(frame, Bottom, bottom);
-  readInt(frame, Left, left);
-  readInt(frame, Right, right);
-
-  if (espec.frame.animationFrames.present)
-    frameAnimateCb->setChecked(true);
-  else
-    frameAnimateCb->setChecked(false);
-
-  readInt(frame, Frames, animationFrames);
-
-  // interior
-  if ( !((QString)espec.interior.inherits).isNull() && !((QString)espec.interior.inherits).isEmpty() )
-  {
-    inheritInteriorCb->setChecked(true);
-    inheritInteriorCombo->setCurrentIndex(inheritInteriorCombo->findText(espec.interior.inherits));
-  } else {
-    inheritInteriorCb->setChecked(false);
-    inheritInteriorCombo->setCurrentIndex(-1);
-  }
-
-  interiorSvgCombo->clear();
-  interiorSvgCombo->addItems(svgElements);
-  interiorCb->setChecked(espec.interior.hasInterior);
-  interiorSvgCombo->setCurrentIndex(interiorSvgCombo->findText(espec.interior.element));
-
-  readInt(interior, Rx, px);
-  readInt(interior, Ry, py);
-
-  if (espec.interior.animationFrames.present)
-    interiorAnimateCb->setChecked(true);
-  else
-    interiorAnimateCb->setChecked(false);
-
-  readInt(interior, Frames, animationFrames);
-
-  // indicator
-  if ( !((QString)espec.indicator.inherits).isNull() && !((QString)espec.indicator.inherits).isEmpty() )
-  {
-    inheritIndicatorCb->setChecked(true);
-    inheritIndicatorCombo->setCurrentIndex(inheritIndicatorCombo->findText(espec.indicator.inherits));
-  } else {
-    inheritIndicatorCb->setChecked(false);
-    inheritIndicatorCombo->setCurrentIndex(-1);
-  }
-
-  indicatorSvgCombo->clear();
-  indicatorSvgCombo->addItems(svgElements);
-  indicatorSvgCombo->setCurrentIndex(indicatorSvgCombo->findText(espec.indicator.element));
-
-  readInt(indicator, Size, size);
-
-  // text
-  readInt(label, ShadowX, xshift);
-  readInt(label, ShadowY, yshift);
-  readInt(label, ShadowDepth, depth);
-
-  if (espec.label.hasShadow.present && espec.label.hasShadow)
-    shadowCb->setChecked(true);
-  else
-    shadowCb->setChecked(false);
-
-  readInt(label, ShadowRed, r);
-  readInt(label, ShadowGreen, g);
-  readInt(label, ShadowBlue, b);
-  readInt(label, ShadowAlpha, a);
-
-  if (espec.label.hasMargin.present && espec.label.hasMargin)
-    textMarginCb->setChecked(true);
-  else
-    textMarginCb->setChecked(false);
-
-  readInt(label, TextTop, top);
-  readInt(label, TextBottom, bottom);
-  readInt(label, TextLeft, left);
-  readInt(label, TextRight, right);
-
-  readInt(label, TextIconSpacing, tispace);
-
-  // size
-  heightSb->setValue(0);
-  widthSb->setValue(0);
-
-  if (espec.size.minH.present) {
-    heightSb->setValue(espec.size.minH);
-    minHeightRadio->setChecked(true);
-  }
-  if (espec.size.fixedH.present) {
-    heightSb->setValue(espec.size.fixedH);
-    fixedHeightRadio->setChecked(true);
-  }
-  if (espec.size.minH.present || espec.size.fixedH.present)
-    forceHeightCb->setChecked(true);
-  else
-    forceHeightCb->setChecked(false);
-
-  if (espec.size.minW.present) {
-    widthSb->setValue(espec.size.minW);
-    minWidthRadio->setChecked(true);
-  }
-  if (espec.size.fixedW.present) {
-    widthSb->setValue(espec.size.fixedW);
-    fixedWidthRadio->setChecked(true);
-  }
-  if (espec.size.minW.present || espec.size.fixedW.present)
-    forceWidthCb->setChecked(true);
+void ThemeBuilderUI::slot_rtlBtnClicked(bool checked)
+{
+  if ( previewWidget ) {
+    if ( checked )
+      previewWidget->setLayoutDirection(Qt::RightToLeft);
     else
-      forceWidthCb->setChecked(false);
+      previewWidget->setLayoutDirection(Qt::LeftToRight);
+  }
 }
 
-void ThemeBuilderUI::slot_save(const QString& widget)
+void ThemeBuilderUI::slot_drawModeBtnClicked(bool checked)
 {
-  if (!config->isValid())
-    return;
+  Q_UNUSED(checked);
 
-  theme_spec_t tspec;
-  tspec.author = authorLineEdit->text();
-  tspec.descr = commentLineEdit->text();
-  tspec.animated = animateThemeCb->isChecked();
-  tspec.step = stepSb->value();
+  currentDrawMode = (currentDrawMode+1)%3;
 
-  config->setThemeSpec(tspec);
+  if ( style)
+    style->dbgOverdraw = style->dbgWireframe = 0;
 
-  if (widget.isEmpty())
-    return;
+  switch (currentDrawMode) {
+    case 0:
+      drawModeBtn->setText("N");
+      break;
+    case 1:
+      drawModeBtn->setText("W");
+      if ( style )
+        style->dbgWireframe = 1;
+      break;
+    case 2:
+      drawModeBtn->setText("O");
+      if ( style )
+        style->dbgOverdraw = 1;
+      break;
+  }
 
-  element_spec_t espec;
+  if ( previewWidget )
+    previewWidget->repaint();
+}
 
-  if (inheritElementCb->isChecked())
-    espec.inherits = inheritElementCombo->currentText();
-  if (inheritFrameCb->isChecked())
-    espec.frame.inherits = inheritFrameCombo->currentText();
-  espec.frame.hasFrame = frameCb->isChecked();
-  espec.frame.hasCapsule = capsuleCb->isChecked();
-  espec.frame.element = frameSvgCombo->currentText();
-  if (!svgElements.contains(espec.frame.element))
-    svgElements.append(espec.frame.element);
+void ThemeBuilderUI::slot_detachBtnClicked(bool checked)
+{
+  Q_UNUSED(checked);
 
-  writeInt(frame, Top, top);
-  writeInt(frame, Bottom, bottom);
-  writeInt(frame, Left, left);
-  writeInt(frame, Right, right);
+  QIcon icon;
 
-  if (frameAnimateCb->isChecked()) {
-    writeInt(frame, Frames, animationFrames);
+  if ( !previewArea->isTopLevel() ) {
+    icon.addFile(QString::fromUtf8(":/icon/pixmaps/dockwidget.png"), QSize(), QIcon::Normal, QIcon::Off);
+    detachBtn->setIcon(icon);
+    detachBtn->setText("Attach");
+    previewArea->setParent(NULL);
+    previewArea->show();
+    if ( detachedPeviewGeometry.isValid() )
+      previewArea->setGeometry(detachedPeviewGeometry);
+    previewArea->window()->setWindowTitle("QSvgThemeBuilder preview");
   } else {
-    espec.frame.animationFrames = 0;
+    icon.addFile(QString::fromUtf8(":/icon/pixmaps/widget.png"), QSize(), QIcon::Normal, QIcon::Off);
+    detachBtn->setIcon(icon);
+    detachBtn->setText("Detach");
+    detachedPeviewGeometry = previewArea->geometry();
+    previewLayout->addWidget(previewArea, 1, 0, 1, 1);
   }
+}
 
-  if (inheritInteriorCb->isChecked())
-    espec.interior.inherits = inheritInteriorCombo->currentText();
-  espec.interior.hasInterior = interiorCb->isChecked();
-  espec.interior.element = interiorSvgCombo->currentText();
-  if (!svgElements.contains(espec.interior.element))
-    svgElements.append(espec.interior.element);
+void ThemeBuilderUI::slot_fontSizeChanged(int val)
+{
+  if ( previewWidget ) {
+    QFont f = previewWidget->font();
+    f.setPointSize(val);
+    previewWidget->setFont(f);
+  }
+}
 
-  writeInt(interior, Rx, px);
-  writeInt(interior, Ry, py);
+void ThemeBuilderUI::slot_enableBtnClicked(bool checked)
+{
+  if ( previewWidget )
+    previewWidget->setEnabled(checked);
+}
 
-  if (interiorAnimateCb->isChecked()) {
-    writeInt(interior, Frames, animationFrames);
+void ThemeBuilderUI::slot_previewVariantBtnClicked(bool checked)
+{
+  Q_UNUSED(checked);
+
+  currentPreviewVariant++;
+
+  setupPreviewForWidget(currentWidget);
+}
+
+void ThemeBuilderUI::slot_inheritCbChanged(int state)
+{
+  inheritCombo->removeItem(inheritCombo->findText("<invalid>"));
+
+  if ( state == Qt::Checked ) {
+    inheritCombo->setEnabled(true);
+    if ( raw_es.inherits.present ) {
+      int idx = inheritCombo->findData(raw_es.inherits);
+      if ( idx == -1 ) {
+        inheritCombo->addItem("<invalid>");
+        inheritCombo->setCurrentIndex(inheritCombo->findText("<invalid>"));
+      } else {
+        inheritCombo->setCurrentIndex(idx);
+      }
+    }
   } else {
-    espec.interior.animationFrames = 0;
-  }
-
-  if (inheritIndicatorCb->isChecked())
-    espec.indicator.inherits = inheritIndicatorCombo->currentText();
-  espec.indicator.element = indicatorSvgCombo->currentText();
-  if (!svgElements.contains(espec.indicator.element))
-    svgElements.append(espec.indicator.element);
-
-  writeInt(indicator, Size, size);
-
-  espec.label.hasShadow = shadowCb->isChecked();
-
-  writeInt(label, ShadowX, xshift);
-  writeInt(label, ShadowY, yshift);
-  writeInt(label, ShadowDepth, depth);
-
-  writeInt(label, ShadowRed, r);
-  writeInt(label, ShadowGreen, g);
-  writeInt(label, ShadowBlue, b);
-  writeInt(label, ShadowAlpha, a);
-
-  espec.label.hasMargin = textMarginCb->isChecked();
-
-  writeInt(label, TextTop, top);
-  writeInt(label, TextBottom, bottom);
-  writeInt(label, TextLeft, left);
-  writeInt(label, TextRight, right);
-
-  writeInt(label, TextIconSpacing, tispace);
-
-  if (forceHeightCb->isChecked()) {
-    if (minHeightRadio->isChecked()) {
-      espec.size.minH = heightSb->value();
-    }
-    if (fixedHeightRadio->isChecked()) {
-      espec.size.fixedH = heightSb->value();
-    }
-  }
-
-  if (forceWidthCb->isChecked()) {
-    if (minWidthRadio->isChecked()) {
-      espec.size.minW = widthSb->value();
-    }
-    if (fixedWidthRadio->isChecked()) {
-      espec.size.fixedW = widthSb->value();
-    }
-  }
-
-  printf("saved %s\n",(const char *)(widget.toAscii()));
-
-  config->setElementSpec(widget,espec);
-}
-
-void ThemeBuilderUI::slot_open()
-{
-  QString s = QFileDialog::getOpenFileName(NULL,"Load Theme","","*.cfg");
-  if (!s.isNull()) {
-    slot_loadTheme(s);
+    inheritCombo->setEnabled(false);
+    inheritCombo->setCurrentIndex(-1);
   }
 }
 
-void ThemeBuilderUI::slot_new()
+void ThemeBuilderUI::slot_frameCbChanged(int state)
 {
-  QString s = QFileDialog::getSaveFileName(NULL,"New Theme","","*.cfg");
-  if (!s.isNull()) {
-    //QFile::copy(":default.cfg",s);
-    QFile f(s);
-    f.open(QIODevice::WriteOnly | QIODevice::Truncate);
-    f.close();
-
-    slot_loadTheme(s);
+  if ( (state == Qt::Checked) || (state == Qt::PartiallyChecked) ) {
+    frameIdCb->setEnabled(true);
+    frameWidthCb->setEnabled(true);
+  } else {
+    frameIdCb->setEnabled(false);
+    frameWidthCb->setEnabled(false);
   }
+
+  if ( state == Qt::Checked ) {
+    frameEdit->setEnabled(true);
+    frameEdit->setText("<yes>");
+  }
+  if ( state == Qt::PartiallyChecked ) {
+    frameEdit->setEnabled(false);
+    frameEdit->setText("<inherit>");
+  }
+  if ( state == Qt::Unchecked ) {
+    frameEdit->setEnabled(false);
+    frameEdit->setText("<no>");
+  }
+
+  slot_frameIdCbChanged(frameIdCb->checkState());
+  slot_frameWidthCbChanged(frameWidthCb->checkState());
+}
+
+void ThemeBuilderUI::slot_frameIdCbChanged(int state)
+{
+  if ( state == Qt::Checked ) {
+    frameIdCombo->setEnabled(frameCb->isChecked());
+  } else {
+    frameIdCombo->setEnabled(false);
+  }
+  if ( state == Qt::Checked ) {
+    if ( raw_es.frame.element.present ) {
+      int idx = frameIdCombo->findText(raw_es.frame.element);
+      if ( idx == -1 )
+        frameIdCombo->addItem(raw_es.frame.element);
+      idx = frameIdCombo->findText(raw_es.frame.element);
+      frameIdCombo->setCurrentIndex(idx);
+      frameIdCombo->setEditText(raw_es.frame.element);
+    }
+  }
+  if ( state == Qt::PartiallyChecked ) {
+    frameIdCombo->setEditText("<inherit>");
+  }
+  if ( state == Qt::Unchecked ) {
+    frameIdCombo->setEditText("<none>");
+  }
+}
+
+void ThemeBuilderUI::slot_frameWidthCbChanged(int state)
+{
+  if ( state == Qt::Checked ) {
+    frameWidthSpin->setEnabled(frameCb->isChecked());
+    frameWidthSpin->setSpecialValueText(QString());
+    frameWidthSpin->setMinimum(1);
+    frameWidthSpin->setValue(raw_es.frame.width);
+  } else {
+    frameWidthSpin->setEnabled(false);
+    frameWidthSpin->setMinimum(-1);
+    frameWidthSpin->setValue(frameWidthSpin->minimum());
+  }
+  if ( state == Qt::PartiallyChecked ) {
+    frameWidthSpin->setSpecialValueText("<inherit>");
+  }
+  if ( state == Qt::Unchecked ) {
+    frameWidthSpin->setSpecialValueText("<none>");
+  }
+}
+
+void ThemeBuilderUI::slot_interiorCbChanged(int state)
+{
+  if ( (state == Qt::Checked) || (state == Qt::PartiallyChecked) ) {
+    interiorIdCb->setEnabled(true);
+    interiorRepeatCb->setEnabled(true);
+  } else {
+    interiorIdCb->setEnabled(false);
+    interiorRepeatCb->setEnabled(false);
+  }
+
+  if ( state == Qt::Checked ) {
+    interiorEdit->setEnabled(true);
+    interiorEdit->setText("<yes>");
+  }
+  if ( state == Qt::PartiallyChecked ) {
+    interiorEdit->setEnabled(false);
+    interiorEdit->setText("<inherit>");
+  }
+  if ( state == Qt::Unchecked ) {
+    interiorEdit->setEnabled(false);
+    interiorEdit->setText("<no>");
+  }
+
+  slot_interiorIdCbChanged(interiorIdCb->checkState());
+  slot_interiorRepeatCbChanged(interiorRepeatCb->checkState());
+}
+
+void ThemeBuilderUI::slot_interiorIdCbChanged(int state)
+{
+  if ( state == Qt::Checked ) {
+    interiorIdCombo->setEnabled(interiorIdCb->isChecked());
+  } else {
+    interiorIdCombo->setEnabled(false);
+  }
+  if ( state == Qt::Checked ) {
+    if ( raw_es.interior.element.present ) {
+      int idx = interiorIdCombo->findText(raw_es.interior.element);
+      if ( idx == -1 )
+        interiorIdCombo->addItem(raw_es.interior.element);
+      idx = interiorIdCombo->findText(raw_es.interior.element);
+      interiorIdCombo->setCurrentIndex(idx);
+      interiorIdCombo->setEditText(raw_es.interior.element);
+    }
+  }
+  if ( state == Qt::PartiallyChecked ) {
+    interiorIdCombo->setEditText("<inherit>");
+  }
+  if ( state == Qt::Unchecked ) {
+    interiorIdCombo->setEditText("<none>");
+  }
+}
+
+void ThemeBuilderUI::slot_interiorRepeatCbChanged(int state)
+{
+  if ( state == Qt::Checked ) {
+    interiorRepeatXSpin->setEnabled(interiorRepeatCb->isChecked());
+    interiorRepeatXSpin->setSpecialValueText(QString());
+    interiorRepeatXSpin->setMinimum(1);
+    interiorRepeatXSpin->setValue(qMax((int)raw_es.interior.px,interiorRepeatXSpin->minimum()));
+
+    interiorRepeatYSpin->setEnabled(interiorRepeatCb->isChecked());
+    interiorRepeatYSpin->setSpecialValueText(QString());
+    interiorRepeatYSpin->setMinimum(1);
+    interiorRepeatYSpin->setValue(qMax((int)raw_es.interior.py,interiorRepeatYSpin->minimum()));
+  } else {
+    interiorRepeatXSpin->setEnabled(false);
+    interiorRepeatXSpin->setMinimum(-1);
+    interiorRepeatXSpin->setValue(interiorRepeatXSpin->minimum());
+
+    interiorRepeatYSpin->setEnabled(false);
+    interiorRepeatYSpin->setMinimum(-1);
+    interiorRepeatYSpin->setValue(interiorRepeatXSpin->minimum());
+  }
+  if ( state == Qt::PartiallyChecked ) {
+    interiorRepeatXSpin->setSpecialValueText("<inherit>");
+    interiorRepeatYSpin->setSpecialValueText("<inherit>");
+  }
+  if ( state == Qt::Unchecked ) {
+    interiorRepeatXSpin->setSpecialValueText("<none>");
+    interiorRepeatYSpin->setSpecialValueText("<none>");
+  }
+}
+
+void ThemeBuilderUI::slot_labelSpacingCbChanged(int state)
+{
+  if ( state == Qt::Checked ) {
+    labelSpacingSpin->setEnabled(true);
+    labelSpacingSpin->setSpecialValueText(QString());
+    labelSpacingSpin->setMinimum(1);
+    labelSpacingSpin->setValue(qMax((int)raw_es.label.tispace,labelSpacingSpin->minimum()));
+  } else {
+    labelSpacingSpin->setEnabled(false);
+    labelSpacingSpin->setMinimum(-1);
+    labelSpacingSpin->setValue(labelSpacingSpin->minimum());
+  }
+  if ( state == Qt::PartiallyChecked ) {
+    labelSpacingSpin->setSpecialValueText("<inherit>");
+  }
+  if ( state == Qt::Unchecked ) {
+    labelSpacingSpin->setSpecialValueText("<none>");
+  }
+}
+
+void ThemeBuilderUI::slot_labelMarginCbChanged(int state)
+{
+  if ( state == Qt::Checked ) {
+    labelMarginHSpin->setEnabled(labelMarginCb->isChecked());
+    labelMarginHSpin->setSpecialValueText(QString());
+    labelMarginHSpin->setMinimum(1);
+    labelMarginHSpin->setValue(qMax((int)raw_es.label.hmargin,labelMarginHSpin->minimum()));
+
+    labelMarginVSpin->setEnabled(labelMarginCb->isChecked());
+    labelMarginVSpin->setSpecialValueText(QString());
+    labelMarginVSpin->setMinimum(1);
+    labelMarginVSpin->setValue(qMax((int)raw_es.label.vmargin,labelMarginVSpin->minimum()));
+  } else {
+    labelMarginHSpin->setEnabled(false);
+    labelMarginHSpin->setMinimum(-1);
+    labelMarginHSpin->setValue(labelMarginHSpin->minimum());
+
+    labelMarginVSpin->setEnabled(false);
+    labelMarginVSpin->setMinimum(-1);
+    labelMarginVSpin->setValue(labelMarginHSpin->minimum());
+  }
+  if ( state == Qt::PartiallyChecked ) {
+    labelMarginHSpin->setSpecialValueText("<inherit>");
+    labelMarginVSpin->setSpecialValueText("<inherit>");
+  }
+  if ( state == Qt::Unchecked ) {
+    labelMarginHSpin->setSpecialValueText("<none>");
+    labelMarginVSpin->setSpecialValueText("<none>");
+  }
+}
+
+void ThemeBuilderUI::slot_indicatorIdCbChanged(int state)
+{
+  if ( state == Qt::Checked ) {
+    indicatorIdCombo->setEnabled(indicatorIdCb->isChecked());
+  } else {
+    indicatorIdCombo->setEnabled(false);
+  }
+  if ( state == Qt::Checked ) {
+    if ( raw_es.indicator.element.present ) {
+      int idx = indicatorIdCombo->findText(raw_es.indicator.element);
+      if ( idx == -1 )
+        indicatorIdCombo->addItem(raw_es.indicator.element);
+      idx = indicatorIdCombo->findText(raw_es.indicator.element);
+      indicatorIdCombo->setCurrentIndex(idx);
+      indicatorIdCombo->setEditText(raw_es.indicator.element);
+    }
+  }
+  if ( state == Qt::PartiallyChecked ) {
+    indicatorIdCombo->setEditText("<inherit>");
+  }
+  if ( state == Qt::Unchecked ) {
+    indicatorIdCombo->setEditText("<none>");
+  }
+}
+
+void ThemeBuilderUI::slot_toolboxTabChanged(int index)
+{
+  QListWidgetItem *previous = 0, *current = 0;
+
+  switch ( currentToolboxTab ) {
+    case 0:
+      previous = buttonList->currentItem();
+      break;
+    case 1:
+      previous = inputList->currentItem();
+      break;
+    case 2:
+      previous = displayList->currentItem();
+      break;
+    case 3:
+      previous = containerList->currentItem();
+      break;
+    case 4:
+      previous = miscList->currentItem();
+      break;
+    default:
+      break;
+  }
+
+  currentToolboxTab = index;
+
+  switch ( currentToolboxTab ) {
+    case 0:
+      current = buttonList->currentItem();
+      break;
+    case 1:
+      current = inputList->currentItem();
+      break;
+    case 2:
+      current = displayList->currentItem();
+      break;
+    case 3:
+      current = containerList->currentItem();
+      break;
+    case 4:
+      current = miscList->currentItem();
+      break;
+    default:
+      break;
+  }
+
+//   if ( current )
+//     current->listWidget()->setFocus(Qt::ActiveWindowFocusReason);
+
+  slot_widgetChanged(current,previous);
+}
+
+void ThemeBuilderUI::slot_widgetChanged(QListWidgetItem *current, QListWidgetItem *previous)
+{
+  if ( current ) {
+    if ( !previous )
+      tabWidget2->setCurrentIndex(1);
+    currentPreviewVariant = 0;
+  }
+
+  currentWidget = current;
+
+  setupUiForWidget(current);
+  setupPreviewForWidget(current);
+}
+
+void ThemeBuilderUI::slot_drawPrimitive_begin(const QString& s)
+{
+  noteStyleOperation_begin("drawPrimitive",s);
+}
+
+void ThemeBuilderUI::slot_drawPrimitive_end(const QString& s)
+{
+  noteStyleOperation_end("drawPrimitive",s);
+}
+
+void ThemeBuilderUI::slot_drawComplexControl_begin(const QString &s)
+{
+  noteStyleOperation_begin("drawComplexControl",s);
+}
+void ThemeBuilderUI::slot_drawComplexControl_end(const QString &s)
+{
+  noteStyleOperation_end("drawComplexControl",s);
+}
+void ThemeBuilderUI::slot_drawControl_begin(const QString &s)
+{
+  noteStyleOperation_begin("drawControl",s);
+}
+void ThemeBuilderUI::slot_drawControl_end(const QString &s)
+{
+  noteStyleOperation_end("drawControl",s);
+}
+void ThemeBuilderUI::slot_renderElement_begin(const QString &s)
+{
+  noteStyleOperation_begin("renderElement",s);
+}
+void ThemeBuilderUI::slot_renderElement_end(const QString &s)
+{
+  noteStyleOperation_end("renderElement",s);
+}
+void ThemeBuilderUI::slot_renderFrame_begin(const QString &s)
+{
+  noteStyleOperation_begin("renderFrame",s);
+}
+void ThemeBuilderUI::slot_renderFrame_end(const QString &s)
+{
+  noteStyleOperation_end("renderFrame",s);
+}
+void ThemeBuilderUI::slot_renderIndicator_begin(const QString &s)
+{
+  noteStyleOperation_begin("renderIndicator",s);
+}
+void ThemeBuilderUI::slot_renderIndicator_end(const QString &s)
+{
+  noteStyleOperation_end("renderIndicator",s);
+}
+void ThemeBuilderUI::slot_renderInterior_begin(const QString &s)
+{
+  noteStyleOperation_begin("renderInterior",s);
+}
+void ThemeBuilderUI::slot_renderInterior_end(const QString &s)
+{
+  noteStyleOperation_end("renderInterior",s);
+}
+void ThemeBuilderUI::slot_renderLabel_begin(const QString &s)
+{
+  noteStyleOperation_begin("renderLabel",s);
+}
+void ThemeBuilderUI::slot_renderLabel_end(const QString &s)
+{
+  noteStyleOperation_end("renderLabel",s);
+}
+void ThemeBuilderUI::slot_sizeFromContents_begin(const QString &s)
+{
+  noteStyleOperation_begin("sizeFromContents",s);
+}
+void ThemeBuilderUI::slot_sizeFromContents_end(const QString &s)
+{
+  noteStyleOperation_end("sizeFromContents",s);
 }

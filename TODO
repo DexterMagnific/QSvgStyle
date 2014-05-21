@@ -9,5 +9,3 @@ QSvgStyle
 QSvgThemeBuilder
 ----------------
 * widget specific settings (layout, pixelmetric)
-* preview in themebuilder 
-* tri-state check boxes : enabled, disabled and no change (inherit)

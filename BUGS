@@ -9,5 +9,4 @@ QSvgThemeBuilder
 
 QSvgThemeConfig
 ---------------
-* fix inheritence resolution limited to 1 level before searching parenta
-
+* fix inheritence resolution limited to 1 level before searching parent
