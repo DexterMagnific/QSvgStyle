@@ -62,44 +62,30 @@
 QSvgStyle::QSvgStyle()
   : QCommonStyle(),
     cls(QString(this->metaObject()->className())),
-    defaultRndr(NULL),
     themeRndr(NULL),
-    defaultSettings(NULL),
     themeSettings(NULL),
-    settings(NULL),
     progresstimer(NULL),
     dbgWireframe(false),
     dbgOverdraw(false)
 {
-  setBuiltinTheme();
-  setUserTheme();
+  loadBuiltinTheme();
+  loadUserTheme();
 
   progresstimer = new QTimer(this);
 
   connect(progresstimer,SIGNAL(timeout()), this,SLOT(slot_animateProgressBars()));
 
-  theme_spec_t tspec = settings->getThemeSpec();
+  theme_spec_t tspec = themeSettings->getThemeSpec();
 }
 
 QSvgStyle::~QSvgStyle()
 {
-  delete defaultSettings;
   delete themeSettings;
-
-  delete defaultRndr;
   delete themeRndr;
 }
 
-void QSvgStyle::setBuiltinTheme()
+void QSvgStyle::loadBuiltinTheme()
 {
-  if (defaultSettings) {
-    delete defaultSettings;
-    defaultSettings = NULL;
-  }
-  if (defaultRndr) {
-    delete defaultRndr;
-    defaultRndr = NULL;
-  }
   if ( themeRndr ) {
     delete themeRndr;
     themeRndr = NULL;
@@ -109,75 +95,77 @@ void QSvgStyle::setBuiltinTheme()
     themeSettings = NULL;
   }
 
-  defaultSettings = new ThemeConfig(":default.cfg");
-  defaultRndr = new QSvgRenderer();
-  defaultRndr->load(QString(":default.svg"));
-
-  settings = defaultSettings;
+  themeSettings = new ThemeConfig(":default.cfg");
+  themeRndr = new QSvgRenderer();
+  themeRndr->load(QString(":default.svg"));
 
   qDebug() << "["+cls+"]" << "Loaded built in theme";
 }
 
-void QSvgStyle::setTheme(const QString& theme)
+void QSvgStyle::loadTheme(const QString& theme)
 {
-  QString xdg_cfg;
+  if ( !theme.isNull() &&
+       !theme.isEmpty() &&
+       QFile::exists(QString("~/.config/QSvgStyle/%1/%1.cfg").arg(theme)) &&
+       QFile::exists(QString("~/.config/QSvgStyle/%1/%1.svg").arg(theme))
+     ) {
+    if ( themeSettings ) {
+      delete themeSettings;
+      themeSettings = NULL;
+    }
+    if ( themeRndr ) {
+      delete themeRndr;
+      themeRndr = NULL;
+    }
 
-  // get $XDG_CONFIG_HOME value
-  char *_xdg_cfg = getenv("XDG_CONFIG_HOME");
-  if ( _xdg_cfg )
-    xdg_cfg = QString(_xdg_cfg);
-  else
-    return;
+    themeSettings = new ThemeConfig(QString("~/.config/QSvgStyle/%1/%1.cfg").arg(theme));
+    themeRndr = new QSvgRenderer();
+    themeRndr->load(QString("~/.config/QSvgStyle/%1/%1.svg").arg(theme));
 
-  if ( !defaultSettings || !defaultRndr )
-    setBuiltinTheme();
-
-  if ( themeSettings ) {
-    delete themeSettings;
-    themeSettings = NULL;
+    if ( !themeRndr->isValid() ) {
+      qWarning() << "Invalid SVG file" << QString("~/.config/QSvgStyle/%1/%1.svg").arg(theme);
+      loadBuiltinTheme();
+    } else
+      qDebug() << "["+cls+"]" << "Loaded user theme " << theme;
   }
+}
+
+void QSvgStyle::loadUserTheme()
+{
+  QString theme;
+  QSettings *globalSettings;
+
+  // load global config file
+  if ( QFile::exists(QString("~/.config/QSvgStyle/qsvgstyle.cfg")) ) {
+    globalSettings = new QSettings(QString("~/.config/QSvgStyle/qsvgstyle.cfg"),QSettings::NativeFormat);
+
+    if (globalSettings->contains("theme"))
+      loadTheme(globalSettings->value("theme").toString());
+
+    delete globalSettings;
+  }
+}
+
+void QSvgStyle::loadCustomSVG(const QString& filename)
+{
   if ( themeRndr ) {
     delete themeRndr;
     themeRndr = NULL;
   }
 
-  if ( !theme.isNull() &&
-       !theme.isEmpty() &&
-       QFile::exists(QString("%1/QSvgStyle/%2/%2.cfg").arg(xdg_cfg).arg(theme)) &&
-       QFile::exists(QString("%1/QSvgStyle/%2/%2.svg").arg(xdg_cfg).arg(theme))
-     ) {
-    themeSettings = new ThemeConfig(QString("%1/QSvgStyle/%2/%2.cfg").arg(xdg_cfg).arg(theme));
-    themeRndr = new QSvgRenderer();
-    themeRndr->load(QString("%1/QSvgStyle/%2/%2.svg").arg(xdg_cfg).arg(theme));
-
-    settings = themeSettings;
-
-    qDebug() << "["+cls+"]" << "Loaded user theme " << theme;
-  }
+  themeRndr = new QSvgRenderer();
+  themeRndr->load(filename);
 }
 
-void QSvgStyle::setUserTheme()
+void QSvgStyle::loadCustomThemeConfig(const QString& filename)
 {
-  QString theme;
-  QSettings *globalSettings;
-  QString xdg_cfg;
-
-  // get $XDG_CONFIG_HOME value
-  char *_xdg_cfg = getenv("XDG_CONFIG_HOME");
-  if ( _xdg_cfg )
-    xdg_cfg = QString(_xdg_cfg);
-  else
-    return;
-
-  // load global config file
-  if ( QFile::exists(QString("%1/QSvgStyle/qsvgstyle.cfg").arg(xdg_cfg)) ) {
-    globalSettings = new QSettings(QString("%1/QSvgStyle/qsvgstyle.cfg").arg(xdg_cfg),QSettings::NativeFormat);
-
-    if (globalSettings->contains("theme"))
-      setTheme(globalSettings->value("theme").toString());
-
-    delete globalSettings;
+  if ( themeSettings ) {
+    delete themeSettings;
+    themeSettings = NULL;
   }
+
+  if ( QFile::exists(filename) )
+    themeSettings = new ThemeConfig(filename);
 }
 
 bool QSvgStyle::isContainerWidget(const QWidget * widget) const
@@ -2674,13 +2662,16 @@ void QSvgStyle::renderElement(QPainter* painter, const QString& element, const Q
   QPainter *p2 = 0;
   QPixmap pm2;
 
-  // theme specific rendering
-  if (themeRndr && themeRndr->isValid() && themeRndr->elementExists(element)) {
-      renderer = themeRndr;
-  } else {
-    // Fall back to default rendering
-    if (defaultRndr && defaultRndr->isValid() && defaultRndr->elementExists(element))
-      renderer = defaultRndr;
+  if (! themeRndr->elementExists(element)) {
+    // Missing element
+    p->save();
+    p->setPen(Qt::black);
+    drawRealRect(p, bounds);
+    p->drawLine(x,y,x+w-1,y+h-1);
+    p->drawLine(x+w-1,y,x,y+h-1);
+    p->restore();
+    qDebug() << "element" << element << "not found in SVG file";
+    return;
   }
 
   if ( orientation == Qt::Vertical ) {
@@ -2701,6 +2692,7 @@ void QSvgStyle::renderElement(QPainter* painter, const QString& element, const Q
     p = p2;
   }
 
+  renderer = themeRndr;
   if (renderer) {
     if ( (hsize > 0) || (vsize > 0) ) {
 
@@ -3072,22 +3064,22 @@ void QSvgStyle::renderLabel(QPainter* p,
 
 inline frame_spec_t QSvgStyle::getFrameSpec(const QString& group) const
 {
-  return settings->getFrameSpec(group);
+  return themeSettings->getFrameSpec(group);
 }
 
 inline interior_spec_t QSvgStyle::getInteriorSpec(const QString& group) const
 {
-  return settings->getInteriorSpec(group);
+  return themeSettings->getInteriorSpec(group);
 }
 
 inline indicator_spec_t QSvgStyle::getIndicatorSpec(const QString& group) const
 {
-  return settings->getIndicatorSpec(group);
+  return themeSettings->getIndicatorSpec(group);
 }
 
 inline label_spec_t QSvgStyle::getLabelSpec(const QString& group) const
 {
-  return settings->getLabelSpec(group);
+  return themeSettings->getLabelSpec(group);
 }
 
 void QSvgStyle::capsulePosition(const QWidget *widget, bool &capsule, int &h, int &v) const

@@ -29,7 +29,9 @@
 class ThemeConfig;
 class QTreeWidget;
 class QTreeWidgetItem;
+class QMenu;
 class QSvgStyle;
+class QTimer;
 
 class ThemeBuilderUI : public QMainWindow, private Ui::ThemeBuilderUIBase {
   Q_OBJECT
@@ -38,7 +40,7 @@ class ThemeBuilderUI : public QMainWindow, private Ui::ThemeBuilderUIBase {
     ThemeBuilderUI(QWidget *parent = 0);
     ~ThemeBuilderUI();
 
-  public slots:
+  private slots:
     // Called on main button clicks
     void slot_openTheme();
     void slot_saveTheme();
@@ -50,21 +52,34 @@ class ThemeBuilderUI : public QMainWindow, private Ui::ThemeBuilderUIBase {
     // Called when the current toolbox tab has changed
     void slot_toolboxTabChanged(int index);
 
+    // Called when the user changes the config from the UI
+    void slot_uiSettingsChanged();
+
     // called on common tab changes
     void slot_inheritCbChanged(int state);
+    void slot_inheritComboChanged(int idx);
 
     void slot_frameCbChanged(int state);
     void slot_frameIdCbChanged(int state);
+    void slot_frameIdComboChanged(const QString &text);
     void slot_frameWidthCbChanged(int state);
+    void slot_frameWidthSpinChanged(int val);
 
     void slot_interiorCbChanged(int state);
     void slot_interiorIdCbChanged(int state);
+    void slot_interiorIdComboChanged(const QString &text);
     void slot_interiorRepeatCbChanged(int state);
-
-    void slot_labelSpacingCbChanged(int state);
-    void slot_labelMarginCbChanged(int state);
+    void slot_interiorRepeatXSpinChanged(int val);
+    void slot_interiorRepeatYSpinChanged(int val);
 
     void slot_indicatorIdCbChanged(int state);
+    void slot_indicatorIdComboChanged(const QString &text);
+
+    void slot_labelSpacingCbChanged(int state);
+    void slot_labelSpacingSpinChanged(int val);
+    void slot_labelMarginCbChanged(int state);
+    void slot_labelMarginHSpinChanged(int val);
+    void slot_labelMarginVSpinChanged(int val);
 
     // called on preview tab changes
     void slot_repaintBtnClicked(bool checked);
@@ -110,6 +125,10 @@ class ThemeBuilderUI : public QMainWindow, private Ui::ThemeBuilderUIBase {
     // Resets the entire UI as if theme builder has just been started
     void resetUi();
 
+    // When called, starts a timer that will trigger
+    // settings of current group to be saved and then preview update
+    void schedulePreviewUpdate();
+
     // Setup the UI to reflect the settings for the given item
     void setupUiForWidget(const QListWidgetItem* current);
     // Setup the preview widget to reflect the given item
@@ -124,6 +143,9 @@ class ThemeBuilderUI : public QMainWindow, private Ui::ThemeBuilderUIBase {
 
     QTreeWidget *drawStackTree;
 //     QTreeWidget *resolvedValuesTree;
+
+    // Menu for recent files
+    QMenu *recentFiles;
 
     // widgets to be inserted inside the status bar
     QLabel *statusbarLbl1, *statusbarLbl2;
@@ -151,8 +173,15 @@ class ThemeBuilderUI : public QMainWindow, private Ui::ThemeBuilderUIBase {
     int currentDrawMode; // 0=normal, 1=wireframe, 2=overdraw
     // current widget variant
     int currentPreviewVariant;
+    // current open theme filename
+    QString cfgFile;
     // geometry of detached preview
     QRect detachedPeviewGeometry;
+    // Timer for repainting the widget when settings change
+    QTimer *timer;
+
+    // Temporary file, a copy of the current opened theme
+    QString tempCfgFile;
 };
 
 #endif // THEMEBUILDERUI_H

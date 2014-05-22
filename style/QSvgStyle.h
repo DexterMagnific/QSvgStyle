@@ -40,6 +40,8 @@ class QSvgStyle : public QCommonStyle {
   Q_OBJECT
 
   public:
+    enum QSvgStyleVersion { Version = 1 };
+
     /**
      * QSvgStyle constructor. The only SVG themeable style for Qt around
      * the world
@@ -81,22 +83,26 @@ class QSvgStyle : public QCommonStyle {
   protected slots:
     QIcon standardIconImplementation ( StandardPixmap standardIcon, const QStyleOption * option = 0, const QWidget * widget = 0 ) const;
 
-  protected:
+  private:
     /**
      * Loads and sets the given theme
-     * Theme is searched for in $XDG_CONFIG_HOME/QSvgStyle/theme directory
+     * Theme is searched for in ~/.config/QSvgStyle/theme directory
      */
-    void setTheme(const QString &theme);
+    void loadTheme(const QString &theme);
     /**
      * Wrapper method around @ref loadTheme that reads
-     * $XDG_CONFIG_HOME/QSvgStyle/qsvgstyle.cfg configuration file and loads
+     * ~/.config/QSvgStyle/qsvgstyle.cfg configuration file and loads
      * the theme set with the variable theme=
      */
-    void setUserTheme();
+    void loadUserTheme();
     /**
      * Loads and sets the built-in default theme
      */
-    void setBuiltinTheme();
+    void loadBuiltinTheme();
+
+    /* Used internally and by QSvgThemeBuilder */
+    void loadCustomThemeConfig(const QString &filename);
+    void loadCustomSVG(const QString &filename);
 
   signals:
     /**
@@ -364,8 +370,8 @@ class QSvgStyle : public QCommonStyle {
 
   private:
     QString cls;
-    QSvgRenderer *defaultRndr, *themeRndr;
-    ThemeConfig *defaultSettings, *themeSettings, *settings;
+    QSvgRenderer *themeRndr;
+    ThemeConfig *themeSettings;
 
     /* timer used for progress bars */
     QTimer *progresstimer;

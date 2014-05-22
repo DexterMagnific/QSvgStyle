@@ -19,6 +19,9 @@
  ***************************************************************************/
 #include "ThemeBuilderUI.h"
 
+#include <stdlib.h> // mkstemp
+#include <unistd.h> // close
+
 #include <QDebug>
 
 // UI
@@ -29,6 +32,8 @@
 #include <QTreeWidgetItem>
 #include <QFileInfo>
 #include <QStyleFactory>
+#include <QMenu>
+#include <QTimer>
 
 // Includes for preview
 #include <QPushButton>
@@ -51,7 +56,8 @@
 ThemeBuilderUI::ThemeBuilderUI(QWidget* parent)
  : QMainWindow(parent), config(0), style(0), previewWidget(0),
    currentWidget(0),
-   currentDrawStackItem(0), currentDrawMode(0), currentPreviewVariant(0)
+   currentDrawStackItem(0), currentDrawMode(0), currentPreviewVariant(0),
+   timer(0)
 {
   // Setup using auto-generated UIC code
   setupUi(this);
@@ -214,6 +220,10 @@ ThemeBuilderUI::ThemeBuilderUI(QWidget* parent)
   i->setText("Metrics");
   //i->setData(GroupRole,"ToolBox");
 
+  // Menu for recent files
+  recentFiles = new QMenu("Recent files", recentBtn);
+  recentBtn->setMenu(recentFiles);
+
   // Adjust toolBox size
   // Shitty QListWidget size policies do not work
   int maxW = buttonList->sizeHintForColumn(0);
@@ -277,10 +287,16 @@ ThemeBuilderUI::ThemeBuilderUI(QWidget* parent)
     style = (QSvgStyle *) QStyleFactory::create("QSvgStyle");
     if ( !style )
       qWarning() << "Could not load QSvgStyle style, preview will not be available !";
+    // Check that the style version is the same as the one we were compiled against
+    if ( style->Version /* dynamic load */ != QSvgStyle::Version /* compiled .h */) {
+      qWarning() << "QSvgStyle version mismatch !";
+      qWarning() << "QStyleFactory reported version" << style->Version;
+      qWarning() << "ThemeBuilder was built with version" << QSvgStyle::Version;
+    }
   }
 
-  // install event filter on previewArea so that we can react to size changes
-  // and center the previewed widget
+  // install event filter on previewArea so that we can react to resize and
+  // close events and save its geometry
   previewArea->installEventFilter(this);
 
   // connections
@@ -307,24 +323,48 @@ ThemeBuilderUI::ThemeBuilderUI(QWidget* parent)
   // Changes inside the common tab
   connect(inheritCb,SIGNAL(stateChanged(int)),
           this,SLOT(slot_inheritCbChanged(int)));
+  connect(inheritCombo,SIGNAL(currentIndexChanged(int)),
+          this,SLOT(slot_inheritComboChanged(int)));
+
   connect(frameCb,SIGNAL(stateChanged(int)),
           this,SLOT(slot_frameCbChanged(int)));
   connect(frameIdCb,SIGNAL(stateChanged(int)),
           this,SLOT(slot_frameIdCbChanged(int)));
+  connect(frameIdCombo,SIGNAL(editTextChanged(QString)),
+          this,SLOT(slot_frameIdComboChanged(QString)));
   connect(frameWidthCb,SIGNAL(stateChanged(int)),
           this,SLOT(slot_frameWidthCbChanged(int)));
+  connect(frameWidthSpin,SIGNAL(valueChanged(int)),
+          this,SLOT(slot_frameWidthSpinChanged(int)));
+
   connect(interiorCb,SIGNAL(stateChanged(int)),
           this,SLOT(slot_interiorCbChanged(int)));
   connect(interiorIdCb,SIGNAL(stateChanged(int)),
           this,SLOT(slot_interiorIdCbChanged(int)));
+  connect(interiorIdCombo,SIGNAL(editTextChanged(QString)),
+          this,SLOT(slot_interiorIdComboChanged(QString)));
   connect(interiorRepeatCb,SIGNAL(stateChanged(int)),
           this,SLOT(slot_interiorRepeatCbChanged(int)));
+  connect(interiorRepeatXSpin,SIGNAL(valueChanged(int)),
+          this,SLOT(slot_interiorRepeatXSpinChanged(int)));
+  connect(interiorRepeatYSpin,SIGNAL(valueChanged(int)),
+          this,SLOT(slot_interiorRepeatYSpinChanged(int)));
+
   connect(indicatorIdCb,SIGNAL(stateChanged(int)),
           this,SLOT(slot_indicatorIdCbChanged(int)));
+  connect(indicatorIdCombo,SIGNAL(editTextChanged(QString)),
+          this,SLOT(slot_indicatorIdComboChanged(QString)));
+
   connect(labelSpacingCb,SIGNAL(stateChanged(int)),
           this,SLOT(slot_labelSpacingCbChanged(int)));
+  connect(labelSpacingSpin,SIGNAL(valueChanged(int)),
+          this,SLOT(slot_labelSpacingSpinChanged(int)));
   connect(labelMarginCb,SIGNAL(stateChanged(int)),
           this,SLOT(slot_labelMarginCbChanged(int)));
+  connect(labelMarginHSpin,SIGNAL(valueChanged(int)),
+          this,SLOT(slot_labelMarginHSpinChanged(int)));
+  connect(labelMarginVSpin,SIGNAL(valueChanged(int)),
+          this,SLOT(slot_labelMarginVSpinChanged(int)));
 
   // Preview tab
   connect(repaintBtn,SIGNAL(clicked(bool)),
@@ -390,6 +430,10 @@ ThemeBuilderUI::ThemeBuilderUI(QWidget* parent)
     connect(style,SIGNAL(sig_sizeFromContents_end(QString)),
             this,SLOT(slot_sizeFromContents_end(QString)));
   }
+
+  // Timer for previewed widget repaints
+  timer = new QTimer(this);
+  connect(timer,SIGNAL(timeout()), this,SLOT(slot_uiSettingsChanged()));
 
   // Reset UI
   resetUi();
@@ -509,7 +553,7 @@ void ThemeBuilderUI::resetUi()
   themeNameLbl->setToolTip(QString());
 
   // clear common settings
-  inheritCb->setChecked(false);
+  inheritCb->setCheckState(Qt::Unchecked);
   inheritCombo->setCurrentIndex(-1);
   frameCb->setCheckState(Qt::PartiallyChecked);
   frameIdCb->setCheckState(Qt::PartiallyChecked);
@@ -523,20 +567,56 @@ void ThemeBuilderUI::resetUi()
   currentToolboxTab = toolBox->currentIndex();
 }
 
+void ThemeBuilderUI::schedulePreviewUpdate()
+{
+  timer->stop();
+  timer->start(1000);
+}
+
 void ThemeBuilderUI::slot_openTheme()
 {
+  char tmp[256] = "qsvgthemebuilder_XXXXXX";
+
   QString s = QFileDialog::getOpenFileName(NULL,"Load Theme","",
                                            "QSvgStyle configuration files(*.cfg);;All files(*)");
   if ( s.isNull() )
     return;
 
+  cfgFile = s;
+
   // FIXME ask to save current theme
-  config = new ThemeConfig(s);
+
+  // Get a unique temp filename
+  int fd;
+  if ( (fd = mkstemp(tmp)) == -1 ) {
+    qWarning() << "Could not generate a temporary file name";
+    return;
+  }
+
+  ::close(fd);
+  unlink(tmp);
+  tempCfgFile = QDir::tempPath()+"/"+tmp;
+
+  if ( !QFile::copy(cfgFile,tempCfgFile) ) {
+    qWarning() << "Could not create temporary file";
+    return;
+  } else {
+    qDebug() << "Temporary file" << tempCfgFile << "created";
+  }
+
+  config = new ThemeConfig(tempCfgFile);
 
   if ( !config ) {
     qWarning() << "Could not load " << s;
     return;
   }
+
+  if ( style ) {
+    style->loadCustomThemeConfig(tempCfgFile);
+  }
+
+  recentFiles->addAction(cfgFile);
+  recentBtn->setEnabled(true);
 
   toolBox->setEnabled(true);
   tabWidget2->setTabEnabled(0,true);
@@ -571,6 +651,9 @@ void ThemeBuilderUI::slot_quit()
 
 void ThemeBuilderUI::setupUiForWidget(const QListWidgetItem* current)
 {
+  // FIXME this functions call slot_XXXChanged() and this schedules preview updates
+  // we should disable preview update while setting up the UI
+
   if ( !config )
     return;
 
@@ -592,16 +675,12 @@ void ThemeBuilderUI::setupUiForWidget(const QListWidgetItem* current)
       inheritCb->setCheckState(Qt::Unchecked);
     }
 
-    slot_inheritCbChanged(inheritCb->checkState());
-
     // frame stuff
     if ( raw_es.frame.hasFrame.present ) {
       frameCb->setChecked(raw_es.frame.hasFrame);
     } else {
       frameCb->setCheckState(Qt::PartiallyChecked);
     }
-
-    slot_frameCbChanged(frameCb->checkState());
 
     if ( raw_es.frame.element.present ) {
       if ( QString(raw_es.frame.element).isEmpty() ) {
@@ -613,8 +692,6 @@ void ThemeBuilderUI::setupUiForWidget(const QListWidgetItem* current)
       frameIdCb->setCheckState(Qt::PartiallyChecked);
     }
 
-    slot_frameIdCbChanged(frameIdCb->checkState());
-
     if ( raw_es.frame.width.present ) {
       if ( QString("%1").arg(raw_es.frame.width).isEmpty() ) {
         frameWidthCb->setCheckState(Qt::Unchecked);
@@ -625,16 +702,12 @@ void ThemeBuilderUI::setupUiForWidget(const QListWidgetItem* current)
       frameWidthCb->setCheckState(Qt::PartiallyChecked);
     }
 
-    slot_frameWidthCbChanged(frameWidthCb->checkState());
-
     // interior stuff
     if ( raw_es.interior.hasInterior.present ) {
       interiorCb->setChecked(raw_es.interior.hasInterior);
     } else {
       interiorCb->setCheckState(Qt::PartiallyChecked);
     }
-
-    slot_interiorCbChanged(interiorCb->checkState());
 
     if ( raw_es.interior.element.present ) {
       if ( QString(raw_es.interior.element).isEmpty() ) {
@@ -646,15 +719,11 @@ void ThemeBuilderUI::setupUiForWidget(const QListWidgetItem* current)
       interiorIdCb->setCheckState(Qt::PartiallyChecked);
     }
 
-    slot_interiorIdCbChanged(interiorIdCb->checkState());
-
     if ( raw_es.interior.px.present || raw_es.interior.py.present ) {
       interiorRepeatCb->setCheckState(Qt::Unchecked);
     } else {
       interiorRepeatCb->setCheckState(Qt::PartiallyChecked);
     }
-
-    slot_interiorRepeatCbChanged(interiorRepeatCb->checkState());
 
     // label stuff
     if ( raw_es.label.tispace.present ) {
@@ -663,15 +732,11 @@ void ThemeBuilderUI::setupUiForWidget(const QListWidgetItem* current)
       labelSpacingCb->setCheckState(Qt::PartiallyChecked);
     }
 
-    slot_labelSpacingCbChanged(labelSpacingCb->checkState());
-
     if ( raw_es.label.hmargin.present || raw_es.label.vmargin.present ) {
       labelMarginCb->setCheckState(Qt::Checked);
     } else {
       labelMarginCb->setCheckState(Qt::PartiallyChecked);
     }
-
-    slot_labelMarginCbChanged(labelMarginCb->checkState());
 
     // indicator stuff
     if ( raw_es.indicator.element.present ) {
@@ -684,6 +749,17 @@ void ThemeBuilderUI::setupUiForWidget(const QListWidgetItem* current)
       indicatorIdCb->setCheckState(Qt::PartiallyChecked);
     }
 
+    // These are needed to force associated widget value updates even
+    // if the check state has not changed when switching widgets
+    slot_inheritCbChanged(inheritCb->checkState());
+    slot_frameCbChanged(frameCb->checkState());
+    slot_frameIdCbChanged(frameIdCb->checkState());
+    slot_frameWidthCbChanged(frameWidthCb->checkState());
+    slot_interiorCbChanged(interiorCb->checkState());
+    slot_interiorIdCbChanged(interiorIdCb->checkState());
+    slot_interiorRepeatCbChanged(interiorRepeatCb->checkState());
+    slot_labelSpacingCbChanged(labelSpacingCb->checkState());
+    slot_labelMarginCbChanged(labelMarginCb->checkState());
     slot_indicatorIdCbChanged(indicatorIdCb->checkState());
   } else {
     tabWidget->setEnabled(false);
@@ -1132,8 +1208,8 @@ void ThemeBuilderUI::setupPreviewForWidget(const QListWidgetItem* current)
     widget->addSeparator();
     widget->addAction(icon,"action3");
 
+    addToolBar(widget);
     previewWidget = widget;
-    previewWidget->show();
   }
 
   if ( group == QSvgStyle::CE_group(QStyle::CE_MenuBarItem) ) {
@@ -1210,6 +1286,14 @@ end:
   }
 }
 
+void ThemeBuilderUI::slot_uiSettingsChanged()
+{
+  qDebug() << "***************** UPDATING *****************";
+  // FIXME take settings from UI and store into theme config file
+  setupPreviewForWidget(currentWidget);
+  timer->stop();
+}
+
 void ThemeBuilderUI::slot_repaintBtnClicked(bool checked)
 {
   Q_UNUSED(checked);
@@ -1277,7 +1361,12 @@ void ThemeBuilderUI::slot_detachBtnClicked(bool checked)
     detachBtn->setIcon(icon);
     detachBtn->setText("Detach");
     detachedPeviewGeometry = previewArea->geometry();
+    // HACK if the preview tab is not visible, the preview area does not appear
+    int i = tabWidget2->currentIndex();
+    tabWidget2->setCurrentIndex(1);
     previewLayout->addWidget(previewArea, 1, 0, 1, 1);
+    tabWidget2->setCurrentIndex(i);
+    // END
   }
 }
 
@@ -1324,6 +1413,15 @@ void ThemeBuilderUI::slot_inheritCbChanged(int state)
     inheritCombo->setEnabled(false);
     inheritCombo->setCurrentIndex(-1);
   }
+
+  schedulePreviewUpdate();
+}
+
+void ThemeBuilderUI::slot_inheritComboChanged(int idx)
+{
+  Q_UNUSED(idx);
+
+  schedulePreviewUpdate();
 }
 
 void ThemeBuilderUI::slot_frameCbChanged(int state)
@@ -1343,6 +1441,7 @@ void ThemeBuilderUI::slot_frameCbChanged(int state)
   if ( state == Qt::PartiallyChecked ) {
     frameEdit->setEnabled(false);
     frameEdit->setText("<inherit>");
+    //frameEdit->setText(QString("inherit=<%1>").arg(es.frame.hasFrame ? "yes" : "no"));
   }
   if ( state == Qt::Unchecked ) {
     frameEdit->setEnabled(false);
@@ -1351,6 +1450,8 @@ void ThemeBuilderUI::slot_frameCbChanged(int state)
 
   slot_frameIdCbChanged(frameIdCb->checkState());
   slot_frameWidthCbChanged(frameWidthCb->checkState());
+
+  schedulePreviewUpdate();
 }
 
 void ThemeBuilderUI::slot_frameIdCbChanged(int state)
@@ -1376,6 +1477,15 @@ void ThemeBuilderUI::slot_frameIdCbChanged(int state)
   if ( state == Qt::Unchecked ) {
     frameIdCombo->setEditText("<none>");
   }
+
+  schedulePreviewUpdate();
+}
+
+void ThemeBuilderUI::slot_frameIdComboChanged(const QString& text)
+{
+  Q_UNUSED(text);
+
+  schedulePreviewUpdate();
 }
 
 void ThemeBuilderUI::slot_frameWidthCbChanged(int state)
@@ -1396,6 +1506,15 @@ void ThemeBuilderUI::slot_frameWidthCbChanged(int state)
   if ( state == Qt::Unchecked ) {
     frameWidthSpin->setSpecialValueText("<none>");
   }
+
+  schedulePreviewUpdate();
+}
+
+void ThemeBuilderUI::slot_frameWidthSpinChanged(int val)
+{
+  Q_UNUSED(val);
+
+  schedulePreviewUpdate();
 }
 
 void ThemeBuilderUI::slot_interiorCbChanged(int state)
@@ -1423,6 +1542,8 @@ void ThemeBuilderUI::slot_interiorCbChanged(int state)
 
   slot_interiorIdCbChanged(interiorIdCb->checkState());
   slot_interiorRepeatCbChanged(interiorRepeatCb->checkState());
+
+  schedulePreviewUpdate();
 }
 
 void ThemeBuilderUI::slot_interiorIdCbChanged(int state)
@@ -1448,6 +1569,15 @@ void ThemeBuilderUI::slot_interiorIdCbChanged(int state)
   if ( state == Qt::Unchecked ) {
     interiorIdCombo->setEditText("<none>");
   }
+
+  schedulePreviewUpdate();
+}
+
+void ThemeBuilderUI::slot_interiorIdComboChanged(const QString &text)
+{
+  Q_UNUSED(text);
+
+  schedulePreviewUpdate();
 }
 
 void ThemeBuilderUI::slot_interiorRepeatCbChanged(int state)
@@ -1479,6 +1609,22 @@ void ThemeBuilderUI::slot_interiorRepeatCbChanged(int state)
     interiorRepeatXSpin->setSpecialValueText("<none>");
     interiorRepeatYSpin->setSpecialValueText("<none>");
   }
+
+  schedulePreviewUpdate();
+}
+
+void ThemeBuilderUI::slot_interiorRepeatXSpinChanged(int val)
+{
+  Q_UNUSED(val);
+
+  schedulePreviewUpdate();
+}
+
+void ThemeBuilderUI::slot_interiorRepeatYSpinChanged(int val)
+{
+  Q_UNUSED(val)
+
+  schedulePreviewUpdate();
 }
 
 void ThemeBuilderUI::slot_labelSpacingCbChanged(int state)
@@ -1499,6 +1645,15 @@ void ThemeBuilderUI::slot_labelSpacingCbChanged(int state)
   if ( state == Qt::Unchecked ) {
     labelSpacingSpin->setSpecialValueText("<none>");
   }
+
+  schedulePreviewUpdate();
+}
+
+void ThemeBuilderUI::slot_labelSpacingSpinChanged(int val)
+{
+  Q_UNUSED(val);
+
+  schedulePreviewUpdate();
 }
 
 void ThemeBuilderUI::slot_labelMarginCbChanged(int state)
@@ -1506,12 +1661,12 @@ void ThemeBuilderUI::slot_labelMarginCbChanged(int state)
   if ( state == Qt::Checked ) {
     labelMarginHSpin->setEnabled(labelMarginCb->isChecked());
     labelMarginHSpin->setSpecialValueText(QString());
-    labelMarginHSpin->setMinimum(1);
+    labelMarginHSpin->setMinimum(0);
     labelMarginHSpin->setValue(qMax((int)raw_es.label.hmargin,labelMarginHSpin->minimum()));
 
     labelMarginVSpin->setEnabled(labelMarginCb->isChecked());
     labelMarginVSpin->setSpecialValueText(QString());
-    labelMarginVSpin->setMinimum(1);
+    labelMarginVSpin->setMinimum(0);
     labelMarginVSpin->setValue(qMax((int)raw_es.label.vmargin,labelMarginVSpin->minimum()));
   } else {
     labelMarginHSpin->setEnabled(false);
@@ -1530,6 +1685,22 @@ void ThemeBuilderUI::slot_labelMarginCbChanged(int state)
     labelMarginHSpin->setSpecialValueText("<none>");
     labelMarginVSpin->setSpecialValueText("<none>");
   }
+
+  schedulePreviewUpdate();
+}
+
+void ThemeBuilderUI::slot_labelMarginHSpinChanged(int val)
+{
+  Q_UNUSED(val);
+
+  schedulePreviewUpdate();
+}
+
+void ThemeBuilderUI::slot_labelMarginVSpinChanged(int val)
+{
+  Q_UNUSED(val);
+
+  schedulePreviewUpdate();
 }
 
 void ThemeBuilderUI::slot_indicatorIdCbChanged(int state)
@@ -1555,7 +1726,17 @@ void ThemeBuilderUI::slot_indicatorIdCbChanged(int state)
   if ( state == Qt::Unchecked ) {
     indicatorIdCombo->setEditText("<none>");
   }
+
+  schedulePreviewUpdate();
 }
+
+void ThemeBuilderUI::slot_indicatorIdComboChanged(const QString& text)
+{
+  Q_UNUSED(text);
+
+  schedulePreviewUpdate();
+}
+
 
 void ThemeBuilderUI::slot_toolboxTabChanged(int index)
 {
