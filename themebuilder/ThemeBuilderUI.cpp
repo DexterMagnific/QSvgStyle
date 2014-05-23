@@ -59,7 +59,8 @@ ThemeBuilderUI::ThemeBuilderUI(QWidget* parent)
    currentWidget(0),
    currentDrawStackItem(0), currentDrawMode(0), currentPreviewVariant(0),
    cfgModified(0), previewUpdateEnabled(false),
-   timer(0)
+   timer(0), timer2(0),
+   svgWatcher(this)
 {
   // Setup using auto-generated UIC code
   setupUi(this);
@@ -444,6 +445,13 @@ ThemeBuilderUI::ThemeBuilderUI(QWidget* parent)
   // Timer for previewed widget repaints
   timer = new QTimer(this);
   connect(timer,SIGNAL(timeout()), this,SLOT(slot_uiSettingsChanged()));
+  // Timer for SVG file reload
+  timer2 = new QTimer(this);
+  connect(timer2,SIGNAL(timeout()), this,SLOT(slot_reloadSvgFile()));
+
+  // Watch SVG file changes
+  connect(&svgWatcher,SIGNAL(fileChanged(QString)),
+          this,SLOT(slot_svgFileChanged(QString)));
 
   // Reset UI
   resetUi();
@@ -578,6 +586,7 @@ void ThemeBuilderUI::resetUi()
 
   currentToolboxTab = toolBox->currentIndex();
 
+  // Reset preview tab stuff
   clearDrawStackTree();
   currentDrawMode = 0;
   currentPreviewVariant = 0;
@@ -587,6 +596,10 @@ void ThemeBuilderUI::resetUi()
   currentWidget = 0;
   previewUpdateEnabled = false;
 
+  // Reset state
+  QStringList l = svgWatcher.files();
+  if ( !l.empty() )
+    svgWatcher.removePaths(l);
   cfgModified = false;
   cfgFile.clear();
   tempCfgFile.clear();
@@ -661,9 +674,6 @@ void ThemeBuilderUI::slot_openTheme()
 
   config = new ThemeConfig(tempCfgFile);
 
-  if ( style ) {
-  }
-
   svgFile = QFileInfo(cfgFile).absoluteDir().path()+"/"+QFileInfo(cfgFile).baseName()+".svg";
 
   if ( QFile::exists(svgFile) ) {
@@ -678,6 +688,8 @@ void ThemeBuilderUI::slot_openTheme()
     // the same file location
     style->loadCustomThemeConfig(tempCfgFile);
     style->loadCustomSVG(svgFile);
+
+    svgWatcher.addPath(svgFile);
   }
 
   if ( svgFile.isEmpty() )
@@ -739,6 +751,25 @@ void ThemeBuilderUI::slot_quit()
     return;
 
   QApplication::closeAllWindows();
+}
+
+void ThemeBuilderUI::slot_svgFileChanged(const QString& filename)
+{
+  Q_UNUSED(filename);
+
+  timer2->stop();
+  timer2->start(500);
+}
+
+void ThemeBuilderUI::slot_reloadSvgFile()
+{
+  timer2->stop();
+
+  if ( style && !svgFile.isEmpty() ) {
+    qDebug() << "SVG file changed, reloading it";
+    style->loadCustomSVG(svgFile);
+    setupPreviewForWidget(currentWidget);
+  }
 }
 
 void ThemeBuilderUI::setupUiForWidget(const QListWidgetItem* current)

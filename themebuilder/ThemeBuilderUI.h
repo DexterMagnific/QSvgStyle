@@ -22,6 +22,7 @@
 
 #include <QStringList>
 #include <QShowEvent>
+#include <QFileSystemWatcher>
 
 #include "ui_ThemeBuilderUIBase.h"
 #include <../style/specs.h>
@@ -32,6 +33,7 @@ class QTreeWidgetItem;
 class QMenu;
 class QSvgStyle;
 class QTimer;
+class QFileSystemWatcher;
 
 class ThemeBuilderUI : public QMainWindow, private Ui::ThemeBuilderUIBase {
   Q_OBJECT
@@ -46,6 +48,11 @@ class ThemeBuilderUI : public QMainWindow, private Ui::ThemeBuilderUIBase {
     void slot_saveTheme();
     void slot_saveAsTheme();
     void slot_quit();
+
+    // Called when the SVG file has changed
+    void slot_svgFileChanged(const QString &filename);
+
+    void slot_reloadSvgFile();
 
     // Called when the current widget in the same QTreeView has changed
     void slot_widgetChanged(QListWidgetItem *current, QListWidgetItem *previous);
@@ -129,6 +136,7 @@ class ThemeBuilderUI : public QMainWindow, private Ui::ThemeBuilderUIBase {
     };
 
     // Resets the entire UI as if theme builder has just been started
+    // To be called before opening any config file
     void resetUi();
 
     // If current theme is modified, shows a dialog box that asks to save it
@@ -198,10 +206,12 @@ class ThemeBuilderUI : public QMainWindow, private Ui::ThemeBuilderUIBase {
     // geometry of detached preview
     QRect detachedPeviewGeometry;
     // Timer for repainting the widget when settings change
-    QTimer *timer;
+    QTimer *timer, *timer2;
 
     // Temporary file, a copy of the current opened theme
     QString tempCfgFile;
+    // to watch SVG file for file changes
+    QFileSystemWatcher svgWatcher;
 };
 
 #endif // THEMEBUILDERUI_H
