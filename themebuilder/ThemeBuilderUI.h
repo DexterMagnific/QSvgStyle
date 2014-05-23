@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2009 by Saïd LANKRI   *
+ *   Copyright (C) 2014 by Saïd LANKRI   *
  *   said.lankri@gmail.com   *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -193,6 +193,8 @@ class ThemeBuilderUI : public QMainWindow, private Ui::ThemeBuilderUIBase {
     bool previewUpdateEnabled;
     // current open theme filename
     QString cfgFile;
+    // associated SVG file
+    QString svgFile;
     // geometry of detached preview
     QRect detachedPeviewGeometry;
     // Timer for repainting the widget when settings change

@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2009 by Saïd LANKRI   *
+ *   Copyright (C) 2014 by Saïd LANKRI   *
  *   said.lankri@gmail.com   *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *

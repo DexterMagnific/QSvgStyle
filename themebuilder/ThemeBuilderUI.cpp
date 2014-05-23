@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2009 by Saïd LANKRI   *
+ *   Copyright (C) 2014 by Saïd LANKRI   *
  *   said.lankri@gmail.com   *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -588,8 +588,9 @@ void ThemeBuilderUI::resetUi()
   previewUpdateEnabled = false;
 
   cfgModified = false;
-  cfgFile = QString();
-  tempCfgFile = QString();
+  cfgFile.clear();
+  tempCfgFile.clear();
+  svgFile.clear();
 }
 
 bool ThemeBuilderUI::ensureSettingsSaved()
@@ -635,8 +636,6 @@ void ThemeBuilderUI::slot_openTheme()
 
   resetUi();
 
-  cfgFile = s;
-
   // Get a unique temp filename
   int fd;
   if ( (fd = mkstemp(tmp)) == -1 ) {
@@ -648,12 +647,14 @@ void ThemeBuilderUI::slot_openTheme()
   unlink(tmp);
   tempCfgFile = QDir::tempPath()+"/"+tmp;
 
-  if ( !QFile::copy(cfgFile,tempCfgFile) ) {
+  if ( !QFile::copy(s,tempCfgFile) ) {
     qWarning() << "Could not create temporary file";
     return;
   } else {
     qDebug() << "Temporary file" << tempCfgFile << "created";
   }
+
+  cfgFile = s;
 
   if ( config )
     delete config;
@@ -661,12 +662,27 @@ void ThemeBuilderUI::slot_openTheme()
   config = new ThemeConfig(tempCfgFile);
 
   if ( style ) {
+  }
+
+  svgFile = QFileInfo(cfgFile).absoluteDir().path()+"/"+QFileInfo(cfgFile).baseName()+".svg";
+
+  if ( QFile::exists(svgFile) ) {
+    qDebug() << "Matching SVG file" << svgFile << "found";
+  } else
+    svgFile.clear();
+
+  if ( style && !svgFile.isEmpty() ) {
     // NOTE Thanks to Qt, ThemeBuilder can modify this file safely while the style
     // uses it. Changes made by ThemeBuilder will be seen by the style immediately
     // even if the style and ThemeBuilder use different QSettings objects for
     // the same file location
     style->loadCustomThemeConfig(tempCfgFile);
+    style->loadCustomSVG(svgFile);
   }
+
+  if ( svgFile.isEmpty() )
+    QMessageBox::warning(this, "Preview feature", "The matching SVG file for this config"
+      " is missing in this directory. Preview will not be available");
 
   recentFiles->addAction(cfgFile);
   recentBtn->setEnabled(true);
@@ -675,8 +691,8 @@ void ThemeBuilderUI::slot_openTheme()
   tabWidget2->setTabEnabled(0,true);
   tabWidget2->setTabEnabled(1,true);
   tabWidget2->setCurrentIndex(0);
-  themeNameLbl->setText(QFileInfo(s).fileName());
-  themeNameLbl->setToolTip(s);
+  themeNameLbl->setText(QFileInfo(cfgFile).fileName());
+  themeNameLbl->setToolTip(cfgFile);
 
   // fill in properties form
   theme_spec_t ts = config->getThemeSpec();
@@ -861,6 +877,9 @@ void ThemeBuilderUI::setupPreviewForWidget(const QListWidgetItem *current)
   QString group;
 
   if ( !current )
+    goto end;
+
+  if ( svgFile.isEmpty() )
     goto end;
 
   // prepare icon
@@ -1357,7 +1376,11 @@ end:
 //     resolvedValuesTree->setEnabled(false);
     previewVariantBtn->setEnabled(false);
 
-    previewWidget = new QLabel("There is no preview available for this element");
+    if ( !svgFile.isEmpty() )
+      previewWidget = new QLabel("There is no preview available for this element");
+    else
+      previewWidget = new QLabel("Matching SVG file not found. No preview available");
+
     previewWidget->setSizePolicy(qsz);
     previewArea->setWidget(previewWidget);
   }

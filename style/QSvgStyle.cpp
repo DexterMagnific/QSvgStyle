@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2009 by Saïd LANKRI                                     *
+ *   Copyright (C) 2014 by Saïd LANKRI                                     *
  *   said.lankri@gmail.com                                                 *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -99,7 +99,7 @@ void QSvgStyle::loadBuiltinTheme()
   themeRndr = new QSvgRenderer();
   themeRndr->load(QString(":default.svg"));
 
-  qDebug() << "["+cls+"]" << "Loaded built in theme";
+  qDebug() << "[QSvgStyle]" << "Loaded built in theme";
 }
 
 void QSvgStyle::loadTheme(const QString& theme)
@@ -126,7 +126,7 @@ void QSvgStyle::loadTheme(const QString& theme)
       qWarning() << "Invalid SVG file" << QString("~/.config/QSvgStyle/%1/%1.svg").arg(theme);
       loadBuiltinTheme();
     } else
-      qDebug() << "["+cls+"]" << "Loaded user theme " << theme;
+      qDebug() << "[QSvgStyle]" << "Loaded theme " << theme;
   }
 }
 
@@ -155,6 +155,8 @@ void QSvgStyle::loadCustomSVG(const QString& filename)
 
   themeRndr = new QSvgRenderer();
   themeRndr->load(filename);
+
+  qDebug() << "[QSvgStyle] loaded custom SVG file" << filename;
 }
 
 void QSvgStyle::loadCustomThemeConfig(const QString& filename)
@@ -166,6 +168,8 @@ void QSvgStyle::loadCustomThemeConfig(const QString& filename)
 
   if ( QFile::exists(filename) )
     themeSettings = new ThemeConfig(filename);
+
+  qDebug() << "[QSvgStyle] loaded custom config file" << filename;
 }
 
 bool QSvgStyle::isContainerWidget(const QWidget * widget) const
@@ -2663,7 +2667,7 @@ void QSvgStyle::renderElement(QPainter* painter, const QString& element, const Q
   QPainter *p2 = 0;
   QPixmap pm2;
 
-  if (! themeRndr->elementExists(element)) {
+  if ( !themeRndr->elementExists(element) ) {
     // Missing element
     p->save();
     p->setPen(Qt::black);
