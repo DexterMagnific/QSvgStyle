@@ -52,8 +52,14 @@ class ThemeBuilderUI : public QMainWindow, private Ui::ThemeBuilderUIBase {
     // Called when the current toolbox tab has changed
     void slot_toolboxTabChanged(int index);
 
-    // Called when the user changes the config from the UI
+    // Called when the user changes the config from the UI. It saves the current
+    // group settings and updates the preview
     void slot_uiSettingsChanged();
+
+    // called on properties tab changes
+    void slot_authorEditChanged(const QString &text);
+    void slot_descrEditChanged(const QString &text);
+    void slot_themeNameEditChanged(const QString &text);
 
     // called on common tab changes
     void slot_inheritCbChanged(int state);
@@ -125,14 +131,22 @@ class ThemeBuilderUI : public QMainWindow, private Ui::ThemeBuilderUIBase {
     // Resets the entire UI as if theme builder has just been started
     void resetUi();
 
+    // If current theme is modified, shows a dialog box that asks to save it
+    // returns false if the user chooses to cancel button, true if it presses
+    // yes or no
+    // It the user presses yes, the theme is saved
+    bool ensureSettingsSaved();
+
     // When called, starts a timer that will trigger
     // settings of current group to be saved and then preview update
     void schedulePreviewUpdate();
 
     // Setup the UI to reflect the settings for the given item
-    void setupUiForWidget(const QListWidgetItem* current);
+    void setupUiForWidget(const QListWidgetItem *current);
     // Setup the preview widget to reflect the given item
-    void setupPreviewForWidget(const QListWidgetItem* current);
+    void setupPreviewForWidget(const QListWidgetItem *current);
+    // Save current UI settings for widget
+    void saveSettingsFromUi(const QListWidgetItem *current);
     // wrapper around slot_XXXX_begin
     void noteStyleOperation_begin(const QString &op, const QString &args);
     void noteStyleOperation_end(const QString &op, const QString &args);
@@ -173,6 +187,10 @@ class ThemeBuilderUI : public QMainWindow, private Ui::ThemeBuilderUIBase {
     int currentDrawMode; // 0=normal, 1=wireframe, 2=overdraw
     // current widget variant
     int currentPreviewVariant;
+    // cfg file modified
+    bool cfgModified;
+    // update preview when UI changes ?
+    bool previewUpdateEnabled;
     // current open theme filename
     QString cfgFile;
     // geometry of detached preview

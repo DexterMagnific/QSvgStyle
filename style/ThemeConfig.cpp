@@ -256,7 +256,7 @@ theme_spec_t ThemeConfig::getThemeSpec() const
 
   r.name = getRawValue("General","name");
   r.author = getRawValue("General","author");
-  r.descr = getRawValue("General","description");
+  r.descr = getRawValue("General","comment");
 
   return r;
 }

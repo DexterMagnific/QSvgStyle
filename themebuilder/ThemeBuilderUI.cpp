@@ -33,6 +33,7 @@
 #include <QFileInfo>
 #include <QStyleFactory>
 #include <QMenu>
+#include <QMessageBox>
 #include <QTimer>
 
 // Includes for preview
@@ -57,6 +58,7 @@ ThemeBuilderUI::ThemeBuilderUI(QWidget* parent)
  : QMainWindow(parent), config(0), style(0), previewWidget(0),
    currentWidget(0),
    currentDrawStackItem(0), currentDrawMode(0), currentPreviewVariant(0),
+   cfgModified(0), previewUpdateEnabled(false),
    timer(0)
 {
   // Setup using auto-generated UIC code
@@ -320,6 +322,14 @@ ThemeBuilderUI::ThemeBuilderUI(QWidget* parent)
   connect(toolBox,SIGNAL(currentChanged(int)),
           this,SLOT(slot_toolboxTabChanged(int)));
 
+  // Changes inside properties tab
+  connect(authorEdit,SIGNAL(textEdited(QString)),
+          this,SLOT(slot_authorEditChanged(QString)));
+  connect(descrEdit,SIGNAL(textEdited(QString)),
+          this,SLOT(slot_descrEditChanged(QString)));
+  connect(themeNameEdit,SIGNAL(textEdited(QString)),
+          this,SLOT(slot_themeNameEditChanged(QString)));
+
   // Changes inside the common tab
   connect(inheritCb,SIGNAL(stateChanged(int)),
           this,SLOT(slot_inheritCbChanged(int)));
@@ -439,7 +449,7 @@ ThemeBuilderUI::ThemeBuilderUI(QWidget* parent)
   resetUi();
 
   // TESTING remove me in release
-  aboutFrame->hide();
+  //aboutFrame->hide();
   //toolBox->setEnabled(true);
   // TESTING end
 
@@ -547,6 +557,8 @@ void ThemeBuilderUI::resetUi()
   tabWidget2->setTabEnabled(0,false);
   tabWidget2->setTabEnabled(1,false);
   tabWidget2->setCurrentIndex(2);
+  saveBtn->setEnabled(false);
+  saveAsBtn->setEnabled(false);
 
   // clear theme file name
   themeNameLbl->clear();
@@ -565,12 +577,48 @@ void ThemeBuilderUI::resetUi()
   labelMarginCb->setCheckState(Qt::PartiallyChecked);
 
   currentToolboxTab = toolBox->currentIndex();
+
+  clearDrawStackTree();
+  currentDrawMode = 0;
+  currentPreviewVariant = 0;
+  if ( previewWidget )
+    delete previewWidget;
+  previewWidget = 0;
+  currentWidget = 0;
+  previewUpdateEnabled = false;
+
+  cfgModified = false;
+  cfgFile = QString();
+  tempCfgFile = QString();
+}
+
+bool ThemeBuilderUI::ensureSettingsSaved()
+{
+  if ( !cfgModified || !config )
+    return true;
+
+  QMessageBox::StandardButton b = QMessageBox::warning(this,"Save current theme ?",
+                                         "Current theme has been modified. Do you"
+                                         " want to save it ?",
+                                         QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel);
+
+  if ( (b == QMessageBox::Cancel) || (b == QMessageBox::Escape) )
+    return false;
+
+  if ( b == QMessageBox::Yes )
+    slot_saveTheme();
+
+  return true;
 }
 
 void ThemeBuilderUI::schedulePreviewUpdate()
 {
   timer->stop();
-  timer->start(1000);
+
+  if ( !previewUpdateEnabled )
+    return;
+
+  timer->start(500);
 }
 
 void ThemeBuilderUI::slot_openTheme()
@@ -582,9 +630,12 @@ void ThemeBuilderUI::slot_openTheme()
   if ( s.isNull() )
     return;
 
-  cfgFile = s;
+  if ( !ensureSettingsSaved() )
+    return;
 
-  // FIXME ask to save current theme
+  resetUi();
+
+  cfgFile = s;
 
   // Get a unique temp filename
   int fd;
@@ -604,14 +655,16 @@ void ThemeBuilderUI::slot_openTheme()
     qDebug() << "Temporary file" << tempCfgFile << "created";
   }
 
+  if ( config )
+    delete config;
+
   config = new ThemeConfig(tempCfgFile);
 
-  if ( !config ) {
-    qWarning() << "Could not load " << s;
-    return;
-  }
-
   if ( style ) {
+    // NOTE Thanks to Qt, ThemeBuilder can modify this file safely while the style
+    // uses it. Changes made by ThemeBuilder will be seen by the style immediately
+    // even if the style and ThemeBuilder use different QSettings objects for
+    // the same file location
     style->loadCustomThemeConfig(tempCfgFile);
   }
 
@@ -642,20 +695,42 @@ void ThemeBuilderUI::slot_saveAsTheme()
 
 void ThemeBuilderUI::slot_saveTheme()
 {
+  if ( !config || !cfgModified )
+    return;
+
+  // We normally don't need this
+  saveSettingsFromUi(currentWidget);
+
+  if ( !QFile::remove(cfgFile) ) {
+    qWarning() << "Could not remove" + cfgFile;
+    return;
+  }
+
+  if ( !QFile::copy(tempCfgFile,cfgFile) ) {
+    qWarning() << "Could not save" + cfgFile;
+    return;
+  }
+
+  qDebug() << cfgFile << "saved";
+
+  cfgModified = false;
+  saveBtn->setEnabled(false);
 }
 
 void ThemeBuilderUI::slot_quit()
 {
+  if ( !ensureSettingsSaved() )
+    return;
+
   QApplication::closeAllWindows();
 }
 
 void ThemeBuilderUI::setupUiForWidget(const QListWidgetItem* current)
 {
-  // FIXME this functions call slot_XXXChanged() and this schedules preview updates
-  // we should disable preview update while setting up the UI
-
   if ( !config )
     return;
+
+  previewUpdateEnabled = false;
 
   if ( current ) {
     QString group = current->data(GroupRole).toString();
@@ -764,9 +839,11 @@ void ThemeBuilderUI::setupUiForWidget(const QListWidgetItem* current)
   } else {
     tabWidget->setEnabled(false);
   }
+
+  previewUpdateEnabled = true;
 }
 
-void ThemeBuilderUI::setupPreviewForWidget(const QListWidgetItem* current)
+void ThemeBuilderUI::setupPreviewForWidget(const QListWidgetItem *current)
 {
   if ( previewWidget ) {
     delete previewWidget;
@@ -1286,12 +1363,94 @@ end:
   }
 }
 
+void ThemeBuilderUI::saveSettingsFromUi(const QListWidgetItem *current)
+{
+  if ( !config )
+    return;
+
+  theme_spec_t _ts;
+  _ts.author = authorEdit->text();
+  _ts.name = themeNameEdit->text();
+  _ts.descr = descrEdit->text();
+
+  config->setThemeSpec(_ts);
+
+  if ( !current )
+    return;
+
+  QString group = current->data(GroupRole).toString();
+
+  element_spec_t _es;
+  if ( inheritCb->isChecked() )
+    _es.inherits = inheritCombo->itemData(inheritCombo->currentIndex());
+
+  if ( frameCb->checkState() == Qt::Checked )
+    _es.frame.hasFrame = true;
+  if ( frameCb->checkState() == Qt::Unchecked )
+    _es.frame.hasFrame = false;
+  if ( frameCb->isChecked() ) {
+    if ( frameIdCb->checkState() == Qt::Checked )
+      _es.frame.element = frameIdCombo->currentText();
+    if ( frameIdCb->checkState() == Qt::Unchecked )
+      _es.frame.element = QString();
+    if ( frameWidthCb->checkState() == Qt::Checked )
+      _es.frame.width = frameWidthSpin->value();
+    if ( frameWidthCb->checkState() == Qt::Unchecked )
+      _es.frame.width = 0;
+  }
+
+  if ( interiorCb->checkState() == Qt::Checked )
+    _es.interior.hasInterior = true;
+  if ( interiorCb->checkState() == Qt::Unchecked )
+    _es.interior.hasInterior = false;
+  if ( interiorCb->isChecked() ) {
+    if ( interiorIdCb->checkState() == Qt::Checked )
+      _es.interior.element = interiorIdCombo->currentText();
+    if ( interiorIdCb->checkState() == Qt::Unchecked )
+      _es.interior.element = QString();
+    if ( interiorRepeatCb->checkState() == Qt::Checked ) {
+      _es.interior.px = interiorRepeatXSpin->value();
+      _es.interior.py = interiorRepeatYSpin->value();
+    }
+    if ( interiorRepeatCb->checkState() == Qt::Unchecked ) {
+      _es.interior.px = 0;
+      _es.interior.py = 0;
+    }
+  }
+
+  if ( indicatorIdCb->checkState() == Qt::Checked )
+    _es.indicator.element = indicatorIdCombo->currentText();
+  if ( indicatorIdCb->checkState() == Qt::Unchecked )
+    _es.indicator.element = QString();
+
+  if ( labelSpacingCb->checkState() == Qt::Checked )
+    _es.label.tispace = labelSpacingSpin->value();
+  if ( labelSpacingCb->checkState() == Qt::Unchecked )
+    _es.label.tispace = 0;
+
+  if ( labelMarginCb->checkState() == Qt::Checked ) {
+    _es.label.hmargin = labelMarginHSpin->value();
+    _es.label.vmargin = labelMarginVSpin->value();
+  }
+  if ( labelMarginCb->checkState() == Qt::Unchecked ) {
+    _es.label.hmargin = 0;
+    _es.label.vmargin = 0;
+  }
+
+  config->setElementSpec(group, _es);
+}
+
 void ThemeBuilderUI::slot_uiSettingsChanged()
 {
   qDebug() << "***************** UPDATING *****************";
-  // FIXME take settings from UI and store into theme config file
-  setupPreviewForWidget(currentWidget);
+
   timer->stop();
+
+  cfgModified = true;
+  saveBtn->setEnabled(true);
+
+  saveSettingsFromUi(currentWidget);
+  setupPreviewForWidget(currentWidget);
 }
 
 void ThemeBuilderUI::slot_repaintBtnClicked(bool checked)
@@ -1392,6 +1551,27 @@ void ThemeBuilderUI::slot_previewVariantBtnClicked(bool checked)
   currentPreviewVariant++;
 
   setupPreviewForWidget(currentWidget);
+}
+
+void ThemeBuilderUI::slot_authorEditChanged(const QString& text)
+{
+  Q_UNUSED(text);
+
+  schedulePreviewUpdate();
+}
+
+void ThemeBuilderUI::slot_themeNameEditChanged(const QString& text)
+{
+  Q_UNUSED(text);
+
+  schedulePreviewUpdate();
+}
+
+void ThemeBuilderUI::slot_descrEditChanged(const QString& text)
+{
+  Q_UNUSED(text);
+
+  schedulePreviewUpdate();
 }
 
 void ThemeBuilderUI::slot_inheritCbChanged(int state)
@@ -1792,6 +1972,8 @@ void ThemeBuilderUI::slot_toolboxTabChanged(int index)
 
 void ThemeBuilderUI::slot_widgetChanged(QListWidgetItem *current, QListWidgetItem *previous)
 {
+  saveSettingsFromUi(currentWidget);
+
   if ( current ) {
     if ( !previous )
       tabWidget2->setCurrentIndex(1);
@@ -1800,8 +1982,8 @@ void ThemeBuilderUI::slot_widgetChanged(QListWidgetItem *current, QListWidgetIte
 
   currentWidget = current;
 
-  setupUiForWidget(current);
-  setupPreviewForWidget(current);
+  setupUiForWidget(currentWidget);
+  setupPreviewForWidget(currentWidget);
 }
 
 void ThemeBuilderUI::slot_drawPrimitive_begin(const QString& s)
