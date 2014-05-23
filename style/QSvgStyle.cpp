@@ -378,6 +378,7 @@ void QSvgStyle::drawPrimitive(PrimitiveElement e, const QStyleOption * option, Q
       // frame and interior for tool tips
       renderFrame(p,r,fs,fs.element+"-"+st);
       renderInterior(p,r,fs,is,is.element+"-"+st);
+      break;
     }
     case PE_IndicatorRadioButton : {
       ds.size = pixelMetric(PM_IndicatorHeight);
