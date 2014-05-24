@@ -23,6 +23,7 @@
 #include <unistd.h> // close
 
 #include <QDebug>
+#include <QStandardItemModel>
 
 // UI
 #include <QFile>
@@ -147,11 +148,18 @@ ThemeBuilderUI::ThemeBuilderUI(QWidget* parent)
   i->setData(GroupRole,QSvgStyle::CE_group(QStyle::CE_Splitter));
 
   QIcon icon111;
-  icon11.addFile(QString::fromUtf8(":/icon/pixmaps/edithlayout.png"), QSize(), QIcon::Normal, QIcon::Off);
+  icon111.addFile(QString::fromUtf8(":/icon/pixmaps/edithlayout.png"), QSize(), QIcon::Normal, QIcon::Off);
   i = new QListWidgetItem(displayList);
   i->setIcon(icon111);
   i->setText("Tooltip");
   i->setData(GroupRole,QSvgStyle::PE_group(QStyle::PE_PanelTipLabel));
+
+  QIcon icon112;
+  //icon112.addFile(QString::fromUtf8(":/icon/pixmaps/edithlayout.png"), QSize(), QIcon::Normal, QIcon::Off);
+  i = new QListWidgetItem(displayList);
+  i->setIcon(icon112);
+  i->setText("Header");
+  i->setData(GroupRole,QSvgStyle::CE_group(QStyle::CE_Header));
 
   QIcon icon12;
   icon12.addFile(QString::fromUtf8(":/icon/pixmaps/groupbox.png"), QSize(), QIcon::Normal, QIcon::Off);
@@ -217,10 +225,17 @@ ThemeBuilderUI::ThemeBuilderUI(QWidget* parent)
   i->setData(GroupRole,QSvgStyle::PE_group(QStyle::PE_IndicatorArrowDown));
 
   QIcon icon21;
-  icon21.addFile(QString::fromUtf8(":/icon/pixmaps/optimize.png"), QSize(), QIcon::Normal, QIcon::Off);
+  icon21.addFile(QString::fromUtf8(":/icon/pixmaps/adjustsize.png"), QSize(), QIcon::Normal, QIcon::Off);
   i = new QListWidgetItem(miscList);
   i->setIcon(icon21);
-  i->setText("Metrics");
+  i->setText("Size grip");
+  i->setData(GroupRole,QSvgStyle::CE_group(QStyle::CE_SizeGrip));
+
+//   QIcon icon22;
+//   icon22.addFile(QString::fromUtf8(":/icon/pixmaps/optimize.png"), QSize(), QIcon::Normal, QIcon::Off);
+//   i = new QListWidgetItem(miscList);
+//   i->setIcon(icon21);
+//   i->setText("Metrics");
   //i->setData(GroupRole,"ToolBox");
 
   // Menu for recent files
@@ -288,13 +303,22 @@ ThemeBuilderUI::ThemeBuilderUI(QWidget* parent)
   // Get an instance of QSvgStyle
   if ( !style ) {
     style = (QSvgStyle *) QStyleFactory::create("QSvgStyle");
-    if ( !style )
-      qWarning() << "Could not load QSvgStyle style, preview will not be available !";
+    if ( !style ) {
+      qWarning() << "[QSvgThemeBuilder]" << "Could not load QSvgStyle style, preview will not be available !";
+      QMessageBox::warning(this,"QSvgStyle style not found",
+                           "QSvgStyle style library could not be loaded. Maybe it is"
+                           " not installed in the right directory.\n"
+                           " Preview will not be available.");
+    }
     // Check that the style version is the same as the one we were compiled against
     if ( style->Version /* dynamic load */ != QSvgStyle::Version /* compiled .h */) {
-      qWarning() << "QSvgStyle version mismatch !";
-      qWarning() << "QStyleFactory reported version" << style->Version;
-      qWarning() << "ThemeBuilder was built with version" << QSvgStyle::Version;
+      qWarning() << "[QSvgThemeBuilder]" << "QSvgStyle version mismatch !";
+      qWarning() << "[QSvgThemeBuilder]" << "QStyleFactory reported version" << style->Version;
+      qWarning() << "[QSvgThemeBuilder]" << "ThemeBuilder was built with version" << QSvgStyle::Version;
+      QMessageBox::warning(this,"QSvgStyle version mismatch",
+                           "The version of the installed QSvgStyle style is not"
+                           " the same as the one known by QSvgThemeBuilder.\n"
+                           " You may experience crashes when previewing.\n");
     }
   }
 
@@ -652,7 +676,7 @@ void ThemeBuilderUI::slot_openTheme()
   // Get a unique temp filename
   int fd;
   if ( (fd = mkstemp(tmp)) == -1 ) {
-    qWarning() << "Could not generate a temporary file name";
+    qWarning() << "[QSvgThemeBuilder]" << "Could not generate a temporary file name";
     return;
   }
 
@@ -661,10 +685,10 @@ void ThemeBuilderUI::slot_openTheme()
   tempCfgFile = QDir::tempPath()+"/"+tmp;
 
   if ( !QFile::copy(s,tempCfgFile) ) {
-    qWarning() << "Could not create temporary file";
+    qWarning() << "[QSvgThemeBuilder]" << "Could not create temporary file";
     return;
   } else {
-    qDebug() << "Temporary file" << tempCfgFile << "created";
+    qDebug() << "[QSvgThemeBuilder]" << "Temporary file" << tempCfgFile << "created";
   }
 
   cfgFile = s;
@@ -677,7 +701,7 @@ void ThemeBuilderUI::slot_openTheme()
   svgFile = QFileInfo(cfgFile).absoluteDir().path()+"/"+QFileInfo(cfgFile).baseName()+".svg";
 
   if ( QFile::exists(svgFile) ) {
-    qDebug() << "Matching SVG file" << svgFile << "found";
+    qDebug() << "[QSvgThemeBuilder]" << "Matching SVG file" << svgFile << "found";
   } else
     svgFile.clear();
 
@@ -730,16 +754,16 @@ void ThemeBuilderUI::slot_saveTheme()
   saveSettingsFromUi(currentWidget);
 
   if ( !QFile::remove(cfgFile) ) {
-    qWarning() << "Could not remove" + cfgFile;
+    qWarning() << "[QSvgThemeBuilder]" << "Could not remove" + cfgFile;
     return;
   }
 
   if ( !QFile::copy(tempCfgFile,cfgFile) ) {
-    qWarning() << "Could not save" + cfgFile;
+    qWarning() << "[QSvgThemeBuilder]" << "Could not save" + cfgFile;
     return;
   }
 
-  qDebug() << cfgFile << "saved";
+  qDebug() << "[QSvgThemeBuilder]" << cfgFile << "saved";
 
   cfgModified = false;
   saveBtn->setEnabled(false);
@@ -766,7 +790,7 @@ void ThemeBuilderUI::slot_reloadSvgFile()
   timer2->stop();
 
   if ( style && !svgFile.isEmpty() ) {
-    qDebug() << "SVG file changed, reloading it";
+    qDebug() << "[QSvgThemeBuilder]" << "SVG file changed, reloading it";
     style->loadCustomSVG(svgFile);
     setupPreviewForWidget(currentWidget);
   }
@@ -1371,6 +1395,26 @@ void ThemeBuilderUI::setupPreviewForWidget(const QListWidgetItem *current)
 
     previewWidget = widget;
   }
+
+  if ( group == QSvgStyle::CE_group(QStyle::CE_Header) ) {
+    variants = 1;
+
+    QHeaderView *widget = new QHeaderView(Qt::Horizontal);
+    QStandardItemModel *model = new QStandardItemModel(1,3, widget);
+    widget->setModel(model);
+    widget->model()->setHeaderData(0,Qt::Horizontal,"Section 1",Qt::DisplayRole);
+    widget->model()->setHeaderData(0,Qt::Horizontal,icon,Qt::DecorationRole);
+    widget->model()->setHeaderData(1,Qt::Horizontal,"Section 2",Qt::DisplayRole);
+    widget->model()->setHeaderData(2,Qt::Horizontal,"Section 3",Qt::DisplayRole);
+    widget->setSortIndicator(0,Qt::AscendingOrder);
+    widget->setSortIndicator(1,Qt::DescendingOrder);
+
+    // FIXME size !
+    previewWidget = widget;
+    widget->resize(widget->minimumSizeHint());
+    qsz = QSizePolicy(widget->sizePolicy().horizontalPolicy(),QSizePolicy::Maximum);;
+  }
+
 end:
   if ( previewWidget ) {
     repaintBtn->setEnabled(true);
@@ -1496,8 +1540,6 @@ void ThemeBuilderUI::saveSettingsFromUi(const QListWidgetItem *current)
 
 void ThemeBuilderUI::slot_uiSettingsChanged()
 {
-  qDebug() << "***************** UPDATING *****************";
-
   timer->stop();
 
   cfgModified = true;
