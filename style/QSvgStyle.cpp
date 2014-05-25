@@ -640,7 +640,7 @@ void QSvgStyle::drawPrimitive(PrimitiveElement e, const QStyleOption * option, Q
           qstyleoption_cast<const QStyleOptionViewItemV4 *>(option) ) {
 
           if ( opt->features & QStyleOptionViewItemV2::Alternate )
-            st = "-alt-"+st;
+            st = "alt-"+st;
           }
       }
       renderInterior(p,r,fs,is,is.element+"-"+st);

@@ -148,7 +148,7 @@ ThemeBuilderUI::ThemeBuilderUI(QWidget* parent)
   i->setData(GroupRole,QSvgStyle::CE_group(QStyle::CE_Splitter));
 
   QIcon icon111;
-  icon111.addFile(QString::fromUtf8(":/icon/pixmaps/edithlayout.png"), QSize(), QIcon::Normal, QIcon::Off);
+  //icon111.addFile(QString::fromUtf8(":/icon/pixmaps/edithlayout.png"), QSize(), QIcon::Normal, QIcon::Off);
   i = new QListWidgetItem(displayList);
   i->setIcon(icon111);
   i->setText("Tooltip");
