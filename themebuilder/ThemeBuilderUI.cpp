@@ -34,7 +34,6 @@
 #include <QTreeWidgetItem>
 #include <QFileInfo>
 #include <QStyleFactory>
-#include <QMenu>
 #include <QMessageBox>
 #include <QTimer>
 
@@ -52,6 +51,8 @@
 #include <QToolBar>
 #include <QMenuBar>
 #include <QToolTip>
+#include <QMenu>
+#include <QListView>
 
 #include "../style/ThemeConfig.h"
 #include "../style/QSvgStyle.h"
@@ -162,6 +163,13 @@ ThemeBuilderUI::ThemeBuilderUI(QWidget* parent)
   i->setIcon(icon112);
   i->setText("Header");
   i->setData(GroupRole,CE_group(QStyle::CE_Header));
+
+  QIcon icon113;
+  //icon112.addFile(QString::fromUtf8(":/icon/pixmaps/edithlayout.png"), QSize(), QIcon::Normal, QIcon::Off);
+  i = new QListWidgetItem(displayList);
+  i->setIcon(icon113);
+  i->setText("View item");
+  i->setData(GroupRole,PE_group(QStyle::PE_PanelItemViewItem));
 
   QIcon icon12;
   icon12.addFile(QString::fromUtf8(":/icon/pixmaps/groupbox.png"), QSize(), QIcon::Normal, QIcon::Off);
@@ -1427,6 +1435,27 @@ void ThemeBuilderUI::setupPreviewForWidget(const QListWidgetItem *current)
     previewWidget = widget;
     widget->resize(widget->minimumSizeHint());
     qsz = QSizePolicy(widget->sizePolicy().horizontalPolicy(),QSizePolicy::Maximum);;
+  }
+
+  if ( group == PE_group(QStyle::PE_PanelItemViewItem) ) {
+    variants = 1;
+
+    QListWidget *widget = new QListWidget();
+    widget->addItem("item 1");
+    widget->addItem("item 2");
+    widget->addItem("item 3");
+    widget->addItem("item 4");
+    widget->addItem("item 5");
+    widget->addItem("item 6");
+
+    widget->item(0)->setCheckState(Qt::Checked);
+    widget->item(1)->setIcon(icon);
+    widget->item(3)->setCheckState(Qt::Unchecked);
+    widget->item(3)->setIcon(icon);
+
+    widget->setAlternatingRowColors(true);
+
+    previewWidget = widget;
   }
 
 end:

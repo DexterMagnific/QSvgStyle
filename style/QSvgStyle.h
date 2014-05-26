@@ -87,7 +87,7 @@ class QSvgStyle : public QCommonStyle {
     /* Used internally and by QSvgThemeBuilder */
     Q_INVOKABLE void loadCustomThemeConfig(const QString &filename);
     Q_INVOKABLE void loadCustomSVG(const QString &filename);
-    
+
     /**
      * Loads and sets the given theme
      * Theme is searched for in ~/.config/QSvgStyle/theme directory
