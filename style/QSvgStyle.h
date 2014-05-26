@@ -84,6 +84,10 @@ class QSvgStyle : public QCommonStyle {
     QIcon standardIconImplementation ( StandardPixmap standardIcon, const QStyleOption * option = 0, const QWidget * widget = 0 ) const;
 
   private:
+    /* Used internally and by QSvgThemeBuilder */
+    Q_INVOKABLE void loadCustomThemeConfig(const QString &filename);
+    Q_INVOKABLE void loadCustomSVG(const QString &filename);
+    
     /**
      * Loads and sets the given theme
      * Theme is searched for in ~/.config/QSvgStyle/theme directory
@@ -99,10 +103,6 @@ class QSvgStyle : public QCommonStyle {
      * Loads and sets the built-in default theme
      */
     void loadBuiltinTheme();
-
-    /* Used internally and by QSvgThemeBuilder */
-    void loadCustomThemeConfig(const QString &filename);
-    void loadCustomSVG(const QString &filename);
 
   signals:
     /**
@@ -339,15 +339,6 @@ class QSvgStyle : public QCommonStyle {
     QString CT_str(ContentsType type) const;
 
     friend class ThemeBuilderUI;
-    /**
-     * Helper functions that determine the appriopriate QSvgStyle
-     * configuration group to draw a given element
-     */
-    static QString PE_group(PrimitiveElement element);
-    static QString SE_group(SubElement element);
-    static QString CE_group(ControlElement element);
-    static QString CC_group(ComplexControl element);
-    static QString CT_group(ContentsType type);
 
     /**
      * Helper function that converts a QStyle::State value to a string

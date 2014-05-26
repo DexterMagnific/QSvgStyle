@@ -1,8 +1,7 @@
 TEMPLATE = subdirs
 SUBDIRS += \
   style        \
-  themebuilder \
-  themeviewer
+  themebuilder
 
 CONFIG += \
   warn_on \

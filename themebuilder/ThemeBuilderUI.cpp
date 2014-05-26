@@ -24,6 +24,7 @@
 
 #include <QDebug>
 #include <QStandardItemModel>
+#include <QMetaObject>
 
 // UI
 #include <QFile>
@@ -54,6 +55,7 @@
 
 #include "../style/ThemeConfig.h"
 #include "../style/QSvgStyle.h"
+#include "../common/groups.h"
 
 ThemeBuilderUI::ThemeBuilderUI(QWidget* parent)
  : QMainWindow(parent), config(0), style(0), previewWidget(0),
@@ -75,161 +77,161 @@ ThemeBuilderUI::ThemeBuilderUI(QWidget* parent)
   i = new QListWidgetItem(buttonList);
   i->setIcon(icon1);
   i->setText("Push button");
-  i->setData(GroupRole,QSvgStyle::CE_group(QStyle::CE_PushButton));
+  i->setData(GroupRole,CE_group(QStyle::CE_PushButton));
 
   QIcon icon2;
   icon2.addFile(QString::fromUtf8(":/icon/pixmaps/toolbutton.png"), QSize(), QIcon::Normal, QIcon::Off);
   i = new QListWidgetItem(buttonList);
   i->setIcon(icon2);
   i->setText("Tool button");
-  i->setData(GroupRole,QSvgStyle::CC_group(QStyle::CC_ToolButton));
+  i->setData(GroupRole,CC_group(QStyle::CC_ToolButton));
 
   QIcon icon3;
   icon3.addFile(QString::fromUtf8(":/icon/pixmaps/radiobutton.png"), QSize(), QIcon::Normal, QIcon::Off);
   i = new QListWidgetItem(buttonList);
   i->setIcon(icon3);
   i->setText("Radio button");
-  i->setData(GroupRole,QSvgStyle::CE_group(QStyle::CE_RadioButton));
+  i->setData(GroupRole,CE_group(QStyle::CE_RadioButton));
 
   QIcon icon4;
   icon4.addFile(QString::fromUtf8(":/icon/pixmaps/checkbox.png"), QSize(), QIcon::Normal, QIcon::Off);
   i = new QListWidgetItem(buttonList);
   i->setIcon(icon4);
   i->setText("Check box");
-  i->setData(GroupRole,QSvgStyle::CE_group(QStyle::CE_CheckBox));
+  i->setData(GroupRole,CE_group(QStyle::CE_CheckBox));
 
   QIcon icon5;
   icon5.addFile(QString::fromUtf8(":/icon/pixmaps/lineedit.png"), QSize(), QIcon::Normal, QIcon::Off);
   i = new QListWidgetItem(inputList);
   i->setIcon(icon5);
   i->setText("Line edit");
-  i->setData(GroupRole,QSvgStyle::PE_group(QStyle::PE_FrameLineEdit));
+  i->setData(GroupRole,PE_group(QStyle::PE_FrameLineEdit));
 
   QIcon icon6;
   icon6.addFile(QString::fromUtf8(":/icon/pixmaps/spinbox.png"), QSize(), QIcon::Normal, QIcon::Off);
   i = new QListWidgetItem(inputList);
   i->setIcon(icon6);
   i->setText("Spin box");
-  i->setData(GroupRole,QSvgStyle::CC_group(QStyle::CC_SpinBox));
+  i->setData(GroupRole,CC_group(QStyle::CC_SpinBox));
 
   QIcon icon7;
   icon7.addFile(QString::fromUtf8(":/icon/pixmaps/vscrollbar.png"), QSize(), QIcon::Normal, QIcon::Off);
   i = new QListWidgetItem(inputList);
   i->setIcon(icon7);
   i->setText("Scroll bar");
-  i->setData(GroupRole,QSvgStyle::CC_group(QStyle::CC_ScrollBar));
+  i->setData(GroupRole,CC_group(QStyle::CC_ScrollBar));
 
   QIcon icon8;
   icon8.addFile(QString::fromUtf8(":/icon/pixmaps/hslider.png"), QSize(), QIcon::Normal, QIcon::Off);
   i = new QListWidgetItem(inputList);
   i->setIcon(icon8);
   i->setText("Slider");
-  i->setData(GroupRole,QSvgStyle::CC_group(QStyle::CC_Slider));
+  i->setData(GroupRole,CC_group(QStyle::CC_Slider));
 
 //   QIcon icon9;
 //   icon9.addFile(QString::fromUtf8(":/icon/pixmaps/dial.png"), QSize(), QIcon::Normal, QIcon::Off);
 //   i = new QListWidgetItem(inputList);
 //   i->setIcon(icon9);
 //   i->setText("Dial");
-//   i->setData(GroupRole,QSvgStyle::CC_group(QStyle::CC_Dial));
+//   i->setData(GroupRole,CC_group(QStyle::CC_Dial));
 
   QIcon icon10;
   icon10.addFile(QString::fromUtf8(":/icon/pixmaps/progress.png"), QSize(), QIcon::Normal, QIcon::Off);
   i = new QListWidgetItem(displayList);
   i->setIcon(icon10);
   i->setText("Progress bar");
-  i->setData(GroupRole,QSvgStyle::CE_group(QStyle::CE_ProgressBar));
+  i->setData(GroupRole,CE_group(QStyle::CE_ProgressBar));
 
   QIcon icon11;
   icon11.addFile(QString::fromUtf8(":/icon/pixmaps/edithlayout.png"), QSize(), QIcon::Normal, QIcon::Off);
   i = new QListWidgetItem(displayList);
   i->setIcon(icon11);
   i->setText("Splitter");
-  i->setData(GroupRole,QSvgStyle::CE_group(QStyle::CE_Splitter));
+  i->setData(GroupRole,CE_group(QStyle::CE_Splitter));
 
   QIcon icon111;
   //icon111.addFile(QString::fromUtf8(":/icon/pixmaps/edithlayout.png"), QSize(), QIcon::Normal, QIcon::Off);
   i = new QListWidgetItem(displayList);
   i->setIcon(icon111);
   i->setText("Tooltip");
-  i->setData(GroupRole,QSvgStyle::PE_group(QStyle::PE_PanelTipLabel));
+  i->setData(GroupRole,PE_group(QStyle::PE_PanelTipLabel));
 
   QIcon icon112;
   //icon112.addFile(QString::fromUtf8(":/icon/pixmaps/edithlayout.png"), QSize(), QIcon::Normal, QIcon::Off);
   i = new QListWidgetItem(displayList);
   i->setIcon(icon112);
   i->setText("Header");
-  i->setData(GroupRole,QSvgStyle::CE_group(QStyle::CE_Header));
+  i->setData(GroupRole,CE_group(QStyle::CE_Header));
 
   QIcon icon12;
   icon12.addFile(QString::fromUtf8(":/icon/pixmaps/groupbox.png"), QSize(), QIcon::Normal, QIcon::Off);
   i = new QListWidgetItem(containerList);
   i->setIcon(icon12);
   i->setText("Group box");
-  i->setData(GroupRole,QSvgStyle::CC_group(QStyle::CC_GroupBox));
+  i->setData(GroupRole,CC_group(QStyle::CC_GroupBox));
 
   QIcon icon13;
   icon13.addFile(QString::fromUtf8(":/icon/pixmaps/toolbox.png"), QSize(), QIcon::Normal, QIcon::Off);
   i = new QListWidgetItem(containerList);
   i->setIcon(icon13);
   i->setText("Tool box");
-  i->setData(GroupRole,QSvgStyle::CE_group(QStyle::CE_ToolBoxTab));
+  i->setData(GroupRole,CE_group(QStyle::CE_ToolBoxTab));
 
   QIcon icon14;
   icon14.addFile(QString::fromUtf8(":/icon/pixmaps/tabwidget.png"), QSize(), QIcon::Normal, QIcon::Off);
   i = new QListWidgetItem(containerList);
   i->setIcon(icon14);
   i->setText("Tab widget");
-  i->setData(GroupRole,QSvgStyle::CE_group(QStyle::CE_TabBarTab));
+  i->setData(GroupRole,CE_group(QStyle::CE_TabBarTab));
 
   QIcon icon15;
   icon15.addFile(QString::fromUtf8(":/icon/pixmaps/frame.png"), QSize(), QIcon::Normal, QIcon::Off);
   i = new QListWidgetItem(containerList);
   i->setIcon(icon15);
   i->setText("Frame");
-  i->setData(GroupRole,QSvgStyle::PE_group(QStyle::PE_Frame));
+  i->setData(GroupRole,PE_group(QStyle::PE_Frame));
 
   QIcon icon16;
   icon16.addFile(QString::fromUtf8(":/icon/pixmaps/dockwidget.png"), QSize(), QIcon::Normal, QIcon::Off);
   i = new QListWidgetItem(containerList);
   i->setIcon(icon16);
   i->setText("Dock widget");
-  i->setData(GroupRole,QSvgStyle::CE_group(QStyle::CE_DockWidgetTitle));
+  i->setData(GroupRole,CE_group(QStyle::CE_DockWidgetTitle));
 
   QIcon icon17;
   icon17.addFile(QString::fromUtf8(":/icon/pixmaps/toolbox.png"), QSize(), QIcon::Normal, QIcon::Off);
   i = new QListWidgetItem(containerList);
   //i->setIcon(icon17);
   i->setText("Tool bar");
-  i->setData(GroupRole,QSvgStyle::CE_group(QStyle::CE_ToolBar));
+  i->setData(GroupRole,CE_group(QStyle::CE_ToolBar));
 
   QIcon icon18;
   icon18.addFile(QString::fromUtf8(":/icon/pixmaps/menubar.png"), QSize(), QIcon::Normal, QIcon::Off);
   i = new QListWidgetItem(containerList);
   i->setIcon(icon18);
   i->setText("Menu bar item");
-  i->setData(GroupRole,QSvgStyle::CE_group(QStyle::CE_MenuBarItem));
+  i->setData(GroupRole,CE_group(QStyle::CE_MenuBarItem));
 
   QIcon icon19;
   icon19.addFile(QString::fromUtf8(":/icon/pixmaps/toolbox.png"), QSize(), QIcon::Normal, QIcon::Off);
   i = new QListWidgetItem(containerList);
   //i->setIcon(icon19);
   i->setText("Menu item");
-  i->setData(GroupRole,QSvgStyle::CE_group(QStyle::CE_MenuItem));
+  i->setData(GroupRole,CE_group(QStyle::CE_MenuItem));
 
   QIcon icon20;
   icon20.addFile(QString::fromUtf8(":/icon/pixmaps/righttoleft.png"), QSize(), QIcon::Normal, QIcon::Off);
   i = new QListWidgetItem(miscList);
   i->setIcon(icon20);
   i->setText("Indicators");
-  i->setData(GroupRole,QSvgStyle::PE_group(QStyle::PE_IndicatorArrowDown));
+  i->setData(GroupRole,PE_group(QStyle::PE_IndicatorArrowDown));
 
   QIcon icon21;
   icon21.addFile(QString::fromUtf8(":/icon/pixmaps/adjustsize.png"), QSize(), QIcon::Normal, QIcon::Off);
   i = new QListWidgetItem(miscList);
   i->setIcon(icon21);
   i->setText("Size grip");
-  i->setData(GroupRole,QSvgStyle::CE_group(QStyle::CE_SizeGrip));
+  i->setData(GroupRole,CE_group(QStyle::CE_SizeGrip));
 
 //   QIcon icon22;
 //   icon22.addFile(QString::fromUtf8(":/icon/pixmaps/optimize.png"), QSize(), QIcon::Normal, QIcon::Off);
@@ -710,8 +712,16 @@ void ThemeBuilderUI::slot_openTheme()
     // uses it. Changes made by ThemeBuilder will be seen by the style immediately
     // even if the style and ThemeBuilder use different QSettings objects for
     // the same file location
-    style->loadCustomThemeConfig(tempCfgFile);
-    style->loadCustomSVG(svgFile);
+
+    // NOTE use invokeMethod, this allows us to not link against libqsvgstyle.so
+    //style->loadCustomThemeConfig(tempCfgFile);
+    QStyle::staticMetaObject.invokeMethod(style,"loadCustomThemeConfig",
+                                          Qt::DirectConnection,
+                                          Q_ARG(QString,tempCfgFile));
+    //style->loadCustomSVG(svgFile);
+    QStyle::staticMetaObject.invokeMethod(style,"loadCustomSVG",
+                                          Qt::DirectConnection,
+                                          Q_ARG(QString,svgFile));
 
     svgWatcher.addPath(svgFile);
   }
@@ -791,7 +801,11 @@ void ThemeBuilderUI::slot_reloadSvgFile()
 
   if ( style && !svgFile.isEmpty() ) {
     qDebug() << "[QSvgThemeBuilder]" << "SVG file changed, reloading it";
-    style->loadCustomSVG(svgFile);
+    //style->loadCustomSVG(svgFile);
+    QStyle::staticMetaObject.invokeMethod(style,"loadCustomSVG",
+                                          Qt::DirectConnection,
+                                          QGenericArgument(),
+                                          Q_ARG(QString,svgFile));
     setupPreviewForWidget(currentWidget);
   }
 }
@@ -947,7 +961,7 @@ void ThemeBuilderUI::setupPreviewForWidget(const QListWidgetItem *current)
   // used to setup the UI in the constructor
 
   // Push button
-  if ( group == QSvgStyle::CE_group(QStyle::CE_PushButton) ) {
+  if ( group == CE_group(QStyle::CE_PushButton) ) {
     variants = 4;
 
     QPushButton *widget = new QPushButton();
@@ -971,7 +985,7 @@ void ThemeBuilderUI::setupPreviewForWidget(const QListWidgetItem *current)
   }
 
   // Tool button
-  if ( group == QSvgStyle::CC_group(QStyle::CC_ToolButton) ) {
+  if ( group == CC_group(QStyle::CC_ToolButton) ) {
     variants = 20;
 
     QToolButton *widget = new QToolButton();
@@ -1124,7 +1138,7 @@ void ThemeBuilderUI::setupPreviewForWidget(const QListWidgetItem *current)
     previewWidget = widget;
   }
 
-  if ( group == QSvgStyle::CE_group(QStyle::CE_RadioButton) ) {
+  if ( group == CE_group(QStyle::CE_RadioButton) ) {
     variants = 3;
 
     QRadioButton *widget = new QRadioButton();
@@ -1144,7 +1158,7 @@ void ThemeBuilderUI::setupPreviewForWidget(const QListWidgetItem *current)
     previewWidget = widget;
   }
 
-  if ( group == QSvgStyle::CE_group(QStyle::CE_CheckBox) ) {
+  if ( group == CE_group(QStyle::CE_CheckBox) ) {
     variants = 3;
 
     QCheckBox *widget = new QCheckBox();
@@ -1165,7 +1179,7 @@ void ThemeBuilderUI::setupPreviewForWidget(const QListWidgetItem *current)
     previewWidget = widget;
   }
 
-  if ( group == QSvgStyle::PE_group(QStyle::PE_FrameLineEdit) ) {
+  if ( group == PE_group(QStyle::PE_FrameLineEdit) ) {
     variants = 1;
 
     QLineEdit *widget = new QLineEdit();
@@ -1175,7 +1189,7 @@ void ThemeBuilderUI::setupPreviewForWidget(const QListWidgetItem *current)
     previewWidget = widget;
   }
 
-  if ( group == QSvgStyle::CC_group(QStyle::CC_SpinBox) ) {
+  if ( group == CC_group(QStyle::CC_SpinBox) ) {
     variants = 1;
 
     QSpinBox *widget = new QSpinBox();
@@ -1185,7 +1199,7 @@ void ThemeBuilderUI::setupPreviewForWidget(const QListWidgetItem *current)
     previewWidget = widget;
   }
 
-  if ( group == QSvgStyle::CC_group(QStyle::CC_ScrollBar) ) {
+  if ( group == CC_group(QStyle::CC_ScrollBar) ) {
     variants = 2;
 
     QScrollBar *widget = new QScrollBar();
@@ -1202,7 +1216,7 @@ void ThemeBuilderUI::setupPreviewForWidget(const QListWidgetItem *current)
     qsz = widget->sizePolicy();
   }
 
-  if ( group == QSvgStyle::CC_group(QStyle::CC_Slider) ) {
+  if ( group == CC_group(QStyle::CC_Slider) ) {
     variants = 2;
 
     QSlider *widget = new QSlider();
@@ -1219,7 +1233,7 @@ void ThemeBuilderUI::setupPreviewForWidget(const QListWidgetItem *current)
     qsz = widget->sizePolicy();
   }
 
-  if ( group == QSvgStyle::CE_group(QStyle::CE_ProgressBar) ) {
+  if ( group == CE_group(QStyle::CE_ProgressBar) ) {
     variants = 4;
 
     QProgressBar *widget = new QProgressBar();
@@ -1246,7 +1260,7 @@ void ThemeBuilderUI::setupPreviewForWidget(const QListWidgetItem *current)
     qsz = widget->sizePolicy();
   }
 
-  if ( group == QSvgStyle::CC_group(QStyle::CC_GroupBox) ) {
+  if ( group == CC_group(QStyle::CC_GroupBox) ) {
     variants = 6;
 
     QGroupBox *widget = new QGroupBox();
@@ -1279,7 +1293,7 @@ void ThemeBuilderUI::setupPreviewForWidget(const QListWidgetItem *current)
     previewWidget = widget;
   }
 
-  if ( group == QSvgStyle::CE_group(QStyle::CE_ToolBoxTab) ) {
+  if ( group == CE_group(QStyle::CE_ToolBoxTab) ) {
     variants = 1;
 
     QToolBox *widget = new QToolBox();
@@ -1292,7 +1306,7 @@ void ThemeBuilderUI::setupPreviewForWidget(const QListWidgetItem *current)
     previewWidget = widget;
   }
 
-  if ( group == QSvgStyle::CE_group(QStyle::CE_TabBarTab) ) {
+  if ( group == CE_group(QStyle::CE_TabBarTab) ) {
     variants = 4;
 
     QTabWidget *widget = new QTabWidget();
@@ -1318,7 +1332,7 @@ void ThemeBuilderUI::setupPreviewForWidget(const QListWidgetItem *current)
     qsz = widget->sizePolicy();
   }
 
-  if ( group == QSvgStyle::PE_group(QStyle::PE_Frame) ) {
+  if ( group == PE_group(QStyle::PE_Frame) ) {
     variants = 2;
 
     QFrame *widget = new QFrame();
@@ -1337,7 +1351,7 @@ void ThemeBuilderUI::setupPreviewForWidget(const QListWidgetItem *current)
     qsz = widget->sizePolicy();
   }
 
-  if ( group == QSvgStyle::CE_group(QStyle::CE_DockWidgetTitle) ) {
+  if ( group == CE_group(QStyle::CE_DockWidgetTitle) ) {
     variants = 1;
 
     QDockWidget *widget = new QDockWidget();
@@ -1348,7 +1362,7 @@ void ThemeBuilderUI::setupPreviewForWidget(const QListWidgetItem *current)
     qsz = widget->sizePolicy();
   }
 
-  if ( group == QSvgStyle::CE_group(QStyle::CE_ToolBar) ) {
+  if ( group == CE_group(QStyle::CE_ToolBar) ) {
     variants = 1;
 
     QToolBar *widget = new QToolBar(this);
@@ -1363,7 +1377,7 @@ void ThemeBuilderUI::setupPreviewForWidget(const QListWidgetItem *current)
     previewWidget = widget;
   }
 
-  if ( group == QSvgStyle::CE_group(QStyle::CE_MenuBarItem) ) {
+  if ( group == CE_group(QStyle::CE_MenuBarItem) ) {
     variants = 1;
 
     QMenuBar *widget = new QMenuBar();
@@ -1374,7 +1388,7 @@ void ThemeBuilderUI::setupPreviewForWidget(const QListWidgetItem *current)
     qsz = QSizePolicy(QSizePolicy::Expanding,QSizePolicy::Fixed);
   }
 
-  if ( group == QSvgStyle::CE_group(QStyle::CE_MenuItem) ) {
+  if ( group == CE_group(QStyle::CE_MenuItem) ) {
     variants = 1;
 
     QMenu *widget = new QMenu("this is a menu");
@@ -1396,7 +1410,7 @@ void ThemeBuilderUI::setupPreviewForWidget(const QListWidgetItem *current)
     previewWidget = widget;
   }
 
-  if ( group == QSvgStyle::CE_group(QStyle::CE_Header) ) {
+  if ( group == CE_group(QStyle::CE_Header) ) {
     variants = 1;
 
     QHeaderView *widget = new QHeaderView(Qt::Horizontal);
