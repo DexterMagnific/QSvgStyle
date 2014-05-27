@@ -63,6 +63,12 @@ void ThemeConfig::load(const QString& theme)
   settings = new QSettings(theme,QSettings::NativeFormat);
 }
 
+void ThemeConfig::sync()
+{
+  if ( settings )
+    settings->sync();
+}
+
 QVariant ThemeConfig::getRawValue(const QString& group, const QString& key) const
 {
   return settings ? settings->value(group+"/"+key) : QVariant();

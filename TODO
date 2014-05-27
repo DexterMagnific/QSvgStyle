@@ -1,11 +1,13 @@
 QSvgStyle
 ---------
-* add list of animatable widgets
-* Idea : loop animations. If yes, loop, if no animate on 'enter' and 'leave' widget
-* better animation handling
+* Rework animation framework
 * add optional support for color schemes (read widget->palette())
-* add option for groupbox title V alignment
 
 QSvgThemeBuilder
 ----------------
 * widget specific settings (layout, pixelmetric)
+* implement New, theme builder app settings save/restore
+
+QSvgThemeChooser
+----------------
+* Implement me

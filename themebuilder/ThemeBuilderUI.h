@@ -34,16 +34,18 @@ class QMenu;
 class QSvgStyle;
 class QTimer;
 class QFileSystemWatcher;
+class NewThemeUI;
 
 class ThemeBuilderUI : public QMainWindow, private Ui::ThemeBuilderUIBase {
   Q_OBJECT
 
   public:
     ThemeBuilderUI(QWidget *parent = 0);
-    ~ThemeBuilderUI();
+    virtual ~ThemeBuilderUI();
 
   private slots:
     // Called on main button clicks
+    void slot_newTheme();
     void slot_openTheme();
     void slot_saveTheme();
     void slot_saveAsTheme();
@@ -135,6 +137,9 @@ class ThemeBuilderUI : public QMainWindow, private Ui::ThemeBuilderUIBase {
                                      // selected widget
     };
 
+    // opens a theme
+    void openTheme(const QString &filename);
+
     // Resets the entire UI as if theme builder has just been started
     // To be called before opening any config file
     void resetUi();
@@ -207,6 +212,8 @@ class ThemeBuilderUI : public QMainWindow, private Ui::ThemeBuilderUIBase {
     QRect detachedPeviewGeometry;
     // Timer for repainting the widget when settings change
     QTimer *timer, *timer2;
+    // New theme dialog
+    NewThemeUI *newThemeDlg;
 
     // Temporary file, a copy of the current opened theme
     QString tempCfgFile;

@@ -1,4 +1,4 @@
-/***************************************************************************
+  /***************************************************************************
  *   Copyright (C) 2014 by Saïd LANKRI   *
  *   said.lankri@gmail.com   *
  *                                                                         *
@@ -54,6 +54,7 @@
 #include <QMenu>
 #include <QListView>
 
+#include "NewThemeUI.h"
 #include "../style/ThemeConfig.h"
 #include "../style/QSvgStyle.h"
 #include "../common/groups.h"
@@ -63,7 +64,7 @@ ThemeBuilderUI::ThemeBuilderUI(QWidget* parent)
    currentWidget(0),
    currentDrawStackItem(0), currentDrawMode(0), currentPreviewVariant(0),
    cfgModified(0), previewUpdateEnabled(false),
-   timer(0), timer2(0),
+   timer(0), timer2(0), newThemeDlg(0),
    svgWatcher(this)
 {
   // Setup using auto-generated UIC code
@@ -339,6 +340,7 @@ ThemeBuilderUI::ThemeBuilderUI(QWidget* parent)
   // connections
   // main buttons
   connect(quitBtn,SIGNAL(clicked()),this,SLOT(slot_quit()));
+  connect(newBtn,SIGNAL(clicked()), this,SLOT(slot_newTheme()));
   connect(openBtn,SIGNAL(clicked()), this,SLOT(slot_openTheme()));
   connect(saveBtn,SIGNAL(clicked()), this,SLOT(slot_saveTheme()));
   connect(saveAsBtn,SIGNAL(clicked()), this,SLOT(slot_saveAsTheme()));
@@ -631,6 +633,10 @@ void ThemeBuilderUI::resetUi()
   previewUpdateEnabled = false;
 
   // Reset state
+  if ( config ) {
+    delete config;
+    config = 0;
+  }
   QStringList l = svgWatcher.files();
   if ( !l.empty() )
     svgWatcher.removePaths(l);
@@ -669,17 +675,9 @@ void ThemeBuilderUI::schedulePreviewUpdate()
   timer->start(500);
 }
 
-void ThemeBuilderUI::slot_openTheme()
+void ThemeBuilderUI::openTheme(const QString& filename)
 {
   char tmp[256] = "qsvgthemebuilder_XXXXXX";
-
-  QString s = QFileDialog::getOpenFileName(NULL,"Load Theme","",
-                                           "QSvgStyle configuration files(*.cfg);;All files(*)");
-  if ( s.isNull() )
-    return;
-
-  if ( !ensureSettingsSaved() )
-    return;
 
   resetUi();
 
@@ -694,17 +692,16 @@ void ThemeBuilderUI::slot_openTheme()
   unlink(tmp);
   tempCfgFile = QDir::tempPath()+"/"+tmp;
 
-  if ( !QFile::copy(s,tempCfgFile) ) {
+  if ( !QFile::copy(filename,tempCfgFile) ) {
     qWarning() << "[QSvgThemeBuilder]" << "Could not create temporary file";
     return;
   } else {
     qDebug() << "[QSvgThemeBuilder]" << "Temporary file" << tempCfgFile << "created";
+    // BUG QFile::copy does not obey umask. Add write permission for self
+    QFile::setPermissions(tempCfgFile,QFile::permissions(tempCfgFile) | QFile::WriteOwner);
   }
 
-  cfgFile = s;
-
-  if ( config )
-    delete config;
+  cfgFile = filename;
 
   config = new ThemeConfig(tempCfgFile);
 
@@ -735,10 +732,11 @@ void ThemeBuilderUI::slot_openTheme()
   }
 
   if ( svgFile.isEmpty() )
-    QMessageBox::warning(this, "Preview feature", "The matching SVG file for this config"
-      " is missing in this directory. Preview will not be available");
+    QMessageBox::warning(this, "Preview feature",
+                         "The matching SVG file for this config"
+                         " is missing in this directory. Preview will not be available");
 
-  recentFiles->addAction(cfgFile);
+    recentFiles->addAction(cfgFile);
   recentBtn->setEnabled(true);
 
   toolBox->setEnabled(true);
@@ -759,6 +757,73 @@ void ThemeBuilderUI::slot_openTheme()
   slot_toolboxTabChanged(toolBox->currentIndex());
 }
 
+void ThemeBuilderUI::slot_newTheme()
+{
+  int res = QDialog::Rejected;
+  QString dirname,basename;
+
+  if ( !newThemeDlg ) {
+    newThemeDlg = new NewThemeUI(NULL);
+  }
+
+restart:
+  res = newThemeDlg->exec();
+
+  if ( res == QDialog::Rejected )
+    return;
+
+  dirname = newThemeDlg->directory()+"/"+newThemeDlg->themeBaseFilename();
+  basename = dirname+"/"+newThemeDlg->themeBaseFilename();
+
+  if ( QFile::exists(basename+".cfg") || QFile::exists(basename+".svg") ) {
+    QMessageBox::warning(this,"Theme exists",
+                         "This theme already exists. Please choose another name",
+                         QMessageBox::Ok);
+    goto restart;
+  }
+
+  if ( !QDir().mkpath(dirname) ) {
+    QMessageBox::critical(this, "Error", "Could not create directory\n"+dirname,
+                          QMessageBox::Ok);
+    goto restart;
+  }
+
+  qDebug() << "[QSvgThemeBuilder]" << "creating" << basename+".cfg" << "based on default theme";
+
+  if ( !QFile::copy(":default.cfg",basename+".cfg") ) {
+    QMessageBox::critical(this, "Error", "Could not create file\n"+basename+".cfg",
+                          QMessageBox::Ok);
+    return;
+  }
+
+  qDebug() << "[QSvgThemeBuilder]" << "creating" << basename+".svg" << "based on default theme";
+
+  if ( !QFile::copy(":default.svg",basename+".svg") ) {
+    QMessageBox::critical(this, "Error", "Could not create file\n"+basename+".svg",
+                          QMessageBox::Ok);
+    return;
+  }
+
+  // BUG set owner write permissions
+  QFile::setPermissions(basename+".cfg",QFile::permissions(basename+".cfg") | QFile::WriteOwner);
+  QFile::setPermissions(basename+".svg",QFile::permissions(basename+".svg") | QFile::WriteOwner);
+
+  openTheme(basename+".cfg");
+}
+
+void ThemeBuilderUI::slot_openTheme()
+{
+  QString s = QFileDialog::getOpenFileName(NULL,"Load Theme","",
+                                           "QSvgStyle configuration files(*.cfg);;All files(*)");
+  if ( s.isNull() )
+    return;
+
+  if ( !ensureSettingsSaved() )
+    return;
+
+  openTheme(s);
+}
+
 void ThemeBuilderUI::slot_saveAsTheme()
 {
 }
@@ -770,6 +835,8 @@ void ThemeBuilderUI::slot_saveTheme()
 
   // We normally don't need this
   saveSettingsFromUi(currentWidget);
+
+  config->sync();
 
   if ( !QFile::remove(cfgFile) ) {
     qWarning() << "[QSvgThemeBuilder]" << "Could not remove" + cfgFile;

@@ -42,6 +42,11 @@ class ThemeConfig {
      */
     void load(const QString &theme);
 
+    /**
+     * Forces an immediate disk write of the current settings
+     */
+    void sync();
+
     frame_spec_t getFrameSpec(const QString &group) const;
     interior_spec_t getInteriorSpec(const QString &group) const;
     indicator_spec_t getIndicatorSpec(const QString &group) const;
