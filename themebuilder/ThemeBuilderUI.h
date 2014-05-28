@@ -48,7 +48,8 @@ class ThemeBuilderUI : public QMainWindow, private Ui::ThemeBuilderUIBase {
     void slot_newTheme();
     void slot_openTheme();
     void slot_saveTheme();
-    void slot_saveAsTheme();
+    void slot_optimizeSvg();
+    void slot_editSvg();
     void slot_quit();
 
     // Called when the SVG file has changed
@@ -126,8 +127,10 @@ class ThemeBuilderUI : public QMainWindow, private Ui::ThemeBuilderUIBase {
     void slot_sizeFromContents_begin(const QString &s);
     void slot_sizeFromContents_end(const QString &s);
 
+  protected:
     // intercept some events from previewArea and previewWidget
     virtual bool eventFilter(QObject *o, QEvent *e);
+    virtual void closeEvent(QCloseEvent *e);
 
   private:
     // enum that allow us to attach arbitrary data to QTreeViewItem items

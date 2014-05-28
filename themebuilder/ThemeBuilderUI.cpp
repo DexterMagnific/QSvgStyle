@@ -23,7 +23,6 @@
 #include <unistd.h> // close
 
 #include <QDebug>
-#include <QStandardItemModel>
 #include <QMetaObject>
 
 // UI
@@ -36,6 +35,9 @@
 #include <QStyleFactory>
 #include <QMessageBox>
 #include <QTimer>
+#include <QStandardItemModel>
+#include <QDesktopServices>
+#include <QUrl>
 
 // Includes for preview
 #include <QPushButton>
@@ -343,7 +345,8 @@ ThemeBuilderUI::ThemeBuilderUI(QWidget* parent)
   connect(newBtn,SIGNAL(clicked()), this,SLOT(slot_newTheme()));
   connect(openBtn,SIGNAL(clicked()), this,SLOT(slot_openTheme()));
   connect(saveBtn,SIGNAL(clicked()), this,SLOT(slot_saveTheme()));
-  connect(saveAsBtn,SIGNAL(clicked()), this,SLOT(slot_saveAsTheme()));
+  connect(optimizeSvgBtn,SIGNAL(clicked()), this,SLOT(slot_optimizeSvg()));
+  connect(editSvgBtn,SIGNAL(clicked()), this,SLOT(slot_editSvg()));
 
   // Change of selected widget to edit
   connect(buttonList,SIGNAL(currentItemChanged(QListWidgetItem*,QListWidgetItem*)),
@@ -510,6 +513,20 @@ ThemeBuilderUI::~ThemeBuilderUI()
     delete style;
 }
 
+void ThemeBuilderUI::closeEvent(QCloseEvent* e)
+{
+  if ( !ensureSettingsSaved() ) {
+    e->ignore();
+    return;
+  }
+
+  resetUi();
+
+  QApplication::closeAllWindows();
+
+  QWidget::closeEvent(e);
+}
+
 bool ThemeBuilderUI::eventFilter(QObject* o, QEvent* e)
 {
   // previewArea
@@ -602,7 +619,8 @@ void ThemeBuilderUI::resetUi()
   tabWidget2->setTabEnabled(1,false);
   tabWidget2->setCurrentIndex(2);
   saveBtn->setEnabled(false);
-  saveAsBtn->setEnabled(false);
+  optimizeSvgBtn->setEnabled(false);
+  editSvgBtn->setEnabled(false);
 
   // clear theme file name
   themeNameLbl->clear();
@@ -642,6 +660,8 @@ void ThemeBuilderUI::resetUi()
     svgWatcher.removePaths(l);
   cfgModified = false;
   cfgFile.clear();
+  if ( !tempCfgFile.isEmpty() )
+    QFile::remove(tempCfgFile);
   tempCfgFile.clear();
   svgFile.clear();
 }
@@ -736,7 +756,7 @@ void ThemeBuilderUI::openTheme(const QString& filename)
                          "The matching SVG file for this config"
                          " is missing in this directory. Preview will not be available");
 
-    recentFiles->addAction(cfgFile);
+  recentFiles->addAction(cfgFile);
   recentBtn->setEnabled(true);
 
   toolBox->setEnabled(true);
@@ -745,6 +765,11 @@ void ThemeBuilderUI::openTheme(const QString& filename)
   tabWidget2->setCurrentIndex(0);
   themeNameLbl->setText(QFileInfo(cfgFile).fileName());
   themeNameLbl->setToolTip(cfgFile);
+
+  if ( !svgFile.isEmpty() ) {
+    editSvgBtn->setEnabled(true);
+    optimizeSvgBtn->setEnabled(true);
+  }
 
   // fill in properties form
   theme_spec_t ts = config->getThemeSpec();
@@ -824,10 +849,6 @@ void ThemeBuilderUI::slot_openTheme()
   openTheme(s);
 }
 
-void ThemeBuilderUI::slot_saveAsTheme()
-{
-}
-
 void ThemeBuilderUI::slot_saveTheme()
 {
   if ( !config || !cfgModified )
@@ -854,11 +875,31 @@ void ThemeBuilderUI::slot_saveTheme()
   saveBtn->setEnabled(false);
 }
 
-void ThemeBuilderUI::slot_quit()
+void ThemeBuilderUI::slot_editSvg()
 {
-  if ( !ensureSettingsSaved() )
+  if ( svgFile.isEmpty() )
     return;
 
+  QDesktopServices::openUrl(QUrl(svgFile));
+}
+
+void ThemeBuilderUI::slot_optimizeSvg()
+{
+  if ( svgFile.isEmpty() )
+    return;
+
+  qint64 oldsize,newsize;
+
+  oldsize = QFile(svgFile).size();
+
+  // Optimize
+
+  newsize = QFile(svgFile).size();
+
+}
+
+void ThemeBuilderUI::slot_quit()
+{
   QApplication::closeAllWindows();
 }
 
