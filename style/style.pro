@@ -1,6 +1,6 @@
 CONFIG += \
+  release \
   warn_on \
-  thread  \
   qt      \
   dll     \
   plugin
@@ -8,8 +8,6 @@ CONFIG += \
 TARGET = qsvgstyle
 DESTDIR = plugins
 TEMPLATE = lib
-
-VERSION = 0.1
 
 QT += svg
 

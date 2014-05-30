@@ -19,9 +19,6 @@
  ***************************************************************************/
 #include "ThemeBuilderUI.h"
 
-#include <stdlib.h> // mkstemp
-#include <unistd.h> // close
-
 #include <QDebug>
 #include <QMetaObject>
 
@@ -38,6 +35,7 @@
 #include <QStandardItemModel>
 #include <QDesktopServices>
 #include <QUrl>
+#include <QTemporaryFile>
 
 // Includes for preview
 #include <QPushButton>
@@ -60,6 +58,12 @@
 #include "../style/ThemeConfig.h"
 #include "../style/QSvgStyle.h"
 #include "../common/groups.h"
+
+// optimizer
+#include "keys.h"
+#include "basecleaner.h"
+#include "remover.h"
+#include "replacer.h"
 
 ThemeBuilderUI::ThemeBuilderUI(QWidget* parent)
  : QMainWindow(parent), config(0), style(0), previewWidget(0),
@@ -495,6 +499,43 @@ ThemeBuilderUI::ThemeBuilderUI(QWidget* parent)
   // Reset UI
   resetUi();
 
+  // Setup optimizer arguments
+  QStringList options = QStringList()
+    << "--remove-comments"
+    << "--remove-unused-defs"
+    << "--remove-nonsvg-elts"
+    << "--remove-sodipodi-elts"
+    << "--remove-ai-elts"
+    << "--remove-corel-elts"
+    << "--remove-msvisio-elts"
+    << "--remove-sketch-elts"
+    << "--remove-invisible-elts"
+    << "--remove-empty-containers"
+    << "--remove-duplicated-defs"
+    << "--remove-gaussian-blur=0"
+    << "--remove-notappl-atts"
+    << "--remove-default-atts"
+    << "--remove-inkscape-atts"
+    << "--remove-sodipodi-atts"
+    << "--remove-ai-atts"
+    << "--remove-corel-atts"
+    << "--remove-msvisio-atts"
+    << "--remove-sketch-atts"
+    << "--remove-stroke-props"
+    << "--remove-fill-props"
+    << "--remove-unused-xlinks"
+    << "--simplify-transform-matrix"
+    << "--apply-transforms-to-shapes"
+    << "--join-style-atts"
+    << "--remove-unneeded-symbols"
+    << "--apply-transforms-to-paths"
+    << "--colors-to-rrggbb"
+    << "--transform-precision=8"
+    << "--coordinates-precision=6"
+    << "--attributes-precision=6";
+    
+  Keys.parseOptions(options);
+
   // TESTING remove me in release
   //aboutFrame->hide();
   //toolBox->setEnabled(true);
@@ -697,29 +738,29 @@ void ThemeBuilderUI::schedulePreviewUpdate()
 
 void ThemeBuilderUI::openTheme(const QString& filename)
 {
-  char tmp[256] = "qsvgthemebuilder_XXXXXX";
-
   resetUi();
 
   // Get a unique temp filename
-  int fd;
-  if ( (fd = mkstemp(tmp)) == -1 ) {
-    qWarning() << "[QSvgThemeBuilder]" << "Could not generate a temporary file name";
-    return;
-  }
-
-  ::close(fd);
-  unlink(tmp);
-  tempCfgFile = QDir::tempPath()+"/"+tmp;
-
-  if ( !QFile::copy(filename,tempCfgFile) ) {
+  QTemporaryFile f(QDir::tempPath()+"/qsvhthemebuilder_XXXXXX");
+  if ( !f.open() ) {
     qWarning() << "[QSvgThemeBuilder]" << "Could not create temporary file";
     return;
   } else {
-    qDebug() << "[QSvgThemeBuilder]" << "Temporary file" << tempCfgFile << "created";
-    // BUG QFile::copy does not obey umask. Add write permission for self
-    QFile::setPermissions(tempCfgFile,QFile::permissions(tempCfgFile) | QFile::WriteOwner);
+    qDebug() << "[QSvgThemeBuilder]" << "Temporary file" << f.fileName() << "created";
   }
+
+  // do not destroy temp file on object destruction
+  f.setAutoRemove(false);
+
+  tempCfgFile = f.fileName();
+
+  QFile in(filename);
+  in.open(QIODevice::ReadOnly);
+  QByteArray data = in.readAll();
+  in.close();
+
+  f.write(data);
+  f.close();
 
   cfgFile = filename;
 
@@ -892,11 +933,152 @@ void ThemeBuilderUI::slot_optimizeSvg()
 
   oldsize = QFile(svgFile).size();
 
-  // Optimize
+  // get temporary file name
+  QTemporaryFile outFile(QDir::tempPath()+"/svg_XXXXXX");
+  outFile.open();
+  outFile.close();
 
-  newsize = QFile(svgFile).size();
+  qDebug() << outFile.fileName();
 
+  // optimize
+  optimizeSvg(svgFile,outFile.fileName());
+
+  newsize = QFile(outFile.fileName()).size();
+
+  // Replace svg file by temp file contents
+  svgWatcher.removePath(svgFile);
+
+  QFile in(outFile.fileName());
+  in.open(QIODevice::ReadOnly);
+  QByteArray data = in.readAll();
+  in.close();
+
+  QFile out(svgFile);
+  out.open(QIODevice::WriteOnly | QIODevice::Truncate);
+  out.write(data);
+  out.close();
+
+  svgWatcher.addPath(svgFile);
+
+  qDebug() << "[QSvgThemeBuilder]" << "Optimized" << svgFile
+    << QString("(%1 -> %2 bytes)").arg(oldsize).arg(newsize);
+
+  slot_svgFileChanged(svgFile);
 }
+
+/****************************************************************************
+ **
+ ** SVG Cleaner is batch, tunable, crossplatform SVG cleaning program.
+ ** Copyright (C) 2012-2014 Evgeniy Reizner
+ **
+ ** This program is free software; you can redistribute it and/or modify
+ ** it under the terms of the GNU General Public License as published by
+ ** the Free Software Foundation; either version 2 of the License, or
+ ** (at your option) any later version.
+ **
+ ** This program is distributed in the hope that it will be useful,
+ ** but WITHOUT ANY WARRANTY; without even the implied warranty of
+ ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ ** GNU General Public License for more details.
+ **
+ ** You should have received a copy of the GNU General Public License along
+ ** with this program; if not, write to the Free Software Foundation, Inc.,
+ ** 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ **
+ ****************************************************************************/
+void ThemeBuilderUI::optimizeSvg(const QString& inPath, const QString& outPath)
+{
+  XMLDocument doc;
+  doc.LoadFile(inPath.toUtf8().constData());
+  if (BaseCleaner::svgElement(&doc).isNull()) {
+    QFile inputFile(inPath);
+    if (!inputFile.open(QIODevice::ReadOnly | QIODevice::Text))
+      qFatal("Error: cannot open input file");
+    QTextStream inputStream(&inputFile);
+    QString svgText = inputStream.readAll();
+    svgText.replace("<svg:", "<");
+    svgText.replace("</svg:", "</");
+    doc.Clear();
+    doc.Parse(svgText.toUtf8().constData());
+    if (BaseCleaner::svgElement(&doc).isNull())
+      qFatal("Error: invalid svg file");
+  }
+
+  Replacer replacer(&doc);
+  Remover remover(&doc);
+
+//  replacer.calcElemAttrCount("initial");
+
+  // mandatory fixes used to simplify subsequent functions
+  replacer.splitStyleAttr();
+  // TODO: add key
+  replacer.convertCDATAStyle();
+  replacer.convertUnits();
+  replacer.prepareDefs();
+  replacer.fixWrongAttr();
+  replacer.markUsedElements();
+
+  remover.cleanSvgElementAttribute();
+  if (Keys.flag(Key::CreateViewbox))
+    replacer.convertSizeToViewbox();
+  if (Keys.flag(Key::RemoveUnusedDefs))
+    remover.removeUnusedDefs();
+  if (Keys.flag(Key::RemoveDuplicatedDefs))
+    remover.removeDuplicatedDefs();
+  if (Keys.flag(Key::MergeGradients)) {
+    replacer.mergeGradients();
+    replacer.mergeGradientsWithEqualStopElem();
+  }
+  remover.removeElements();
+  remover.removeAttributes();
+  remover.removeElementsFinal();
+  if (Keys.flag(Key::RemoveUnreferencedIds))
+    remover.removeUnreferencedIds();
+  if (Keys.flag(Key::RemoveUnusedXLinks))
+    remover.removeUnusedXLinks();
+  remover.cleanPresentationAttributes();
+  if (Keys.flag(Key::ApplyTransformsToShapes))
+    replacer.applyTransformToShapes();
+  if (Keys.flag(Key::RemoveOutsideElements))
+    replacer.calcElementsBoundingBox();
+  if (Keys.flag(Key::ConvertBasicShapes))
+    replacer.convertBasicShapes();
+  if (Keys.flag(Key::UngroupContainers)) {
+    remover.ungroupAElement();
+    remover.removeGroups();
+  }
+  replacer.processPaths();
+  if (Keys.flag(Key::ReplaceEqualEltsByUse))
+    replacer.replaceEqualElementsByUse();
+  if (Keys.flag(Key::RemoveNotAppliedAttributes))
+    replacer.moveStyleFromUsedElemToUse();
+  if (Keys.flag(Key::RemoveOutsideElements))
+    remover.removeElementsOutsideTheViewbox();
+  if (Keys.flag(Key::GroupElemByStyle))
+    replacer.groupElementsByStyles();
+  if (Keys.flag(Key::ApplyTransformsToDefs))
+    replacer.applyTransformToDefs();
+  if (Keys.flag(Key::TrimIds))
+    replacer.trimIds();
+  replacer.roundNumericAttributes();
+  // TODO: check only for xmlns:xlink
+  remover.cleanSvgElementAttribute();
+  if (Keys.flag(Key::SortDefs))
+    replacer.sortDefs();
+  replacer.finalFixes();
+  if (Keys.flag(Key::JoinStyleAttributes))
+    replacer.joinStyleAttr();
+
+  QFile outFile(outPath);
+  if (!outFile.open(QIODevice::WriteOnly | QIODevice::Text))
+    qFatal("Error: could not write output file");
+
+  SVGPrinter printer(0, Keys.flag(Key::CompactOutput));
+  doc.Print(&printer);
+  outFile.write(printer.CStr());
+  outFile.close();
+}
+/* END */
 
 void ThemeBuilderUI::slot_quit()
 {
@@ -920,7 +1102,6 @@ void ThemeBuilderUI::slot_reloadSvgFile()
     //style->loadCustomSVG(svgFile);
     QStyle::staticMetaObject.invokeMethod(style,"loadCustomSVG",
                                           Qt::DirectConnection,
-                                          QGenericArgument(),
                                           Q_ARG(QString,svgFile));
     setupPreviewForWidget(currentWidget);
   }

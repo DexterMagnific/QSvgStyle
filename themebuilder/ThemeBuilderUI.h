@@ -171,6 +171,9 @@ class ThemeBuilderUI : public QMainWindow, private Ui::ThemeBuilderUIBase {
     // Sets the given style for the given widget and all its children
     void setStyleForWidgetAndChildren(QStyle* style, QWidget* w);
 
+    // Optimizes SVG
+    void optimizeSvg(const QString& inPath, const QString& outPath);
+    
     QTreeWidget *drawStackTree;
 //     QTreeWidget *resolvedValuesTree;
 

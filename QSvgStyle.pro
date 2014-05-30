@@ -1,8 +1,8 @@
 TEMPLATE = subdirs
 SUBDIRS += \
-  style        \
-  themebuilder
+  style \
+  thirdparty/svgcleaner \
+  themebuilder \
 
 CONFIG += \
-  warn_on \
   ordered

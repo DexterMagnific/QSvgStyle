@@ -4,6 +4,9 @@ QSvgStyle
 QSvgStyle is a themeable SVG style for Qt 4 applications
 (C) Said LANKRI, under the GNU GPL License version 2+
 
+It comes with the style (QSvgStyle), a theme builder (QSvgThemeBuilder)
+and a built-in svg cleaner courtesy of SVGCleaner team.
+
 COMPILATION
 ===========
 
@@ -15,7 +18,7 @@ $ make
 USAGE
 =====
 
-* If you have root access, you need first to copy or symlink the
+* If you have root access, you need to copy or symlink the
   libqsvgstyle.so library to the plugins directory of Qt:
 
 $ cd /usr/lib/qt4/plugins/styles
@@ -57,53 +60,6 @@ The SVG file is designed by yourself. See
 the documentation
 the CFG file can be created using /path/to/QSvgStyle/themebuilder/bin/qsvgthemebuilder
 
-* It is recommended to optimize SVG files before they are used by
-  QSvgStyle. This will reduce their size and hence the overall memory footprint
-  of applications that use QSvgStyle.
-
-  There are various SVG optimizers int the wild. Two have been successfully
-  tested, which means:
-  - Optimized SVG is still editable inside Inkscape
-  - Optimized SVG is correctly shown using Qt SVG module
-
-First optimizer is "scour". It is a Python program:
-
-$ python scour.py -i my_theme.inkscape.svg -o my_theme.svg --shorten-ids --protect-ids-noninkscape --quiet
-
-To use it, you need to download the 'scour' utility at http://codedread.com/scour
-
-Second optimizer is SVGCleaner:
-
-$ svgcleaner-cli --remove-comments 
-		--remove-unused-defs 
-		--remove-nonsvg-elts 
-		--remove-sodipodi-elts 
-		--remove-ai-elts 
-		--remove-corel-elts 
-		--remove-msvisio-elts 
-		--remove-sketch-elts 
-		--remove-invisible-elts 
-		--remove-empty-containers 
-		--remove-duplicated-defs 
-		--remove-gaussian-blur=0 
-		--remove-notappl-atts 
-		--remove-default-atts 
-		--remove-inkscape-atts 
-		--remove-sodipodi-atts 
-		--remove-ai-atts 
-		--remove-corel-atts 
-		--remove-msvisio-atts 
-		--remove-sketch-atts 
-		--remove-stroke-props 
-		--remove-fill-props 
-		--remove-unused-xlinks 
-		--simplify-transform-matrix 
-		--apply-transforms-to-shapes 
-		--remove-unneeded-symbols 
-		--apply-transforms-to-paths 
-		--colors-to-rrggbb 
-		--transform-precision=8 
-		--coordinates-precision=6 
-		--attributes-precision=6 
-
-Download it at https://github.com/RazrFalcon/
+* It is recommended to optimize the SVG file each time you modify
+  it in an SVG editor. You can use the QSvgThemeBuilder built-in
+  optimizer got this purpose.
