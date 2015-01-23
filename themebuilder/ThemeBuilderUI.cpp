@@ -36,6 +36,7 @@
 #include <QDesktopServices>
 #include <QUrl>
 #include <QTemporaryFile>
+#include <QLibraryInfo>
 
 // Includes for preview
 #include <QPushButton>
@@ -305,7 +306,11 @@ ThemeBuilderUI::ThemeBuilderUI(QWidget* parent)
 //   resolvedValuesTree->headerItem()->setText(2,"Resolved value");
 //   previewLayout->addWidget(resolvedValuesTree, 5, 0, 1, 1);
 
+#if QT_VERSION < 0x050000
   drawStackTree->header()->setResizeMode(0,QHeaderView::ResizeToContents);
+#else
+  drawStackTree->header()->setSectionResizeMode(0,QHeaderView::ResizeToContents);
+#endif
 //   resolvedValuesTree->header()->setResizeMode(QHeaderView::ResizeToContents);
 
   // insert appropriate widget into status bar
@@ -323,9 +328,11 @@ ThemeBuilderUI::ThemeBuilderUI(QWidget* parent)
     if ( !style ) {
       qWarning() << "[QSvgThemeBuilder]" << "Could not load QSvgStyle style, preview will not be available !";
       QMessageBox::warning(this,"QSvgStyle style not found",
-                           "QSvgStyle style library could not be loaded. Maybe it is"
-                           " not installed in the right directory.\n"
-                           " Preview will not be available.");
+                           QString("QSvgStyle style library could not be loaded."
+                           "Maybe it is not installed in the right directory.\n"
+                           "The Qt plugin library is\n"
+                           "%1\n"
+                           "Preview will not be available.").arg(QLibraryInfo::location(QLibraryInfo::PluginsPath)));
     }
     // Check that the style version is the same as the one we were compiled against
     if ( style->Version /* dynamic load */ != QSvgStyle::Version /* compiled .h */) {

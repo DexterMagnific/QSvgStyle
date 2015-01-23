@@ -79,9 +79,12 @@ class QSvgStyle : public QCommonStyle {
     virtual void drawControl(ControlElement element, const QStyleOption * option, QPainter * painter, const QWidget * widget = 0 ) const;
     virtual void drawComplexControl(ComplexControl control, const QStyleOptionComplex * option, QPainter * painter, const QWidget * widget = 0 ) const;
     virtual int styleHint(StyleHint hint, const QStyleOption * option = 0, const QWidget * widget = 0, QStyleHintReturn * returnData = 0 ) const;
-
+#if QT_VERSION >= 0x050000
+    virtual QIcon standardIcon(StandardPixmap standardIcon, const QStyleOption * option = 0, const QWidget * widget = 0) const;
+#else
   protected slots:
     QIcon standardIconImplementation ( StandardPixmap standardIcon, const QStyleOption * option = 0, const QWidget * widget = 0 ) const;
+#endif
 
   private:
     /* Used internally and by QSvgThemeBuilder */
@@ -256,7 +259,7 @@ class QSvgStyle : public QCommonStyle {
                      /* text alignment */ int talign,
                      /* text */ const QString &text,
                      /* disabled text ? */ bool disabled = false,
-                     /* icon */ const QPixmap &icon = 0,
+                     /* icon */ const QPixmap &icon = QPixmap(),
                      /* text-icon alignment */ const Qt::ToolButtonStyle tialign = Qt::ToolButtonTextBesideIcon) const;
     /**
      * Generic method to compute the ideal

@@ -1,7 +1,7 @@
 QSvgStyle
 =========
 
-QSvgStyle is a themeable SVG style for Qt 4 applications
+QSvgStyle is a themeable SVG style for Qt 4 and Qt 5 applications
 (C) Said LANKRI, under the GNU GPL License version 2+
 
 It comes with the style (QSvgStyle), a theme builder (QSvgThemeBuilder)
@@ -10,7 +10,7 @@ and a built-in svg cleaner courtesy of SVGCleaner team.
 COMPILATION
 ===========
 
-* You need : Qt4 development files
+* You need : Qt4 or Qt5 development files
 
 $ qmake
 $ make
@@ -20,6 +20,8 @@ USAGE
 
 * If you have root access, you need to copy or symlink the
   libqsvgstyle.so library to the plugins directory of Qt:
+
+(example here for Qt 4)
 
 $ cd /usr/lib/qt4/plugins/styles
 $ ln -s /path/to/QSvgStyle/style/plugins/libqsvgstyle.so

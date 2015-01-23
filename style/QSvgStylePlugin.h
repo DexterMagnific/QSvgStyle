@@ -23,7 +23,14 @@
 #include <QStylePlugin>
 
 class QSvgStylePlugin : public QStylePlugin {
+  Q_OBJECT
+#if QT_VERSION >= 0x050000
+  Q_PLUGIN_METADATA(IID "org.qt-project.Qt.QStyleFactoryInterface" FILE "QSvgStyle.json")
+#endif
   public:
+#if QT_VERSION >= 0x050000
+    QSvgStylePlugin(QObject *parent = 0) { }
+#endif
     QStringList keys() const;
     QStyle *create(const QString &key);
 };

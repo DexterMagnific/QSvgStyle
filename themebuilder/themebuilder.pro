@@ -4,6 +4,8 @@ DEPENDPATH += .
 INCLUDEPATH += . ../thirdparty/svgcleaner
 DESTDIR = bin
 
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+
 # Input
 PRE_TARGETDEPS += ../thirdparty/svgcleaner/lib/libsvgcleaner-cli.a
 LIBS += ../thirdparty/svgcleaner/lib/libsvgcleaner-cli.a

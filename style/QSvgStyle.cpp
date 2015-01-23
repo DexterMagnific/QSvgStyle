@@ -2256,8 +2256,10 @@ QRect QSvgStyle::subControlRect(ComplexControl control, const QStyleOptionComple
   ds = getIndicatorSpec(g);
 
   switch (control) {
-    case CC_SpinBox :
+    case CC_SpinBox : {
       // OK
+      const QStyleOptionSpinBox *opt =
+        qstyleoption_cast<const QStyleOptionSpinBox *>(option);
       switch (subControl) {
         case SC_SpinBoxFrame :
           ret = r;
@@ -2265,20 +2267,30 @@ QRect QSvgStyle::subControlRect(ComplexControl control, const QStyleOptionComple
         case SC_SpinBoxEditField :
           // FIXME
           // do not remove -fs.right: merge with spin box button at right
-          ret = r.adjusted(0,0,-40,0);
+          if ( opt->buttonSymbols == QAbstractSpinBox::NoButtons )
+            ret = r;
+          else
+            ret = r.adjusted(0,0,-40,0);
           break;
         case SC_SpinBoxUp :
           // FIXME
-          ret = QRect(x+w-20-fs.right,y,20,h);
+          if ( opt->buttonSymbols == QAbstractSpinBox::NoButtons )
+            ret = QRect();
+          else
+            ret = QRect(x+w-20-fs.right,y,20,h);
           break;
         case SC_SpinBoxDown :
           // FIXME
-          ret = QRect(x+w-40-fs.right,y,20,h);
+          if ( opt->buttonSymbols == QAbstractSpinBox::NoButtons )
+            ret = QRect();
+          else
+            ret = QRect(x+w-40-fs.right,y,20,h);
           break;
         default :
           ret = QCommonStyle::subControlRect(control,option,subControl,widget);
       }
       break;
+    }
 
     case CC_ComboBox :
       // OK
@@ -2528,7 +2540,11 @@ QRect QSvgStyle::subControlRect(ComplexControl control, const QStyleOptionComple
   return visualRect(dir,r,ret);
 }
 
+#if QT_VERSION >= 0x050000
+QIcon QSvgStyle::standardIcon(StandardPixmap standardIcon, const QStyleOption * option, const QWidget * widget) const
+#else
 QIcon QSvgStyle::standardIconImplementation ( QStyle::StandardPixmap standardIcon, const QStyleOption* option, const QWidget* widget ) const
+#endif
 {
   switch (standardIcon) {
     case SP_ToolBarHorizontalExtensionButton : {
@@ -2644,10 +2660,19 @@ QIcon QSvgStyle::standardIconImplementation ( QStyle::StandardPixmap standardIco
       return QIcon(pm);
     }
 
-    default : return QCommonStyle::standardIconImplementation(standardIcon,option,widget);
+    default : 
+#if QT_VERSION >= 0x050000
+      return QCommonStyle::standardIcon(standardIcon,option,widget);
+#else
+      return QCommonStyle::standardIconImplementation(standardIcon,option,widget);
+#endif
   }
 
+#if QT_VERSION >= 0x050000
+  return QCommonStyle::standardIcon(standardIcon,option,widget);
+#else
   return QCommonStyle::standardIconImplementation(standardIcon,option,widget);
+#endif
 }
 
 QRect QSvgStyle::squaredRect(const QRect& r) const {
@@ -3249,11 +3274,13 @@ QIcon::State QSvgStyle::state_iconstate(State st) const
 QString QSvgStyle::PE_str(PrimitiveElement element) const
 {
   switch (element) {
+#if QT_VERSION < 0x050000
     case PE_Q3CheckListController : return "PE_Q3CheckListController";
     case PE_Q3CheckListExclusiveIndicator : return "PE_Q3CheckListExclusiveIndicator";
     case PE_Q3CheckListIndicator : return "PE_Q3CheckListIndicator";
     case PE_Q3DockWindowSeparator : return "PE_Q3DockWindowSeparator";
     case PE_Q3Separator : return "PE_Q3Separator";
+#endif
     case PE_Frame : return "PE_Frame";
     case PE_FrameDefaultButton : return "PE_FrameDefaultButton";
     case PE_FrameDockWidget : return "PE_FrameDockWidget";
@@ -3312,6 +3339,9 @@ QString QSvgStyle::PE_str(PrimitiveElement element) const
 QString QSvgStyle::CE_str(QStyle::ControlElement element) const
 {
   switch(element) {
+#if QT_VERSION < 0x050000    
+    case CE_Q3DockWindowEmptyArea : return "CE_Q3DockWindowEmptyArea";
+#endif
     case CE_PushButton : return "CE_PushButton";
     case CE_PushButtonBevel : return "CE_PushButtonBevel";
     case CE_PushButtonLabel : return "CE_PushButtonLabel";
@@ -3338,7 +3368,6 @@ QString QSvgStyle::CE_str(QStyle::ControlElement element) const
     case CE_Header : return "CE_Header";
     case CE_HeaderSection : return "CE_HeaderSection";
     case CE_HeaderLabel : return "CE_HeaderLabel";
-    case CE_Q3DockWindowEmptyArea : return "CE_Q3DockWindowEmptyArea";
     case CE_ToolBoxTab : return "CE_ToolBoxTab";
     case CE_SizeGrip : return "CE_SizeGrip";
     case CE_Splitter : return "CE_Splitter";
@@ -3369,6 +3398,9 @@ QString QSvgStyle::CE_str(QStyle::ControlElement element) const
 QString QSvgStyle::SE_str(QStyle::SubElement element) const
 {
   switch(element) {
+#if QT_VERSION < 0x050000
+    case SE_Q3DockWindowHandleRect : return "SE_Q3DockWindowHandleRect";
+#endif
     case SE_PushButtonContents : return "SE_PushButtonContents";
     case SE_PushButtonFocusRect : return "SE_PushButtonFocusRect";
     case SE_CheckBoxIndicator : return "SE_CheckBoxIndicator";
@@ -3381,10 +3413,10 @@ QString QSvgStyle::SE_str(QStyle::SubElement element) const
     case SE_RadioButtonClickRect : return "SE_RadioButtonClickRect";
     case SE_ComboBoxFocusRect : return "SE_ComboBoxFocusRect";
     case SE_SliderFocusRect : return "SE_SliderFocusRect";
-    case SE_Q3DockWindowHandleRect : return "SE_Q3DockWindowHandleRect";
     case SE_ProgressBarGroove : return "SE_ProgressBarGroove";
     case SE_ProgressBarContents : return "SE_ProgressBarContents";
     case SE_ProgressBarLabel : return "SE_ProgressBarLabel";
+#if QT_VERSION < 0x050000
     case SE_DialogButtonAccept : return "SE_DialogButtonAccept";
     case SE_DialogButtonReject : return "SE_DialogButtonReject";
     case SE_DialogButtonApply : return "SE_DialogButtonApply";
@@ -3394,6 +3426,7 @@ QString QSvgStyle::SE_str(QStyle::SubElement element) const
     case SE_DialogButtonIgnore : return "SE_DialogButtonIgnore";
     case SE_DialogButtonRetry : return "SE_DialogButtonRetry";
     case SE_DialogButtonCustom : return "SE_DialogButtonCustom";
+#endif
     case SE_ToolBoxTabContents : return "SE_ToolBoxTabContents";
     case SE_HeaderLabel : return "SE_HeaderLabel";
     case SE_HeaderArrow : return "SE_HeaderArrow";
@@ -3442,13 +3475,15 @@ QString QSvgStyle::SE_str(QStyle::SubElement element) const
 QString QSvgStyle::CC_str(QStyle::ComplexControl element) const
 {
   switch (element) {
+#if QT_VERSION < 0x050000
+    case CC_Q3ListView : return "CC_Q3ListView";
+#endif
     case CC_SpinBox : return "CC_SpinBox";
     case CC_ComboBox : return "CC_ComboBox";
     case CC_ScrollBar : return "CC_ScrollBar";
     case CC_Slider : return "CC_Slider";
     case CC_ToolButton : return "CC_ToolButton";
     case CC_TitleBar : return "CC_TitleBar";
-    case CC_Q3ListView : return "CC_Q3ListView";
     case CC_Dial : return "CC_Dial";
     case CC_GroupBox : return "CC_GroupBox";
     case CC_MdiControls : return "CC_MdiControls";
@@ -3515,6 +3550,7 @@ QString QSvgStyle::SC_str(QStyle::ComplexControl control, QStyle::SubControl sub
       case SC_None : return "SC_None";
       default : return "SC_Unknown";
     }
+#if QT_VERSION < 0x050000
     case CC_Q3ListView : switch (subControl) {
       case SC_Q3ListView : return "SC_Q3ListView";
       case SC_Q3ListViewBranch : return "SC_Q3ListViewBranch";
@@ -3522,6 +3558,7 @@ QString QSvgStyle::SC_str(QStyle::ComplexControl control, QStyle::SubControl sub
       case SC_None : return "SC_None";
       default : return "SC_Unknown";
     }
+#endif
     case CC_Dial : switch (subControl) {
       case SC_DialGroove : return "SC_DialGroove";
       case SC_DialHandle : return "SC_DialHandle";
@@ -3553,13 +3590,16 @@ QString QSvgStyle::SC_str(QStyle::ComplexControl control, QStyle::SubControl sub
 QString QSvgStyle::CT_str(QStyle::ContentsType type) const
 {
   switch (type) {
+#if QT_VERSION < 0x050000
+    case CT_Q3Header : return "CT_Q3Header";
+    case CT_Q3DockWindow : return "CT_Q3DockWindow";
+#endif
     case CT_PushButton : return "CT_PushButton";
     case CT_CheckBox : return "CT_CheckBox";
     case CT_RadioButton : return "CT_RadioButton";
     case CT_ToolButton : return "CT_ToolButton";
     case CT_ComboBox : return "CT_ComboBox";
     case CT_Splitter : return "CT_Splitter";
-    case CT_Q3DockWindow : return "CT_Q3DockWindow";
     case CT_ProgressBar : return "CT_ProgressBar";
     case CT_MenuItem : return "CT_MenuItem";
     case CT_MenuBarItem : return "CT_MenuBarItem";
@@ -3568,7 +3608,6 @@ QString QSvgStyle::CT_str(QStyle::ContentsType type) const
     case CT_TabBarTab : return "CT_TabBarTab";
     case CT_Slider : return "CT_Slider";
     case CT_ScrollBar : return "CT_ScrollBar";
-    case CT_Q3Header : return "CT_Q3Header";
     case CT_LineEdit : return "CT_LineEdit";
     case CT_SpinBox : return "CT_SpinBox";
     case CT_SizeGrip : return "CT_SizeGrip";
