@@ -47,7 +47,7 @@ class QSvgStyle : public QCommonStyle {
      * the world
      */
     QSvgStyle();
-    ~QSvgStyle();
+    virtual ~QSvgStyle();
 
     /**
      * Reimplemented from QStyle

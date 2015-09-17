@@ -386,7 +386,7 @@ void QSvgStyle::drawPrimitive(PrimitiveElement e, const QStyleOption * option, Q
       break;
     }
     case PE_IndicatorRadioButton : {
-      ds.size = pixelMetric(PM_IndicatorHeight);
+      ds.size = pixelMetric(PM_ExclusiveIndicatorHeight);
       // a radio button (exclusive choice)
       // QSvgStyle: no pressed or toggled status for radio buttons
       st = (option->state & State_Enabled) ?
@@ -1219,19 +1219,19 @@ void QSvgStyle::drawControl(ControlElement e, const QStyleOption * option, QPain
            qstyleoption_cast<const QStyleOptionButton *>(option) ) {
 
         if ( opt->features & QStyleOptionButton::HasMenu ) {
-	  QStyleOptionButton o(*opt);
-	  renderLabel(p,dir,r.adjusted(0,0,-ds.size-ls.tispace,0),fs,is,ls,
+          QStyleOptionButton o(*opt);
+          renderLabel(p,dir,r.adjusted(0,0,-ds.size-ls.tispace,0),fs,is,ls,
                       Qt::AlignCenter | Qt::AlignVCenter | Qt::TextShowMnemonic,
                       opt->text,!(option->state & State_Enabled),
                       opt->icon.pixmap(opt->iconSize,icm,ics));
-	  o.rect = QRect(x+w-ls.tispace-ds.size-fs.right,y,ds.size,h);
+          o.rect = QRect(x+w-ls.tispace-ds.size-fs.right,y,ds.size,h);
           drawPrimitive(PE_IndicatorArrowDown,&o,p,widget);
-	} else {
-	  renderLabel(p,dir,r,fs,is,ls,
+        } else {
+          renderLabel(p,dir,r,fs,is,ls,
                       Qt::AlignCenter | Qt::AlignVCenter | Qt::TextShowMnemonic,
                       opt->text,!(option->state & State_Enabled),
                       opt->icon.pixmap(opt->iconSize,icm,ics));
-	}
+        }
       }
 
       break;
@@ -1263,10 +1263,10 @@ void QSvgStyle::drawControl(ControlElement e, const QStyleOption * option, QPain
                         opt->toolButtonStyle);
         }
 
-	// alignement of arrow
-	Qt::Alignment hAlign = visualAlignment(dir,Qt::AlignLeft);
-	if ( opt->text.isEmpty() && opt->icon.isNull() )
-	  hAlign = Qt::AlignCenter;
+        // alignement of arrow
+        Qt::Alignment hAlign = visualAlignment(dir,Qt::AlignLeft);
+        if ( opt->text.isEmpty() && opt->icon.isNull() )
+          hAlign = Qt::AlignCenter;
 
         switch (opt->arrowType) {
           case Qt::NoArrow :
@@ -1641,7 +1641,7 @@ void QSvgStyle::drawComplexControl(ComplexControl control, const QStyleOptionCom
 
     case CC_GroupBox : {
       if ( const QStyleOptionGroupBox *opt =
-	   qstyleoption_cast<const QStyleOptionGroupBox *>(option) ) {
+           qstyleoption_cast<const QStyleOptionGroupBox *>(option) ) {
 
         QStyleOptionGroupBox o(*opt);
 
@@ -1697,6 +1697,13 @@ end:
 int QSvgStyle::pixelMetric(PixelMetric metric, const QStyleOption * option, const QWidget * widget) const
 {
   switch (metric) {
+    // Indicator width (checkboxes, radios, arrows, ...)
+    case PM_IndicatorWidth :
+    case PM_IndicatorHeight :
+    case PM_ExclusiveIndicatorWidth :
+    case PM_ExclusiveIndicatorHeight :
+      return 15;
+
     // Custom layout margins
     case PM_LayoutLeftMargin :
     case PM_LayoutRightMargin :
@@ -1855,9 +1862,19 @@ QSize QSvgStyle::sizeFromContents ( ContentsType type, const QStyleOption * opti
     }
 
     case CT_SpinBox : {
-      s = csz;
-      // add buttons
-      //s += QSize(40,0);
+      if ( const QStyleOptionSpinBox *opt =
+           qstyleoption_cast<const QStyleOptionSpinBox *>(option) ) {
+        Q_UNUSED(opt);
+        const QSpinBox *w = qobject_cast<const QSpinBox *>(widget);
+        // FIXME: handle specialValueText()
+        s = sizeFromContents(fm,fs,is,ls,
+                             QString("%1%2%3").arg(w->prefix()).arg(w->maximum()).arg(w->suffix()),
+                             QPixmap());
+
+        s = s.expandedTo(csz);
+        s += QSize(4,0); // QLineEdit hard-coded margins
+        s += QSize(40,0); // buttons
+      }
 
       break;
     }
@@ -1868,7 +1885,7 @@ QSize QSvgStyle::sizeFromContents ( ContentsType type, const QStyleOption * opti
         Q_UNUSED(opt);
         s = sizeFromContents(fm,fs,is,ls,
                              "W",
-                            QPixmap(QSize(pixelMetric(PM_SmallIconSize),pixelMetric(PM_SmallIconSize))));
+                             QPixmap(QSize(pixelMetric(PM_SmallIconSize),pixelMetric(PM_SmallIconSize))));
 
         s = s.expandedTo(csz);
         s += QSize(20,0); // drop down button;
@@ -1886,14 +1903,14 @@ QSize QSvgStyle::sizeFromContents ( ContentsType type, const QStyleOption * opti
                                : opt->text,
                              opt->icon.pixmap(opt->iconSize));
 
-	if ( opt->features & QStyleOptionButton::HasMenu ) {
-	  s.rwidth() += ls.tispace+ds.size;
-	}
+        if ( opt->features & QStyleOptionButton::HasMenu ) {
+          s.rwidth() += ls.tispace+ds.size;
+        }
       }
       break;
     }
-    case CT_CheckBox :
-    case CT_RadioButton : {
+
+    case CT_CheckBox :  {
       if ( const QStyleOptionButton *opt =
            qstyleoption_cast<const QStyleOptionButton *>(option) ) {
 
@@ -1901,7 +1918,20 @@ QSize QSvgStyle::sizeFromContents ( ContentsType type, const QStyleOption * opti
                              opt->text,
                              opt->icon.pixmap(opt->iconSize));
         s += QSize(pixelMetric(PM_CheckBoxLabelSpacing)+pixelMetric(PM_IndicatorWidth),0);
-	s = s.expandedTo(QSize(pixelMetric(PM_IndicatorWidth),pixelMetric(PM_IndicatorWidth))); // minimal checkbox size is size of indicator
+        s = s.expandedTo(QSize(pixelMetric(PM_IndicatorWidth),pixelMetric(PM_IndicatorHeight))); // minimal checkbox size is size of indicator
+      }
+      break;
+    }
+
+    case CT_RadioButton : {
+      if ( const QStyleOptionButton *opt =
+           qstyleoption_cast<const QStyleOptionButton *>(option) ) {
+
+        s = sizeFromContents(fm,fs,is,ls,
+                             opt->text,
+                             opt->icon.pixmap(opt->iconSize));
+        s += QSize(pixelMetric(PM_CheckBoxLabelSpacing)+pixelMetric(PM_ExclusiveIndicatorWidth),0);
+        s = s.expandedTo(QSize(pixelMetric(PM_ExclusiveIndicatorWidth),pixelMetric(PM_ExclusiveIndicatorHeight))); // minimal checkbox size is size of indicator
       }
       break;
     }
@@ -1980,25 +2010,25 @@ QSize QSvgStyle::sizeFromContents ( ContentsType type, const QStyleOption * opti
 
         QStyleOptionToolButton o(*opt);
 
-	// minimum size
-	QSize ms;
-	if ( opt->text.isEmpty() && (opt->toolButtonStyle == Qt::ToolButtonTextOnly) )
-	  ms = sizeFromContents(fm,fs,is,ls,
+        // minimum size
+        QSize ms;
+        if ( opt->text.isEmpty() && (opt->toolButtonStyle == Qt::ToolButtonTextOnly) )
+          ms = sizeFromContents(fm,fs,is,ls,
                                 "W",
                                 opt->icon.pixmap(opt->iconSize),
                                 Qt::ToolButtonTextOnly);
-	if ( opt->icon.isNull() && (opt->toolButtonStyle == Qt::ToolButtonIconOnly) )
-	  ms = sizeFromContents(fm,fs,is,ls,
+        if ( opt->icon.isNull() && (opt->toolButtonStyle == Qt::ToolButtonIconOnly) )
+          ms = sizeFromContents(fm,fs,is,ls,
                                 "W",
                                 opt->icon.pixmap(opt->iconSize),
                                 Qt::ToolButtonTextOnly);
-	if ( opt->text.isEmpty() && opt->icon.isNull() )
-	  ms = sizeFromContents(fm,fs,is,ls,
+        if ( opt->text.isEmpty() && opt->icon.isNull() )
+          ms = sizeFromContents(fm,fs,is,ls,
                                 "W",
                                 opt->icon.pixmap(opt->iconSize),
                                 Qt::ToolButtonTextOnly);
 
-	s = sizeFromContents(fm,fs,is,ls,
+        s = sizeFromContents(fm,fs,is,ls,
                              opt->text,
                              opt->icon.pixmap(opt->iconSize),
                              opt->toolButtonStyle).expandedTo(ms);
@@ -2007,15 +2037,15 @@ QSize QSvgStyle::sizeFromContents ( ContentsType type, const QStyleOption * opti
           // add room for arrow
           s = s + QSize(ds.size,0);
           // add spacing between arrow and label if necessary
-	  if ( (opt->toolButtonStyle != Qt::ToolButtonIconOnly) &&
+          if ( (opt->toolButtonStyle != Qt::ToolButtonIconOnly) &&
                !opt->text.isEmpty() )
-	    s = s + QSize(ls.tispace,0);
-	  else if ( (opt->toolButtonStyle != Qt::ToolButtonTextOnly) &&
+            s = s + QSize(ls.tispace,0);
+          else if ( (opt->toolButtonStyle != Qt::ToolButtonTextOnly) &&
                !opt->icon.isNull() )
-	    s = s + QSize(ls.tispace,0);
-	}
+            s = s + QSize(ls.tispace,0);
+        }
 
-	// add room for simple down arrow or drop down arrow
+        // add room for simple down arrow or drop down arrow
         if (opt->features & QStyleOptionToolButton::Menu) {
           // Tool button with drop down button
           s.rwidth() += 20;
@@ -2069,13 +2099,13 @@ QSize QSvgStyle::sizeFromContents ( ContentsType type, const QStyleOption * opti
       if ( const QStyleOptionGroupBox *opt =
            qstyleoption_cast<const QStyleOptionGroupBox *>(option) ) {
 
-	if ( opt->subControls & SC_GroupBoxCheckBox )
+        if ( opt->subControls & SC_GroupBoxCheckBox )
           s = sizeFromContents(fm,fs,is,ls,opt->text,QPixmap())+QSize(pixelMetric(PM_CheckBoxLabelSpacing)+pixelMetric(PM_IndicatorWidth),0);
         else
-	  s = sizeFromContents(fm,fs,is,ls,opt->text,QPixmap());
+          s = sizeFromContents(fm,fs,is,ls,opt->text,QPixmap());
 
         // add contents to st, 30 is title shift (left and right)
-	s = QSize(qMax(s.width()+30+30,csz.width()+fs.left+fs.right),
+        s = QSize(qMax(s.width()+30+30,csz.width()+fs.left+fs.right),
                   csz.height()+s.height()+fs.top+fs.bottom);
       }
 
@@ -2517,14 +2547,14 @@ QRect QSvgStyle::subControlRect(ComplexControl control, const QStyleOptionComple
             ret = labelRect;
             break;
         }
-	case SC_GroupBoxFrame : {
-	  ret = r.adjusted(0,stitle.height(),0,0);
+        case SC_GroupBoxFrame : {
+          ret = r.adjusted(0,stitle.height(),0,0);
           break;
-	}
-	case SC_GroupBoxContents : {
-	  ret = interiorRect(r.adjusted(0,stitle.height(),0,0),fs,is);
+        }
+        case SC_GroupBoxContents : {
+          ret = interiorRect(r.adjusted(0,stitle.height(),0,0),fs,is);
           break;
-	}
+        }
 
         default : ret = QCommonStyle::subControlRect(control,option,subControl,widget);
       }
@@ -2660,7 +2690,7 @@ QIcon QSvgStyle::standardIconImplementation ( QStyle::StandardPixmap standardIco
       return QIcon(pm);
     }
 
-    default : 
+    default :
 #if QT_VERSION >= 0x050000
       return QCommonStyle::standardIcon(standardIcon,option,widget);
 #else
@@ -3149,10 +3179,10 @@ void QSvgStyle::capsulePosition(const QWidget *widget, bool &capsule, int &h, in
           const QHBoxLayout *hbox = qobject_cast<const QHBoxLayout *>(l);
           if (hbox) {
             // layout is a horizontal box
-			if ( hbox->spacing() != 0 ) {
-			  capsule = false;
-			  return;
-			}
+                        if ( hbox->spacing() != 0 ) {
+                          capsule = false;
+                          return;
+                        }
             if ( (index == 0) && (index == hbox->count()-1) )
               h = 2;
             else if (index == hbox->count()-1)
@@ -3168,10 +3198,10 @@ void QSvgStyle::capsulePosition(const QWidget *widget, bool &capsule, int &h, in
           const QVBoxLayout *vbox = qobject_cast<const QVBoxLayout *>(l);
           if (vbox) {
             // layout is a horizontal box
-			if ( vbox->spacing() != 0 ) {
-			  capsule = false;
-			  return;
-			}
+                        if ( vbox->spacing() != 0 ) {
+                          capsule = false;
+                          return;
+                        }
             if ( (index == 0) && (index == vbox->count()-1) )
               v = 2;
             else if (index == vbox->count()-1)
@@ -3187,15 +3217,15 @@ void QSvgStyle::capsulePosition(const QWidget *widget, bool &capsule, int &h, in
           const QGridLayout *gbox = qobject_cast<const QGridLayout *>(l);
           if (gbox) {
             // layout is a grid
-			if ( (gbox->horizontalSpacing() != 0) || (gbox->verticalSpacing() != 0) ) {
-			  capsule = false;
-			  return;
-			}
+                        if ( (gbox->horizontalSpacing() != 0) || (gbox->verticalSpacing() != 0) ) {
+                          capsule = false;
+                          return;
+                        }
 
             const int rows = gbox->rowCount();
             const int cols = gbox->columnCount();
 
-			qDebug() << "rows,cols" << rows << cols;
+                        qDebug() << "rows,cols" << rows << cols;
 
             if (rows == 1)
               v = 2;
@@ -3339,7 +3369,7 @@ QString QSvgStyle::PE_str(PrimitiveElement element) const
 QString QSvgStyle::CE_str(QStyle::ControlElement element) const
 {
   switch(element) {
-#if QT_VERSION < 0x050000    
+#if QT_VERSION < 0x050000
     case CE_Q3DockWindowEmptyArea : return "CE_Q3DockWindowEmptyArea";
 #endif
     case CE_PushButton : return "CE_PushButton";
