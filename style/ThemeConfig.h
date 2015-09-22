@@ -26,7 +26,6 @@ class QString;
 class QVariant;
 class QSettings;
 class QStringList;
-template <class Key, class T> class QMap;
 
 /**
  * Class that loads, saves (and in the future caches) theme settings
@@ -47,6 +46,7 @@ class ThemeConfig {
      */
     void sync();
 
+    /* Get post-processed frame spec after 'inherits' resolution */
     frame_spec_t getFrameSpec(const QString &group) const;
     interior_spec_t getInteriorSpec(const QString &group) const;
     indicator_spec_t getIndicatorSpec(const QString &group) const;
@@ -60,6 +60,9 @@ class ThemeConfig {
     indicator_spec_t getRawIndicatorSpec(const QString &group) const;
     label_spec_t getRawLabelSpec(const QString &group) const;
     element_spec_t getRawElementSpec(const QString &group) const;
+    QVariant getSpecificValue(const QString &key) const {
+        return getRawValue("Specific",key);
+    }
 
     /* Get the frame as read from the configuration file and recursively
      * following inheritance if some values are unset within the specified
@@ -73,6 +76,10 @@ class ThemeConfig {
     void setLabelSpec(const QString &group, const label_spec_t &ls) const;
     void setElementSpec(const QString &group, const element_spec_t &es) const;
     void setThemeSpec(const theme_spec_t &ts) const;
+    void setSpecificValue(const QString &key, const QVariant &v) const {
+        setValue("Specific",key,v);
+    }
+                          
 
   private:
     friend class ThemeBuilderUIBase;
@@ -105,8 +112,8 @@ class ThemeConfig {
      */
     void setValue(const QString &group, const QString &key,const QVariant &v) const;
 
-    QMap<QString,QVariant> values;
-    QMap<QString,QVariant> rawValues;
+    QVariantMap values;
+    QVariantMap rawValues;
 
     QSettings *settings;
 };

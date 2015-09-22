@@ -191,6 +191,10 @@ class QSvgStyle : public QCommonStyle {
      * Returns the label (text+icon) spec of the given group
      */
     inline label_spec_t getLabelSpec(const QString &group) const;
+    /**
+     * Returns the specific setting from the config file
+     */
+    inline QVariant getSpecificValue(const QString &key) const;
 
     /**
      * QSvgStyle support for capsule grouping

@@ -1702,40 +1702,55 @@ int QSvgStyle::pixelMetric(PixelMetric metric, const QStyleOption * option, cons
     case PM_IndicatorHeight :
     case PM_ExclusiveIndicatorWidth :
     case PM_ExclusiveIndicatorHeight :
-      return 15;
+      return getSpecificValue("specific.radiocheckbox.indicator.size").toInt();
 
     // Custom layout margins
     case PM_LayoutLeftMargin :
+      return getSpecificValue("specific.layoutmargins.left").toInt();
     case PM_LayoutRightMargin :
+      return getSpecificValue("specific.layoutmargins.right").toInt();
     case PM_LayoutTopMargin :
-    case PM_LayoutBottomMargin : return 4;
+      return getSpecificValue("specific.layoutmargins.top").toInt();
+    case PM_LayoutBottomMargin :
+      return getSpecificValue("specific.layoutmargins.bottom").toInt();
     case PM_LayoutHorizontalSpacing :
-    case PM_LayoutVerticalSpacing : return 2;
+      return getSpecificValue("specific.layoutmargins.hspace").toInt();
+    case PM_LayoutVerticalSpacing :
+      return getSpecificValue("specific.layoutmargins.vspace").toInt();
 
     case PM_MenuBarPanelWidth :
       return getFrameSpec(PE_group(PE_PanelMenuBar)).width;
 
     // These are the 'interior' margins of the menu bar
-    case PM_MenuBarVMargin :
-    case PM_MenuBarHMargin :  return 0;
+    case PM_MenuBarVMargin : return 0;
+    case PM_MenuBarHMargin :
+      getSpecificValue("specific.menubar.hspace").toInt();
     // Spacing between menu bar items
-    case PM_MenuBarItemSpacing : return 2;
+    case PM_MenuBarItemSpacing :
+      return getSpecificValue("specific.menubar.space").toInt();
 
     // Popup menu tear off height
-    case PM_MenuTearoffHeight : return 7;
+    case PM_MenuTearoffHeight :
+      return getSpecificValue("specific.menu.tearoff.height").toInt();
 
     case PM_ToolBarFrameWidth :
       return getFrameSpec(PE_group(PE_PanelToolBar)).width;
     // No margin between toolbar frame and contents
     case PM_ToolBarItemMargin : return 0;
     // The "move" handle of a toolbar
-    case PM_ToolBarHandleExtent : return 8;
+    case PM_ToolBarHandleExtent :
+      return getSpecificValue("specific.toolbar.handle.width").toInt();
     // Item separator size
-    case PM_ToolBarSeparatorExtent : return 2;
+    case PM_ToolBarSeparatorExtent :
+      return getSpecificValue("specific.toolbar.separator.width").toInt();
     // No spacing between items
-    case PM_ToolBarItemSpacing : return 0;
+    case PM_ToolBarItemSpacing :
+      return getSpecificValue("specific.toolbar.space").toInt();
     // The "extension" button size on partial toolbars
-    case PM_ToolBarExtensionExtent : return 20;
+    case PM_ToolBarExtensionExtent :
+      return getSpecificValue("specific.toolbar.extension.width").toInt();
+    case PM_ToolBarIconSize :
+      return getSpecificValue("specific.toolbar.icon.size").toInt();
 
     case PM_TabBarTabHSpace : return 0;
     case PM_TabBarTabVSpace : return 0;
@@ -1744,10 +1759,8 @@ int QSvgStyle::pixelMetric(PixelMetric metric, const QStyleOption * option, cons
     case PM_TabBarBaseOverlap : return 0;
     case PM_TabBarTabShiftHorizontal : return 0;
     case PM_TabBarTabShiftVertical : return 0;
-
-    case PM_ToolBarIconSize : return 16;
-
     case PM_TabBarIconSize : return 16;
+
     case PM_SmallIconSize : return 16;
     case PM_LargeIconSize : return 32;
 
@@ -1755,19 +1768,24 @@ int QSvgStyle::pixelMetric(PixelMetric metric, const QStyleOption * option, cons
     case PM_FocusFrameVMargin : return 0;
 
     case PM_CheckBoxLabelSpacing :
-    case PM_RadioButtonLabelSpacing : return 5;
+    case PM_RadioButtonLabelSpacing :
+      return getSpecificValue("specific.radiocheckbox.label.tispace").toInt();
 
     case PM_SplitterWidth : return 6;
 
-    case PM_ScrollBarExtent : return 16;
-    case PM_ScrollBarSliderMin : return 10;
+    case PM_ScrollBarExtent :
+      return getSpecificValue("specific.scrollbar.thickness").toInt();
+    case PM_ScrollBarSliderMin :
+      return getSpecificValue("specific.scrollbar.slider.minsize").toInt();
 
-    case PM_SliderThickness : return 4;
+    case PM_SliderThickness :
+      return getSpecificValue("specific.slider.thickness").toInt();
+    case PM_SliderLength :
+    case PM_SliderControlThickness :
+      return getSpecificValue("specific.slider.cursor.size").toInt();
 
-    case PM_ProgressBarChunkWidth : return 20;
-
-    case PM_SliderLength : return 15;
-    case PM_SliderControlThickness : return 15;
+    case PM_ProgressBarChunkWidth :
+      return getSpecificValue("specific.progressbar.chunk.width").toInt();
 
     case PM_DefaultFrameWidth :
       // NOTE used by QLineEdit, QTabWidget and QMdiArea
@@ -3141,6 +3159,11 @@ inline indicator_spec_t QSvgStyle::getIndicatorSpec(const QString& group) const
 inline label_spec_t QSvgStyle::getLabelSpec(const QString& group) const
 {
   return themeSettings->getLabelSpec(group);
+}
+
+inline QVariant QSvgStyle::getSpecificValue(const QString &key) const
+{
+  return themeSettings->getSpecificValue(key);
 }
 
 void QSvgStyle::capsulePosition(const QWidget *widget, bool &capsule, int &h, int &v) const

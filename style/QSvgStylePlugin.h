@@ -29,7 +29,7 @@ class QSvgStylePlugin : public QStylePlugin {
 #endif
   public:
 #if QT_VERSION >= 0x050000
-    QSvgStylePlugin(QObject *parent = 0) { }
+    QSvgStylePlugin(QObject *parent = 0) { Q_UNUSED(parent); }
 #endif
     QStringList keys() const;
     QStyle *create(const QString &key);
