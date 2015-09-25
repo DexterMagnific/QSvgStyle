@@ -25,6 +25,7 @@
 #include <QFileSystemWatcher>
 #include <QElapsedTimer>
 #include <QStyledItemDelegate>
+#include <QColor>
 
 #include "ui_ThemeBuilderUIBase.h"
 #include <../style/specs.h>
@@ -111,6 +112,7 @@ class ThemeBuilderUI : public QMainWindow, private Ui::ThemeBuilderUIBase {
     void slot_enableBtnClicked(bool checked);
     void slot_previewVariantBtnClicked(bool checked);
     void slot_fontSizeChanged(int val);
+    void slot_colorBtnClicked(bool checked);
 
     // Callbacks from QSvgStyle that are triggered when it renders widgets
     void slot_drawPrimitive_begin(const QString &s);
@@ -176,6 +178,8 @@ class ThemeBuilderUI : public QMainWindow, private Ui::ThemeBuilderUIBase {
     void clearDrawStackTree();
     // Sets the given style for the given widget and all its children
     void setStyleForWidgetAndChildren(QStyle* style, QWidget* w);
+    // Update the icon on the color button using the baseColor
+    void updateColorBtnIcon();
 
     // Optimizes SVG
     void optimizeSvg(const QString& inPath, const QString& outPath);
@@ -228,6 +232,8 @@ class ThemeBuilderUI : public QMainWindow, private Ui::ThemeBuilderUIBase {
     QTimer *timer, *timer2;
     // New theme dialog
     NewThemeUI *newThemeDlg;
+    // Current palette color for preview widget
+    QColor baseColor;
 
     // Temporary file, a copy of the current opened theme
     QString tempCfgFile;

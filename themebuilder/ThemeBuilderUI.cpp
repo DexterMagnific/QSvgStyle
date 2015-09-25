@@ -1,4 +1,4 @@
-  /***************************************************************************
+ /***************************************************************************
  *   Copyright (C) 2014 by Saïd LANKRI   *
  *   said.lankri@gmail.com   *
  *                                                                         *
@@ -39,6 +39,10 @@
 #include <QLibraryInfo>
 #include <QEvent>
 #include <QTreeWidgetItemIterator>
+#include <QColorDialog>
+#include <QPainter>
+#include <QPen>
+#include <QPixmap>
 
 // Includes for preview
 #include <QPushButton>
@@ -130,12 +134,14 @@ ThemeBuilderUI::ThemeBuilderUI(QWidget* parent)
    currentDrawStackItem(0), currentDrawMode(0), currentPreviewVariant(0),
    cfgModified(0), previewUpdateEnabled(false),
    timer(0), timer2(0), newThemeDlg(0),
+   baseColor(QApplication::palette().color(QPalette::Normal,QPalette::Button)),
    svgWatcher(this)
 {
   qDebug() << "Current style:" << QApplication::style()->metaObject()->className();
-  
+
   // Setup using auto-generated UIC code
   setupUi(this);
+  setWindowTitle(windowTitle()+"[*]");
 
   // populate widget tree views
   QListWidgetItem *i;
@@ -357,7 +363,7 @@ ThemeBuilderUI::ThemeBuilderUI(QWidget* parent)
   drawStackTree->setAlternatingRowColors(true);
   drawStackTree->headerItem()->setText(0,"Function");
   drawStackTree->headerItem()->setText(1,"Args");
-  previewLayout->addWidget(drawStackTree, 3, 0, 1, 1);
+  debugLayout->addWidget(drawStackTree, 2, 0, 1, 1);
 
 //   resolvedValuesTree = new QTreeWidget(previewTab);
 //   resolvedValuesTree->setObjectName(QString::fromUtf8("resolvedValuesTree"));
@@ -674,6 +680,8 @@ ThemeBuilderUI::ThemeBuilderUI(QWidget* parent)
           this,SLOT(slot_enableBtnClicked(bool)));
   connect(previewVariantBtn,SIGNAL(clicked(bool)),
           this,SLOT(slot_previewVariantBtnClicked(bool)));
+  connect(colorBtn,SIGNAL(clicked(bool)),
+          this,SLOT(slot_colorBtnClicked(bool)));
 
   // style callbacks
   if ( style ) {
@@ -916,10 +924,11 @@ void ThemeBuilderUI::resetUi()
   tabWidget->setEnabled(false);
   tabWidget2->setTabEnabled(0,false);
   tabWidget2->setTabEnabled(1,false);
-  tabWidget2->setCurrentIndex(2);
+  tabWidget3->setEnabled(false);
   saveBtn->setEnabled(false);
   optimizeSvgBtn->setEnabled(false);
   editSvgBtn->setEnabled(false);
+  specificTree->setEnabled(false);
 
   // clear theme file name
   themeNameLbl->clear();
@@ -948,6 +957,7 @@ void ThemeBuilderUI::resetUi()
   previewWidget = 0;
   currentWidget = 0;
   previewUpdateEnabled = false;
+  updateColorBtnIcon();
 
   // Reset state
   if ( config ) {
@@ -963,6 +973,18 @@ void ThemeBuilderUI::resetUi()
     QFile::remove(tempCfgFile);
   tempCfgFile.clear();
   svgFile.clear();
+}
+
+void ThemeBuilderUI::updateColorBtnIcon()
+{
+  QIcon i;
+  QPixmap p(colorBtn->iconSize()-QSize(5,5));
+  p.fill(baseColor);
+  QPainter _p(&p);
+  _p.setPen(Qt::black);
+  _p.drawRect(0,0,p.width()-1,p.height()-1);
+  i.addPixmap(p);
+  colorBtn->setIcon(i);
 }
 
 bool ThemeBuilderUI::ensureSettingsSaved()
@@ -1062,6 +1084,8 @@ void ThemeBuilderUI::openTheme(const QString& filename)
   tabWidget2->setTabEnabled(0,true);
   tabWidget2->setTabEnabled(1,true);
   tabWidget2->setCurrentIndex(0);
+  tabWidget3->setEnabled(true);
+  specificTree->setEnabled(true);
   themeNameLbl->setText(QFileInfo(cfgFile).fileName());
   themeNameLbl->setToolTip(cfgFile);
 
@@ -1182,6 +1206,7 @@ void ThemeBuilderUI::slot_saveTheme()
 
   cfgModified = false;
   saveBtn->setEnabled(false);
+  setWindowModified(false);
 }
 
 void ThemeBuilderUI::slot_editSvg()
@@ -1228,8 +1253,7 @@ void ThemeBuilderUI::slot_optimizeSvg()
 
   svgWatcher.addPath(svgFile);
 
-  statusbar->showMessage(
-                         QString("Optimized svg file: %1 -> %2 bytes").arg(oldsize).arg(newsize),
+  statusbar->showMessage(QString("Optimized svg file: %1 -> %2 bytes").arg(oldsize).arg(newsize),
                          10000);
 
   qDebug() << "[QSvgThemeBuilder]" << "Optimized" << svgFile
@@ -2045,6 +2069,8 @@ end:
     slot_enableBtnClicked(enableBtn->isChecked());
     slot_rtlBtnClicked(rtlBtn->isChecked());
     slot_fontSizeChanged(fontSizeSpin->value());
+    QPalette p(baseColor);
+    previewWidget->setPalette(p);
   } else {
     repaintBtn->setEnabled(false);
     rtlBtn->setEnabled(false);
@@ -2160,9 +2186,14 @@ void ThemeBuilderUI::slot_uiSettingsChanged()
 
   cfgModified = true;
   saveBtn->setEnabled(true);
+  setWindowModified(true);
 
   saveSettingsFromUi(currentWidget);
-  setupPreviewForWidget(currentWidget);
+  if ( previewWidget ) {
+    // HACK: this will force geometry recalculation
+    slot_fontSizeChanged(previewWidget->font().pointSize()-1);
+    slot_fontSizeChanged(previewWidget->font().pointSize()+1);
+  }
 }
 
 void ThemeBuilderUI::slot_repaintBtnClicked(bool checked)
@@ -2170,7 +2201,7 @@ void ThemeBuilderUI::slot_repaintBtnClicked(bool checked)
   Q_UNUSED(checked);
 
   if ( previewWidget )
-    previewWidget->repaint();
+    previewWidget->update();
 }
 
 void ThemeBuilderUI::slot_rtlBtnClicked(bool checked)
@@ -2209,7 +2240,7 @@ void ThemeBuilderUI::slot_drawModeBtnClicked(bool checked)
   }
 
   if ( previewWidget )
-    previewWidget->repaint();
+    previewWidget->update();
 }
 
 void ThemeBuilderUI::slot_detachBtnClicked(bool checked)
@@ -2218,26 +2249,22 @@ void ThemeBuilderUI::slot_detachBtnClicked(bool checked)
 
   QIcon icon;
 
-  if ( !previewArea->isTopLevel() ) {
+  if ( !tabWidget3->isTopLevel() ) {
     icon.addFile(QString::fromUtf8(":/icon/pixmaps/dockwidget.png"), QSize(), QIcon::Normal, QIcon::Off);
     detachBtn->setIcon(icon);
     detachBtn->setText("Attach");
-    previewArea->setParent(NULL);
-    previewArea->show();
+    //previewArea->setParent(NULL);
+    tabWidget3->setParent(NULL);
+    tabWidget3->show();
     if ( detachedPeviewGeometry.isValid() )
-      previewArea->setGeometry(detachedPeviewGeometry);
-    previewArea->window()->setWindowTitle("QSvgThemeBuilder preview");
+      tabWidget3->setGeometry(detachedPeviewGeometry);
+    tabWidget3->window()->setWindowTitle("QSvgThemeBuilder preview");
   } else {
     icon.addFile(QString::fromUtf8(":/icon/pixmaps/widget.png"), QSize(), QIcon::Normal, QIcon::Off);
     detachBtn->setIcon(icon);
     detachBtn->setText("Detach");
-    detachedPeviewGeometry = previewArea->geometry();
-    // HACK if the preview tab is not visible, the preview area does not appear
-    int i = tabWidget2->currentIndex();
-    tabWidget2->setCurrentIndex(1);
-    previewLayout->addWidget(previewArea, 1, 0, 1, 1);
-    tabWidget2->setCurrentIndex(i);
-    // END
+    detachedPeviewGeometry = tabWidget3->geometry();
+    gridLayout->addWidget(tabWidget3, 2, 2, 1, 1);
   }
 }
 
@@ -2248,6 +2275,26 @@ void ThemeBuilderUI::slot_fontSizeChanged(int val)
     f.setPointSize(val);
     previewWidget->setFont(f);
   }
+}
+
+void ThemeBuilderUI::slot_colorBtnClicked(bool checked)
+{
+  Q_UNUSED(checked);
+
+  int res = QDialog::Rejected;
+
+  QColorDialog dlg(baseColor);
+  res = dlg.exec();
+  if ( res == QDialog::Rejected )
+    return;
+
+  if ( previewWidget ) {
+    QPalette p(dlg.selectedColor());
+    previewWidget->setPalette(p);
+  }
+
+  baseColor = dlg.selectedColor();
+  updateColorBtnIcon();
 }
 
 void ThemeBuilderUI::slot_enableBtnClicked(bool checked)
@@ -2694,11 +2741,11 @@ void ThemeBuilderUI::slot_toolboxTabChanged(int index)
 
 void ThemeBuilderUI::slot_widgetChanged(QListWidgetItem *current, QListWidgetItem *previous)
 {
+  Q_UNUSED(previous);
+
   saveSettingsFromUi(currentWidget);
 
   if ( current ) {
-    if ( !previous )
-      tabWidget2->setCurrentIndex(1);
     currentPreviewVariant = 0;
   }
 
