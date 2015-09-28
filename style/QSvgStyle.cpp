@@ -310,8 +310,8 @@ void QSvgStyle::drawPrimitive(PrimitiveElement e, const QStyleOption * option, Q
   QString st = state_str(option->state, widget);
   Qt::LayoutDirection dir = option->direction;
   bool focus = option->state & State_HasFocus;
+  QPalette pal = widget ? widget->palette() : QApplication::palette();
 
-  Q_UNUSED(dir);
   Q_UNUSED(focus);
 
   // Get QSvgStyle configuration group used to render this element
@@ -345,7 +345,7 @@ void QSvgStyle::drawPrimitive(PrimitiveElement e, const QStyleOption * option, Q
     case PE_PanelButtonCommand : {
       // Interior for push buttons
       capsulePosition(widget,fs.hasCapsule,fs.capsuleH,fs.capsuleV);
-      renderInterior(p,r,fs,is,is.element+"-"+st);
+      renderInterior(p,r,fs,is,is.element+"-"+st,dir);
       break;
     }
     case PE_FrameDefaultButton : {
@@ -353,14 +353,14 @@ void QSvgStyle::drawPrimitive(PrimitiveElement e, const QStyleOption * option, Q
       // use "default" status
       if ( option->state & State_On ) {
         st = "default";
-        renderFrame(p,r,fs,fs.element+"-"+st);
+        renderFrame(p,r,fs,fs.element+"-"+st,dir);
       }
       break;
     }
     case PE_FrameButtonBevel : {
       // Frame for push buttons
       capsulePosition(widget,fs.hasCapsule,fs.capsuleH,fs.capsuleV);
-      renderFrame(p,r,fs,fs.element+"-"+st);
+      renderFrame(p,r,fs,fs.element+"-"+st,dir);
       break;
     }
     case PE_PanelButtonTool : {
@@ -368,7 +368,7 @@ void QSvgStyle::drawPrimitive(PrimitiveElement e, const QStyleOption * option, Q
       // Do not compute capsule position for autoraise buttons
       if ( !option->state & State_AutoRaise )
         capsulePosition(widget,fs.hasCapsule,fs.capsuleH,fs.capsuleV);
-      renderInterior(p,r,fs,is,is.element+"-"+st);
+      renderInterior(p,r,fs,is,is.element+"-"+st,dir);
       break;
     }
     case PE_FrameButtonTool : {
@@ -376,13 +376,13 @@ void QSvgStyle::drawPrimitive(PrimitiveElement e, const QStyleOption * option, Q
       // Do not compute capsule position for autoraise buttons
       if ( !option->state & State_AutoRaise )
         capsulePosition(widget,fs.hasCapsule,fs.capsuleH,fs.capsuleV);
-      renderFrame(p,r,fs,fs.element+"-"+st);
+      renderFrame(p,r,fs,fs.element+"-"+st,dir);
       break;
     }
     case PE_PanelTipLabel : {
       // frame and interior for tool tips
-      renderFrame(p,r,fs,fs.element+"-"+st);
-      renderInterior(p,r,fs,is,is.element+"-"+st);
+      renderFrame(p,r,fs,fs.element+"-"+st,dir);
+      renderInterior(p,r,fs,is,is.element+"-"+st,dir);
       break;
     }
     case PE_IndicatorRadioButton : {
@@ -394,7 +394,7 @@ void QSvgStyle::drawPrimitive(PrimitiveElement e, const QStyleOption * option, Q
         : "disabled";
       if ( option->state & State_On )
         st = "checked-"+st;
-      renderIndicator(p,r,fs,is,ds,ds.element+"-"+st);
+      renderIndicator(p,r,fs,is,ds,ds.element+"-"+st,dir);
       break;
     }
     case PE_IndicatorViewItemCheck :
@@ -410,7 +410,7 @@ void QSvgStyle::drawPrimitive(PrimitiveElement e, const QStyleOption * option, Q
         st = "checked-"+st;
       else if ( option->state & State_NoChange )
         st = "tristate-"+st;
-      renderIndicator(p,r,fs,is,ds,ds.element+"-"+st);
+      renderIndicator(p,r,fs,is,ds,ds.element+"-"+st,dir);
       break;
     }
     case PE_IndicatorMenuCheckMark : {
@@ -433,7 +433,7 @@ void QSvgStyle::drawPrimitive(PrimitiveElement e, const QStyleOption * option, Q
     case PE_FrameFocusRect : {
       // The frame of a focus rectangle, used on focusable widgets
       // FIXME
-      renderFrame(p,r,fs,fs.element);
+      renderFrame(p,r,fs,fs.element,dir);
       break;
     }
     case PE_IndicatorBranch : {
@@ -443,18 +443,18 @@ void QSvgStyle::drawPrimitive(PrimitiveElement e, const QStyleOption * option, Q
           st = "minus-"+st;
         else
           st = "plus-"+st;
-        renderIndicator(p,r,fs,is,ds,ds.element+"-"+st);
+        renderIndicator(p,r,fs,is,ds,ds.element+"-"+st,dir);
       }
       break;
     }
     case PE_FrameMenu :  {
       // Frame for menus
-      renderFrame(p,r,fs,fs.element+"-"+st);
+      renderFrame(p,r,fs,fs.element+"-"+st,dir);
       break;
     }
     case PE_FrameWindow : {
       // Frame for windows
-      renderFrame(p,r,fs,fs.element+"-"+st);
+      renderFrame(p,r,fs,fs.element+"-"+st,dir);
       break;
     }
     case PE_FrameTabBarBase : {
@@ -471,38 +471,38 @@ void QSvgStyle::drawPrimitive(PrimitiveElement e, const QStyleOption * option, Q
         st = state_str(o.state,widget);
 
         if ( opt->state & State_Sunken )
-          renderFrame(p,r,fs,fs.element+"-sunken-"+st);
+          renderFrame(p,r,fs,fs.element+"-sunken-"+st,dir);
         else
-          renderFrame(p,r,fs,fs.element+"-raised-"+st);
+          renderFrame(p,r,fs,fs.element+"-raised-"+st,dir);
 
         if ( !qobject_cast< const QTreeWidget* >(widget) ) {
           if ( opt->state & State_Sunken )
-            renderInterior(p,r,fs,is,is.element+"-sunken-"+st);
+            renderInterior(p,r,fs,is,is.element+"-sunken-"+st,dir);
           if ( opt->state & State_Raised )
-            renderInterior(p,r,fs,is,is.element+"-raised-"+st);
+            renderInterior(p,r,fs,is,is.element+"-raised-"+st,dir);
         }
       }
       break;
     }
     case PE_FrameDockWidget : {
       // Frame for "detached" dock widgets
-      renderFrame(p,r,fs,fs.element+"-"+st);
+      renderFrame(p,r,fs,fs.element+"-"+st,dir);
       break;
     }
     case PE_FrameStatusBarItem : {
       // Frame for status bar items
-      renderFrame(p,r,fs,fs.element+"-"+st);
+      renderFrame(p,r,fs,fs.element+"-"+st,dir);
       break;
     }
     case PE_FrameGroupBox : {
       // Frame and interior for group boxes
-      renderFrame(p,r,fs,fs.element+"-"+st);
-      renderInterior(p,r,fs,is,is.element+"-"+st);
+      renderFrame(p,r,fs,fs.element+"-"+st,dir);
+      renderInterior(p,r,fs,is,is.element+"-"+st,dir);
       break;
     }
     case PE_FrameTabWidget : {
       // Frame for tab widgets (contents)
-      renderFrame(p,r,fs,fs.element+"-raised-"+st);
+      renderFrame(p,r,fs,fs.element+"-raised-"+st,dir);
       break;
     }
     case PE_FrameLineEdit : {
@@ -513,7 +513,7 @@ void QSvgStyle::drawPrimitive(PrimitiveElement e, const QStyleOption * option, Q
       QStyleOption o(*option);
       o.state &= ~(State_Sunken | State_On);
       st = state_str(o.state,widget);
-      renderFrame(p,r,fs,fs.element+"-"+st);
+      renderFrame(p,r,fs,fs.element+"-"+st,dir);
       break;
     }
     case PE_PanelLineEdit : {
@@ -531,13 +531,13 @@ void QSvgStyle::drawPrimitive(PrimitiveElement e, const QStyleOption * option, Q
       QStyleOption o(*option);
       o.state &= ~ (State_Sunken | State_On);
       st = state_str(o.state,widget);
-      renderInterior(p,r,fs,is,is.element+"-"+st);
+      renderInterior(p,r,fs,is,is.element+"-"+st,dir);
       break;
     }
     case PE_PanelToolBar : {
       // toolbar frame and interior
-      renderFrame(p,r,fs,fs.element+"-"+st);
-      renderInterior(p,r,fs,is,is.element+"-"+st);
+      renderFrame(p,r,fs,fs.element+"-"+st,dir);
+      renderInterior(p,r,fs,is,is.element+"-"+st,dir);
       break;
     }
     case PE_IndicatorToolBarHandle : {
@@ -552,22 +552,22 @@ void QSvgStyle::drawPrimitive(PrimitiveElement e, const QStyleOption * option, Q
     }
     case PE_IndicatorSpinPlus : {
       // Plus spin box indicator
-      renderIndicator(p,r,fs,is,ds,ds.element+"-plus-"+st);
+      renderIndicator(p,r,fs,is,ds,ds.element+"-plus-"+st,dir);
       break;
     }
     case PE_IndicatorSpinMinus : {
       // Minus spin box indicator
-      renderIndicator(p,r,fs,is,ds,ds.element+"-minus-"+st);
+      renderIndicator(p,r,fs,is,ds,ds.element+"-minus-"+st,dir);
       break;
     }
     case PE_IndicatorSpinUp : {
       // Up spin box indicator
-      renderIndicator(p,r,fs,is,ds,ds.element+"-up-"+st);
+      renderIndicator(p,r,fs,is,ds,ds.element+"-up-"+st,dir);
       break;
     }
     case PE_IndicatorSpinDown : {
       // down spin box indicator
-      renderIndicator(p,r,fs,is,ds,ds.element+"-down-"+st);
+      renderIndicator(p,r,fs,is,ds,ds.element+"-down-"+st,dir);
       break;
     }
     case PE_IndicatorHeaderArrow : {
@@ -575,20 +575,20 @@ void QSvgStyle::drawPrimitive(PrimitiveElement e, const QStyleOption * option, Q
       if ( const QStyleOptionHeader *opt =
            qstyleoption_cast<const QStyleOptionHeader *>(option) ) {
         if (opt->sortIndicator == QStyleOptionHeader::SortDown)
-          renderIndicator(p,r,fs,is,ds,ds.element+"-down-"+st);
+          renderIndicator(p,r,fs,is,ds,ds.element+"-down-"+st,dir);
         else if (opt->sortIndicator == QStyleOptionHeader::SortUp)
-          renderIndicator(p,r,fs,is,ds,ds.element+"-up-"+st);
+          renderIndicator(p,r,fs,is,ds,ds.element+"-up-"+st,dir);
       }
       break;
     }
     case PE_IndicatorButtonDropDown : {
       // Drop down button arrow
-      renderIndicator(p,r,fs,is,ds,ds.element+"-dropdown-"+st);
+      renderIndicator(p,r,fs,is,ds,ds.element+"-dropdown-"+st,dir);
       break;
     }
     case PE_PanelMenuBar : {
       // Menu bar "border" (see QMenuBar.cpp)
-      renderFrame(p,r,fs,fs.element+"-"+st);
+      renderFrame(p,r,fs,fs.element+"-"+st,dir);
       break;
     }
     case PE_PanelMenu : {
@@ -603,22 +603,22 @@ void QSvgStyle::drawPrimitive(PrimitiveElement e, const QStyleOption * option, Q
     }
     case PE_IndicatorArrowUp : {
       // Arrow up indicator
-      renderIndicator(p,r,fs,is,ds,ds.element+"-up-"+st);
+      renderIndicator(p,r,fs,is,ds,ds.element+"-up-"+st,dir);
       break;
     }
     case PE_IndicatorArrowDown : {
       // Arrow down indicator
-      renderIndicator(p,r,fs,is,ds,ds.element+"-down-"+st);
+      renderIndicator(p,r,fs,is,ds,ds.element+"-down-"+st,dir);
       break;
     }
     case PE_IndicatorArrowLeft : {
       // Arrow left indicator
-      renderIndicator(p,r,fs,is,ds,ds.element+"-left-"+st);
+      renderIndicator(p,r,fs,is,ds,ds.element+"-left-"+st,dir);
       break;
     }
     case PE_IndicatorArrowRight : {
       // Arrow right indicator
-      renderIndicator(p,r,fs,is,ds,ds.element+"-right-"+st);
+      renderIndicator(p,r,fs,is,ds,ds.element+"-right-"+st,dir);
       break;
     }
     case PE_IndicatorColumnViewArrow : {
@@ -627,7 +627,7 @@ void QSvgStyle::drawPrimitive(PrimitiveElement e, const QStyleOption * option, Q
     }
     case PE_IndicatorProgressChunk : {
       // The "filled" part of a progress bar
-      renderInterior(p,r,fs,is,is.element+"-"+st);
+      renderInterior(p,r,fs,is,is.element+"-"+st,dir);
       break;
     }
     case PE_PanelItemViewRow : {
@@ -644,7 +644,7 @@ void QSvgStyle::drawPrimitive(PrimitiveElement e, const QStyleOption * option, Q
             st = "alt-"+st;
           }
       }
-      renderInterior(p,r,fs,is,is.element+"-"+st);
+      renderInterior(p,r,fs,is,is.element+"-"+st,dir);
       break;
     }
     case PE_PanelStatusBar : {
@@ -733,7 +733,7 @@ void QSvgStyle::drawControl(ControlElement e, const QStyleOption * option, QPain
           // NOTE QSvgStyle ignore pressed state
           o.state &= ~State_Sunken;
           st = state_str(o.state,widget);
-          renderInterior(p,r,fs,is,is.element+"-"+st);
+          renderInterior(p,r,fs,is,is.element+"-"+st,dir);
 
           QRect rtext = r; // text rect (menu item label+shortcut)
           QRect rcheckmark, rarrow;
@@ -822,7 +822,7 @@ void QSvgStyle::drawControl(ControlElement e, const QStyleOption * option, QPain
         fs.hasFrame = false;
         fs.top = fs.bottom = fs.left = fs.right = 0;
 
-        renderInterior(p,option->rect,fs,is,is.element+"-"+st);
+        renderInterior(p,option->rect,fs,is,is.element+"-"+st,dir);
         renderLabel(p,dir,r,fs,is,ls,
                     Qt::AlignCenter | Qt::AlignVCenter | Qt::TextShowMnemonic,
                     opt->text,!(option->state & State_Enabled));
@@ -833,7 +833,7 @@ void QSvgStyle::drawControl(ControlElement e, const QStyleOption * option, QPain
 
     case CE_MenuBarEmptyArea : {
       // Menu bar interior
-      renderInterior(p,r,fs,is,is.element+"-"+st);
+      renderInterior(p,r,fs,is,is.element+"-"+st,dir);
       break;
     }
 
@@ -965,8 +965,8 @@ void QSvgStyle::drawControl(ControlElement e, const QStyleOption * option, QPain
           fs.capsuleH = 1;
         }
 
-        renderInterior(p,r,fs,is,is.element+"-"+st);
-        renderFrame(p,r,fs,fs.element+"-"+st);
+        renderInterior(p,r,fs,is,is.element+"-"+st,dir);
+        renderFrame(p,r,fs,fs.element+"-"+st,dir);
       }
 
       break;
@@ -990,8 +990,8 @@ void QSvgStyle::drawControl(ControlElement e, const QStyleOption * option, QPain
     }
 
     case CE_ToolBoxTabShape : {
-      renderFrame(p,option->rect,fs,fs.element+"-"+st);
-      renderInterior(p,option->rect,fs,is,is.element+"-"+st);
+      renderFrame(p,option->rect,fs,fs.element+"-"+st,dir);
+      renderInterior(p,option->rect,fs,is,is.element+"-"+st,dir);
 
       break;
     }
@@ -1033,8 +1033,8 @@ void QSvgStyle::drawControl(ControlElement e, const QStyleOption * option, QPain
 
     case CE_ProgressBarGroove : {
       // "background" of a progress bar
-      renderFrame(p,r,fs,fs.element+"-"+st);
-      renderInterior(p,r,fs,is,is.element+"-"+st);
+      renderFrame(p,r,fs,fs.element+"-"+st,dir);
+      renderInterior(p,r,fs,is,is.element+"-"+st,dir);
 
       break;
     }
@@ -1070,10 +1070,10 @@ void QSvgStyle::drawControl(ControlElement e, const QStyleOption * option, QPain
 
           if ( opt->invertedAppearance )
             renderInterior(p,r.adjusted(empty,0,0,0),fs,is,
-                           is.element+"-elapsed-"+st);
+                           is.element+"-elapsed-"+st,dir);
           else
             renderInterior(p,r.adjusted(0,0,-empty,0),fs,is,
-                           is.element+"-elapsed-"+st);
+                           is.element+"-elapsed-"+st,dir);
         } else { // busy progressbar
           QWidget *wd = (QWidget *)widget;
 
@@ -1084,12 +1084,12 @@ void QSvgStyle::drawControl(ControlElement e, const QStyleOption * option, QPain
           if ( r.x()+r.width()-1 > x+w-1 ) {
             // wrap busy indicator
             r.setWidth(x+w-r.x());
-            renderInterior(p,r,fs,is,is.element+"-elapsed-"+st);
+            renderInterior(p,r,fs,is,is.element+"-elapsed-"+st,dir);
 
             r = QRect(x,y,pm-r.width(),h);
-            renderInterior(p,r,fs,is,is.element+"-elapsed-"+st);
+            renderInterior(p,r,fs,is,is.element+"-elapsed-"+st,dir);
           } else {
-            renderInterior(p,r,fs,is,is.element+"-elapsed-"+st);
+            renderInterior(p,r,fs,is,is.element+"-elapsed-"+st,dir);
           }
         }
       }
@@ -1098,8 +1098,8 @@ void QSvgStyle::drawControl(ControlElement e, const QStyleOption * option, QPain
     }
 
     case CE_Splitter : {
-      renderFrame(p,option->rect,fs,fs.element+"-"+st);
-      renderInterior(p,option->rect,fs,is,is.element+"-"+st, (h > w) ? Qt::Vertical : Qt::Horizontal);
+      renderFrame(p,option->rect,fs,fs.element+"-"+st,dir);
+      renderInterior(p,option->rect,fs,is,is.element+"-"+st,dir);
 
       break;
     }
@@ -1113,8 +1113,8 @@ void QSvgStyle::drawControl(ControlElement e, const QStyleOption * option, QPain
         if ( opt->activeSubControls & SC_ScrollBarAddLine )
           o.state = opt->state;
         st = state_str(o.state,widget);
-        renderFrame(p,option->rect,fs,fs.element+"-"+st);
-        renderInterior(p,option->rect,fs,is,is.element+"-"+st);
+        renderFrame(p,option->rect,fs,fs.element+"-"+st,dir);
+        renderInterior(p,option->rect,fs,is,is.element+"-"+st,dir);
         if (option->state & State_Horizontal) {
           if ( dir == Qt::LeftToRight )
             drawPrimitive(PE_IndicatorArrowRight,option,p,widget);
@@ -1135,8 +1135,8 @@ void QSvgStyle::drawControl(ControlElement e, const QStyleOption * option, QPain
         if ( opt->activeSubControls & SC_ScrollBarSubLine )
           o.state = opt->state;
         st = state_str(o.state,widget);
-        renderFrame(p,option->rect,fs,fs.element+"-"+st);
-        renderInterior(p,option->rect,fs,is,is.element+"-"+st);
+        renderFrame(p,option->rect,fs,fs.element+"-"+st,dir);
+        renderInterior(p,option->rect,fs,is,is.element+"-"+st,dir);
         if (option->state & State_Horizontal) {
           if ( dir == Qt::LeftToRight )
             drawPrimitive(PE_IndicatorArrowLeft,option,p,widget);
@@ -1157,15 +1157,15 @@ void QSvgStyle::drawControl(ControlElement e, const QStyleOption * option, QPain
         if ( opt->activeSubControls & SC_ScrollBarSlider )
           o.state = opt->state;
         st = state_str(o.state,widget);
-        renderFrame(p,option->rect,fs,fs.element+"-cursor-"+st);
-        renderInterior(p,option->rect,fs,is,is.element+"-cursor-"+st);
+        renderFrame(p,option->rect,fs,fs.element+"-cursor-"+st,dir);
+        renderInterior(p,option->rect,fs,is,is.element+"-cursor-"+st,dir);
       }
       break;
     }
 
     case CE_HeaderSection : {
-      renderFrame(p,r,fs,fs.element+"-"+st);
-      renderInterior(p,r,fs,is,is.element+"-"+st);
+      renderFrame(p,r,fs,fs.element+"-"+st,dir);
+      renderInterior(p,r,fs,is,is.element+"-"+st,dir);
       break;
     }
 
@@ -1198,13 +1198,13 @@ void QSvgStyle::drawControl(ControlElement e, const QStyleOption * option, QPain
     }
 
     case CE_ToolBar : {
-      renderFrame(p,option->rect,fs,fs.element+"-"+st);
-      renderInterior(p,option->rect,fs,is,is.element+"-"+st, (option->state & State_Horizontal) ? Qt::Horizontal : Qt::Vertical);
+      renderFrame(p,option->rect,fs,fs.element+"-"+st,dir);
+      renderInterior(p,option->rect,fs,is,is.element+"-"+st,dir);
       break;
     }
 
     case CE_SizeGrip : {
-      renderIndicator(p,option->rect,fs,is,ds,ds.element+"-"+st);
+      renderIndicator(p,option->rect,fs,is,ds,ds.element+"-"+st,dir);
       break;
     }
 
@@ -1273,18 +1273,22 @@ void QSvgStyle::drawControl(ControlElement e, const QStyleOption * option, QPain
             break;
           case Qt::UpArrow :
             renderIndicator(p,r,fs,is,ds,ds.element+"-up-"+st,
+                            dir,
                             hAlign | Qt::AlignVCenter);
             break;
           case Qt::DownArrow :
             renderIndicator(p,r,fs,is,ds,ds.element+"-down-"+st,
+                            dir,
                             hAlign | Qt::AlignVCenter);
             break;
           case Qt::LeftArrow :
             renderIndicator(p,option->rect,fs,is,ds,ds.element+"-left-"+st,
+                            dir,
                             hAlign | Qt::AlignVCenter);
             break;
           case Qt::RightArrow :
             renderIndicator(p,option->rect,fs,is,ds,ds.element+"-right-"+st,
+                            dir,
                             hAlign | Qt::AlignVCenter);
             break;
         }
@@ -1297,8 +1301,8 @@ void QSvgStyle::drawControl(ControlElement e, const QStyleOption * option, QPain
       if ( const QStyleOptionDockWidget *opt =
            qstyleoption_cast<const QStyleOptionDockWidget *>(option) ) {
 
-        renderFrame(p,r,fs,fs.element+"-"+st);
-        renderInterior(p,r,fs,is,is.element+"-"+st);
+        renderFrame(p,r,fs,fs.element+"-"+st,dir);
+        renderInterior(p,r,fs,is,is.element+"-"+st,dir);
         renderLabel(p,dir,r,fs,is,ls,
                     Qt::AlignLeft | Qt::AlignVCenter | Qt::TextShowMnemonic,
                     opt->title,!(option->state & State_Enabled));
@@ -1443,7 +1447,7 @@ void QSvgStyle::drawComplexControl(ComplexControl control, const QStyleOptionCom
           fs.capsuleV = 2;
           fs.capsuleH = 0;
           o.rect = subControlRect(CC_SpinBox,opt,SC_SpinBoxUp,widget);
-          renderInterior(p,o.rect,fs,is,is.element+'-'+st);
+          renderInterior(p,o.rect,fs,is,is.element+'-'+st,dir);
           drawPrimitive(PE_IndicatorSpinUp,&o,p,widget);
 
           o.state &= ~(State_Sunken | State_Selected | State_MouseOver);
@@ -1453,7 +1457,7 @@ void QSvgStyle::drawComplexControl(ComplexControl control, const QStyleOptionCom
           fs.capsuleV = 2;
           fs.capsuleH = 0;
           o.rect = subControlRect(CC_SpinBox,opt,SC_SpinBoxDown,widget);
-          renderInterior(p,o.rect,fs,is,is.element+'-'+st);
+          renderInterior(p,o.rect,fs,is,is.element+'-'+st,dir);
           drawPrimitive(PE_IndicatorSpinDown,&o,p,widget);
         }
         if (opt->buttonSymbols == QAbstractSpinBox::PlusMinus) {
@@ -1512,8 +1516,8 @@ void QSvgStyle::drawComplexControl(ComplexControl control, const QStyleOptionCom
           o.state = opt->state;
         st = state_str(o.state,widget);
         o.rect = subControlRect(CC_ScrollBar,opt,SC_ScrollBarGroove,widget);
-        renderFrame(p,o.rect,fs,fs.element+"-"+st);
-        renderInterior(p,o.rect,fs,is,is.element+"-"+st);
+        renderFrame(p,o.rect,fs,fs.element+"-"+st,dir);
+        renderInterior(p,o.rect,fs,is,is.element+"-"+st,dir);
 
         // 'Next' arrow
         o.state = opt->state;
@@ -1549,7 +1553,7 @@ void QSvgStyle::drawComplexControl(ComplexControl control, const QStyleOptionCom
         QRect slider = subControlRect(CC_Slider,opt,SC_SliderHandle,widget);
 
         // Groove
-        renderFrame(p,empty,fs,fs.element+"-"+st);
+        renderFrame(p,empty,fs,fs.element+"-"+st,dir);
 
         // compute elapsed and empty part of groove
         if (opt->orientation == Qt::Horizontal) {
@@ -1590,7 +1594,7 @@ void QSvgStyle::drawComplexControl(ComplexControl control, const QStyleOptionCom
             fs.capsuleV = -1;
           }
 
-        renderInterior(p,empty,fs,is,is.element+"-"+st,opt->orientation);
+        renderInterior(p,empty,fs,is,is.element+"-"+st,dir);
 
         // draw elapsed part
         if (option->state & State_Horizontal)
@@ -1606,14 +1610,14 @@ void QSvgStyle::drawComplexControl(ComplexControl control, const QStyleOptionCom
             fs.capsuleV = 1;
           }
 
-        renderInterior(p,full,fs,is,is.element+"-elapsed-"+st,opt->orientation);
+        renderInterior(p,full,fs,is,is.element+"-elapsed-"+st,dir);
 
         // cursor
         o.state = option->state;
         st = state_str(o.state,widget);
         fs.hasFrame = false;
         o.rect = subControlRect(CC_Slider,opt,SC_SliderHandle,widget);
-        renderInterior(p,o.rect,fs,is,is.element+"-cursor-"+st);
+        renderInterior(p,o.rect,fs,is,is.element+"-cursor-"+st,dir);
       }
 
       break;
@@ -1651,15 +1655,15 @@ void QSvgStyle::drawComplexControl(ComplexControl control, const QStyleOptionCom
         r2 = subControlRect(CC_GroupBox,&o,SC_GroupBoxLabel,widget);
 
         // Draw frame and interior around contents
-        renderFrame(p,r1,fs,fs.element+"-"+st);
-        renderInterior(p,r1,fs,is,is.element+"-"+st);
+        renderFrame(p,r1,fs,fs.element+"-"+st,dir);
+        renderInterior(p,r1,fs,is,is.element+"-"+st,dir);
 
         // Draw frame and interior around title
         fs.hasCapsule = true;
         fs.capsuleH = 2;
         fs.capsuleV = -1; // FIXME bottom titles
-        renderFrame(p,r2,fs,fs.element+"-"+st);
-        renderInterior(p,r2,fs,is,is.element+"-"+st);
+        renderFrame(p,r2,fs,fs.element+"-"+st,dir);
+        renderInterior(p,r2,fs,is,is.element+"-"+st,dir);
 
         // Draw title
         fs.hasCapsule = false;
@@ -2825,10 +2829,8 @@ void QSvgStyle::renderFrame(QPainter *p,
                     /* frame bounds */ const QRect &bounds,
                     /* frame spec */ const frame_spec_t &fs,
                     /* SVG element */ const QString &e,
-                    /* orientation */ Qt::Orientation orientation) const
+                    /* direction */ Qt::LayoutDirection dir) const
 {
-  Q_UNUSED(orientation);
-
   if (!fs.hasFrame)
     return;
 
@@ -2912,6 +2914,12 @@ void QSvgStyle::renderFrame(QPainter *p,
     }
   }
 
+  if ( dir == Qt::RightToLeft ) {
+    p->save();
+    p->scale(-1.0,1.0);
+    p->translate(-2*x0-w,0);
+  }
+
   // Render !
   renderElement(p,e+"-top",top,0,0);
   renderElement(p,e+"-bottom",bottom,0,0);
@@ -2921,6 +2929,10 @@ void QSvgStyle::renderFrame(QPainter *p,
   renderElement(p,e+"-topright",topright,0,0);
   renderElement(p,e+"-bottomleft",bottomleft,0,0);
   renderElement(p,e+"-bottomright",bottomright,0,0);
+
+  if ( dir == Qt::RightToLeft ) {
+    p->restore();
+  }
 
   // debugging facilities
   if ( dbgWireframe || dbgOverdraw ) {
@@ -2957,7 +2969,7 @@ void QSvgStyle::renderInterior(QPainter *p,
                        /* frame spec */ const frame_spec_t &fs,
                        /* interior spec */ const interior_spec_t &is,
                        /* SVG element */ const QString &e,
-                       /* orientation */ Qt::Orientation orientation) const
+                       /* direction */ Qt::LayoutDirection dir) const
 {
   if (!is.hasInterior)
     return;
@@ -2966,6 +2978,14 @@ void QSvgStyle::renderInterior(QPainter *p,
 
   // drawing rect
   QRect r = interiorRect(bounds,fs,is);
+
+  int x0,y0,x1,y1,w,h;
+  r.getRect(&x0,&y0,&w,&h);
+  x1 = r.bottomRight().x();
+  y1 = r.bottomRight().y();
+
+  Q_UNUSED(x1);
+  Q_UNUSED(y1);
 
   if (fs.hasCapsule) {
     // add these to compensate the absence of the frame
@@ -2993,8 +3013,18 @@ void QSvgStyle::renderInterior(QPainter *p,
     r.adjust(-left,-top,right,bottom);
   }
 
+  if ( dir == Qt::RightToLeft ) {
+    p->save();
+    p->scale(-1.0,1.0);
+    p->translate(-2*x0-w,0);
+  }
+
   // render
-  renderElement(p,e,r,is.px,is.py,orientation);
+  renderElement(p,e,r,is.px,is.py);
+
+  if ( dir == Qt::RightToLeft ) {
+    p->restore();
+  }
 
   // debugging facilities
   if ( dbgWireframe || dbgOverdraw ) {
@@ -3018,6 +3048,7 @@ void QSvgStyle::renderIndicator(QPainter *p,
                        /* interior spec */ const interior_spec_t &is,
                        /* indicator spec */ const indicator_spec_t &ds,
                        /* indicator SVG element */ const QString &e,
+                       /* direction */ Qt::LayoutDirection dir,
                        Qt::Alignment alignment) const
 {
   emit(sig_renderIndicator_begin(e));
@@ -3027,7 +3058,20 @@ void QSvgStyle::renderIndicator(QPainter *p,
   int s = (r.width() > ds.size) ? ds.size : r.width();
   r = alignedRect(Qt::LeftToRight,alignment,QSize(s,s),interiorRect(bounds,fs,is));
 
+  int x0,y0,w,h;
+  r.getRect(&x0,&y0,&w,&h);
+
+  if ( dir == Qt::RightToLeft ) {
+    p->save();
+    p->scale(-1.0,1.0);
+    p->translate(-2*x0-w,0);
+  }
+
   renderElement(p,e,r,0,0);
+
+  if ( dir == Qt::RightToLeft ) {
+    p->restore();
+  }
 
   // debugging facilities
   if ( dbgWireframe || dbgOverdraw ) {

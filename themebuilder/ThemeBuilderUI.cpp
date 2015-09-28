@@ -844,6 +844,8 @@ bool ThemeBuilderUI::eventFilter(QObject* o, QEvent* e)
     paintTimer.restart();
     // Post a custom "finish paint" event so we can diff time
 
+    sizeLbl->setText(QString("Size: %1x%2").arg(previewWidget->width()).arg(previewWidget->height()));
+
     QApplication::postEvent(previewWidget, new QEvent(static_cast<QEvent::Type>(QEvent::User+1)));
   }
 

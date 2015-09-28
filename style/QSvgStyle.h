@@ -231,7 +231,7 @@ class QSvgStyle : public QCommonStyle {
                     /* frame bounds */ const QRect &bounds,
                     /* frame spec */ const frame_spec_t &fspec,
                     /* frame SVG element (basename) */ const QString &element,
-                    /* orientation */ Qt::Orientation orientation = Qt::Horizontal) const;
+                    /* direction */ Qt::LayoutDirection dir = Qt::LeftToRight) const;
     /**
      * Generic method that draws a frame interior
      */
@@ -240,7 +240,7 @@ class QSvgStyle : public QCommonStyle {
                        /* frame spec */ const frame_spec_t &fspec,
                        /* interior spec */ const interior_spec_t &ispec,
                        /* interior SVG element */ const QString &element,
-                        /* orientation */ Qt::Orientation orientation = Qt::Horizontal) const;
+                       /* direction */ Qt::LayoutDirection dir = Qt::LeftToRight) const;
     /**
      * Generic method that draws an indicator (e.g. drop down arrows)
      */
@@ -250,6 +250,7 @@ class QSvgStyle : public QCommonStyle {
                        /* interior spec */ const interior_spec_t &ispec,
                        /* indicator spec */ const indicator_spec_t &dspec,
                        /* indicator SVG element */ const QString &element,
+                       /* direction */ Qt::LayoutDirection dir = Qt::LeftToRight,
                        Qt::Alignment alignment = Qt::AlignVCenter | Qt::AlignCenter) const;
     /**
      * Generic method that draws a label (text and/or icon)
