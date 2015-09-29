@@ -582,7 +582,7 @@ ThemeBuilderUI::ThemeBuilderUI(QWidget* parent)
 
   // install event filter on previewArea so that we can react to resize and
   // close events and save its geometry
-  previewArea->installEventFilter(this);
+  tabWidget3->installEventFilter(this);
 
   // connections
   // main buttons
@@ -818,14 +818,14 @@ void ThemeBuilderUI::closeEvent(QCloseEvent* e)
 bool ThemeBuilderUI::eventFilter(QObject* o, QEvent* e)
 {
   // previewArea
-  if ( (o == previewArea) && previewWidget && (e->type() == QEvent::Resize) ) {
+  if ( (o == tabWidget3) && previewWidget && (e->type() == QEvent::Resize) ) {
     // save detached preview area geometry
-    if ( previewArea->isTopLevel() ) {
-      detachedPeviewGeometry = previewArea->geometry();
+    if ( tabWidget3->isTopLevel() ) {
+      detachedPeviewGeometry = tabWidget3->geometry();
     }
   }
 
-  if ( (o == previewArea) && (e->type() == QEvent::Close) ) {
+  if ( (o == tabWidget3) && (e->type() == QEvent::Close) ) {
     // detached preview area closed -> re-attach to main window
     slot_detachBtnClicked(false);
   }
@@ -1906,8 +1906,9 @@ void ThemeBuilderUI::setupPreviewForWidget(const QListWidgetItem *current)
 
     QTabWidget *widget = new QTabWidget();
 
-    widget->addTab(new QLabel("content 1"),icon,"Tab 1");
-    widget->addTab(new QLabel("content 2"),"Tab 2");
+    widget->addTab(new QLabel("content 1"),icon,"First Tab");
+    widget->addTab(new QLabel("content 2"),icon,"Middle Tab");
+    widget->addTab(new QLabel("content 3"),"Last Tab");
 
     switch (currentPreviewVariant % variants) {
       case 0:

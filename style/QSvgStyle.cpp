@@ -42,6 +42,8 @@
 #include <QList>
 #include <QMap>
 #include <QDebug>
+#include <QMatrix>
+#include <QtAlgorithms>
 
 #include <QSpinBox>
 #include <QToolButton>
@@ -674,8 +676,8 @@ void QSvgStyle::drawControl(ControlElement e, const QStyleOption * option, QPain
   bool focus = option->state & State_HasFocus;
   QIcon::Mode icm = state_iconmode(option->state);
   QIcon::State ics = state_iconstate(option->state);
+  Orientation orn = option->state & State_Horizontal ? Horizontal : Vertical;
 
-  Q_UNUSED(dir);
   Q_UNUSED(focus);
 
   // Get QSvgStyle configuration group used to render this element
@@ -917,25 +919,14 @@ void QSvgStyle::drawControl(ControlElement e, const QStyleOption * option, QPain
         fs.hasCapsule = true;
         int capsule = 2;
 
-        if ( dir == Qt::LeftToRight ) {
-          if (opt->position == QStyleOptionTab::Beginning)
-            capsule = -1;
-          else if (opt->position == QStyleOptionTab::Middle)
-            capsule = 0;
-          else if (opt->position == QStyleOptionTab::End)
-            capsule = 1;
-          else if (opt->position == QStyleOptionTab::OnlyOneTab)
-            capsule = 2;
-        } else {
-          if (opt->position == QStyleOptionTab::Beginning)
-            capsule = 1;
-          else if (opt->position == QStyleOptionTab::Middle)
-            capsule = 0;
-          else if (opt->position == QStyleOptionTab::End)
-            capsule = -1;
-          else if (opt->position == QStyleOptionTab::OnlyOneTab)
-            capsule = 2;
-        }
+        if (opt->position == QStyleOptionTab::Beginning)
+          capsule = -1;
+        else if (opt->position == QStyleOptionTab::Middle)
+          capsule = 0;
+        else if (opt->position == QStyleOptionTab::End)
+          capsule = 1;
+        else if (opt->position == QStyleOptionTab::OnlyOneTab)
+          capsule = 2;
 
         if ( (opt->shape == QTabBar::RoundedNorth) ||
              (opt->shape == QTabBar::TriangularNorth)
@@ -955,14 +946,22 @@ void QSvgStyle::drawControl(ControlElement e, const QStyleOption * option, QPain
              (opt->shape == QTabBar::TriangularWest)
         ) {
           fs.capsuleV = capsule;
-          fs.capsuleH = -1;
+          // RTL layout won't make West transformed into East, so
+          // cheat on the capsule
+          if ( dir == Qt::LeftToRight )
+            fs.capsuleH = -1;
+          else
+            fs.capsuleH = 1;
         }
 
         if ( (opt->shape == QTabBar::RoundedEast) ||
              (opt->shape == QTabBar::TriangularEast)
         ) {
           fs.capsuleV = capsule;
-          fs.capsuleH = 1;
+          if ( dir == Qt::LeftToRight )
+            fs.capsuleH = 1;
+          else
+            fs.capsuleH = -1;
         }
 
         renderInterior(p,r,fs,is,is.element+"-"+st,dir);
@@ -1033,8 +1032,8 @@ void QSvgStyle::drawControl(ControlElement e, const QStyleOption * option, QPain
 
     case CE_ProgressBarGroove : {
       // "background" of a progress bar
-      renderFrame(p,r,fs,fs.element+"-"+st,dir);
-      renderInterior(p,r,fs,is,is.element+"-"+st,dir);
+      renderFrame(p,r,fs,fs.element+"-"+st,dir,orn);
+      renderInterior(p,r,fs,is,is.element+"-"+st,dir,orn);
 
       break;
     }
@@ -1057,9 +1056,16 @@ void QSvgStyle::drawControl(ControlElement e, const QStyleOption * option, QPain
       if ( const QStyleOptionProgressBarV2 *opt =
            qstyleoption_cast<const QStyleOptionProgressBarV2 *>(option) ) {
 
+        if ( orn != Horizontal ) {
+          // perform computations on horizontalized widget
+          r = transposedRect(r);
+          qSwap(x,y);
+          qSwap(w,h);
+        }
+
+        QRect orig = r;
+        
         if ( opt->progress >= 0 ) {
-          // FIXME RTL layout
-          // FIXME vertical orientation
           // FIXME top to bottom text
           // Normal progress bar
           int empty = sliderPositionFromValue(opt->minimum,
@@ -1068,12 +1074,19 @@ void QSvgStyle::drawControl(ControlElement e, const QStyleOption * option, QPain
                                               interiorRect(r,fs,is).width(),
                                               false);
 
+          r = r.adjusted(0,0,-empty,0); // filled area
+
+          if ( orn == Horizontal )
+            r = visualRect(dir,orig,r);
+
           if ( opt->invertedAppearance )
-            renderInterior(p,r.adjusted(empty,0,0,0),fs,is,
-                           is.element+"-elapsed-"+st,dir);
-          else
-            renderInterior(p,r.adjusted(0,0,-empty,0),fs,is,
-                           is.element+"-elapsed-"+st,dir);
+            r = visualRect(Qt::RightToLeft,orig,r);
+
+          renderInterior(p,(orn != Horizontal) ? transposedRect(r) : r,
+                         fs,is,
+                         is.element+"-elapsed-"+st,
+                         dir,
+                         orn);
         } else { // busy progressbar
           QWidget *wd = (QWidget *)widget;
 
@@ -1084,12 +1097,45 @@ void QSvgStyle::drawControl(ControlElement e, const QStyleOption * option, QPain
           if ( r.x()+r.width()-1 > x+w-1 ) {
             // wrap busy indicator
             r.setWidth(x+w-r.x());
-            renderInterior(p,r,fs,is,is.element+"-elapsed-"+st,dir);
+            int ww = r.width();
 
-            r = QRect(x,y,pm-r.width(),h);
-            renderInterior(p,r,fs,is,is.element+"-elapsed-"+st,dir);
+            if ( orn == Horizontal )
+              r = visualRect(dir,orig,r);
+            
+            if ( opt->invertedAppearance )
+              r = visualRect(Qt::RightToLeft,orig,r);
+
+            renderInterior(p,(orn != Horizontal) ? transposedRect(r) : r,
+                           fs,is,
+                           is.element+"-elapsed-"+st,
+                           dir,
+                           orn);
+
+            r = QRect(x,y,pm-ww,h);
+            
+            if ( orn == Horizontal )
+              r = visualRect(dir,orig,r);
+            
+            if ( opt->invertedAppearance )
+              r = visualRect(Qt::RightToLeft,orig,r);
+
+            renderInterior(p,(orn != Horizontal) ? transposedRect(r) : r,
+                           fs,is,
+                           is.element+"-elapsed-"+st,
+                           dir,
+                           orn);
           } else {
-            renderInterior(p,r,fs,is,is.element+"-elapsed-"+st,dir);
+            if ( orn == Horizontal )
+              r = visualRect(dir,orig,r);
+            
+            if ( opt->invertedAppearance )
+              r = visualRect(Qt::RightToLeft,orig,r);
+            
+            renderInterior(p,(orn != Horizontal) ? transposedRect(r) : r,
+                           fs,is,
+                           is.element+"-elapsed-"+st,
+                           dir,
+                           orn);
           }
         }
       }
@@ -1098,8 +1144,8 @@ void QSvgStyle::drawControl(ControlElement e, const QStyleOption * option, QPain
     }
 
     case CE_Splitter : {
-      renderFrame(p,option->rect,fs,fs.element+"-"+st,dir);
-      renderInterior(p,option->rect,fs,is,is.element+"-"+st,dir);
+      renderFrame(p,option->rect,fs,fs.element+"-"+st,dir,orn);
+      renderInterior(p,option->rect,fs,is,is.element+"-"+st,dir,orn);
 
       break;
     }
@@ -1116,10 +1162,7 @@ void QSvgStyle::drawControl(ControlElement e, const QStyleOption * option, QPain
         renderFrame(p,option->rect,fs,fs.element+"-"+st,dir);
         renderInterior(p,option->rect,fs,is,is.element+"-"+st,dir);
         if (option->state & State_Horizontal) {
-          if ( dir == Qt::LeftToRight )
             drawPrimitive(PE_IndicatorArrowRight,option,p,widget);
-          else
-            drawPrimitive(PE_IndicatorArrowLeft,option,p,widget);
         } else
           drawPrimitive(PE_IndicatorArrowDown,option,p,widget);
       }
@@ -1138,10 +1181,7 @@ void QSvgStyle::drawControl(ControlElement e, const QStyleOption * option, QPain
         renderFrame(p,option->rect,fs,fs.element+"-"+st,dir);
         renderInterior(p,option->rect,fs,is,is.element+"-"+st,dir);
         if (option->state & State_Horizontal) {
-          if ( dir == Qt::LeftToRight )
             drawPrimitive(PE_IndicatorArrowLeft,option,p,widget);
-          else
-            drawPrimitive(PE_IndicatorArrowRight,option,p,widget);
         } else
           drawPrimitive(PE_IndicatorArrowUp,option,p,widget);
       }
@@ -1728,7 +1768,7 @@ int QSvgStyle::pixelMetric(PixelMetric metric, const QStyleOption * option, cons
     // These are the 'interior' margins of the menu bar
     case PM_MenuBarVMargin : return 0;
     case PM_MenuBarHMargin :
-      getSpecificValue("specific.menubar.hspace").toInt();
+      return getSpecificValue("specific.menubar.hspace").toInt();
     // Spacing between menu bar items
     case PM_MenuBarItemSpacing :
       return getSpecificValue("specific.menubar.space").toInt();
@@ -2732,7 +2772,7 @@ QRect QSvgStyle::squaredRect(const QRect& r) const {
   return QRect(r.x(),r.y(),e,e);
 }
 
-void QSvgStyle::renderElement(QPainter* painter, const QString& element, const QRect& bounds, int hsize, int vsize, Qt::Orientation orientation) const
+void QSvgStyle::renderElement(QPainter* p, const QString& element, const QRect& bounds, int hsize, int vsize) const
 {
   int x,y,h,w;
   bounds.getRect(&x,&y,&w,&h);
@@ -2741,9 +2781,6 @@ void QSvgStyle::renderElement(QPainter* painter, const QString& element, const Q
     return;
 
   QSvgRenderer *renderer = 0;
-  QPainter *p = painter;
-  QPainter *p2 = 0;
-  QPixmap pm2;
 
   if ( !themeRndr->elementExists(element) ) {
     // Missing element
@@ -2755,24 +2792,6 @@ void QSvgStyle::renderElement(QPainter* painter, const QString& element, const Q
     p->restore();
     qDebug() << "element" << element << "not found in SVG file";
     return;
-  }
-
-  if ( orientation == Qt::Vertical ) {
-    // render the item rotated by -90 degrees into a pixmap first
-    pm2 = QPixmap(w,h);
-    pm2.fill(Qt::transparent);
-    p2 = new QPainter(&pm2);
-    p2->translate(0,h);
-    p2->rotate(-90);
-
-    // QPixmap origin is (0,0)
-    x = y = 0;
-
-    // swap w,h for the code below
-    SWAP(w,h);
-
-    // paint into pm1
-    p = p2;
   }
 
   renderer = themeRndr;
@@ -2813,15 +2832,6 @@ void QSvgStyle::renderElement(QPainter* painter, const QString& element, const Q
     } else {
       renderer->render(p,element,QRect(x,y,w,h));
     }
-
-    if ( orientation == Qt::Vertical ) {
-      // restore coords
-      bounds.getRect(&x,&y,&w,&h);
-
-      painter->drawPixmap(bounds,pm2,QRect(0,0,w,h));
-
-      delete p2;
-    }
   }
 }
 
@@ -2829,17 +2839,27 @@ void QSvgStyle::renderFrame(QPainter *p,
                     /* frame bounds */ const QRect &bounds,
                     /* frame spec */ const frame_spec_t &fs,
                     /* SVG element */ const QString &e,
-                    /* direction */ Qt::LayoutDirection dir) const
+                    /* direction */ Qt::LayoutDirection dir,
+                    /* orientation */ Orientation orn) const
 {
   if (!fs.hasFrame)
     return;
 
   emit(sig_renderFrame_begin(e));
 
+  // drawing rect
+  QRect r = frameRect(bounds,fs);
+
+  if ( orn != Horizontal ) {
+    // Vertical orientation: perform calculations on "horizontalized"
+    // rect
+    r = transposedRect(r);
+  }
+
   int x0,y0,x1,y1,w,h;
-  bounds.getRect(&x0,&y0,&w,&h);
-  x1 = bounds.bottomRight().x();
-  y1 = bounds.bottomRight().y();
+  r.getRect(&x0,&y0,&w,&h);
+  x1 = r.bottomRight().x();
+  y1 = r.bottomRight().y();
 
   // rects to draw frame parts
   QRect top, bottom, left, right, topleft, topright, bottomleft, bottomright;
@@ -2856,7 +2876,7 @@ void QSvgStyle::renderFrame(QPainter *p,
     bottomright = QRect(x1-fs.right+1,y1-fs.bottom+1,fs.right,fs.bottom);
   } else {
     if ( (fs.capsuleH == 0) && (fs.capsuleV == 0) )
-      // no frame at all
+      // no frame at all (middle position)
       return;
 
     // adjustment
@@ -2884,7 +2904,6 @@ void QSvgStyle::renderFrame(QPainter *p,
     // bottom
     if ( (fs.capsuleV == 1) || (fs.capsuleV == 2) ) {
       bottom = QRect(x0+la,y1-ba+1,w-la-ra,fs.bottom);
-      renderElement(p,e+"-bottom",bottom,0,0,Qt::Horizontal);
       // bottomleft corner
       if (fs.capsuleH == -1)
         bottomleft = QRect(x0,y1-fs.bottom+1,fs.left,fs.bottom);
@@ -2920,6 +2939,11 @@ void QSvgStyle::renderFrame(QPainter *p,
     p->translate(-2*x0-w,0);
   }
 
+  if ( orn == Vertical ) {
+    p->save();
+    p->setMatrix(QMatrix(0,1,1,0,0,0));
+  }
+
   // Render !
   renderElement(p,e+"-top",top,0,0);
   renderElement(p,e+"-bottom",bottom,0,0);
@@ -2929,6 +2953,10 @@ void QSvgStyle::renderFrame(QPainter *p,
   renderElement(p,e+"-topright",topright,0,0);
   renderElement(p,e+"-bottomleft",bottomleft,0,0);
   renderElement(p,e+"-bottomright",bottomright,0,0);
+
+  if ( orn == Vertical ) {
+    p->restore();
+  }
 
   if ( dir == Qt::RightToLeft ) {
     p->restore();
@@ -2969,7 +2997,8 @@ void QSvgStyle::renderInterior(QPainter *p,
                        /* frame spec */ const frame_spec_t &fs,
                        /* interior spec */ const interior_spec_t &is,
                        /* SVG element */ const QString &e,
-                       /* direction */ Qt::LayoutDirection dir) const
+                       /* direction */ Qt::LayoutDirection dir,
+                       /* orientation */ Orientation orn) const
 {
   if (!is.hasInterior)
     return;
@@ -2979,13 +3008,14 @@ void QSvgStyle::renderInterior(QPainter *p,
   // drawing rect
   QRect r = interiorRect(bounds,fs,is);
 
-  int x0,y0,x1,y1,w,h;
-  r.getRect(&x0,&y0,&w,&h);
-  x1 = r.bottomRight().x();
-  y1 = r.bottomRight().y();
+  if ( orn != Horizontal ) {
+    // Vertical orientation: perform calculations on "horizontalized"
+    // rect
+    r = transposedRect(r);
+  }
 
-  Q_UNUSED(x1);
-  Q_UNUSED(y1);
+  int x0,y0,w,h;
+  r.getRect(&x0,&y0,&w,&h);
 
   if (fs.hasCapsule) {
     // add these to compensate the absence of the frame
@@ -3019,8 +3049,17 @@ void QSvgStyle::renderInterior(QPainter *p,
     p->translate(-2*x0-w,0);
   }
 
+  if ( orn == Vertical ) {
+    p->save();
+    p->setMatrix(QMatrix(0,1,1,0,0,0));
+  }
+
   // render
   renderElement(p,e,r,is.px,is.py);
+
+  if ( orn == Vertical ) {
+    p->restore();
+  }
 
   if ( dir == Qt::RightToLeft ) {
     p->restore();
@@ -3143,7 +3182,7 @@ void QSvgStyle::renderLabel(QPainter* p,
 //           p->drawText(rtext.adjusted(ls.xshift+i,ls.yshift+i,0,0),talign,text);
 //         p->restore();
 //       }
-      p->drawText(rtext,talign,text);
+      p->drawText(rtext,visualAlignment(dir,static_cast<Qt::Alignment>(talign)),text);
     }
   }
 

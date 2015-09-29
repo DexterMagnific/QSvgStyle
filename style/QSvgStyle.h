@@ -143,6 +143,16 @@ class QSvgStyle : public QCommonStyle {
     void sig_sizeFromContents_end(const QString &) const;
 
   private:
+     /**
+      * Extension of Qt::orientation
+      */
+    typedef enum {
+        Horizontal = Qt::Horizontal,
+        Vertical   = Qt::Vertical,
+        TopBottom  = Vertical,
+        BottomTop,
+    } Orientation;
+
     /**
      * Returns whether the given widget is a container widget
      * (e.g. Frame, Tab, ...)
@@ -163,17 +173,12 @@ class QSvgStyle : public QCommonStyle {
      * (the element is stretched/collapsed if necessary)
      * If \ref pattern is true, the element is taken as a pattern to repeat
      * either horizontally, vertically or both, depending of \ref h and \ref v
-     * if \ref orientation if Qt::Vertical, the element is drawn rotated by an angle
-     * of -90 degrees.
-     * FIXME @warning if orientation is Vertical, rendering is three times
-     * slower than Horizontal.
      */
     void renderElement(QPainter *painter,
                        const QString &element,
                        const QRect &bounds,
                        int hsize = 0,
-                       int vsize = 0,
-                       Qt::Orientation orientation = Qt::Horizontal) const;
+                       int vsize = 0) const;
 
     /**
      * Returns the frame spec of the given group
@@ -227,40 +232,42 @@ class QSvgStyle : public QCommonStyle {
     /**
      * Generic method that draws a frame
      */
-    void renderFrame(QPainter *painter,
+    void renderFrame(QPainter *p,
                     /* frame bounds */ const QRect &bounds,
-                    /* frame spec */ const frame_spec_t &fspec,
-                    /* frame SVG element (basename) */ const QString &element,
-                    /* direction */ Qt::LayoutDirection dir = Qt::LeftToRight) const;
+                    /* frame spec */ const frame_spec_t &fs,
+                    /* frame SVG element (basename) */ const QString &e,
+                    /* direction */ Qt::LayoutDirection dir = Qt::LeftToRight,
+                    /* orientation */ Orientation orn = Horizontal) const;
     /**
      * Generic method that draws a frame interior
      */
-    void renderInterior(QPainter *painter,
+    void renderInterior(QPainter *p,
                        /* frame bounds */ const QRect &bounds,
-                       /* frame spec */ const frame_spec_t &fspec,
-                       /* interior spec */ const interior_spec_t &ispec,
-                       /* interior SVG element */ const QString &element,
-                       /* direction */ Qt::LayoutDirection dir = Qt::LeftToRight) const;
+                       /* frame spec */ const frame_spec_t &fs,
+                       /* interior spec */ const interior_spec_t &is,
+                       /* interior SVG element */ const QString &e,
+                       /* direction */ Qt::LayoutDirection dir = Qt::LeftToRight,
+                       /* orientation */ Orientation orn = Horizontal) const;
     /**
      * Generic method that draws an indicator (e.g. drop down arrows)
      */
-    void renderIndicator(QPainter *painter,
+    void renderIndicator(QPainter *p,
                        /* frame bounds */ const QRect &bounds,
-                       /* frame spec */ const frame_spec_t &fspec,
-                       /* interior spec */ const interior_spec_t &ispec,
-                       /* indicator spec */ const indicator_spec_t &dspec,
-                       /* indicator SVG element */ const QString &element,
+                       /* frame spec */ const frame_spec_t &fs,
+                       /* interior spec */ const interior_spec_t &is,
+                       /* indicator spec */ const indicator_spec_t &ds,
+                       /* indicator SVG element */ const QString &e,
                        /* direction */ Qt::LayoutDirection dir = Qt::LeftToRight,
                        Qt::Alignment alignment = Qt::AlignVCenter | Qt::AlignCenter) const;
     /**
      * Generic method that draws a label (text and/or icon)
      */
-    void renderLabel(QPainter *painter,
-                     /* text direction */ Qt::LayoutDirection direction,
+    void renderLabel(QPainter *p,
+                     /* text direction */ Qt::LayoutDirection dir,
                      /* frame bounds */ const QRect &bounds,
-                     /* frame spec */ const frame_spec_t &fspec,
-                     /* interior spec */ const interior_spec_t &ispec,
-                     /* label spec */ const label_spec_t &lspec,
+                     /* frame spec */ const frame_spec_t &fs,
+                     /* interior spec */ const interior_spec_t &is,
+                     /* label spec */ const label_spec_t &ls,
                      /* text alignment */ int talign,
                      /* text */ const QString &text,
                      /* disabled text ? */ bool disabled = false,
@@ -282,6 +289,12 @@ class QSvgStyle : public QCommonStyle {
      * The topleft of the result is the same as the topleft of @ref r
      */
     QRect squaredRect(const QRect &r) const;
+    /**
+     * Returns a transposed rect
+     */
+    QRect transposedRect(const QRect &r) const {
+        return QRect(r.y(),r.x(),r.height(),r.width());
+    }
     /**
      * Returns a QRect for drawing the frame inside the given @ref bounds
      * QSvgStyle draws frames inside @ref bounds with no margins,
@@ -383,12 +396,6 @@ class QSvgStyle : public QCommonStyle {
 
     /* QSvgStyle debugging capabilities */
     bool dbgWireframe, dbgOverdraw;
-
-    static void SWAP(int &x, int &y) {
-      int tmp = x;
-      x = y;
-      y = tmp;
-    }
 };
 
 #endif
