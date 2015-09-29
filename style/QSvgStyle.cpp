@@ -1396,6 +1396,7 @@ void QSvgStyle::drawComplexControl(ComplexControl control, const QStyleOptionCom
   QIcon::Mode icm = state_iconmode(option->state);
   QIcon::State ics = state_iconstate(option->state);
   QFontMetrics fm = option->fontMetrics;
+  Orientation orn = option->state & State_Horizontal ? Horizontal : Vertical;
 
   Q_UNUSED(focus);
   Q_UNUSED(icm);
@@ -1593,7 +1594,7 @@ void QSvgStyle::drawComplexControl(ComplexControl control, const QStyleOptionCom
         QRect slider = subControlRect(CC_Slider,opt,SC_SliderHandle,widget);
 
         // Groove
-        renderFrame(p,empty,fs,fs.element+"-"+st,dir);
+        renderFrame(p,empty,fs,fs.element+"-"+st,dir,orn);
 
         // compute elapsed and empty part of groove
         if (opt->orientation == Qt::Horizontal) {
@@ -1634,7 +1635,7 @@ void QSvgStyle::drawComplexControl(ComplexControl control, const QStyleOptionCom
             fs.capsuleV = -1;
           }
 
-        renderInterior(p,empty,fs,is,is.element+"-"+st,dir);
+        renderInterior(p,empty,fs,is,is.element+"-"+st,dir,orn);
 
         // draw elapsed part
         if (option->state & State_Horizontal)
@@ -1650,14 +1651,14 @@ void QSvgStyle::drawComplexControl(ComplexControl control, const QStyleOptionCom
             fs.capsuleV = 1;
           }
 
-        renderInterior(p,full,fs,is,is.element+"-elapsed-"+st,dir);
+        renderInterior(p,full,fs,is,is.element+"-elapsed-"+st,dir,orn);
 
         // cursor
         o.state = option->state;
         st = state_str(o.state,widget);
         fs.hasFrame = false;
         o.rect = subControlRect(CC_Slider,opt,SC_SliderHandle,widget);
-        renderInterior(p,o.rect,fs,is,is.element+"-cursor-"+st,dir);
+        renderInterior(p,o.rect,fs,is,is.element+"-cursor-"+st,dir,orn);
       }
 
       break;
@@ -2152,7 +2153,7 @@ QSize QSvgStyle::sizeFromContents ( ContentsType type, const QStyleOption * opti
       if (option->state & State_Horizontal)
         s = QSize(csw,pixelMetric(PM_SliderControlThickness,option,widget)+2); // +2 for frame
       else
-        s = QSize(pixelMetric(PM_SliderControlThickness,option,widget),csh+2);
+        s = QSize(pixelMetric(PM_SliderControlThickness,option,widget)+2,csh);
 
       break;
     }
