@@ -7,5 +7,5 @@ QSvgStyle
 QSvgThemeBuilder
 ----------------
 
-QSvgThemeConfig
----------------
+QSvgThemeChooser
+----------------

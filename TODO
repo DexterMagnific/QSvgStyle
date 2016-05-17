@@ -5,8 +5,6 @@ QSvgStyle
 
 QSvgThemeBuilder
 ----------------
-* widget specific settings (layout, pixelmetric)
-* implement New, theme builder app settings save/restore
 
 QSvgThemeChooser
 ----------------

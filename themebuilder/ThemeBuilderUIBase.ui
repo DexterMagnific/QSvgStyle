@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1080</width>
+    <width>1131</width>
     <height>674</height>
    </rect>
   </property>
@@ -177,8 +177,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>481</width>
-             <height>86</height>
+             <width>519</width>
+             <height>70</height>
             </rect>
            </property>
           </widget>
@@ -605,9 +605,6 @@
         </item>
         <item row="4" column="0" colspan="2">
          <widget class="QTreeWidget" name="specificTree">
-          <property name="sizeAdjustPolicy">
-           <enum>QAbstractScrollArea::AdjustToContentsOnFirstShow</enum>
-          </property>
           <property name="editTriggers">
            <set>QAbstractItemView::CurrentChanged|QAbstractItemView::EditKeyPressed</set>
           </property>
@@ -1126,7 +1123,7 @@
          <x>0</x>
          <y>0</y>
          <width>256</width>
-         <height>417</height>
+         <height>411</height>
         </rect>
        </property>
        <attribute name="label">
@@ -1162,8 +1159,8 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>256</width>
-         <height>417</height>
+         <width>98</width>
+         <height>68</height>
         </rect>
        </property>
        <attribute name="label">
@@ -1199,8 +1196,8 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>256</width>
-         <height>417</height>
+         <width>98</width>
+         <height>68</height>
         </rect>
        </property>
        <attribute name="label">
@@ -1236,8 +1233,8 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>256</width>
-         <height>417</height>
+         <width>98</width>
+         <height>68</height>
         </rect>
        </property>
        <attribute name="label">
@@ -1273,8 +1270,8 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>256</width>
-         <height>417</height>
+         <width>98</width>
+         <height>68</height>
         </rect>
        </property>
        <attribute name="label">
