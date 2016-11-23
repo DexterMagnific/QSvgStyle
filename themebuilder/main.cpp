@@ -23,7 +23,7 @@
 
 int main(int argc, char *argv[]) {
 
-  QApplication::setApplicationName("QSThemeBuilder");
+  QApplication::setApplicationName("QSvgThemeBuilder");
   QApplication builder(argc,argv);
   ThemeBuilderUI t(NULL);
   t.show();

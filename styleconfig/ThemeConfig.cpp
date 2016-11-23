@@ -191,6 +191,8 @@ void ThemeConfig::setThemeSpec(const theme_spec_t& ts) const
   setValue("General","name", ts.name);
   setValue("General","author", ts.author);
   setValue("General","comment", ts.descr);
+  setValue("General","intensity", ts.intensity);
+  setValue("General","3dFrames", ts.use3dFrame);
 }
 
 frame_spec_t ThemeConfig::getRawFrameSpec(const QString& group) const
@@ -263,6 +265,8 @@ theme_spec_t ThemeConfig::getThemeSpec() const
   r.name = getRawValue("General","name");
   r.author = getRawValue("General","author");
   r.descr = getRawValue("General","comment");
+  r.intensity = getRawValue("General","intensity");
+  r.use3dFrame = getRawValue("General","3dFrames");
 
   return r;
 }

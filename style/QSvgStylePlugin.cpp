@@ -19,7 +19,7 @@
  ***************************************************************************/
 
 #include "QSvgStylePlugin.h"
-#include "QSvgStyle.h"
+#include "QSvgThemableStyle.h"
 
 QStringList QSvgStylePlugin::keys() const
 {
@@ -29,7 +29,7 @@ QStringList QSvgStylePlugin::keys() const
 QStyle *QSvgStylePlugin::create(const QString &key)
 {
   if (key.toLower() == "qsvgstyle")
-    return new QSvgStyle;
+    return new QSvgThemableStyle;
 
   return 0;
 }

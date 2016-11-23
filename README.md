@@ -90,7 +90,7 @@ Run the theme builder as follows:
 
 ```
 $ path/to/QSvgStyle/themebuilder/bin/qsvgthemebuilder
-``
+```
 
 ![QSvgThemeBuilder](qsvgstyle.png)
 

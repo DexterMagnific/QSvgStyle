@@ -28,13 +28,13 @@
 #include <QColor>
 
 #include "ui_ThemeBuilderUIBase.h"
-#include <../style/specs.h>
+#include <specs.h>
 
 class ThemeConfig;
 class QTreeWidget;
 class QTreeWidgetItem;
 class QMenu;
-class QSvgStyle;
+class QSvgThemableStyle;
 class QTimer;
 class QFileSystemWatcher;
 class NewThemeUI;
@@ -59,6 +59,8 @@ class ThemeBuilderUI : public QMainWindow, private Ui::ThemeBuilderUIBase {
     void slot_svgFileChanged(const QString &filename);
 
     void slot_reloadSvgFile();
+
+    void slot_openRecentTheme();
 
     // Called when the current widget in the same QTreeView has changed
     void slot_widgetChanged(QListWidgetItem *current, QListWidgetItem *previous);
@@ -112,7 +114,8 @@ class ThemeBuilderUI : public QMainWindow, private Ui::ThemeBuilderUIBase {
     void slot_enableBtnClicked(bool checked);
     void slot_previewVariantBtnClicked(bool checked);
     void slot_fontSizeChanged(int val);
-    void slot_colorBtnClicked(bool checked);
+    void slot_intensityChanged(int);
+    void slot_use3dFrameBtnClicked(bool checked);
 
     // Callbacks from QSvgStyle that are triggered when it renders widgets
     void slot_drawPrimitive_begin(const QString &s);
@@ -149,7 +152,12 @@ class ThemeBuilderUI : public QMainWindow, private Ui::ThemeBuilderUIBase {
     };
 
     // opens a theme
-    void openTheme(const QString &filename);
+    bool openTheme(const QString &filename);
+
+    // Saves list of recent files
+    void saveRecentFiles();
+    // Loads list of recent files
+    void loadRecentFiles();
 
     // Resets the entire UI as if theme builder has just been started
     // To be called before opening any config file
@@ -163,7 +171,7 @@ class ThemeBuilderUI : public QMainWindow, private Ui::ThemeBuilderUIBase {
 
     // When called, starts a timer that will trigger
     // settings of current group to be saved and then preview update
-    void schedulePreviewUpdate();
+    void schedulePreviewUpdate(bool modified = true);
 
     // Setup the UI to reflect the settings for the given item
     void setupUiForWidget(const QListWidgetItem *current);
@@ -178,8 +186,6 @@ class ThemeBuilderUI : public QMainWindow, private Ui::ThemeBuilderUIBase {
     void clearDrawStackTree();
     // Sets the given style for the given widget and all its children
     void setStyleForWidgetAndChildren(QStyle* style, QWidget* w);
-    // Update the icon on the color button using the baseColor
-    void updateColorBtnIcon();
 
     // Optimizes SVG
     void optimizeSvg(const QString& inPath, const QString& outPath);
@@ -201,7 +207,7 @@ class ThemeBuilderUI : public QMainWindow, private Ui::ThemeBuilderUIBase {
     element_spec_t es;
 
     // an instance of QSvgStyle
-    QSvgStyle *style;
+    QSvgThemableStyle *style;
 
     // current widget being previewed
     QWidget *previewWidget;

@@ -70,6 +70,8 @@ typedef struct {
   value_t<QString> name;
   value_t<QString> author;
   value_t<QString> descr;
+  value_t<unsigned> intensity;
+  value_t<bool> use3dFrame;
 } theme_spec_t;
 
 /** Generic information about a frame */
@@ -79,7 +81,7 @@ typedef struct frame_spec_t {
     capsuleH = capsuleV = 0;
   };
 
-  /* Element name */
+  /* Element name (SVG id) */
   value_t<QString> element;
   /* has frame ? */
   value_t<bool> hasFrame;
@@ -92,13 +94,13 @@ typedef struct frame_spec_t {
   int top,bottom,left,right;
   /* widget position in a capsule, used internally */
   int capsuleH,capsuleV; // 0 : middle, -1 : left,top, 1 : right,bottom, 2 : left+right,top+bottom
-  /* positions where the frame is 'cut' (for each line), used internally */
-  int y0c0,y0c1, y1c0,y1c1, x0c0,x0c1, x1c0,x1c1;
+  /* widget in pressed state, used internally */
+  bool pressed;
 } frame_spec_t;
 
 /** Generic information about a frame interior */
 typedef struct {
-  /* Element name */
+  /* Element name (SVG id) */
   value_t<QString> element;
   /* has interior */
   value_t<bool> hasInterior;
@@ -108,7 +110,7 @@ typedef struct {
 
 /** Generic information about widget indicators */
 typedef struct {
-  /* Element name */
+  /* Element name (SVG id) */
   value_t<QString> element;
   /* size */
   value_t<int> size;
@@ -133,6 +135,14 @@ typedef struct {
 
 } label_spec_t;
 
+/** Generic information about colors */
+typedef struct {
+  /* foreground (usually used for text) */
+  value_t<int> fg;
+  /* background (windows, 3D, ...) */
+  value_t<int> bg;
+} color_spec_t;
+
 /** Generic information about an element */
 typedef struct {
   /* Inherited Element */
@@ -141,6 +151,7 @@ typedef struct {
   interior_spec_t interior;
   indicator_spec_t indicator;
   label_spec_t label;
+  color_spec_t color;
 } element_spec_t;
 
 #endif

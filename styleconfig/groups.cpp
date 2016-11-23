@@ -67,7 +67,7 @@ QString PE_group(QStyle::PrimitiveElement element)
     case QStyle::PE_IndicatorProgressChunk : return "ProgressbarContents";
     case QStyle::PE_IndicatorRadioButton : return "RadioButton";
     case QStyle::PE_IndicatorSpinDown : return "Indicator";
-    case QStyle::PE_IndicatorSpinMinus : return "Indocator";
+    case QStyle::PE_IndicatorSpinMinus : return "Indicator";
     case QStyle::PE_IndicatorSpinPlus : return "Indicator";
     case QStyle::PE_IndicatorSpinUp : return "Indicator";
     case QStyle::PE_IndicatorToolBarHandle : return "ToolBar";

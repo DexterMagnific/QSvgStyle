@@ -35,19 +35,19 @@ template<typename T> class QList;
 template<typename T1, typename T2> class QMap;
 
 class ThemeConfig;
+class PaletteConfig;
 
-class QSvgStyle : public QCommonStyle {
+class QSvgThemableStyle : public QCommonStyle {
   Q_OBJECT
 
   public:
-    enum QSvgStyleVersion { Version = 1 };
+    enum QSvgStyleVersion { Version = 2 };
 
     /**
-     * QSvgStyle constructor. The only SVG themeable style for Qt around
-     * the world
+     * QSvgStyle constructor
      */
-    QSvgStyle();
-    virtual ~QSvgStyle();
+    QSvgThemableStyle();
+    virtual ~QSvgThemableStyle();
 
     /**
      * Reimplemented from QStyle
@@ -87,9 +87,11 @@ class QSvgStyle : public QCommonStyle {
 #endif
 
   private:
-    /* Used internally and by QSvgThemeBuilder */
+    /* Used internally by QSvgThemeBuilder */
     Q_INVOKABLE void loadCustomThemeConfig(const QString &filename);
     Q_INVOKABLE void loadCustomSVG(const QString &filename);
+    /* Used internally by QSvgPaletteBuilder */
+    Q_INVOKABLE void loadCustomPaletteConfig(const QString &filename);
 
     /**
      * Loads and sets the given theme
@@ -107,13 +109,27 @@ class QSvgStyle : public QCommonStyle {
      */
     void loadBuiltinTheme();
 
+    /**
+     * Loads and sets the given palette
+     * Palette is searched for in ~/.config/QSvgStyle/palette.pal file
+     */
+    void loadPalette(const QString& palette);
+    /**
+     * Wrapper method around @ref loadPalette that reads
+     * ~/.config/QSvgStyle/qsvgstyle.cfg configuration file and loads
+     * the palette set with the variable palette=
+     */
+    void loadUserPalette();
+    /**
+     * Loads and sets the system palette
+     */
+    void loadSystemPalette();
+
   signals:
     /**
      * These signals are emitted on various QSvgStyle painting events
      * They are mainly used by the QSvgThemeViewer application to monitor
      * style actions
-     * FIXME signals/slots are a slow mechanism. Maybe replace with direct
-     * callback invocation
      */
     void sig_drawPrimitive_begin(const QString &) const;
     void sig_drawPrimitive_end(const QString &) const;
@@ -200,6 +216,10 @@ class QSvgStyle : public QCommonStyle {
      * Returns the specific setting from the config file
      */
     inline QVariant getSpecificValue(const QString &key) const;
+    /**
+     * Returns the color spec of the given group
+     */
+    inline color_spec_t getColorSpec(const QString &group) const;
 
     /**
      * QSvgStyle support for capsule grouping
@@ -230,9 +250,39 @@ class QSvgStyle : public QCommonStyle {
     void capsulePosition(const QWidget *widget, bool &capsule, int &h, int &v) const;
 
     /**
+     * Helper function that computers the 9 rects of a frame
+     * NOTE: if @ref orn is @ref Vertical, returned results
+     * are for the transposed @ref bounds. Drawinf routines like @ref renderFrame
+     * will manage to apply appriopriate rotations when drawing
+     */
+    void computeFrameRects(/* element bounds */ const QRect &bounds,
+                           /* frame spec */ const frame_spec_t &fs,
+                           /* orientation */ Orientation orn,
+                           /* Results */
+                           QRect &top,
+                           QRect &bottom,
+                           QRect &left,
+                           QRect &right,
+                           QRect &topleft,
+                           QRect &topright,
+                           QRect &bottomleft,
+                           QRect &bottomright) const;
+
+    /**
+     * Helper function that computes the interior rect
+     */
+    void computeInteriorRect(/* element bounds */ const QRect &bounds,
+                             /* frame spec */ frame_spec_t fs,
+                             /* interior spec */ interior_spec_t is,
+                             /* orientation */ Orientation orn,
+                             /* Result */
+                             QRect &r) const;
+
+    /**
      * Generic method that draws a frame
      */
     void renderFrame(QPainter *p,
+                    /* color spec */ const QBrush &b,
                     /* frame bounds */ const QRect &bounds,
                     /* frame spec */ const frame_spec_t &fs,
                     /* frame SVG element (basename) */ const QString &e,
@@ -242,6 +292,7 @@ class QSvgStyle : public QCommonStyle {
      * Generic method that draws a frame interior
      */
     void renderInterior(QPainter *p,
+                       /* color spec */ const QBrush &b,
                        /* frame bounds */ const QRect &bounds,
                        /* frame spec */ const frame_spec_t &fs,
                        /* interior spec */ const interior_spec_t &is,
@@ -273,6 +324,17 @@ class QSvgStyle : public QCommonStyle {
                      /* disabled text ? */ bool disabled = false,
                      /* icon */ const QPixmap &icon = QPixmap(),
                      /* text-icon alignment */ const Qt::ToolButtonStyle tialign = Qt::ToolButtonTextBesideIcon) const;
+
+    void colorizeIndicator(QPainter *p,
+                        /* frame bounds */ const QRect &bounds,
+                        /* frame spec */ const frame_spec_t &fs,
+                        /* interior spec */ const interior_spec_t &is,
+                        /* indicator spec */ const indicator_spec_t &ds,
+                        /* brush */ const QBrush &b,
+                        /* direction */ Qt::LayoutDirection dir = Qt::LeftToRight,
+                        Qt::Alignment alignment = Qt::AlignVCenter | Qt::AlignCenter) const;
+
+
     /**
      * Generic method to compute the ideal
      * (in QSvgStyle : minimal and strictly sufficient) size of a widget
@@ -296,34 +358,15 @@ class QSvgStyle : public QCommonStyle {
         return QRect(r.y(),r.x(),r.height(),r.width());
     }
     /**
-     * Returns a QRect for drawing the frame inside the given @ref bounds
-     * QSvgStyle draws frames inside @ref bounds with no margins,
-     * so this function returns @ref bounds
-     */
-    QRect frameRect(const QRect &bounds,
-                    frame_spec_t f) const {
-      Q_UNUSED(f);
-      return bounds;
-    }
-    /**
      * Returns a QRect for drawing the interior inside the given @ref bounds
      * with regards to the frame spec @ref f
      * QSvgStyle draws interiors immediately after the frame with no margins
-     * BUG This function does not take into account capsules
      */
     QRect interiorRect(const QRect &bounds,
-                       frame_spec_t f,
-                       interior_spec_t i) const {
-      Q_UNUSED(i);
+                       frame_spec_t fs,
+                       interior_spec_t is) const {
       QRect r;
-      if (f.hasFrame)
-        r = frameRect(bounds,f).adjusted(f.left,f.top,-f.right,-f.bottom);
-      else
-        r = frameRect(bounds,f);
-      if ( r.width() < 0 )
-        r.setWidth(0);
-      if ( r.height() < 0 )
-        r.setHeight(0);
+      computeInteriorRect(bounds,fs,is,Horizontal, r);
       return r;
     }
     /**
@@ -350,6 +393,14 @@ class QSvgStyle : public QCommonStyle {
      * draw a rectangle that is 1 pixel shorter on right and bottom
      */
     void drawRealRect(QPainter *p, const QRect &r) const;
+
+    /**
+     * Converts a color_spec_t fr or bg field to a QBrush.
+     * If the field is not set, takes the defaut supplied brush b
+     */
+    QBrush cs2b(value_t<int> c, const QBrush &b) const {
+      return c.present ? QBrush(QRgba64::fromArgb32(c)) : b;
+    }
 
     /** Helper functions that convert various QStyle enums to strings */
     QString PE_str(PrimitiveElement element) const;
@@ -384,6 +435,7 @@ class QSvgStyle : public QCommonStyle {
     QString cls;
     QSvgRenderer *themeRndr;
     ThemeConfig *themeSettings;
+    PaletteConfig *paletteSettings;
 
     /* timer used for progress bars */
     QTimer *progresstimer;

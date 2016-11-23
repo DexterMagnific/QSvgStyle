@@ -12,17 +12,20 @@ TEMPLATE = lib
 QT += core gui svg
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
+INCLUDEPATH += ../styleconfig
+
+PRE_TARGETDEPS += \
+  ../styleconfig/lib/libQSvgStyleConfig.a
+
+LIBS += \
+  ../styleconfig/lib/libQSvgStyleConfig.a
+
 HEADERS += \
-  ../common/groups.h \
-  specs.h            \
-  ThemeConfig.h      \
-  QSvgStyle.h        \
+  QSvgThemableStyle.h \
   QSvgStylePlugin.h
 
 SOURCES += \
-  ../common/groups.cpp \
-  ThemeConfig.cpp      \
-  QSvgStyle.cpp        \
+  QSvgThemableStyle.cpp \
   QSvgStylePlugin.cpp
 
 RESOURCES += \

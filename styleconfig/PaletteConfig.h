@@ -17,8 +17,8 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef THEMECONFIG_H
-#define THEMECONFIG_H
+#ifndef PALETTECONFIG_H
+#define PALETTECONFIG_H
 
 #include "specs.h"
 
@@ -28,68 +28,39 @@ class QSettings;
 class QStringList;
 
 /**
- * Class that loads, saves (and in the future caches) theme settings
+ * Class that loads, saves palette settings
  */
-class ThemeConfig {
+class PaletteConfig {
   public:
-    ThemeConfig();
-    ThemeConfig(const QString &theme);
-    ~ThemeConfig();
+    PaletteConfig();
+    PaletteConfig(const QString &palette);
+    ~PaletteConfig();
 
     /**
-     * Loads a configuration from the given theme filename
+     * Loads a configuration from the given palette filename
      */
-    void load(const QString &theme);
+    void load(const QString &palette);
 
     /**
      * Forces an immediate disk write of the current settings
      */
     void sync();
 
-    /* Get post-processed frame spec after 'inherits' resolution */
-    frame_spec_t getFrameSpec(const QString &group) const;
-    interior_spec_t getInteriorSpec(const QString &group) const;
-    indicator_spec_t getIndicatorSpec(const QString &group) const;
-    label_spec_t getLabelSpec(const QString &group) const;
-    element_spec_t getElementSpec(const QString &group) const;
-    theme_spec_t getThemeSpec() const;
+    /* Get post-processed color spec after 'inherits' resolution */
+    color_spec_t getColorSpec(const QString &group) const;
 
     /* Get frame spec exactly as read from the configuration file */
-    frame_spec_t getRawFrameSpec(const QString &group) const;
-    interior_spec_t getRawInteriorSpec(const QString &group) const;
-    indicator_spec_t getRawIndicatorSpec(const QString &group) const;
-    label_spec_t getRawLabelSpec(const QString &group) const;
-    element_spec_t getRawElementSpec(const QString &group) const;
-    QVariant getSpecificValue(const QString &key) const {
-        return getRawValue("Specific",key);
-    }
+    color_spec_t getRawColorSpec(const QString &group) const;
 
-    /* Get the frame as read from the configuration file and recursively
-     * following inheritance if some values are unset within the specified
-     * group.
-     * At the end, if some values remain unset, they are filled with default
-     * values so they can be safely read, but are left with the unset status
-     */
-    void setFrameSpec(const QString &group, const frame_spec_t &fs) const;
-    void setInteriorSpec(const QString& group, const interior_spec_t& is) const;
-    void setIndicatorSpec(const QString &group, const indicator_spec_t &ds) const;
-    void setLabelSpec(const QString &group, const label_spec_t &ls) const;
-    void setElementSpec(const QString &group, const element_spec_t &es) const;
-    void setThemeSpec(const theme_spec_t &ts) const;
-    void setSpecificValue(const QString &key, const QVariant &v) const {
-        setValue("Specific",key,v);
-    }
-                          
+    void setColorSpec(const QString &group, const color_spec_t &cs) const;
 
   private:
-    friend class ThemeBuilderUIBase;
+    //friend class PaletteBuilderUIBase;
 
     /**
      * Returns the value of the @ref key key in the group @ref group
      * If the value is not found, a null QVariant is returned
      * (i.e QVariant::isNull() is true)
-     * The key is searched first in the theme configuration cache then
-     * read from the configuration file
      */
     QVariant getRawValue(const QString &group,
                          const QString& key) const;
@@ -98,22 +69,17 @@ class ThemeConfig {
      * Returns the value of the @ref key key in the group @ref group
      * If the key is not found in the group, it is searched in the group
      * set by the entry "inherits" if present.
-     * The key is searched first in the theme configuration cache then
-     * read from the configuration file
      */
     QVariant getValue(const QString &group,
                       const QString& key,
                       int depth = 0) const;
 
     /**
-     * sets the value of the given key from the given group in the theme config file
+     * sets the value of the given key from the given group in the palette config file
      * If the key has a null value (i.e. QVariant::isNull() is true),
      * the key is removed from the configuration file
      */
     void setValue(const QString &group, const QString &key,const QVariant &v) const;
-
-    QVariantMap values;
-    QVariantMap rawValues;
 
     QSettings *settings;
 };

@@ -15,8 +15,8 @@
    <stop offset="1" id="stop3004" style="stop-color:#484848"/>
   </linearGradient>
   <linearGradient id="m">
-   <stop id="stop3007" style="stop-color:#fff;stop-opacity:.81569"/>
-   <stop offset="1" id="stop3009" style="stop-color:#fff;stop-opacity:.25098"/>
+   <stop id="stop3007" style="stop-opacity:.81569;stop-color:#fff"/>
+   <stop offset="1" id="stop3009" style="stop-opacity:.25098;stop-color:#fff"/>
   </linearGradient>
   <linearGradient id="ad">
    <stop id="stop3012" style="stop-color:#e8e8e8"/>
@@ -27,12 +27,12 @@
    <stop offset="1" id="stop3019" style="stop-color:#729fcf"/>
   </linearGradient>
   <linearGradient id="bb">
-   <stop id="stop3022" style="stop-color:#fff;stop-opacity:.60392"/>
-   <stop offset="1" id="stop3024" style="stop-color:#fff;stop-opacity:.14902"/>
+   <stop id="stop3022" style="stop-opacity:.60392;stop-color:#fff"/>
+   <stop offset="1" id="stop3024" style="stop-opacity:.14902;stop-color:#fff"/>
   </linearGradient>
   <linearGradient id="an">
-   <stop id="stop3032" style="stop-color:#fff;stop-opacity:.53333"/>
-   <stop offset="1" id="stop3034" style="stop-color:#fff;stop-opacity:.15686"/>
+   <stop id="stop3032" style="stop-opacity:.53333;stop-color:#fff"/>
+   <stop offset="1" id="stop3034" style="stop-opacity:.15686;stop-color:#fff"/>
   </linearGradient>
   <linearGradient id="bx">
    <stop id="stop3037" style="stop-color:#a5a5a5"/>
@@ -59,8 +59,8 @@
    <stop offset="1" id="stop3069" style="stop-color:#606060"/>
   </linearGradient>
   <linearGradient id="ay">
-   <stop id="stop3072" style="stop-color:#fff;stop-opacity:.6902"/>
-   <stop offset="1" id="stop3074" style="stop-color:#fff;stop-opacity:0"/>
+   <stop id="stop3072" style="stop-opacity:.6902;stop-color:#fff"/>
+   <stop offset="1" id="stop3074" style="stop-opacity:0;stop-color:#fff"/>
   </linearGradient>
   <linearGradient id="al" gradientUnits="userSpaceOnUse" x2="0" y1="95.4" y2="89.4">
    <stop id="stop3077"/>
@@ -96,8 +96,8 @@
   <linearGradient id="j" xlink:href="#ay" gradientUnits="userSpaceOnUse" y1="25" gradientTransform="matrix(1.25 0 0 1-40 .000001)" x2="0" y2="40"/>
   <linearGradient id="ba" xlink:href="#bb" gradientUnits="userSpaceOnUse" y1="365.8" gradientTransform="matrix(.2555 0 0 .1865-77.92 379.3)" x2="0" y2="446.3"/>
   <linearGradient id="z">
-   <stop id="stop3131" style="stop-color:#fff;stop-opacity:.72807"/>
-   <stop offset="1" id="stop3133" style="stop-color:#fff;stop-opacity:.23137"/>
+   <stop id="stop3131" style="stop-opacity:.72807;stop-color:#fff"/>
+   <stop offset="1" id="stop3133" style="stop-opacity:.23137;stop-color:#fff"/>
   </linearGradient>
   <linearGradient id="aj">
    <stop id="stop3136" style="stop-color:#d8d8d8"/>
@@ -120,8 +120,8 @@
   <radialGradient id="t" xlink:href="#aj" gradientUnits="userSpaceOnUse" cy="445.5" cx="39.94" r="21.47"/>
   <linearGradient id="o" xlink:href="#ai" gradientUnits="userSpaceOnUse" x2="0" y1="404.5" y2="445.5"/>
   <linearGradient id="n" x1="40.11" gradientUnits="userSpaceOnUse" x2="40" y1="407.6" y2="425.3">
-   <stop id="stop3158" style="stop-color:#fff;stop-opacity:.84706"/>
-   <stop offset="1" id="stop3160" style="stop-color:#fff;stop-opacity:.29804"/>
+   <stop id="stop3158" style="stop-opacity:.84706;stop-color:#fff"/>
+   <stop offset="1" id="stop3160" style="stop-opacity:.29804;stop-color:#fff"/>
   </linearGradient>
   <radialGradient id="ao" xlink:href="#bq" gradientUnits="userSpaceOnUse" cy="731.2" cx="899.1" gradientTransform="matrix(.235-.00002411.0000001.1034-62.56-523.2)" r="212.8"/>
   <linearGradient id="b" xlink:href="#ay" gradientUnits="userSpaceOnUse" y1="25" gradientTransform="matrix(1.25 0 0 1-47.5-65)" x2="0" y2="40"/>
@@ -130,8 +130,8 @@
    <stop offset="1" id="stop3167" style="stop-color:#828282"/>
   </linearGradient>
   <radialGradient id="e" gradientUnits="userSpaceOnUse" cy="32.52" cx="191.2" gradientTransform="matrix(3.75-.051.054 4.025-527.7-88.7)" r="1.875">
-   <stop id="stop3170" style="stop-color:#fff;stop-opacity:.007843"/>
-   <stop offset="1" id="stop3172" style="stop-color:#fff;stop-opacity:0"/>
+   <stop id="stop3170" style="stop-opacity:.007843;stop-color:#fff"/>
+   <stop offset="1" id="stop3172" style="stop-opacity:0;stop-color:#fff"/>
   </radialGradient>
   <radialGradient id="ap" xlink:href="#bq" gradientUnits="userSpaceOnUse" cy="32.55" cx="180.5" gradientTransform="matrix(3.721.00000383-.00000409 4.025-491.1-98.46)" r="1.875"/>
   <linearGradient id="ax" xlink:href="#bp" gradientUnits="userSpaceOnUse" y1="40" gradientTransform="translate(0-65)" x2="0" y2="25"/>
@@ -146,13 +146,13 @@
   <linearGradient id="l" xlink:href="#z" gradientUnits="userSpaceOnUse" y1="365.8" gradientTransform="matrix(.0192 0 0 .0933 174.3-9.117)" x2="0" y2="446.3"/>
   <linearGradient id="k" xlink:href="#z" gradientUnits="userSpaceOnUse" y1="365.8" gradientTransform="matrix(.0192 0 0 .0933 166.8-9.117)" x2="0" y2="446.3"/>
   <linearGradient id="br">
-   <stop id="stop3191" style="stop-color:#fff;stop-opacity:.25098"/>
-   <stop offset="1" id="stop3193" style="stop-color:#fff;stop-opacity:0"/>
+   <stop id="stop3191" style="stop-opacity:.25098;stop-color:#fff"/>
+   <stop offset="1" id="stop3193" style="stop-opacity:0;stop-color:#fff"/>
   </linearGradient>
   <radialGradient id="ae" cx="191.2" xlink:href="#br" gradientUnits="userSpaceOnUse" cy="32.52" r="1.875" gradientTransform="matrix(3.75-.0506.054 4-910.2-87.99)"/>
   <linearGradient id="av" gradientUnits="userSpaceOnUse" y1="25" gradientTransform="matrix(1.25 0 0 1-40 .000001)" x2="0" y2="40">
-   <stop id="stop3213" style="stop-color:#fff;stop-opacity:.72941"/>
-   <stop offset="1" id="stop3215" style="stop-color:#fff;stop-opacity:0"/>
+   <stop id="stop3213" style="stop-opacity:.72941;stop-color:#fff"/>
+   <stop offset="1" id="stop3215" style="stop-opacity:0;stop-color:#fff"/>
   </linearGradient>
   <radialGradient id="ct" xlink:href="#bx" gradientUnits="userSpaceOnUse" cy="731.2" cx="899.1" gradientTransform="matrix(.235-.00002411.0000001.1034-62.56 402)" r="212.8"/>
   <linearGradient id="ei" xlink:href="#an" gradientUnits="userSpaceOnUse" y1="365.8" gradientTransform="matrix(.2555 0 0 .1865-77.92 379.3)" x2="0" y2="446.3"/>
@@ -166,7 +166,7 @@
   <linearGradient id="eh" xlink:href="#bz" gradientUnits="userSpaceOnUse" x2="0" gradientTransform="translate(0-65)" y1="40" y2="25"/>
   <radialGradient id="bg" gradientUnits="userSpaceOnUse" cy="462.6" cx="148.7" gradientTransform="matrix(1 0 0 .3 0 323.8)" r="50">
    <stop id="stop3242" style="stop-color:#558ecb"/>
-   <stop offset="1" id="stop3244" style="stop-color:#558fcb;stop-opacity:0"/>
+   <stop offset="1" id="stop3244" style="stop-opacity:0;stop-color:#558fcb"/>
   </radialGradient>
   <radialGradient id="ar" cx="180" xlink:href="#y" gradientUnits="userSpaceOnUse" cy="32.5" r="4.5" gradientTransform="matrix(2.778-.00000017.00000007 1.667-320-21.67)"/>
   <radialGradient id="aq" xlink:href="#y" gradientUnits="userSpaceOnUse" cy="731.5" cx="899.1" gradientTransform="matrix(.235 0-.0001073.0987-62.48 405.4)" r="212.8"/>
@@ -175,19 +175,19 @@
   <radialGradient id="bf" cx="227.2" xlink:href="#aj" gradientUnits="userSpaceOnUse" cy="446.4" r="22" gradientTransform="matrix(.6467 0 0 .8011-266.4-56.43)"/>
   <radialGradient id="ch" gradientUnits="userSpaceOnUse" cy="462.6" cx="148.7" gradientTransform="matrix(1 0 0 .3 0 323.8)" r="50">
    <stop id="stop3266" style="stop-color:#6c6c6c"/>
-   <stop offset="1" id="stop3268" style="stop-color:#6c6c6c;stop-opacity:0"/>
+   <stop offset="1" id="stop3268" style="stop-opacity:0;stop-color:#6c6c6c"/>
   </radialGradient>
   <radialGradient id="be" xlink:href="#az" gradientUnits="userSpaceOnUse" cy="445.5" cx="39.94" r="21.47"/>
   <linearGradient id="bm" xlink:href="#ay" gradientUnits="userSpaceOnUse" x2="0" y1="40" y2="25"/>
   <radialGradient id="ck" xlink:href="#bu" gradientUnits="userSpaceOnUse" cy="512.6" cx="148.7" gradientTransform="matrix(1 0 0 .3 0-601.3)" r="50"/>
   <linearGradient id="cz" xlink:href="#an" gradientUnits="userSpaceOnUse" y1="34.99" gradientTransform="matrix(39.06 0 0 3.516-13570-600.6)" x2="0" y2="39.24"/>
   <linearGradient id="cx" gradientUnits="userSpaceOnUse" x2="0" gradientTransform="matrix(2.93 0 0 1.758-1220-36.52)" y1="34.99" y2="39.24">
-   <stop id="stop3275" style="stop-color:#fff;stop-opacity:.53333"/>
-   <stop offset="1" id="stop3277" style="stop-color:#fff;stop-opacity:.15686"/>
+   <stop id="stop3275" style="stop-opacity:.53333;stop-color:#fff"/>
+   <stop offset="1" id="stop3277" style="stop-opacity:.15686;stop-color:#fff"/>
   </linearGradient>
   <linearGradient id="cw" gradientUnits="userSpaceOnUse" x2="0" gradientTransform="matrix(2.93 0 0 1.758-837.9-36.52)" y1="34.99" y2="39.24">
-   <stop id="stop3280" style="stop-color:#fff;stop-opacity:.53333"/>
-   <stop offset="1" id="stop3282" style="stop-color:#fff;stop-opacity:.15686"/>
+   <stop id="stop3280" style="stop-opacity:.53333;stop-color:#fff"/>
+   <stop offset="1" id="stop3282" style="stop-opacity:.15686;stop-color:#fff"/>
   </linearGradient>
   <radialGradient id="ca" xlink:href="#bu" gradientUnits="userSpaceOnUse" cy="32.5" cx="180" gradientTransform="matrix(2 .00000056-.00000056 2-180-32.5)" r="3.75"/>
   <linearGradient id="db" gradientUnits="userSpaceOnUse" y1="257.5" gradientTransform="matrix(.88 0 0 .88 216.2 213.2)" x2="0" y2="305">
@@ -199,8 +199,8 @@
    <stop offset="1" id="stop3293" style="stop-color:#d0d0d0"/>
   </radialGradient>
   <linearGradient id="da" x1="305" gradientUnits="userSpaceOnUse" y1="389.4" gradientTransform="matrix(.0958 0 0 .2582 86.26 345.2)" x2="304" y2="446.3">
-   <stop id="stop3296" style="stop-color:#fff;stop-opacity:.81569"/>
-   <stop offset="1" id="stop3298" style="stop-color:#fff;stop-opacity:.25098"/>
+   <stop id="stop3296" style="stop-opacity:.81569;stop-color:#fff"/>
+   <stop offset="1" id="stop3298" style="stop-opacity:.25098;stop-color:#fff"/>
   </linearGradient>
   <linearGradient id="ec" gradientUnits="userSpaceOnUse" y1="257.5" gradientTransform="matrix(.88 0 0 .88 219.2-13.84)" x2="0" y2="305">
    <stop id="stop3301" style="stop-color:#888"/>
@@ -211,8 +211,8 @@
    <stop offset="1" id="stop3308" style="stop-color:#729fcf"/>
   </radialGradient>
   <linearGradient id="eb" x1="305" gradientUnits="userSpaceOnUse" y1="389.4" gradientTransform="matrix(.0958 0 0 .2582 89.26 118.2)" x2="304" y2="446.3">
-   <stop id="stop3311" style="stop-color:#fff;stop-opacity:.72807"/>
-   <stop offset="1" id="stop3313" style="stop-color:#fff;stop-opacity:.23137"/>
+   <stop id="stop3311" style="stop-opacity:.72807;stop-color:#fff"/>
+   <stop offset="1" id="stop3313" style="stop-opacity:.23137;stop-color:#fff"/>
   </linearGradient>
   <linearGradient id="di" gradientUnits="userSpaceOnUse" x2="0" gradientTransform="matrix(.88 0 0 .88 504.2 370.7)" y1="257.5" y2="305">
    <stop id="stop3316" style="stop-color:#888"/>
@@ -223,16 +223,16 @@
    <stop offset="1" id="stop3323" style="stop-color:#adadad"/>
   </radialGradient>
   <linearGradient id="dh" x1="305" gradientUnits="userSpaceOnUse" x2="304" gradientTransform="matrix(.0958 0 0 .2582 374.3 502.8)" y1="389.4" y2="446.3">
-   <stop id="stop3326" style="stop-color:#fff;stop-opacity:.72807"/>
-   <stop offset="1" id="stop3328" style="stop-color:#fff;stop-opacity:.23137"/>
+   <stop id="stop3326" style="stop-opacity:.72807;stop-color:#fff"/>
+   <stop offset="1" id="stop3328" style="stop-opacity:.23137;stop-color:#fff"/>
   </linearGradient>
   <linearGradient id="dm" gradientUnits="userSpaceOnUse" x2="0" gradientTransform="matrix(1.467 0 0 .2299-334.1-197)" y1="43.36" y2="28.36">
    <stop id="stop3331" style="stop-color:#72a0cf"/>
    <stop offset="1" id="stop3333" style="stop-color:#8fcad9"/>
   </linearGradient>
   <linearGradient id="dw" gradientUnits="userSpaceOnUse" x2="0" gradientTransform="matrix(.0102 0 0 .0274-427.9 178)" y1="365.8" y2="446.3">
-   <stop id="stop3336" style="stop-color:#fff;stop-opacity:.81569"/>
-   <stop offset="1" id="stop3338" style="stop-color:#fff;stop-opacity:.25098"/>
+   <stop id="stop3336" style="stop-opacity:.81569;stop-color:#fff"/>
+   <stop offset="1" id="stop3338" style="stop-opacity:.25098;stop-color:#fff"/>
   </linearGradient>
   <radialGradient id="co" gradientUnits="userSpaceOnUse" cy="544.5" cx="27.5" gradientTransform="matrix(-.8828 0 0 3.341 214.6-1398)" r="2.5">
    <stop id="stop3341" style="stop-opacity:.31373"/>
@@ -240,19 +240,19 @@
   </radialGradient>
   <radialGradient id="cp" gradientUnits="userSpaceOnUse" cy="462.6" cx="148.7" gradientTransform="matrix(.0441 0 0 .16 184 344.9)" r="50">
    <stop id="stop3346" style="stop-color:#558ecb"/>
-   <stop offset="1" id="stop3348" style="stop-color:#558fcb;stop-opacity:0"/>
+   <stop offset="1" id="stop3348" style="stop-opacity:0;stop-color:#558fcb"/>
   </radialGradient>
   <linearGradient id="dx" gradientUnits="userSpaceOnUse" x2="0" gradientTransform="matrix(.0113 0 0 .0995 180.6 374.5)" y1="365.8" y2="446.3">
-   <stop id="stop3351" style="stop-color:#fff;stop-opacity:.60392"/>
-   <stop offset="1" id="stop3353" style="stop-color:#fff;stop-opacity:.14902"/>
+   <stop id="stop3351" style="stop-opacity:.60392;stop-color:#fff"/>
+   <stop offset="1" id="stop3353" style="stop-opacity:.14902;stop-color:#fff"/>
   </linearGradient>
   <linearGradient id="eo" gradientUnits="userSpaceOnUse" y1="25" gradientTransform="matrix(1.333 0 0 .4414-658.5 175.7)" x2="0" y2="40">
-   <stop id="stop3356" style="stop-color:#fff;stop-opacity:.6902"/>
-   <stop offset="1" id="stop3358" style="stop-color:#fff;stop-opacity:0"/>
+   <stop id="stop3356" style="stop-opacity:.6902;stop-color:#fff"/>
+   <stop offset="1" id="stop3358" style="stop-opacity:0;stop-color:#fff"/>
   </linearGradient>
   <linearGradient id="em" gradientUnits="userSpaceOnUse" y1="365.8" gradientTransform="matrix(.0204 0 0 .0823-430 156.6)" x2="0" y2="446.3">
-   <stop id="stop3361" style="stop-color:#fff;stop-opacity:.72807"/>
-   <stop offset="1" id="stop3363" style="stop-color:#fff;stop-opacity:.23137"/>
+   <stop id="stop3361" style="stop-opacity:.72807;stop-color:#fff"/>
+   <stop offset="1" id="stop3363" style="stop-opacity:.23137;stop-color:#fff"/>
   </linearGradient>
   <linearGradient id="ek" gradientUnits="userSpaceOnUse" y1="25" gradientTransform="matrix(1.333 0 0 .4414-663.9 175.7)" x2="0" y2="40">
    <stop id="stop3366" style="stop-color:#888"/>
@@ -267,20 +267,20 @@
    <stop offset="1" id="stop3393" style="stop-color:#c9d2d7"/>
   </radialGradient>
   <linearGradient id="cy" gradientUnits="userSpaceOnUse" y1="34.99" gradientTransform="matrix(39.06 0 0 3.516-13570-600.6)" x2="0" y2="39.24">
-   <stop id="stop3396" style="stop-color:#fff;stop-opacity:.53333"/>
-   <stop offset="1" id="stop3398" style="stop-color:#fff;stop-opacity:.15686"/>
+   <stop id="stop3396" style="stop-opacity:.53333;stop-color:#fff"/>
+   <stop offset="1" id="stop3398" style="stop-opacity:.15686;stop-color:#fff"/>
   </linearGradient>
   <radialGradient id="cq" gradientUnits="userSpaceOnUse" cy="731.2" cx="899.1" gradientTransform="matrix(.235-.00002411.0000001.1034-62.56 402)" r="212.8">
    <stop id="stop3401" style="stop-color:#e8e8e8"/>
    <stop offset="1" id="stop3403" style="stop-color:#d0d0d0"/>
   </radialGradient>
   <linearGradient id="dl" gradientUnits="userSpaceOnUse" x2="0" gradientTransform="matrix(.2555 0 0 .1865-77.92 379.3)" y1="365.8" y2="446.3">
-   <stop id="stop3406" style="stop-color:#fff;stop-opacity:.81569"/>
-   <stop offset="1" id="stop3408" style="stop-color:#fff;stop-opacity:.25098"/>
+   <stop id="stop3406" style="stop-opacity:.81569;stop-color:#fff"/>
+   <stop offset="1" id="stop3408" style="stop-opacity:.25098;stop-color:#fff"/>
   </linearGradient>
   <linearGradient id="dj" gradientUnits="userSpaceOnUse" y1="365.8" gradientTransform="matrix(.2555 0 0 .1865-46.67 388.7)" x2="0" y2="446.3">
-   <stop id="stop3411" style="stop-color:#fff;stop-opacity:.72807"/>
-   <stop offset="1" id="stop3413" style="stop-color:#fff;stop-opacity:.23137"/>
+   <stop id="stop3411" style="stop-opacity:.72807;stop-color:#fff"/>
+   <stop offset="1" id="stop3413" style="stop-opacity:.23137;stop-color:#fff"/>
   </linearGradient>
   <radialGradient id="cl" gradientUnits="userSpaceOnUse" cy="579.5" cx="909" gradientTransform="matrix(.235 0-.0001073.0987-31.23 414.7)" r="212.8">
    <stop id="stop3416" style="stop-color:#7cced8"/>
@@ -327,8 +327,8 @@
   </radialGradient>
   <linearGradient id="ab-3" xlink:href="#m" gradientUnits="userSpaceOnUse" x2="0" gradientTransform="matrix(.0096 0 0 .0933 184.6-9.117)" y1="365.79999" y2="446.29999"/>
   <radialGradient id="v-0" gradientUnits="userSpaceOnUse" cy="541.79999" cx="27.5" gradientTransform="matrix(.00000803-3-3.188-.00000853 1918 115)" r="2.5">
-   <stop id="stop3255-4" style="stop-color:#fff;stop-opacity:.62745"/>
-   <stop offset="1" id="stop3257-9" style="stop-color:#fff;stop-opacity:0"/>
+   <stop id="stop3255-4" style="stop-opacity:.62745;stop-color:#fff"/>
+   <stop offset="1" id="stop3257-9" style="stop-opacity:0;stop-color:#fff"/>
   </radialGradient>
   <radialGradient id="af-2" cx="180" xlink:href="#ad" gradientUnits="userSpaceOnUse" cy="32.5" r="4.5" gradientTransform="matrix(1.389-.00000017.00000003 1.667-70-21.67)"/>
   <radialGradient r="2.5" cy="541.79999" cx="27.5" gradientTransform="matrix(.00000803-3-3.188-.00000853 1918 115)" gradientUnits="userSpaceOnUse" id="radialGradient8784" xlink:href="#v-0"/>
@@ -360,12 +360,12 @@
   <radialGradient r="212.8" cy="731.5" cx="899.09998" gradientTransform="matrix(.05388928 0-.00002461.1167888 70.776536 469.27957)" gradientUnits="userSpaceOnUse" id="radialGradient14735" xlink:href="#y"/>
   <linearGradient xlink:href="#dy" id="linearGradient6698" gradientUnits="userSpaceOnUse" gradientTransform="translate(53 456)" x1="-52.86" x2="-130.4"/>
   <linearGradient id="cx-9" gradientUnits="userSpaceOnUse" x2="0" gradientTransform="matrix(2.93 0 0 1.758-1220-36.52)" y1="34.990002" y2="39.24">
-   <stop id="stop3275-8" style="stop-color:#fff;stop-opacity:.53333"/>
-   <stop offset="1" id="stop3277-0" style="stop-color:#fff;stop-opacity:.15686"/>
+   <stop id="stop3275-8" style="stop-opacity:.53333;stop-color:#fff"/>
+   <stop offset="1" id="stop3277-0" style="stop-opacity:.15686;stop-color:#fff"/>
   </linearGradient>
   <linearGradient id="cw-4" gradientUnits="userSpaceOnUse" x2="0" gradientTransform="matrix(2.93 0 0 1.758-837.9-36.52)" y1="34.990002" y2="39.24">
-   <stop id="stop3280-7" style="stop-color:#fff;stop-opacity:.53333"/>
-   <stop offset="1" id="stop3282-9" style="stop-color:#fff;stop-opacity:.15686"/>
+   <stop id="stop3280-7" style="stop-opacity:.53333;stop-color:#fff"/>
+   <stop offset="1" id="stop3282-9" style="stop-opacity:.15686;stop-color:#fff"/>
   </linearGradient>
   <linearGradient id="df-9" xlink:href="#an" gradientUnits="userSpaceOnUse" y1="365.79999" gradientTransform="matrix(.0192 0 0 .0933 166.8-9.117)" x2="0" y2="446.29999"/>
   <linearGradient id="dg-9" xlink:href="#an" gradientUnits="userSpaceOnUse" y1="365.79999" gradientTransform="matrix(.0192 0 0 .0933 174.3-9.117)" x2="0" y2="446.29999"/>
@@ -373,17 +373,17 @@
   <linearGradient id="dk-7" xlink:href="#m" gradientUnits="userSpaceOnUse" y1="365.79999" gradientTransform="matrix(.0192 0 0 .0933 174.3-9.117)" x2="0" y2="446.29999"/>
   <linearGradient y2="40" x2="0" y1="25" gradientTransform="matrix(1.25 0 0 1-40 .000011)" gradientUnits="userSpaceOnUse" id="linearGradient6748" xlink:href="#bw"/>
  </defs>
- <text line-height="125%" y="288.55786" x="51" id="text3440" text-align="justify" style="font-size:14;font-family:Gill Sans;font-weight:bold"><tspan y="288.55786" x="51" id="tspan3442"/>
+ <text line-height="125%" y="288.55786" x="51" id="text3440" text-align="justify" style="font-weight:bold;font-family:Gill Sans;font-size:14"><tspan y="288.55786" x="51" id="tspan3442"/>
  </text>
- <text line-height="normal" y="557" x="90" id="text3444" block-progression="tb" text-indent="0" text-transform="none" style="font-size:10;font-family:cmr10;color:#000000"><tspan y="557" x="90" id="tspan3446">Radio button</tspan>
+ <text line-height="normal" y="557" x="90" id="text3444" block-progression="tb" text-indent="0" text-transform="none" style="color:#000000;font-family:cmr10;font-size:10"><tspan y="557" x="90" id="tspan3446">Radio button</tspan>
  </text>
- <text line-height="normal" y="154.05078" x="464.43848" id="text3454" block-progression="tb" text-indent="0" text-transform="none" style="font-size:10;font-family:cmr10;color:#000000"><tspan y="154.05078" x="464.43848" id="tspan3456">Separator</tspan>
+ <text line-height="normal" y="154.05078" x="464.43848" id="text3454" block-progression="tb" text-indent="0" text-transform="none" style="color:#000000;font-family:cmr10;font-size:10"><tspan y="154.05078" x="464.43848" id="tspan3456">Separator</tspan>
  </text>
- <text line-height="normal" y="1795" x="90" id="text3470" block-progression="tb" text-indent="0" text-transform="none" style="font-size:10;font-family:cmr10;color:#000000"><tspan y="1795" x="90" id="tspan3472">Size Grip</tspan>
+ <text line-height="normal" y="1795" x="90" id="text3470" block-progression="tb" text-indent="0" text-transform="none" style="color:#000000;font-family:cmr10;font-size:10"><tspan y="1795" x="90" id="tspan3472">Size Grip</tspan>
  </text>
- <text line-height="normal" y="1848" x="90" id="text3474" block-progression="tb" text-indent="0" text-transform="none" style="font-size:10;font-family:cmr10;color:#000000"><tspan y="1848" x="90" id="tspan3476">MdiControls</tspan>
+ <text line-height="normal" y="1848" x="90" id="text3474" block-progression="tb" text-indent="0" text-transform="none" style="color:#000000;font-family:cmr10;font-size:10"><tspan y="1848" x="90" id="tspan3476">MdiControls</tspan>
  </text>
- <text line-height="normal" y="1823" x="181" id="text3478" block-progression="tb" text-indent="0" text-transform="none" style="font-size:10;font-family:cmr10;color:#000000"><tspan y="1823" x="181" id="tspan3480">Maximize</tspan>
+ <text line-height="normal" y="1823" x="181" id="text3478" block-progression="tb" text-indent="0" text-transform="none" style="color:#000000;font-family:cmr10;font-size:10"><tspan y="1823" x="181" id="tspan3480">Maximize</tspan>
  </text>
  <g id="mdi-maximize-normal" transform="matrix(.52217116.52217116-.52217116.52217116 512.68037 1754.5482)" style="fill:none;stroke:#000000">
   <g transform="matrix(.58721602.58721602-.58721602.58721602 87.16072-87.7231)" id="g3483" style="fill:#000000">
@@ -397,7 +397,7 @@
    <rect transform="matrix(0-1 1 0 0 0)" height="2.3133" width="16.533272" y="166.42911" x="-675.47089" id="rect3499" style="stroke-width:.686728"/>
   </g>
  </g>
- <text line-height="normal" y="1823" x="235" id="text3501" block-progression="tb" text-indent="0" text-transform="none" style="font-size:10;font-family:cmr10;fill:#000000;color:#000000"><tspan y="1823" x="235" id="tspan3503">Minimize</tspan>
+ <text line-height="normal" y="1823" x="235" id="text3501" block-progression="tb" text-indent="0" text-transform="none" style="fill:#000000;color:#000000;font-family:cmr10;font-size:10"><tspan y="1823" x="235" id="tspan3503">Minimize</tspan>
  </text>
  <g id="mdi-minimize-normal" transform="matrix(.73846154 0 0 .73846154 127.02624 1373.4199)" style="stroke:#000000">
   <g transform="matrix(.7071.7071-.7071.7071 513.86294 76.72388)" id="g3508">
@@ -405,7 +405,7 @@
    <path d="M182.41423 660.31423L184 661.9l6.2-6.2 3-3-3-3-6.2-6.2-1.58577 1.58577 7.61423 7.61423z" id="path3512"/>
   </g>
  </g>
- <text line-height="normal" y="1823" x="293" id="text3514" block-progression="tb" text-indent="0" text-transform="none" style="font-size:10;font-family:cmr10;color:#000000"><tspan y="1823" x="293" id="tspan3516">Close</tspan>
+ <text line-height="normal" y="1823" x="293" id="text3514" block-progression="tb" text-indent="0" text-transform="none" style="color:#000000;font-family:cmr10;font-size:10"><tspan y="1823" x="293" id="tspan3516">Close</tspan>
  </text>
  <g id="mdi-close-normal" transform="matrix(0 .73846154-.73846154 0 742.23392 1680.6402)" style="stroke:#000000">
   <g transform="matrix(.7071.7071-.7071.7071 591.04116-1.228015)" id="g3521">
@@ -468,70 +468,70 @@
    <path d="m153.2 92.4l2.5 2.5 2.5-2.5" id="path3603" style="stroke-linecap:square"/>
   </g>
  </g>
- <text line-height="normal" y="1144" x="435" id="text3605" block-progression="tb" text-indent="0" text-transform="none" style="font-size:10;font-family:cmr10;fill:#000000;color:#000000"><tspan y="1144" x="435" id="tspan3607">Separator</tspan>
+ <text line-height="normal" y="1144" x="435" id="text3605" block-progression="tb" text-indent="0" text-transform="none" style="fill:#000000;color:#000000;font-family:cmr10;font-size:10"><tspan y="1144" x="435" id="tspan3607">Separator</tspan>
  </text>
  <g id="menuitem-separator" transform="matrix(4.8 0 0-1.614 320 2028.6515)" style="opacity:.8;fill-rule:evenodd">
   <path d="m30 540.9l-5 0 0 2.5 5 0 0-2.5" id="path3610" style="fill-opacity:.1255"/>
   <path d="m30 538.4l-5 0 0 2.5 5 0 0-2.5" id="path3612" style="fill:#ffffff;fill-opacity:.7529"/>
  </g>
- <text line-height="normal" y="30" x="90" id="text3621" block-progression="tb" text-indent="0" text-transform="none" style="font-size:10;font-family:cmr10;color:#000000"><tspan y="30" x="90" id="tspan3623">Button &amp;</tspan>
+ <text line-height="normal" y="30" x="90" id="text3621" block-progression="tb" text-indent="0" text-transform="none" style="color:#000000;font-family:cmr10;font-size:10"><tspan y="30" x="90" id="tspan3623">Button &amp;</tspan>
  </text>
- <text line-height="normal" y="227" x="90" id="text3645" block-progression="tb" text-indent="0" text-transform="none" style="font-size:10;font-family:cmr10;color:#000000"><tspan y="227" x="90" id="tspan3647">Line edit</tspan>
+ <text line-height="normal" y="227" x="90" id="text3645" block-progression="tb" text-indent="0" text-transform="none" style="color:#000000;font-family:cmr10;font-size:10"><tspan y="227" x="90" id="tspan3647">Line edit</tspan>
  </text>
- <text line-height="normal" y="277" x="90" id="text3697" block-progression="tb" text-indent="0" text-transform="none" style="font-size:10;font-family:cmr10;color:#000000"><tspan y="277" x="90" id="tspan3699">Frame</tspan>
+ <text line-height="normal" y="277" x="90" id="text3697" block-progression="tb" text-indent="0" text-transform="none" style="color:#000000;font-family:cmr10;font-size:10"><tspan y="277" x="90" id="tspan3699">Frame</tspan>
  </text>
  <g id="frame-raised-disabled-topright" transform="translate(455 255.6)" style="fill-rule:evenodd">
-  <path d="m-43 12.36l0 5c6 0 10 4 10 10l5 0c0-10-5-15-15-15" id="path3702" style="fill:url(#linearGradient5886);opacity:.8"/>
-  <path d="m-43 20.36l0 7 7 0c0-5-2-7-7-7" id="path3704" style="fill:#cccccc;opacity:.8"/>
-  <path d="m-43 17.36l0 3c5 0 7 2 7 7l3 0c0-6-4-10-10-10" id="path3706" style="fill:#808080;opacity:.8"/>
+  <path d="m-43 12.36l0 5c6 0 10 4 10 10l5 0c0-10-5-15-15-15" id="path3702" style="opacity:.8;fill:url(#linearGradient5886)"/>
+  <path d="m-43 20.36l0 7 7 0c0-5-2-7-7-7" id="path3704" style="opacity:.8;fill:#cccccc"/>
+  <path d="m-43 17.36l0 3c5 0 7 2 7 7l3 0c0-6-4-10-10-10" id="path3706" style="opacity:.8;fill:#808080"/>
  </g>
  <g id="frame-raised-disabled-topleft" transform="translate(455 255.6)" style="fill-rule:evenodd">
-  <path d="m-60 12.36l0 5c-6 0-10 4-10 10l-5 0c0-10 5-15 15-15" id="path3709" style="fill:url(#linearGradient5886);opacity:.8"/>
-  <path d="m-60 20.36l0 7-7 0c0-5 2-7 7-7" id="path3711" style="fill:#cccccc;opacity:.8"/>
-  <path d="m-60 17.36l0 3c-5 0-7 2-7 7l-3 0c0-6 4-10 10-10" id="path3713" style="fill:#808080;opacity:.8"/>
+  <path d="m-60 12.36l0 5c-6 0-10 4-10 10l-5 0c0-10 5-15 15-15" id="path3709" style="opacity:.8;fill:url(#linearGradient5886)"/>
+  <path d="m-60 20.36l0 7-7 0c0-5 2-7 7-7" id="path3711" style="opacity:.8;fill:#cccccc"/>
+  <path d="m-60 17.36l0 3c-5 0-7 2-7 7l-3 0c0-6 4-10 10-10" id="path3713" style="opacity:.8;fill:#808080"/>
  </g>
  <g id="frame-raised-disabled-bottomright" transform="translate(455 255.6)" style="fill-rule:evenodd">
-  <path d="m-43 59.36l0-5c6 0 10-4 10-10l5 0c0 10-5 15-15 15" id="path3716" style="fill:url(#linearGradient5886);opacity:.8"/>
-  <path d="m-43 51.36l0-7 7 0c0 5-2 7-7 7" id="path3718" style="fill:#cccccc;opacity:.8"/>
-  <path d="m-43 54.36l0-3c5 0 7-2 7-7l3 0c0 6-4 10-10 10" id="path3720" style="fill:#808080;opacity:.8"/>
+  <path d="m-43 59.36l0-5c6 0 10-4 10-10l5 0c0 10-5 15-15 15" id="path3716" style="opacity:.8;fill:url(#linearGradient5886)"/>
+  <path d="m-43 51.36l0-7 7 0c0 5-2 7-7 7" id="path3718" style="opacity:.8;fill:#cccccc"/>
+  <path d="m-43 54.36l0-3c5 0 7-2 7-7l3 0c0 6-4 10-10 10" id="path3720" style="opacity:.8;fill:#808080"/>
  </g>
  <g id="frame-raised-disabled-bottomleft" transform="translate(455 255.6)" style="fill-rule:evenodd">
-  <path d="m-60 59.36l0-5c-6 0-10-4-10-10l-5 0c0 10 5 15 15 15" id="path3723" style="fill:url(#linearGradient5886);opacity:.8"/>
-  <path d="m-60 51.36l0-7-7 0c0 5 2 7 7 7" id="path3725" style="fill:#cccccc;opacity:.8"/>
-  <path d="m-60 54.36l0-3c-5 0-7-2-7-7l-3 0c0 6 4 10 10 10" id="path3727" style="fill:#808080;opacity:.8"/>
+  <path d="m-60 59.36l0-5c-6 0-10-4-10-10l-5 0c0 10 5 15 15 15" id="path3723" style="opacity:.8;fill:url(#linearGradient5886)"/>
+  <path d="m-60 51.36l0-7-7 0c0 5 2 7 7 7" id="path3725" style="opacity:.8;fill:#cccccc"/>
+  <path d="m-60 54.36l0-3c-5 0-7-2-7-7l-3 0c0 6 4 10 10 10" id="path3727" style="opacity:.8;fill:#808080"/>
  </g>
  <g id="frame-raised-disabled-top" transform="translate(455 254.86914)" style="fill-rule:evenodd">
-  <rect height="5" width="15" y="12.36" x="-59" id="rect3730" style="fill:url(#linearGradient5886);opacity:.8"/>
-  <rect height="7" width="15" y="20.360001" x="-59" id="rect3732" style="fill:#cccccc;opacity:.8"/>
-  <rect height="3" width="15" y="17.360001" x="-59" id="rect3734" style="fill:#808080;opacity:.8"/>
+  <rect height="5" width="15" y="12.36" x="-59" id="rect3730" style="opacity:.8;fill:url(#linearGradient5886)"/>
+  <rect height="7" width="15" y="20.360001" x="-59" id="rect3732" style="opacity:.8;fill:#cccccc"/>
+  <rect height="3" width="15" y="17.360001" x="-59" id="rect3734" style="opacity:.8;fill:#808080"/>
  </g>
  <g id="frame-raised-disabled-bottom" transform="translate(455 255.6)" style="fill-rule:evenodd">
-  <rect transform="scale(1-1)" height="5" width="15" y="-59.36" x="-59" id="rect3737" style="fill:url(#ea);opacity:.8"/>
-  <rect transform="scale(1-1)" height="7" width="15" y="-51.36" x="-59" id="rect3739" style="fill:#cccccc;opacity:.8"/>
-  <rect transform="scale(1-1)" height="3" width="15" y="-54.36" x="-59" id="rect3741" style="fill:#808080;opacity:.8"/>
+  <rect transform="scale(1-1)" height="5" width="15" y="-59.36" x="-59" id="rect3737" style="opacity:.8;fill:url(#ea)"/>
+  <rect transform="scale(1-1)" height="7" width="15" y="-51.36" x="-59" id="rect3739" style="opacity:.8;fill:#cccccc"/>
+  <rect transform="scale(1-1)" height="3" width="15" y="-54.36" x="-59" id="rect3741" style="opacity:.8;fill:#808080"/>
  </g>
  <g id="frame-raised-disabled-left" transform="translate(455 255.6)" style="fill-rule:evenodd">
-  <rect transform="matrix(0-1 1 0 0 0)" height="5" width="15" y="-75" x="-43.36" id="rect3744" style="fill:url(#linearGradient6698);opacity:.8"/>
-  <rect transform="matrix(0-1 1 0 0 0)" height="7" width="15" y="-67" x="-43.36" id="rect3746" style="fill:#cccccc;opacity:.8"/>
-  <rect transform="matrix(0-1 1 0 0 0)" height="3" width="15" y="-70" x="-43.36" id="rect3748" style="fill:#808080;opacity:.8"/>
+  <rect transform="matrix(0-1 1 0 0 0)" height="5" width="15" y="-75" x="-43.36" id="rect3744" style="opacity:.8;fill:url(#linearGradient6698)"/>
+  <rect transform="matrix(0-1 1 0 0 0)" height="7" width="15" y="-67" x="-43.36" id="rect3746" style="opacity:.8;fill:#cccccc"/>
+  <rect transform="matrix(0-1 1 0 0 0)" height="3" width="15" y="-70" x="-43.36" id="rect3748" style="opacity:.8;fill:#808080"/>
  </g>
  <g id="frame-raised-disabled-right" transform="translate(455 255.6)" style="fill-rule:evenodd">
-  <rect transform="matrix(0-1-1 0 0 0)" height="5" width="15" y="28" x="-43.36" id="rect3751" style="fill:url(#linearGradient6698);opacity:.8"/>
-  <rect transform="matrix(0-1-1 0 0 0)" height="7" width="15" y="36" x="-43.36" id="rect3753" style="fill:#cccccc;opacity:.8"/>
-  <rect transform="matrix(0-1-1 0 0 0)" height="3" width="15" y="33" x="-43.36" id="rect3755" style="fill:#808080;opacity:.8"/>
+  <rect transform="matrix(0-1-1 0 0 0)" height="5" width="15" y="28" x="-43.36" id="rect3751" style="opacity:.8;fill:url(#linearGradient6698)"/>
+  <rect transform="matrix(0-1-1 0 0 0)" height="7" width="15" y="36" x="-43.36" id="rect3753" style="opacity:.8;fill:#cccccc"/>
+  <rect transform="matrix(0-1-1 0 0 0)" height="3" width="15" y="33" x="-43.36" id="rect3755" style="opacity:.8;fill:#808080"/>
  </g>
  <g id="frame-raised-disabled">
-  <rect height="15" width="15" y="283.96" x="396" id="rect3758" rx="0" style="fill:#cccccc;opacity:.8;fill-rule:evenodd"/>
+  <rect height="15" width="15" y="283.96" x="396" id="rect3758" rx="0" style="opacity:.8;fill-rule:evenodd;fill:#cccccc"/>
  </g>
- <text line-height="normal" y="627" x="115" id="text3819" block-progression="tb" text-indent="0" text-transform="none" style="font-size:10;font-family:cmr10;color:#000000"><tspan y="627" x="115" id="tspan3821">Checked</tspan>
+ <text line-height="normal" y="627" x="115" id="text3819" block-progression="tb" text-indent="0" text-transform="none" style="color:#000000;font-family:cmr10;font-size:10"><tspan y="627" x="115" id="tspan3821">Checked</tspan>
  </text>
- <text line-height="125%" y="577" x="115" id="text3823" block-progression="tb" text-indent="0" text-transform="none" style="letter-spacing:0;word-spacing:0;font-size:10;font-family:umr10;color:#000000"><tspan y="577" x="115" id="tspan3825" style="font-family:cmr10">Unchecked</tspan>
+ <text line-height="125%" y="577" x="115" id="text3823" block-progression="tb" text-indent="0" text-transform="none" style="letter-spacing:0;word-spacing:0;color:#000000;font-family:umr10;font-size:10"><tspan y="577" x="115" id="tspan3825" style="font-family:cmr10">Unchecked</tspan>
  </text>
- <text line-height="normal" y="670.91992" x="89.99897" id="text3827" block-progression="tb" text-indent="0" text-transform="none" style="font-size:10;font-family:cmr10;color:#000000"><tspan y="670.91992" x="89.99897" id="tspan3829">Check button</tspan>
+ <text line-height="normal" y="670.91992" x="89.99897" id="text3827" block-progression="tb" text-indent="0" text-transform="none" style="color:#000000;font-family:cmr10;font-size:10"><tspan y="670.91992" x="89.99897" id="tspan3829">Check button</tspan>
  </text>
- <text line-height="normal" y="742" x="115" id="text3831" block-progression="tb" text-indent="0" text-transform="none" style="font-size:10;font-family:cmr10;color:#000000"><tspan y="742" x="115" id="tspan3833">Checked</tspan>
+ <text line-height="normal" y="742" x="115" id="text3831" block-progression="tb" text-indent="0" text-transform="none" style="color:#000000;font-family:cmr10;font-size:10"><tspan y="742" x="115" id="tspan3833">Checked</tspan>
  </text>
- <text line-height="125%" y="692" x="115" id="text3835" block-progression="tb" text-indent="0" text-transform="none" style="letter-spacing:0;word-spacing:0;font-size:10;font-family:umr10;color:#000000"><tspan y="692" x="115" id="tspan3837" style="font-family:cmr10">Unchecked</tspan>
+ <text line-height="125%" y="692" x="115" id="text3835" block-progression="tb" text-indent="0" text-transform="none" style="letter-spacing:0;word-spacing:0;color:#000000;font-family:umr10;font-size:10"><tspan y="692" x="115" id="tspan3837" style="font-family:cmr10">Unchecked</tspan>
  </text>
  <g id="checkbox-tristate-normal" transform="translate(87 332.6)">
   <rect rx="7.291" ry="7.149" height="44" width="44" y="442.39999" x="97" id="rect3840" style="fill-opacity:.1569"/>
@@ -556,7 +556,7 @@
   <rect transform="matrix(.7071.7071-.7071.7071 0 0)" height="12.5" width="2.5" y="57.29" x="-6.651" id="rect3866"/>
   <rect transform="matrix(.7071.7071-.7071.7071 0 0)" height="2.5" width="12.5" y="62.29" x="-11.65" id="rect3868"/>
  </g>
- <g id="arrow-plus-disabled" transform="matrix(1.256 1.256-1.256 1.256 520.1 1697.4)" style="fill:#808080;fill-rule:evenodd">
+ <g id="arrow-plus-disabled" transform="matrix(1.256 1.256-1.256 1.256 520.1 1697.4)" style="fill-rule:evenodd;fill:#808080">
   <rect transform="matrix(.7071.7071-.7071.7071 0 0)" height="12.5" width="2.5" y="57.29" x="-6.651" id="rect3871"/>
   <rect transform="matrix(.7071.7071-.7071.7071 0 0)" height="2.5" width="12.5" y="62.29" x="-11.65" id="rect3873"/>
  </g>
@@ -575,7 +575,7 @@
  <g id="arrow-minus-disabled" style="fill:#808080">
   <rect transform="matrix(0 1.7762352-1.7762352 0 520.1 1729.9018)" height="12.5" width="2.5" y="57.29" x="-6.651" id="rect3896" style="fill-rule:evenodd"/>
  </g>
- <text line-height="normal" y="797" x="115" id="text3900" block-progression="tb" text-indent="0" text-transform="none" style="font-size:10;font-family:cmr10;fill:#000000;color:#000000"><tspan y="797" x="115" id="tspan3902">Tristate</tspan>
+ <text line-height="normal" y="797" x="115" id="text3900" block-progression="tb" text-indent="0" text-transform="none" style="fill:#000000;color:#000000;font-family:cmr10;font-size:10"><tspan y="797" x="115" id="tspan3902">Tristate</tspan>
  </text>
  <g id="checkbox-tristate-hovered" transform="translate(134 559.6)">
   <rect rx="7.291" ry="7.149" height="44" width="44" y="215.39999" x="100" id="rect3905" style="fill-opacity:.1569"/>
@@ -591,47 +591,47 @@
   <path d="m398 603l0 10-10 0 0 10 10 0 0 10 10 0 0-10 10 0 0-10-10 0 0-10z" id="path3922" style="fill:#505050"/>
   <rect rx="4.166" ry="4.085" height="18" width="36" y="600" x="385" id="rect3924" style="fill:url(#dh)"/>
  </g>
- <text line-height="normal" y="1539" x="90" id="text3946" block-progression="tb" text-indent="0" text-transform="none" style="font-size:10;font-family:cmr10;color:#000000"><tspan y="1539" x="90" id="tspan3948">Arrows</tspan>
+ <text line-height="normal" y="1539" x="90" id="text3946" block-progression="tb" text-indent="0" text-transform="none" style="color:#000000;font-family:cmr10;font-size:10"><tspan y="1539" x="90" id="tspan3948">Arrows</tspan>
  </text>
- <text line-height="normal" y="1753" x="90" id="text3950" block-progression="tb" text-indent="0" text-transform="none" style="font-size:10;font-family:cmr10;color:#000000"><tspan y="1753" x="90" id="tspan3952">Drop down button</tspan>
+ <text line-height="normal" y="1753" x="90" id="text3950" block-progression="tb" text-indent="0" text-transform="none" style="color:#000000;font-family:cmr10;font-size:10"><tspan y="1753" x="90" id="tspan3952">Drop down button</tspan>
  </text>
- <text line-height="normal" y="1144" x="485" id="text4017" block-progression="tb" text-indent="0" text-transform="none" style="font-size:10;font-family:cmr10;color:#000000"><tspan y="1144" x="485" id="tspan4019">Tearoff</tspan>
+ <text line-height="normal" y="1144" x="485" id="text4017" block-progression="tb" text-indent="0" text-transform="none" style="color:#000000;font-family:cmr10;font-size:10"><tspan y="1144" x="485" id="tspan4019">Tearoff</tspan>
  </text>
- <text line-height="normal" y="450" x="90" id="text4115" block-progression="tb" text-indent="0" text-transform="none" style="font-size:10;font-family:cmr10;color:#000000"><tspan y="450" x="90" id="tspan4117">Progress bar</tspan>
+ <text line-height="normal" y="450" x="90" id="text4115" block-progression="tb" text-indent="0" text-transform="none" style="color:#000000;font-family:cmr10;font-size:10"><tspan y="450" x="90" id="tspan4117">Progress bar</tspan>
  </text>
- <text line-height="normal" y="842" x="90" id="text4125" block-progression="tb" text-indent="0" text-transform="none" style="font-size:10;font-family:cmr10;color:#000000"><tspan y="842" x="90" id="tspan4127">Slider</tspan>
+ <text line-height="normal" y="842" x="90" id="text4125" block-progression="tb" text-indent="0" text-transform="none" style="color:#000000;font-family:cmr10;font-size:10"><tspan y="842" x="90" id="tspan4127">Slider</tspan>
  </text>
  <g id="slider-disabled">
-  <rect height="15.99078" width="15.99078" y="881.00922" x="395" id="rect4130" rx="0" style="fill:#d8d8d8;fill-rule:evenodd;stroke-width:1.577"/>
+  <rect height="15.99078" width="15.99078" y="881.00922" x="395" id="rect4130" rx="0" style="fill-rule:evenodd;fill:#d8d8d8;stroke-width:1.577"/>
  </g>
- <text line-height="normal" y="993.05078" x="114.43848" id="text4135" block-progression="tb" text-indent="0" text-transform="none" style="font-size:10;font-family:cmr10;color:#000000"><tspan y="993.05078" x="114.43848" id="tspan4137">Cursor</tspan>
+ <text line-height="normal" y="993.05078" x="114.43848" id="text4135" block-progression="tb" text-indent="0" text-transform="none" style="color:#000000;font-family:cmr10;font-size:10"><tspan y="993.05078" x="114.43848" id="tspan4137">Cursor</tspan>
  </text>
  <g id="slider-normal">
-  <rect height="15.99985" width="15.99985" y="881.23199" x="195.0962" id="rect4144" rx="0" style="fill:#e0e0e0;fill-rule:evenodd;stroke-width:.4507"/>
+  <rect height="15.99985" width="15.99985" y="881.23199" x="195.0962" id="rect4144" rx="0" style="fill-rule:evenodd;fill:#e0e0e0;stroke-width:.4507"/>
  </g>
  <g id="slider-hovered">
-  <rect height="15.99985" width="15.99985" y="881.23199" x="244.0962" id="rect4147" rx="0" style="fill:#f0f0f0;fill-rule:evenodd;stroke-width:.4507"/>
+  <rect height="15.99985" width="15.99985" y="881.23199" x="244.0962" id="rect4147" rx="0" style="fill-rule:evenodd;fill:#f0f0f0;stroke-width:.4507"/>
  </g>
- <text line-height="normal" y="1160" x="90" id="text4149" block-progression="tb" text-indent="0" text-transform="none" style="font-size:10;font-family:cmr10;color:#000000"><tspan y="1160" x="90" id="tspan4151">Menu item</tspan>
+ <text line-height="normal" y="1160" x="90" id="text4149" block-progression="tb" text-indent="0" text-transform="none" style="color:#000000;font-family:cmr10;font-size:10"><tspan y="1160" x="90" id="tspan4151">Menu item</tspan>
  </text>
- <text line-height="normal" y="1390" x="90" id="text4153" block-progression="tb" text-indent="0" text-transform="none" style="font-size:10;font-family:cmr10;color:#000000"><tspan y="1390" x="90" id="tspan4155">Scrollbar</tspan>
+ <text line-height="normal" y="1390" x="90" id="text4153" block-progression="tb" text-indent="0" text-transform="none" style="color:#000000;font-family:cmr10;font-size:10"><tspan y="1390" x="90" id="tspan4155">Scrollbar</tspan>
  </text>
- <text line-height="normal" y="1410" x="105" id="text4171" block-progression="tb" text-indent="0" text-transform="none" style="font-size:10;font-family:cmr10;color:#000000"><tspan y="1410" x="105" id="tspan4173">Groove</tspan>
+ <text line-height="normal" y="1410" x="105" id="text4171" block-progression="tb" text-indent="0" text-transform="none" style="color:#000000;font-family:cmr10;font-size:10"><tspan y="1410" x="105" id="tspan4173">Groove</tspan>
  </text>
  <g id="menuitem-tearoff" transform="matrix(0 3.625-1 0 909.97879 472.10909)" style="fill-rule:evenodd">
-  <rect transform="matrix(0-1-1 0 0 0)" height="3.448" width="22" y="-190.39999" x="-420.60001" id="rect4195" style="fill:url(#dm);opacity:.8"/>
+  <rect transform="matrix(0-1-1 0 0 0)" height="3.448" width="22" y="-190.39999" x="-420.60001" id="rect4195" style="opacity:.8;fill:url(#dm)"/>
   <g transform="translate(-.069.25)" id="g4197" style="fill-opacity:.6039">
    <path d="m189.1 411.6l0 6-.7 0 0-6z" id="path4199"/>
    <path d="m189.1 401.1l0 6-.7 0 0-6z" id="path4201"/>
   </g>
  </g>
- <text line-height="normal" y="861.78027" x="113.81836" id="text4216" block-progression="tb" text-indent="0" text-transform="none" style="font-size:10;font-family:cmr10;color:#000000"><tspan y="861.78027" x="113.81836" id="tspan4218">Groove</tspan>
+ <text line-height="normal" y="861.78027" x="113.81836" id="text4216" block-progression="tb" text-indent="0" text-transform="none" style="color:#000000;font-family:cmr10;font-size:10"><tspan y="861.78027" x="113.81836" id="tspan4218">Groove</tspan>
  </text>
  <g id="dial-full" transform="translate(140.1 1696)" style="fill-rule:evenodd">
   <rect rx="23.5" height="47" width="47" y="207.39999" x="94.93" id="rect4225" style="fill:url(#dt)"/>
   <rect rx="18.5" height="37" width="37" y="212.39999" x="99.93" id="rect4227" style="fill:url(#du)"/>
  </g>
- <text line-height="125%" y="172" x="90" id="text4229" block-progression="tb" text-indent="0" text-transform="none" style="letter-spacing:0;word-spacing:0;font-size:10;font-family:umr10;color:#000000"><tspan y="172" x="90" id="tspan4231" style="font-family:cmr10">Tool bar</tspan>
+ <text line-height="125%" y="172" x="90" id="text4229" block-progression="tb" text-indent="0" text-transform="none" style="letter-spacing:0;word-spacing:0;color:#000000;font-family:umr10;font-size:10"><tspan y="172" x="90" id="tspan4231" style="font-family:cmr10">Tool bar</tspan>
  </text>
  <g id="button-normal" transform="matrix(.16 0 0 .5333 181.2-212.7)">
   <rect height="30" width="100" y="447.6" x="98.73" id="rect4234" style="fill:url(#cr)"/>
@@ -699,14 +699,14 @@
   <path d="m-103.8 263l-18.4 24.1-7.9-10.4-5.1 6.6 7.9 10.3 5.1 6.6 5-6.6 18.48-24-5.08-6.6" id="path4328"/>
   <rect rx="4" height="17.620001" width="34.560001" y="265.89999" x="-136.2" id="rect4330" style="fill:url(#bl)"/>
  </g>
- <rect id="menuitem-normal-left" height="8" width="4" y="1154.3788" x="542.48486" style="fill:#d8d8d8;fill-rule:evenodd"/>
- <rect id="menuitem-normal-right" height="8" width="4" y="1154.3788" x="558.48486" style="fill:#d8d8d8;fill-rule:evenodd"/>
- <rect id="menuitem-normal-topright" height="4" width="4" y="1148.3788" x="558.48486" style="fill:#d8d8d8;fill-rule:evenodd"/>
- <rect id="menuitem-normal-bottomright" height="4" width="4" y="1164.3788" x="558.48486" style="fill:#d8d8d8;fill-rule:evenodd"/>
- <rect id="menuitem-normal-bottomleft" height="4" width="4" y="1164.3788" x="542.48486" style="fill:#d8d8d8;fill-rule:evenodd"/>
- <rect id="menuitem-normal-topleft" height="4" width="4" y="1148.3788" x="542.48486" style="fill:#d8d8d8;fill-rule:evenodd"/>
+ <rect id="menuitem-normal-left" height="8" width="4" y="1154.3788" x="542.48486" style="fill-rule:evenodd;fill:#d8d8d8"/>
+ <rect id="menuitem-normal-right" height="8" width="4" y="1154.3788" x="558.48486" style="fill-rule:evenodd;fill:#d8d8d8"/>
+ <rect id="menuitem-normal-topright" height="4" width="4" y="1148.3788" x="558.48486" style="fill-rule:evenodd;fill:#d8d8d8"/>
+ <rect id="menuitem-normal-bottomright" height="4" width="4" y="1164.3788" x="558.48486" style="fill-rule:evenodd;fill:#d8d8d8"/>
+ <rect id="menuitem-normal-bottomleft" height="4" width="4" y="1164.3788" x="542.48486" style="fill-rule:evenodd;fill:#d8d8d8"/>
+ <rect id="menuitem-normal-topleft" height="4" width="4" y="1148.3788" x="542.48486" style="fill-rule:evenodd;fill:#d8d8d8"/>
  <g id="menubaritem-toggled">
-  <rect height="15" width="15" y="28.360001" x="-59" id="rect4340" transform="matrix(.63636364 0 0 .5333 389.21212 1182.197)" style="fill:url(#linearGradient9407);opacity:.8;fill-rule:evenodd"/>
+  <rect height="15" width="15" y="28.360001" x="-59" id="rect4340" transform="matrix(.63636364 0 0 .5333 389.21212 1182.197)" style="opacity:.8;fill-rule:evenodd;fill:url(#linearGradient9407)"/>
  </g>
  <g id="radio-normal" transform="matrix(1.089 0 0 1.069 160.3 116.06629)">
   <path d="m60 425c0 11-8.95 20-20 20-11.05 0-20-9-20-20 0-11 8.95-20 20-20 11.05 0 20 9 20 20" transform="matrix(1.01 0 0 1.029 1.597-7.92)" id="path4343" style="fill-opacity:.1686"/>
@@ -987,7 +987,7 @@
   <rect height="15" width="3" y="25" x="192" id="rect4841" style="fill-opacity:0"/>
   <rect height="15.09" width="3.75" y="25" x="180" id="rect4843" style="fill:#d8d8d8"/>
  </g>
- <rect id="menuitem-normal-top" height="4" width="8" y="1148.3788" x="548.48486" style="fill:#d8d8d8;fill-rule:evenodd"/>
+ <rect id="menuitem-normal-top" height="4" width="8" y="1148.3788" x="548.48486" style="fill-rule:evenodd;fill:#d8d8d8"/>
  <g id="menuitem-normal-bottom" style="fill:#d8d8d8">
   <rect height="11" width="30" y="27.360001" x="102.5" id="rect4847" transform="matrix(.2667 0 0 .3636 521.18484 1154.3788)" style="fill-rule:evenodd"/>
  </g>
@@ -995,7 +995,7 @@
   <rect height="30" width="100" y="447.6" x="98.73" id="rect4925" style="fill:url(#ct)"/>
   <rect rx="0" ry=".2" height="15" width="100" y="447.6" x="98.73" id="rect4927" style="fill:url(#ei)"/>
  </g>
- <rect id="menuitem-normal" height="8" width="8" y="1150.3788" x="201.62122" style="fill:#f4f4f4;fill-rule:evenodd"/>
+ <rect id="menuitem-normal" height="8" width="8" y="1150.3788" x="201.62122" style="fill-rule:evenodd;fill:#f4f4f4"/>
  <g id="button-toggled-topright" transform="matrix(1.067 0 0 1.067 278.7-445.7)">
   <path transform="matrix(0 .2632-.3093 0 164.4 393)" d="m123 272.9c0-26.8 25.5-48.5 57-48.5v48.5z" id="path4975" style="fill:#f200ff;fill-opacity:.0078"/>
   <path transform="matrix(-1.5 0 0 1.5 635 414.1)" d="m365 17.5c0-2.76 2.2-5 5-5v5z" id="path4977" style="fill:#c9d2d7"/>
@@ -1252,7 +1252,7 @@
   <rect height="24" width="24" y="896" x="192" id="rect6240" style="fill-opacity:0"/>
  </g>
  <g id="menuitem-toggled">
-  <rect height="15" width="15" y="28.360001" x="-59" id="rect6321" transform="matrix(.56060606 0 0 .5333 385.12122 1135.2546)" style="fill:url(#linearGradient9407);opacity:.8;fill-rule:evenodd"/>
+  <rect height="15" width="15" y="28.360001" x="-59" id="rect6321" transform="matrix(.56060606 0 0 .5333 385.12122 1135.2546)" style="opacity:.8;fill-rule:evenodd;fill:url(#linearGradient9407)"/>
  </g>
  <g id="arrow-up-pressed" transform="matrix(1 0 0-1 100 2444)">
   <path d="m195 900.5l-3 3 9 9 3 3 3-3 9-9-3-3-9 9-9-9" id="path6737"/>
@@ -1315,7 +1315,7 @@
   <rect height="30" width="100" y="447.60001" x="98.73" id="rect6815" style="fill:url(#ch)"/>
   <rect rx="0" ry=".2" height="15" width="100" y="447.60001" x="98.73" id="rect6817" style="fill:url(#ba)"/>
  </g>
- <rect id="menuitem-disabled" height="8" width="8.787879" y="1150.3788" x="405.83334" style="fill:#f4f4f4;fill-rule:evenodd"/>
+ <rect id="menuitem-disabled" height="8" width="8.787879" y="1150.3788" x="405.83334" style="fill-rule:evenodd;fill:#f4f4f4"/>
  <g id="toolbar-handle-normal" transform="matrix(1.3594817 0 0 1.3124998 267.87291-373.30614)">
   <rect height="16" width="4.414" y="410.89999" x="188.39999" id="rect6821" style="fill:#729fcf"/>
   <rect height="16" width="4.414" y="410.89999" x="188.39999" id="rect6823" style="fill:url(#cp)"/>
@@ -1324,7 +1324,7 @@
  <g id="toolbar-handle-hovered" transform="matrix(0 4.7577573-1.2499981 0 1076.1242-728.93492)">
   <rect transform="matrix(0-1 1 0 0 0)" height="4.414" width="4" y="188.10001" x="-420.89999" id="rect6828" style="fill:#729fcf"/>
   <rect rx="0" ry=".02943" height="2.207" width="4" transform="matrix(0-1 1 0 0 0)" y="188.10001" x="-420.89999" id="rect6830" style="fill:url(#dw)"/>
-  <path d="m188.1 416.9l4.4 0 0 4-4.4 0 0-4" id="path6832" style="fill:url(#co);opacity:.8;fill-rule:evenodd"/>
+  <path d="m188.1 416.9l4.4 0 0 4-4.4 0 0-4" id="path6832" style="opacity:.8;fill-rule:evenodd;fill:url(#co)"/>
  </g>
  <g id="button-toggled" transform="matrix(.16 0 0-.5333 331.2 280.7)">
   <rect transform="scale(1-1)" height="30" width="100" y="-477.6" x="98.73" id="rect6835" style="fill:url(#ck)"/>
@@ -1623,17 +1623,17 @@
   <path d="m60 425c0 11-8.95 20-20 20-11.05 0-20-9-20-20 0-11 8.95-20 20-20 11.05 0 20 9 20 20z" transform="matrix(.9186 0 0 .9355 1.597 28.1)" id="path7444" style="fill:url(#t);stroke:url(#o);stroke-width:4"/>
   <path d="m20 425c0-11.1 8.96-20 20.01-20 11.04 0 19.99 9 19.99 20L40 425z" transform="matrix(.8267 0 0 .8419 5.271 67.86)" id="path7446" style="fill:url(#linearGradient5964)"/>
  </g>
- <text line-height="normal" y="1823" x="341" id="text7448" block-progression="tb" text-indent="0" text-transform="none" style="font-size:10;font-family:cmr10;color:#000000"><tspan y="1823" x="341" id="tspan7450">Restore</tspan>
+ <text line-height="normal" y="1823" x="341" id="text7448" block-progression="tb" text-indent="0" text-transform="none" style="color:#000000;font-family:cmr10;font-size:10"><tspan y="1823" x="341" id="tspan7450">Restore</tspan>
  </text>
  <g id="mdi-restore-normal" style="stroke:#000000">
   <rect id="rect7588" width="25.846154" height="22.15385" x="342.41625" y="1845.9232" rx="0" style="fill:none;stroke-width:1.993846"/>
  </g>
- <text line-height="normal" y="1823" x="389" id="text7465" block-progression="tb" text-indent="0" text-transform="none" style="font-size:10;font-family:cmr10;color:#000000"><tspan y="1823" x="389" id="tspan7467">Menu</tspan>
+ <text line-height="normal" y="1823" x="389" id="text7465" block-progression="tb" text-indent="0" text-transform="none" style="color:#000000;font-family:cmr10;font-size:10"><tspan y="1823" x="389" id="tspan7467">Menu</tspan>
  </text>
  <g id="mdi-menu-normal" style="fill:none;stroke:#000000">
   <path id="path8376" d="m427.84089 1525c0 8.2843-7.35168 15-16.42045 15-9.06877 0-16.42045-6.7157-16.42045-15 0-8.2843 7.35168-15 16.42045-15 9.06877 0 16.42045 6.7157 16.42045 15z" transform="matrix(.72467496 0 0 .79329947 105.30633 647.21841)" style="stroke-width:2.7"/>
  </g>
- <text line-height="normal" y="1320" x="90" id="text7482" block-progression="tb" text-indent="0" text-transform="none" style="font-size:10;font-family:cmr10;fill:#000000;color:#000000"><tspan y="1320" x="90" id="tspan7484">Splitter</tspan>
+ <text line-height="normal" y="1320" x="90" id="text7482" block-progression="tb" text-indent="0" text-transform="none" style="fill:#000000;color:#000000;font-family:cmr10;font-size:10"><tspan y="1320" x="90" id="tspan7484">Splitter</tspan>
  </text>
  <g id="splitter-normal" transform="matrix(.16 0 0 .5333 174.2 1080)">
   <rect height="30" width="100" y="447.60001" x="98.73" id="rect7487" style="fill:url(#cq)"/>
@@ -1657,7 +1657,7 @@
  </g>
  <rect id="scrollbar-cursor-normal-left" height="16" width="4" y="1482" x="190" style="fill:#ff0000;fill-opacity:.666667"/>
  <rect id="scrollbar-cursor-normal-right" height="16" width="4" y="1482" x="214" style="fill:#ff0000;fill-opacity:.666667"/>
- <text line-height="normal" y="1492" x="105" id="text7513" block-progression="tb" text-indent="0" text-transform="none" style="font-size:10;font-family:cmr10;color:#000000"><tspan y="1492" x="105" id="tspan7515">Cursor</tspan>
+ <text line-height="normal" y="1492" x="105" id="text7513" block-progression="tb" text-indent="0" text-transform="none" style="color:#000000;font-family:cmr10;font-size:10"><tspan y="1492" x="105" id="tspan7515">Cursor</tspan>
  </text>
  <rect id="scrollbar-cursor-normal" height="16" width="16" y="1482" x="196" style="fill:#989898"/>
  <rect id="scrollbar-cursor-normal-topleft" height="4" width="4" y="1474" x="190" style="fill:#ff0000;fill-opacity:.666667"/>
@@ -1694,7 +1694,7 @@
  <rect id="scrollbar-cursor-disabled-bottomleft" height="4" width="4" y="1502" x="396" style="fill:#ff2a2a;fill-opacity:.864583"/>
  <rect id="scrollbar-cursor-disabled-bottomright" height="4" width="4" y="1502" x="420" style="fill:#ff2a2a;fill-opacity:.864583"/>
  <g id="viewitem-normal">
-  <rect height="15" width="50" y="472.5" x="136.2" id="rect7561" transform="matrix(.32 0 0 1.067 156.4 727)" style="fill:#f4f4f4;fill-rule:evenodd"/>
+  <rect height="15" width="50" y="472.5" x="136.2" id="rect7561" transform="matrix(.32 0 0 1.067 156.4 727)" style="fill-rule:evenodd;fill:#f4f4f4"/>
  </g>
  <g id="viewitem-disabled" transform="matrix(.16 0 0 .5333 383.84313 993)" style="fill:#999999">
   <rect height="30" width="100" y="447.60001" x="98.73" id="rect7564"/>
@@ -1706,10 +1706,10 @@
  <g id="viewitem-hovered" style="fill:#782121">
   <rect height="15" width="187.60001" y="455.5" x="98.48" id="rect7572" transform="matrix(.0853 0 0 1.067 242.6 746)"/>
  </g>
- <text line-height="normal" y="1247" x="90" id="text7574" block-progression="tb" text-indent="0" text-transform="none" style="font-size:10;font-family:cmr10;color:#000000"><tspan y="1247" x="90" id="tspan7576">ViewItem</tspan>
+ <text line-height="normal" y="1247" x="90" id="text7574" block-progression="tb" text-indent="0" text-transform="none" style="color:#000000;font-family:cmr10;font-size:10"><tspan y="1247" x="90" id="tspan7576">ViewItem</tspan>
  </text>
  <g id="viewitem-alt-normal">
-  <rect height="15" width="50" y="472.5" x="136.2" id="rect7579" transform="matrix(.32 0 0 1.067 155.81985 768.499)" style="fill:#e5dede;fill-rule:evenodd"/>
+  <rect height="15" width="50" y="472.5" x="136.2" id="rect7579" transform="matrix(.32 0 0 1.067 155.81985 768.499)" style="fill-rule:evenodd;fill:#e5dede"/>
  </g>
  <g id="frame-vsep" transform="matrix(1.067 0 0 1.067 266.49555 304.53973)">
   <rect height="15" width="7.5" y="25" x="180" id="rect4783-5" style="fill:#d8d8d8"/>
@@ -1732,68 +1732,68 @@
   <rect rx="0" ry=".2" height="15" width="100" y="447.60001" x="98.73" id="rect6884-8" style="fill:url(#linearGradient5621)"/>
  </g>
  <g transform="translate(247.03059 41.97555)" id="g5736-0">
-  <rect id="rect3673-6" x="96.49" y="77.79" width="2.5" height="12.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill:#bc2122;fill-rule:evenodd"/>
-  <rect id="rect3675-9" x="91.49" y="82.78" width="12.5" height="2.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill:#bc2122;fill-rule:evenodd"/>
+  <rect id="rect3673-6" x="96.49" y="77.79" width="2.5" height="12.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill-rule:evenodd;fill:#bc2122"/>
+  <rect id="rect3675-9" x="91.49" y="82.78" width="12.5" height="2.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill-rule:evenodd;fill:#bc2122"/>
  </g>
  <g transform="translate(297.3086 42.65428)" id="g5736-4">
-  <rect id="rect3673-5" x="96.49" y="77.79" width="2.5" height="12.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill:#bc2122;fill-rule:evenodd"/>
-  <rect id="rect3675-5" x="91.49" y="82.78" width="12.5" height="2.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill:#bc2122;fill-rule:evenodd"/>
+  <rect id="rect3673-5" x="96.49" y="77.79" width="2.5" height="12.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill-rule:evenodd;fill:#bc2122"/>
+  <rect id="rect3675-5" x="91.49" y="82.78" width="12.5" height="2.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill-rule:evenodd;fill:#bc2122"/>
  </g>
  <g transform="translate(347.25647 41.69139)" id="g5736-8">
-  <rect id="rect3673-69" x="96.49" y="77.79" width="2.5" height="12.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill:#bc2122;fill-rule:evenodd"/>
-  <rect id="rect3675-4" x="91.49" y="82.78" width="12.5" height="2.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill:#bc2122;fill-rule:evenodd"/>
+  <rect id="rect3673-69" x="96.49" y="77.79" width="2.5" height="12.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill-rule:evenodd;fill:#bc2122"/>
+  <rect id="rect3675-4" x="91.49" y="82.78" width="12.5" height="2.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill-rule:evenodd;fill:#bc2122"/>
  </g>
  <g transform="translate(245.37159 165.00704)" id="g5736-0-1">
-  <rect id="rect3673-6-4" x="96.49" y="77.79" width="2.5" height="12.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill:#bc2122;fill-rule:evenodd"/>
-  <rect id="rect3675-9-1" x="91.49" y="82.78" width="12.5" height="2.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill:#bc2122;fill-rule:evenodd"/>
+  <rect id="rect3673-6-4" x="96.49" y="77.79" width="2.5" height="12.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill-rule:evenodd;fill:#bc2122"/>
+  <rect id="rect3675-9-1" x="91.49" y="82.78" width="12.5" height="2.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill-rule:evenodd;fill:#bc2122"/>
  </g>
  <g transform="translate(295.6496 165.68577)" id="g5736-4-1">
-  <rect id="rect3673-5-0" x="96.49" y="77.79" width="2.5" height="12.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill:#bc2122;fill-rule:evenodd"/>
-  <rect id="rect3675-5-1" x="91.49" y="82.78" width="12.5" height="2.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill:#bc2122;fill-rule:evenodd"/>
+  <rect id="rect3673-5-0" x="96.49" y="77.79" width="2.5" height="12.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill-rule:evenodd;fill:#bc2122"/>
+  <rect id="rect3675-5-1" x="91.49" y="82.78" width="12.5" height="2.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill-rule:evenodd;fill:#bc2122"/>
  </g>
  <g transform="translate(345.59747 164.72288)" id="g5736-8-7">
-  <rect id="rect3673-69-5" x="96.49" y="77.79" width="2.5" height="12.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill:#bc2122;fill-rule:evenodd"/>
-  <rect id="rect3675-4-9" x="91.49" y="82.78" width="12.5" height="2.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill:#bc2122;fill-rule:evenodd"/>
+  <rect id="rect3673-69-5" x="96.49" y="77.79" width="2.5" height="12.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill-rule:evenodd;fill:#bc2122"/>
+  <rect id="rect3675-4-9" x="91.49" y="82.78" width="12.5" height="2.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill-rule:evenodd;fill:#bc2122"/>
  </g>
  <g transform="translate(294.69937 442.51768)" id="g5736-4-1-5-5">
-  <rect id="rect3673-5-0-7-0" x="96.49" y="77.79" width="2.5" height="12.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill:#bc2122;fill-rule:evenodd"/>
-  <rect id="rect3675-5-1-9-9" x="91.49" y="82.78" width="12.5" height="2.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill:#bc2122;fill-rule:evenodd"/>
+  <rect id="rect3673-5-0-7-0" x="96.49" y="77.79" width="2.5" height="12.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill-rule:evenodd;fill:#bc2122"/>
+  <rect id="rect3675-5-1-9-9" x="91.49" y="82.78" width="12.5" height="2.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill-rule:evenodd;fill:#bc2122"/>
  </g>
  <g transform="translate(344.64724 441.55479)" id="g5736-8-7-8-4">
-  <rect id="rect3673-69-5-4-8" x="96.49" y="77.79" width="2.5" height="12.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill:#bc2122;fill-rule:evenodd"/>
-  <rect id="rect3675-4-9-3-0" x="91.49" y="82.78" width="12.5" height="2.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill:#bc2122;fill-rule:evenodd"/>
+  <rect id="rect3673-69-5-4-8" x="96.49" y="77.79" width="2.5" height="12.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill-rule:evenodd;fill:#bc2122"/>
+  <rect id="rect3675-4-9-3-0" x="91.49" y="82.78" width="12.5" height="2.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill-rule:evenodd;fill:#bc2122"/>
  </g>
  <g transform="translate(294.69937 497.51768)" id="g5736-4-1-5-2">
-  <rect id="rect3673-5-0-7-6" x="96.49" y="77.79" width="2.5" height="12.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill:#bc2122;fill-rule:evenodd"/>
-  <rect id="rect3675-5-1-9-4" x="91.49" y="82.78" width="12.5" height="2.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill:#bc2122;fill-rule:evenodd"/>
+  <rect id="rect3673-5-0-7-6" x="96.49" y="77.79" width="2.5" height="12.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill-rule:evenodd;fill:#bc2122"/>
+  <rect id="rect3675-5-1-9-4" x="91.49" y="82.78" width="12.5" height="2.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill-rule:evenodd;fill:#bc2122"/>
  </g>
  <g transform="translate(344.64724 496.55479)" id="g5736-8-7-8-2">
-  <rect id="rect3673-69-5-4-2" x="96.49" y="77.79" width="2.5" height="12.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill:#bc2122;fill-rule:evenodd"/>
-  <rect id="rect3675-4-9-3-03" x="91.49" y="82.78" width="12.5" height="2.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill:#bc2122;fill-rule:evenodd"/>
+  <rect id="rect3673-69-5-4-2" x="96.49" y="77.79" width="2.5" height="12.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill-rule:evenodd;fill:#bc2122"/>
+  <rect id="rect3675-4-9-3-03" x="91.49" y="82.78" width="12.5" height="2.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill-rule:evenodd;fill:#bc2122"/>
  </g>
  <g transform="translate(296.97327 554.35231)" id="g5736-4-1-5-5-4">
-  <rect id="rect3673-5-0-7-0-0" x="96.49" y="77.79" width="2.5" height="12.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill:#bc2122;fill-rule:evenodd"/>
-  <rect id="rect3675-5-1-9-9-9" x="91.49" y="82.78" width="12.5" height="2.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill:#bc2122;fill-rule:evenodd"/>
+  <rect id="rect3673-5-0-7-0-0" x="96.49" y="77.79" width="2.5" height="12.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill-rule:evenodd;fill:#bc2122"/>
+  <rect id="rect3675-5-1-9-9-9" x="91.49" y="82.78" width="12.5" height="2.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill-rule:evenodd;fill:#bc2122"/>
  </g>
  <g transform="translate(346.92114 553.38942)" id="g5736-8-7-8-4-0">
-  <rect id="rect3673-69-5-4-8-0" x="96.49" y="77.79" width="2.5" height="12.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill:#bc2122;fill-rule:evenodd"/>
-  <rect id="rect3675-4-9-3-0-5" x="91.49" y="82.78" width="12.5" height="2.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill:#bc2122;fill-rule:evenodd"/>
+  <rect id="rect3673-69-5-4-8-0" x="96.49" y="77.79" width="2.5" height="12.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill-rule:evenodd;fill:#bc2122"/>
+  <rect id="rect3675-4-9-3-0-5" x="91.49" y="82.78" width="12.5" height="2.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill-rule:evenodd;fill:#bc2122"/>
  </g>
  <g transform="translate(296.97327 609.3523)" id="g5736-4-1-5-2-0">
-  <rect id="rect3673-5-0-7-6-3" x="96.49" y="77.79" width="2.5" height="12.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill:#bc2122;fill-rule:evenodd"/>
-  <rect id="rect3675-5-1-9-4-4" x="91.49" y="82.78" width="12.5" height="2.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill:#bc2122;fill-rule:evenodd"/>
+  <rect id="rect3673-5-0-7-6-3" x="96.49" y="77.79" width="2.5" height="12.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill-rule:evenodd;fill:#bc2122"/>
+  <rect id="rect3675-5-1-9-4-4" x="91.49" y="82.78" width="12.5" height="2.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill-rule:evenodd;fill:#bc2122"/>
  </g>
  <g transform="translate(346.92114 608.38941)" id="g5736-8-7-8-2-8">
-  <rect id="rect3673-69-5-4-2-4" x="96.49" y="77.79" width="2.5" height="12.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill:#bc2122;fill-rule:evenodd"/>
-  <rect id="rect3675-4-9-3-03-3" x="91.49" y="82.78" width="12.5" height="2.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill:#bc2122;fill-rule:evenodd"/>
+  <rect id="rect3673-69-5-4-2-4" x="96.49" y="77.79" width="2.5" height="12.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill-rule:evenodd;fill:#bc2122"/>
+  <rect id="rect3675-4-9-3-03-3" x="91.49" y="82.78" width="12.5" height="2.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill-rule:evenodd;fill:#bc2122"/>
  </g>
  <g transform="translate(336.97327 624.3523)" id="g5736-4-1-5-2-0-3">
-  <rect id="rect3673-5-0-7-6-3-5" x="97.58536" y="135.89261" width="2.499976" height="12.49988" transform="matrix(.70710678.70710678-.70710678.70710678 0 0)" style="fill:#bc2122;fill-rule:evenodd"/>
-  <rect id="rect3675-5-1-9-4-4-4" x="92.58541" y="140.88255" width="12.49988" height="2.499976" transform="matrix(.70710678.70710678-.70710678.70710678 0 0)" style="fill:#bc2122;fill-rule:evenodd"/>
+  <rect id="rect3673-5-0-7-6-3-5" x="97.58536" y="135.89261" width="2.499976" height="12.49988" transform="matrix(.70710678.70710678-.70710678.70710678 0 0)" style="fill-rule:evenodd;fill:#bc2122"/>
+  <rect id="rect3675-5-1-9-4-4-4" x="92.58541" y="140.88255" width="12.49988" height="2.499976" transform="matrix(.70710678.70710678-.70710678.70710678 0 0)" style="fill-rule:evenodd;fill:#bc2122"/>
  </g>
  <g transform="translate(346.61106 665.24988)" id="g5736-8-7-8-2-8-3">
-  <rect id="rect3673-69-5-4-2-4-3" x="96.49" y="77.79" width="2.5" height="12.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill:#bc2122;fill-rule:evenodd"/>
-  <rect id="rect3675-4-9-3-03-3-2" x="91.49" y="82.78" width="12.5" height="2.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill:#bc2122;fill-rule:evenodd"/>
+  <rect id="rect3673-69-5-4-2-4-3" x="96.49" y="77.79" width="2.5" height="12.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill-rule:evenodd;fill:#bc2122"/>
+  <rect id="rect3675-4-9-3-03-3-2" x="91.49" y="82.78" width="12.5" height="2.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill-rule:evenodd;fill:#bc2122"/>
  </g>
  <g id="tabbar-normal" transform="matrix(.16 0 0 .5333 181.46914-268.06543)">
   <rect height="30" width="100" y="447.60001" x="98.73" id="rect4460-6" style="fill:url(#u-2)"/>
@@ -2011,23 +2011,23 @@
   <rect height="15" width="3" y="25" x="192" id="rect6958-7" style="fill-opacity:0"/>
   <rect height="15.09" width="7.5" y="25" x="180" id="rect6960-5" style="fill:#ffffff;fill-opacity:.7294"/>
  </g>
- <text line-height="normal" y="-20" x="90" id="text3621-2" block-progression="tb" text-indent="0" text-transform="none" style="font-size:10;font-family:cmr10;color:#000000"><tspan y="-20" x="90" id="tspan3623-1">Tab bar</tspan>
+ <text line-height="normal" y="-20" x="90" id="text3621-2" block-progression="tb" text-indent="0" text-transform="none" style="color:#000000;font-family:cmr10;font-size:10"><tspan y="-20" x="90" id="tspan3623-1">Tab bar</tspan>
  </text>
  <g transform="translate(295.00241-153.22631)" id="g5736-4-14">
-  <rect id="rect3673-5-6" x="96.49" y="77.79" width="2.5" height="12.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill:#bc2122;fill-rule:evenodd"/>
-  <rect id="rect3675-5-8" x="91.49" y="82.78" width="12.5" height="2.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill:#bc2122;fill-rule:evenodd"/>
+  <rect id="rect3673-5-6" x="96.49" y="77.79" width="2.5" height="12.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill-rule:evenodd;fill:#bc2122"/>
+  <rect id="rect3675-5-8" x="91.49" y="82.78" width="12.5" height="2.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill-rule:evenodd;fill:#bc2122"/>
  </g>
- <text line-height="normal" y="153.93848" x="524.69238" id="text3454-2" block-progression="tb" text-indent="0" text-transform="none" style="font-size:10;font-family:cmr10;color:#000000"><tspan y="153.93848" x="524.69238" id="tspan3456-5">Handle</tspan>
+ <text line-height="normal" y="153.93848" x="524.69238" id="text3454-2" block-progression="tb" text-indent="0" text-transform="none" style="color:#000000;font-family:cmr10;font-size:10"><tspan y="153.93848" x="524.69238" id="tspan3456-5">Handle</tspan>
  </text>
- <text line-height="normal" y="317" x="455" id="text3454-22" block-progression="tb" text-indent="0" text-transform="none" style="font-size:10;font-family:cmr10;color:#000000"><tspan y="317" x="455" id="tspan3456-8">V Line</tspan>
+ <text line-height="normal" y="317" x="455" id="text3454-22" block-progression="tb" text-indent="0" text-transform="none" style="color:#000000;font-family:cmr10;font-size:10"><tspan y="317" x="455" id="tspan3456-8">V Line</tspan>
  </text>
- <text line-height="normal" y="317" x="495" id="text3454-22-2" block-progression="tb" text-indent="0" text-transform="none" style="font-size:10;font-family:cmr10;color:#000000"><tspan y="317" x="495" id="tspan3456-8-1">H Line</tspan>
+ <text line-height="normal" y="317" x="495" id="text3454-22-2" block-progression="tb" text-indent="0" text-transform="none" style="color:#000000;font-family:cmr10;font-size:10"><tspan y="317" x="495" id="tspan3456-8-1">H Line</tspan>
  </text>
  <g transform="translate(295.00241 95.16011)" id="g5736-4-8">
-  <rect id="rect3673-5-1" x="96.49" y="77.79" width="2.5" height="12.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill:#bc2122;fill-rule:evenodd"/>
-  <rect id="rect3675-5-6" x="91.49" y="82.78" width="12.5" height="2.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill:#bc2122;fill-rule:evenodd"/>
+  <rect id="rect3673-5-1" x="96.49" y="77.79" width="2.5" height="12.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill-rule:evenodd;fill:#bc2122"/>
+  <rect id="rect3675-5-6" x="91.49" y="82.78" width="12.5" height="2.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill-rule:evenodd;fill:#bc2122"/>
  </g>
- <text line-height="normal" y="42.05078" x="89.43848" id="text3621-4" block-progression="tb" text-indent="0" text-transform="none" style="font-size:10;font-family:cmr10;color:#000000"><tspan y="42.05078" x="89.43848" id="tspan3623-3">Combo box</tspan>
+ <text line-height="normal" y="42.05078" x="89.43848" id="text3621-4" block-progression="tb" text-indent="0" text-transform="none" style="color:#000000;font-family:cmr10;font-size:10"><tspan y="42.05078" x="89.43848" id="tspan3623-3">Combo box</tspan>
  </text>
  <g id="group-normal">
   <rect transform="matrix(.16 0 0-.5333 181.6-324)" height="30" width="100" y="-477.60001" x="98.73" id="rect4676" style="fill:url(#radialGradient6552)"/>
@@ -2085,7 +2085,7 @@
   <path transform="matrix(0-.1316-.1546 0 122.2 471)" d="m123 272.9c0-26.8 25.5-48.5 57-48.5l0 48.5z" id="path4756" style="fill:#b0b0b0"/>
   <path transform="matrix(0-.0658-.0773 0 101.1 459.2)" d="m123 272.9c0-26.8 25.5-48.5 57-48.5l0 48.5z" id="path4758" style="fill:url(#linearGradient6562)"/>
  </g>
- <text line-height="normal" y="-75" x="90" id="text4760" block-progression="tb" text-indent="0" text-transform="none" style="font-size:10;font-family:cmr10;color:#000000"><tspan y="-75" x="90" id="tspan4762">Group box</tspan>
+ <text line-height="normal" y="-75" x="90" id="text4760" block-progression="tb" text-indent="0" text-transform="none" style="color:#000000;font-family:cmr10;font-size:10"><tspan y="-75" x="90" id="tspan4762">Group box</tspan>
  </text>
  <g id="group-disabled-top" transform="matrix(0-1.067-1.06 0 439.9 105)">
   <rect height="15.09" width="7.5" y="25" x="180" id="rect6059" style="fill:#a8a8a8"/>
@@ -2144,24 +2144,24 @@
   <rect transform="matrix(.16 0 0-.5333 381.6-324)" height="30" width="100" y="-477.60001" x="98.73" id="rect6252" style="fill:url(#radialGradient6552)"/>
  </g>
  <g transform="translate(245.61598-203.83989)" id="g5736-4-14-6">
-  <rect id="rect3673-5-6-6" x="96.49" y="77.79" width="2.5" height="12.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill:#bc2122;fill-rule:evenodd"/>
-  <rect id="rect3675-5-8-2" x="91.49" y="82.78" width="12.5" height="2.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill:#bc2122;fill-rule:evenodd"/>
+  <rect id="rect3673-5-6-6" x="96.49" y="77.79" width="2.5" height="12.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill-rule:evenodd;fill:#bc2122"/>
+  <rect id="rect3675-5-8-2" x="91.49" y="82.78" width="12.5" height="2.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill-rule:evenodd;fill:#bc2122"/>
  </g>
  <g transform="translate(295.61598-203.83989)" id="g5736-4-14-3">
-  <rect id="rect3673-5-6-1" x="96.49" y="77.79" width="2.5" height="12.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill:#bc2122;fill-rule:evenodd"/>
-  <rect id="rect3675-5-8-1" x="91.49" y="82.78" width="12.5" height="2.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill:#bc2122;fill-rule:evenodd"/>
+  <rect id="rect3673-5-6-1" x="96.49" y="77.79" width="2.5" height="12.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill-rule:evenodd;fill:#bc2122"/>
+  <rect id="rect3675-5-8-1" x="91.49" y="82.78" width="12.5" height="2.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill-rule:evenodd;fill:#bc2122"/>
  </g>
  <g transform="translate(345.61598 862.77369)" id="g5736-8-7-8-2-8-3-5">
-  <rect id="rect3673-69-5-4-2-4-3-8" x="96.49" y="77.79" width="2.5" height="12.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill:#bc2122;fill-rule:evenodd"/>
-  <rect id="rect3675-4-9-3-03-3-2-1" x="91.49" y="82.78" width="12.5" height="2.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill:#bc2122;fill-rule:evenodd"/>
+  <rect id="rect3673-69-5-4-2-4-3-8" x="96.49" y="77.79" width="2.5" height="12.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill-rule:evenodd;fill:#bc2122"/>
+  <rect id="rect3675-4-9-3-03-3-2-1" x="91.49" y="82.78" width="12.5" height="2.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill-rule:evenodd;fill:#bc2122"/>
  </g>
  <g transform="translate(345.00241-203.83989)" id="g5736-4-14-3-4">
-  <rect id="rect3673-5-6-1-3" x="96.49" y="77.79" width="2.5" height="12.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill:#bc2122;fill-rule:evenodd"/>
-  <rect id="rect3675-5-8-1-5" x="91.49" y="82.78" width="12.5" height="2.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill:#bc2122;fill-rule:evenodd"/>
+  <rect id="rect3673-5-6-1-3" x="96.49" y="77.79" width="2.5" height="12.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill-rule:evenodd;fill:#bc2122"/>
+  <rect id="rect3675-5-8-1-5" x="91.49" y="82.78" width="12.5" height="2.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill-rule:evenodd;fill:#bc2122"/>
  </g>
  <g transform="translate(335.31249 681.29964)" id="g5736-4-1-5-2-0-3-2">
-  <rect id="rect3673-5-0-7-6-3-5-0" x="97.58536" y="135.89261" width="2.499976" height="12.49988" transform="matrix(.70710678.70710678-.70710678.70710678 0 0)" style="fill:#bc2122;fill-rule:evenodd"/>
-  <rect id="rect3675-5-1-9-4-4-4-1" x="92.58541" y="140.88255" width="12.49988" height="2.499976" transform="matrix(.70710678.70710678-.70710678.70710678 0 0)" style="fill:#bc2122;fill-rule:evenodd"/>
+  <rect id="rect3673-5-0-7-6-3-5-0" x="97.58536" y="135.89261" width="2.499976" height="12.49988" transform="matrix(.70710678.70710678-.70710678.70710678 0 0)" style="fill-rule:evenodd;fill:#bc2122"/>
+  <rect id="rect3675-5-1-9-4-4-4-1" x="92.58541" y="140.88255" width="12.49988" height="2.499976" transform="matrix(.70710678.70710678-.70710678.70710678 0 0)" style="fill-rule:evenodd;fill:#bc2122"/>
  </g>
  <g id="header-normal-top" transform="matrix(0-1.067-.795 0 233.34824 1234.8075)">
   <rect height="15.09" width="3.75" y="25" x="180" id="rect6255" style="fill:#d0d0d0"/>
@@ -2177,14 +2177,14 @@
  <g id="header-normal-left" transform="matrix(1.067 0 0 1.067-7.551761 1017.8075)">
   <rect height="15" width="3.75" y="25" x="191.2" id="rect6271" style="fill:#d0d0d0"/>
   <rect rx="0" ry=".1" height="7.5" width="3.75" y="25" x="191.2" id="rect6273" style="fill:url(#ab-3)"/>
-  <path d="m195 25l0 15-3.7 0 0-15 3.7 0" id="path6275" style="fill:url(#radialGradient8784);opacity:.8;fill-rule:evenodd"/>
+  <path d="m195 25l0 15-3.7 0 0-15 3.7 0" id="path6275" style="opacity:.8;fill-rule:evenodd;fill:url(#radialGradient8784)"/>
  </g>
  <g id="header-normal-right" transform="matrix(1.067 0 0 1.067 22.448242 1017.8075)">
   <rect height="15" width="3.75" y="25" x="180" id="rect6278" style="fill:#d0d0d0"/>
   <rect rx="0" ry=".1" height="7.5" width="3.75" y="25" x="180" id="rect6280" style="fill:url(#ac-6)"/>
-  <path d="M 183.8,25 V 40 H 180 V 25 h 3.8 z" id="path6282" style="fill:url(#radialGradient8788);opacity:.8;fill-rule:evenodd"/>
+  <path d="M 183.8,25 V 40 H 180 V 25 h 3.8 z" id="path6282" style="opacity:.8;fill-rule:evenodd;fill:url(#radialGradient8788)"/>
  </g>
- <text line-height="normal" y="1051.8877" x="89.69238" id="text6284" block-progression="tb" text-indent="0" text-transform="none" style="font-size:10;font-family:cmr10;color:#000000"><tspan y="1051.8877" x="89.69238" id="tspan6286">Header</tspan>
+ <text line-height="normal" y="1051.8877" x="89.69238" id="text6284" block-progression="tb" text-indent="0" text-transform="none" style="color:#000000;font-family:cmr10;font-size:10"><tspan y="1051.8877" x="89.69238" id="tspan6286">Header</tspan>
  </text>
  <g id="header-normal-topright" transform="matrix(0-1.067-.265 0 225.04824 1234.8075)">
   <rect height="15.09" width="3.75" y="25" x="180" id="rect6289" style="fill:#d0d0d0"/>
@@ -2222,12 +2222,12 @@
  <g id="header-disabled-left" transform="matrix(1.067 0 0 1.067 200.44824 1017.8075)">
   <rect height="15" width="3.75" y="25" x="191.2" id="rect6691" style="fill:#d0d0d0"/>
   <rect rx="0" ry=".1" height="7.5" width="3.75" y="25" x="191.2" id="rect6693" style="fill:url(#ab-3)"/>
-  <path d="m195 25l0 15-3.7 0 0-15 3.7 0" id="path6695" style="fill:url(#radialGradient8784);opacity:.8;fill-rule:evenodd"/>
+  <path d="m195 25l0 15-3.7 0 0-15 3.7 0" id="path6695" style="opacity:.8;fill-rule:evenodd;fill:url(#radialGradient8784)"/>
  </g>
  <g id="header-disabled-right" transform="matrix(1.067 0 0 1.067 230.44824 1017.8075)">
   <rect height="15" width="3.75" y="25" x="180" id="rect6698" style="fill:#d0d0d0"/>
   <rect rx="0" ry=".1" height="7.5" width="3.75" y="25" x="180" id="rect6700" style="fill:url(#ac-6)"/>
-  <path d="M 183.8,25 V 40 H 180 V 25 h 3.8 z" id="path6702" style="fill:url(#radialGradient8788);opacity:.8;fill-rule:evenodd"/>
+  <path d="M 183.8,25 V 40 H 180 V 25 h 3.8 z" id="path6702" style="opacity:.8;fill-rule:evenodd;fill:url(#radialGradient8788)"/>
  </g>
  <g id="header-disabled-topleft" transform="matrix(0-1.067-.265 0 415.04824 1234.8075)">
   <rect height="15.09" width="3.75" y="25" x="180" id="rect6705" style="fill:#d0d0d0"/>
@@ -2252,7 +2252,7 @@
   <rect height="15" width="3.75" y="25" x="187.5" id="rect6734" style="fill-opacity:.1569"/>
  </g>
  <g id="slider-elapsed-disabled">
-  <rect height="15.99078" width="15.99078" y="923.77738" x="394.9038" id="rect4130-5" rx="0" style="fill:#9e9e9e;fill-rule:evenodd;stroke-width:1.577"/>
+  <rect height="15.99078" width="15.99078" y="923.77738" x="394.9038" id="rect4130-5" rx="0" style="fill-rule:evenodd;fill:#9e9e9e;stroke-width:1.577"/>
  </g>
  <g id="slider-elapsed-normal" style="fill:#729fcf">
   <rect height="15.99985" width="15.99985" y="924.00015" x="195" id="rect4144-1" rx="0" style="fill-rule:evenodd;stroke-width:.4507"/>
@@ -2261,24 +2261,24 @@
   <rect height="15.99985" width="15.99985" y="924.00015" x="244" id="rect4147-1" rx="0" style="fill-rule:evenodd;stroke-width:.4507"/>
  </g>
  <g transform="translate(346.92114 722.38942)" id="g5736-8-7-8-4-0-6">
-  <rect id="rect3673-69-5-4-8-0-1" x="96.49" y="77.79" width="2.5" height="12.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill:#bc2122;fill-rule:evenodd"/>
-  <rect id="rect3675-4-9-3-0-5-3" x="91.49" y="82.78" width="12.5" height="2.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill:#bc2122;fill-rule:evenodd"/>
+  <rect id="rect3673-69-5-4-8-0-1" x="96.49" y="77.79" width="2.5" height="12.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill-rule:evenodd;fill:#bc2122"/>
+  <rect id="rect3675-4-9-3-0-5-3" x="91.49" y="82.78" width="12.5" height="2.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill-rule:evenodd;fill:#bc2122"/>
  </g>
  <g transform="translate(295.00241 763.77369)" id="g5736-4-1-5-2-0-9">
-  <rect id="rect3673-5-0-7-6-3-7" x="96.49" y="77.79" width="2.5" height="12.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill:#bc2122;fill-rule:evenodd"/>
-  <rect id="rect3675-5-1-9-4-4-2" x="91.49" y="82.78" width="12.5" height="2.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill:#bc2122;fill-rule:evenodd"/>
+  <rect id="rect3673-5-0-7-6-3-7" x="96.49" y="77.79" width="2.5" height="12.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill-rule:evenodd;fill:#bc2122"/>
+  <rect id="rect3675-5-1-9-4-4-2" x="91.49" y="82.78" width="12.5" height="2.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill-rule:evenodd;fill:#bc2122"/>
  </g>
  <g transform="translate(335.31249 764.29964)" id="g5736-4-1-5-2-0-3-7">
-  <rect id="rect3673-5-0-7-6-3-5-4" x="97.58536" y="135.89261" width="2.499976" height="12.49988" transform="matrix(.70710678.70710678-.70710678.70710678 0 0)" style="fill:#bc2122;fill-rule:evenodd"/>
-  <rect id="rect3675-5-1-9-4-4-4-4" x="92.58541" y="140.88255" width="12.49988" height="2.499976" transform="matrix(.70710678.70710678-.70710678.70710678 0 0)" style="fill:#bc2122;fill-rule:evenodd"/>
+  <rect id="rect3673-5-0-7-6-3-5-4" x="97.58536" y="135.89261" width="2.499976" height="12.49988" transform="matrix(.70710678.70710678-.70710678.70710678 0 0)" style="fill-rule:evenodd;fill:#bc2122"/>
+  <rect id="rect3675-5-1-9-4-4-4-4" x="92.58541" y="140.88255" width="12.49988" height="2.499976" transform="matrix(.70710678.70710678-.70710678.70710678 0 0)" style="fill-rule:evenodd;fill:#bc2122"/>
  </g>
  <g transform="translate(345.00241 763.77369)" id="g5736-4-1-5-2-0-9-6">
-  <rect id="rect3673-5-0-7-6-3-7-2" x="96.49" y="77.79" width="2.5" height="12.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill:#bc2122;fill-rule:evenodd"/>
-  <rect id="rect3675-5-1-9-4-4-2-7" x="91.49" y="82.78" width="12.5" height="2.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill:#bc2122;fill-rule:evenodd"/>
+  <rect id="rect3673-5-0-7-6-3-7-2" x="96.49" y="77.79" width="2.5" height="12.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill-rule:evenodd;fill:#bc2122"/>
+  <rect id="rect3675-5-1-9-4-4-2-7" x="91.49" y="82.78" width="12.5" height="2.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill-rule:evenodd;fill:#bc2122"/>
  </g>
  <g transform="translate(385.31249 764.29964)" id="g5736-4-1-5-2-0-3-7-8">
-  <rect id="rect3673-5-0-7-6-3-5-4-6" x="97.58536" y="135.89261" width="2.499976" height="12.49988" transform="matrix(.70710678.70710678-.70710678.70710678 0 0)" style="fill:#bc2122;fill-rule:evenodd"/>
-  <rect id="rect3675-5-1-9-4-4-4-4-8" x="92.58541" y="140.88255" width="12.49988" height="2.499976" transform="matrix(.70710678.70710678-.70710678.70710678 0 0)" style="fill:#bc2122;fill-rule:evenodd"/>
+  <rect id="rect3673-5-0-7-6-3-5-4-6" x="97.58536" y="135.89261" width="2.499976" height="12.49988" transform="matrix(.70710678.70710678-.70710678.70710678 0 0)" style="fill-rule:evenodd;fill:#bc2122"/>
+  <rect id="rect3675-5-1-9-4-4-4-4-8" x="92.58541" y="140.88255" width="12.49988" height="2.499976" transform="matrix(.70710678.70710678-.70710678.70710678 0 0)" style="fill-rule:evenodd;fill:#bc2122"/>
  </g>
  <g id="header-normal" transform="matrix(.10518008 0 0 .5333 191.53292 805.38633)">
   <rect height="30" width="100" y="447.60001" x="98.73" id="rect4234-2" style="fill:url(#cr-5)"/>
@@ -2289,89 +2289,89 @@
   <rect rx="0" ry=".2" height="15" width="100" y="447.60001" x="98.73" id="rect4547-9" style="fill:url(#linearGradient5621)"/>
  </g>
  <g id="button-disabled-toggled-topright" transform="translate(507.18939.456021)" style="fill-rule:evenodd">
-  <path d="m-43 12.36l0 5c6 0 10 4 10 10l5 0c0-10-5-15-15-15" id="path3702-9" style="fill:url(#linearGradient5886-4);opacity:.8"/>
-  <path d="m-43 20.36l0 7 7 0c0-5-2-7-7-7" id="path3704-5" style="fill:#cccccc;opacity:.8"/>
-  <path d="m-43 17.36l0 3c5 0 7 2 7 7l3 0c0-6-4-10-10-10" id="path3706-1" style="fill:#808080;opacity:.8"/>
+  <path d="m-43 12.36l0 5c6 0 10 4 10 10l5 0c0-10-5-15-15-15" id="path3702-9" style="opacity:.8;fill:url(#linearGradient5886-4)"/>
+  <path d="m-43 20.36l0 7 7 0c0-5-2-7-7-7" id="path3704-5" style="opacity:.8;fill:#cccccc"/>
+  <path d="m-43 17.36l0 3c5 0 7 2 7 7l3 0c0-6-4-10-10-10" id="path3706-1" style="opacity:.8;fill:#808080"/>
  </g>
  <g id="button-disabled-toggled-topleft" transform="translate(507.18939.456021)" style="fill-rule:evenodd">
-  <path d="m-60 12.36l0 5c-6 0-10 4-10 10l-5 0c0-10 5-15 15-15" id="path3709-2" style="fill:url(#linearGradient5886-4);opacity:.8"/>
-  <path d="m-60 20.36l0 7-7 0c0-5 2-7 7-7" id="path3711-8" style="fill:#cccccc;opacity:.8"/>
-  <path d="m-60 17.36l0 3c-5 0-7 2-7 7l-3 0c0-6 4-10 10-10" id="path3713-3" style="fill:#808080;opacity:.8"/>
+  <path d="m-60 12.36l0 5c-6 0-10 4-10 10l-5 0c0-10 5-15 15-15" id="path3709-2" style="opacity:.8;fill:url(#linearGradient5886-4)"/>
+  <path d="m-60 20.36l0 7-7 0c0-5 2-7 7-7" id="path3711-8" style="opacity:.8;fill:#cccccc"/>
+  <path d="m-60 17.36l0 3c-5 0-7 2-7 7l-3 0c0-6 4-10 10-10" id="path3713-3" style="opacity:.8;fill:#808080"/>
  </g>
  <g id="button-disabled-toggled-bottomright" transform="translate(507.18939.456021)" style="fill-rule:evenodd">
-  <path d="m-43 59.36l0-5c6 0 10-4 10-10l5 0c0 10-5 15-15 15" id="path3716-4" style="fill:url(#linearGradient5886-4);opacity:.8"/>
-  <path d="m-43 51.36l0-7 7 0c0 5-2 7-7 7" id="path3718-2" style="fill:#cccccc;opacity:.8"/>
-  <path d="m-43 54.36l0-3c5 0 7-2 7-7l3 0c0 6-4 10-10 10" id="path3720-3" style="fill:#808080;opacity:.8"/>
+  <path d="m-43 59.36l0-5c6 0 10-4 10-10l5 0c0 10-5 15-15 15" id="path3716-4" style="opacity:.8;fill:url(#linearGradient5886-4)"/>
+  <path d="m-43 51.36l0-7 7 0c0 5-2 7-7 7" id="path3718-2" style="opacity:.8;fill:#cccccc"/>
+  <path d="m-43 54.36l0-3c5 0 7-2 7-7l3 0c0 6-4 10-10 10" id="path3720-3" style="opacity:.8;fill:#808080"/>
  </g>
  <g id="button-disabled-toggled-bottomleft" transform="translate(507.18939.456021)" style="fill-rule:evenodd">
-  <path d="m-60 59.36l0-5c-6 0-10-4-10-10l-5 0c0 10 5 15 15 15" id="path3723-2" style="fill:url(#linearGradient5886-4);opacity:.8"/>
-  <path d="m-60 51.36l0-7-7 0c0 5 2 7 7 7" id="path3725-6" style="fill:#cccccc;opacity:.8"/>
-  <path d="m-60 54.36l0-3c-5 0-7-2-7-7l-3 0c0 6 4 10 10 10" id="path3727-9" style="fill:#808080;opacity:.8"/>
+  <path d="m-60 59.36l0-5c-6 0-10-4-10-10l-5 0c0 10 5 15 15 15" id="path3723-2" style="opacity:.8;fill:url(#linearGradient5886-4)"/>
+  <path d="m-60 51.36l0-7-7 0c0 5 2 7 7 7" id="path3725-6" style="opacity:.8;fill:#cccccc"/>
+  <path d="m-60 54.36l0-3c-5 0-7-2-7-7l-3 0c0 6 4 10 10 10" id="path3727-9" style="opacity:.8;fill:#808080"/>
  </g>
  <g id="button-disabled-toggled-top" transform="translate(507.18939-.274839)" style="fill-rule:evenodd">
-  <rect height="5" width="15" y="12.36" x="-59" id="rect3730-7" style="fill:url(#linearGradient5886-4);opacity:.8"/>
-  <rect height="7" width="15" y="20.360001" x="-59" id="rect3732-5" style="fill:#cccccc;opacity:.8"/>
-  <rect height="3" width="15" y="17.360001" x="-59" id="rect3734-8" style="fill:#808080;opacity:.8"/>
+  <rect height="5" width="15" y="12.36" x="-59" id="rect3730-7" style="opacity:.8;fill:url(#linearGradient5886-4)"/>
+  <rect height="7" width="15" y="20.360001" x="-59" id="rect3732-5" style="opacity:.8;fill:#cccccc"/>
+  <rect height="3" width="15" y="17.360001" x="-59" id="rect3734-8" style="opacity:.8;fill:#808080"/>
  </g>
  <g id="button-disabled-toggled-bottom" transform="translate(507.18939.456021)" style="fill-rule:evenodd">
-  <rect transform="scale(1-1)" height="5" width="15" y="-59.36" x="-59" id="rect3737-6" style="fill:url(#ea-7);opacity:.8"/>
-  <rect transform="scale(1-1)" height="7" width="15" y="-51.36" x="-59" id="rect3739-3" style="fill:#cccccc;opacity:.8"/>
-  <rect transform="scale(1-1)" height="3" width="15" y="-54.36" x="-59" id="rect3741-6" style="fill:#808080;opacity:.8"/>
+  <rect transform="scale(1-1)" height="5" width="15" y="-59.36" x="-59" id="rect3737-6" style="opacity:.8;fill:url(#ea-7)"/>
+  <rect transform="scale(1-1)" height="7" width="15" y="-51.36" x="-59" id="rect3739-3" style="opacity:.8;fill:#cccccc"/>
+  <rect transform="scale(1-1)" height="3" width="15" y="-54.36" x="-59" id="rect3741-6" style="opacity:.8;fill:#808080"/>
  </g>
  <g id="button-disabled-toggled-left" transform="translate(507.18939.456021)" style="fill-rule:evenodd">
-  <rect transform="matrix(0-1 1 0 0 0)" height="5" width="15" y="-75" x="-43.36" id="rect3744-5" style="fill:url(#linearGradient9726);opacity:.8"/>
-  <rect transform="matrix(0-1 1 0 0 0)" height="7" width="15" y="-67" x="-43.36" id="rect3746-1" style="fill:#cccccc;opacity:.8"/>
-  <rect transform="matrix(0-1 1 0 0 0)" height="3" width="15" y="-70" x="-43.36" id="rect3748-0" style="fill:#808080;opacity:.8"/>
+  <rect transform="matrix(0-1 1 0 0 0)" height="5" width="15" y="-75" x="-43.36" id="rect3744-5" style="opacity:.8;fill:url(#linearGradient9726)"/>
+  <rect transform="matrix(0-1 1 0 0 0)" height="7" width="15" y="-67" x="-43.36" id="rect3746-1" style="opacity:.8;fill:#cccccc"/>
+  <rect transform="matrix(0-1 1 0 0 0)" height="3" width="15" y="-70" x="-43.36" id="rect3748-0" style="opacity:.8;fill:#808080"/>
  </g>
  <g id="button-disabled-toggled-right" transform="translate(507.18939.456021)" style="fill-rule:evenodd">
-  <rect transform="matrix(0-1-1 0 0 0)" height="5" width="15" y="28" x="-43.36" id="rect3751-4" style="fill:url(#linearGradient9726);opacity:.8"/>
-  <rect transform="matrix(0-1-1 0 0 0)" height="7" width="15" y="36" x="-43.36" id="rect3753-3" style="fill:#cccccc;opacity:.8"/>
-  <rect transform="matrix(0-1-1 0 0 0)" height="3" width="15" y="33" x="-43.36" id="rect3755-9" style="fill:#808080;opacity:.8"/>
+  <rect transform="matrix(0-1-1 0 0 0)" height="5" width="15" y="28" x="-43.36" id="rect3751-4" style="opacity:.8;fill:url(#linearGradient9726)"/>
+  <rect transform="matrix(0-1-1 0 0 0)" height="7" width="15" y="36" x="-43.36" id="rect3753-3" style="opacity:.8;fill:#cccccc"/>
+  <rect transform="matrix(0-1-1 0 0 0)" height="3" width="15" y="33" x="-43.36" id="rect3755-9" style="opacity:.8;fill:#808080"/>
  </g>
  <g id="button-disabled-toggled">
-  <rect height="15" width="15" y="28.816022" x="448.18939" id="rect3758-9" rx="0" style="fill:#cccccc;opacity:.8;fill-rule:evenodd"/>
+  <rect height="15" width="15" y="28.816022" x="448.18939" id="rect3758-9" rx="0" style="opacity:.8;fill-rule:evenodd;fill:#cccccc"/>
  </g>
  <g id="g10804">
-  <text text-transform="none" text-indent="0" block-progression="tb" id="text3625" x="186" y="-110" line-height="normal" style="font-size:10;font-family:cmr10;color:#000000"><tspan id="tspan3627" x="186" y="-110">Normal</tspan>
+  <text text-transform="none" text-indent="0" block-progression="tb" id="text3625" x="186" y="-110" line-height="normal" style="color:#000000;font-family:cmr10;font-size:10"><tspan id="tspan3627" x="186" y="-110">Normal</tspan>
   </text>
-  <text text-transform="none" text-indent="0" block-progression="tb" id="text3629" x="336" y="-110" line-height="normal" style="font-size:10;font-family:cmr10;color:#000000"><tspan id="tspan3631" x="336" y="-110">Toggled</tspan>
+  <text text-transform="none" text-indent="0" block-progression="tb" id="text3629" x="336" y="-110" line-height="normal" style="color:#000000;font-family:cmr10;font-size:10"><tspan id="tspan3631" x="336" y="-110">Toggled</tspan>
   </text>
-  <text text-transform="none" text-indent="0" block-progression="tb" id="text3633" x="386" y="-110" line-height="normal" style="font-size:10;font-family:cmr10;color:#000000"><tspan id="tspan3635" x="386" y="-110">Disabled</tspan>
+  <text text-transform="none" text-indent="0" block-progression="tb" id="text3633" x="386" y="-110" line-height="normal" style="color:#000000;font-family:cmr10;font-size:10"><tspan id="tspan3635" x="386" y="-110">Disabled</tspan>
   </text>
-  <text text-transform="none" text-indent="0" block-progression="tb" id="text3637" x="236" y="-110" line-height="normal" style="font-size:10;font-family:cmr10;color:#000000"><tspan id="tspan3639" x="236" y="-110">Hovered</tspan>
+  <text text-transform="none" text-indent="0" block-progression="tb" id="text3637" x="236" y="-110" line-height="normal" style="color:#000000;font-family:cmr10;font-size:10"><tspan id="tspan3639" x="236" y="-110">Hovered</tspan>
   </text>
-  <text text-transform="none" text-indent="0" block-progression="tb" id="text3641" x="286" y="-110" line-height="normal" style="font-size:10;font-family:cmr10;color:#000000"><tspan id="tspan3643" x="286" y="-110">Pressed</tspan>
+  <text text-transform="none" text-indent="0" block-progression="tb" id="text3641" x="286" y="-110" line-height="normal" style="color:#000000;font-family:cmr10;font-size:10"><tspan id="tspan3643" x="286" y="-110">Pressed</tspan>
   </text>
-  <text text-transform="none" text-indent="0" block-progression="tb" id="text3926" x="255" y="-145" line-height="125%" style="letter-spacing:0;word-spacing:0;font-size:10;font-family:umr10;color:#000000"><tspan id="tspan3928" x="255" y="-145">QSvgStyle Default Theme</tspan><tspan id="tspan3930" x="255" y="-132.5">original design by Richard Kung</tspan>
+  <text text-transform="none" text-indent="0" block-progression="tb" id="text3926" x="255" y="-145" line-height="125%" style="letter-spacing:0;word-spacing:0;color:#000000;font-family:umr10;font-size:10"><tspan id="tspan3928" x="255" y="-145">QSvgStyle Default Theme</tspan><tspan id="tspan3930" x="255" y="-132.5">original design by Richard Kung</tspan>
   </text>
-  <text text-transform="none" text-indent="0" block-progression="tb" id="text3633-0" x="445" y="-120" line-height="normal" style="font-size:10;font-family:cmr10;color:#000000"><tspan id="tspan3635-6" x="445" y="-120">Disabled</tspan>
+  <text text-transform="none" text-indent="0" block-progression="tb" id="text3633-0" x="445" y="-120" line-height="normal" style="color:#000000;font-family:cmr10;font-size:10"><tspan id="tspan3635-6" x="445" y="-120">Disabled</tspan>
   </text>
-  <text text-transform="none" text-indent="0" block-progression="tb" id="text3633-0-3" x="445" y="-110" line-height="normal" style="font-size:10;font-family:cmr10;color:#000000"><tspan id="tspan3635-6-9" x="445" y="-110">Toggled</tspan>
+  <text text-transform="none" text-indent="0" block-progression="tb" id="text3633-0-3" x="445" y="-110" line-height="normal" style="color:#000000;font-family:cmr10;font-size:10"><tspan id="tspan3635-6-9" x="445" y="-110">Toggled</tspan>
   </text>
  </g>
  <g transform="translate(294.62362 317.63733)" id="g5736-4-1-5-2-0-9-1">
-  <rect id="rect3673-5-0-7-6-3-7-1" x="96.49" y="77.79" width="2.5" height="12.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill:#bc2122;fill-rule:evenodd"/>
-  <rect id="rect3675-5-1-9-4-4-2-3" x="91.49" y="82.78" width="12.5" height="2.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill:#bc2122;fill-rule:evenodd"/>
+  <rect id="rect3673-5-0-7-6-3-7-1" x="96.49" y="77.79" width="2.5" height="12.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill-rule:evenodd;fill:#bc2122"/>
+  <rect id="rect3675-5-1-9-4-4-2-3" x="91.49" y="82.78" width="12.5" height="2.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill-rule:evenodd;fill:#bc2122"/>
  </g>
  <g transform="translate(334.9337 354.16328)" id="g5736-4-1-5-2-0-3-7-3">
-  <rect id="rect3673-5-0-7-6-3-5-4-69" x="97.58536" y="135.89261" width="2.499976" height="12.49988" transform="matrix(.70710678.70710678-.70710678.70710678 0 0)" style="fill:#bc2122;fill-rule:evenodd"/>
-  <rect id="rect3675-5-1-9-4-4-4-4-6" x="92.58541" y="140.88255" width="12.49988" height="2.499976" transform="matrix(.70710678.70710678-.70710678.70710678 0 0)" style="fill:#bc2122;fill-rule:evenodd"/>
+  <rect id="rect3673-5-0-7-6-3-5-4-69" x="97.58536" y="135.89261" width="2.499976" height="12.49988" transform="matrix(.70710678.70710678-.70710678.70710678 0 0)" style="fill-rule:evenodd;fill:#bc2122"/>
+  <rect id="rect3675-5-1-9-4-4-4-4-6" x="92.58541" y="140.88255" width="12.49988" height="2.499976" transform="matrix(.70710678.70710678-.70710678.70710678 0 0)" style="fill-rule:evenodd;fill:#bc2122"/>
  </g>
  <g transform="translate(344.62362 317.63733)" id="g5736-4-1-5-2-0-9-6-4">
-  <rect id="rect3673-5-0-7-6-3-7-2-8" x="96.49" y="77.79" width="2.5" height="12.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill:#bc2122;fill-rule:evenodd"/>
-  <rect id="rect3675-5-1-9-4-4-2-7-2" x="91.49" y="82.78" width="12.5" height="2.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill:#bc2122;fill-rule:evenodd"/>
+  <rect id="rect3673-5-0-7-6-3-7-2-8" x="96.49" y="77.79" width="2.5" height="12.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill-rule:evenodd;fill:#bc2122"/>
+  <rect id="rect3675-5-1-9-4-4-2-7-2" x="91.49" y="82.78" width="12.5" height="2.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill-rule:evenodd;fill:#bc2122"/>
  </g>
  <g transform="translate(384.9337 354.16328)" id="g5736-4-1-5-2-0-3-7-8-1">
-  <rect id="rect3673-5-0-7-6-3-5-4-6-6" x="97.58536" y="135.89261" width="2.499976" height="12.49988" transform="matrix(.70710678.70710678-.70710678.70710678 0 0)" style="fill:#bc2122;fill-rule:evenodd"/>
-  <rect id="rect3675-5-1-9-4-4-4-4-8-2" x="92.58541" y="140.88255" width="12.49988" height="2.499976" transform="matrix(.70710678.70710678-.70710678.70710678 0 0)" style="fill:#bc2122;fill-rule:evenodd"/>
+  <rect id="rect3673-5-0-7-6-3-5-4-6-6" x="97.58536" y="135.89261" width="2.499976" height="12.49988" transform="matrix(.70710678.70710678-.70710678.70710678 0 0)" style="fill-rule:evenodd;fill:#bc2122"/>
+  <rect id="rect3675-5-1-9-4-4-4-4-8-2" x="92.58541" y="140.88255" width="12.49988" height="2.499976" transform="matrix(.70710678.70710678-.70710678.70710678 0 0)" style="fill-rule:evenodd;fill:#bc2122"/>
  </g>
  <g transform="translate(244.16907 318.09184)" id="g5736-4-1-5-2-0-9-1-0">
-  <rect id="rect3673-5-0-7-6-3-7-1-2" x="96.49" y="77.79" width="2.5" height="12.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill:#bc2122;fill-rule:evenodd"/>
-  <rect id="rect3675-5-1-9-4-4-2-3-5" x="91.49" y="82.78" width="12.5" height="2.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill:#bc2122;fill-rule:evenodd"/>
+  <rect id="rect3673-5-0-7-6-3-7-1-2" x="96.49" y="77.79" width="2.5" height="12.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill-rule:evenodd;fill:#bc2122"/>
+  <rect id="rect3675-5-1-9-4-4-2-3-5" x="91.49" y="82.78" width="12.5" height="2.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill-rule:evenodd;fill:#bc2122"/>
  </g>
  <g transform="translate(284.47915 354.61779)" id="g5736-4-1-5-2-0-3-7-3-7">
-  <rect id="rect3673-5-0-7-6-3-5-4-69-8" x="97.58536" y="135.89261" width="2.499976" height="12.49988" transform="matrix(.70710678.70710678-.70710678.70710678 0 0)" style="fill:#bc2122;fill-rule:evenodd"/>
-  <rect id="rect3675-5-1-9-4-4-4-4-6-1" x="92.58541" y="140.88255" width="12.49988" height="2.499976" transform="matrix(.70710678.70710678-.70710678.70710678 0 0)" style="fill:#bc2122;fill-rule:evenodd"/>
+  <rect id="rect3673-5-0-7-6-3-5-4-69-8" x="97.58536" y="135.89261" width="2.499976" height="12.49988" transform="matrix(.70710678.70710678-.70710678.70710678 0 0)" style="fill-rule:evenodd;fill:#bc2122"/>
+  <rect id="rect3675-5-1-9-4-4-4-4-6-1" x="92.58541" y="140.88255" width="12.49988" height="2.499976" transform="matrix(.70710678.70710678-.70710678.70710678 0 0)" style="fill-rule:evenodd;fill:#bc2122"/>
  </g>
  <g id="progress-normal-left" transform="matrix(1.067 0 0 1.067-14.06431 411.07135)">
   <rect height="15" width="7.5" y="25" x="187.5" id="rect4679-3" style="fill:url(#linearGradient6554)"/>
@@ -2479,7 +2479,7 @@
   <path transform="matrix(0-.1316-.1546 0 122.2 471)" d="m123 272.9c0-26.8 25.5-48.5 57-48.5l0 48.5z" id="path4756-3-2" style="fill:#b0b0b0"/>
   <path transform="matrix(0-.0658-.0773 0 101.1 459.2)" d="m123 272.9c0-26.8 25.5-48.5 57-48.5l0 48.5z" id="path4758-9-4" style="fill:url(#linearGradient6562)"/>
  </g>
- <text line-height="normal" y="1114" x="90" id="text6284-2" block-progression="tb" text-indent="0" text-transform="none" style="font-size:10;font-family:cmr10;color:#000000"><tspan y="1114" x="90" id="tspan6286-0">SpinBox</tspan>
+ <text line-height="normal" y="1114" x="90" id="text6284-2" block-progression="tb" text-indent="0" text-transform="none" style="color:#000000;font-family:cmr10;font-size:10"><tspan y="1114" x="90" id="tspan6286-0">SpinBox</tspan>
  </text>
  <g id="spin-normal" transform="matrix(.10518008 0 0-.5333 191.84054 1360.8988)">
   <rect height="30" width="100" y="447.60001" x="98.73" id="rect4234-2-4" style="fill:url(#cr-5)"/>
@@ -2502,43 +2502,43 @@
   <rect rx="0" ry=".2" height="15" width="100" y="447.60001" x="98.73" id="rect7439-4-1" style="fill:url(#linearGradient5621)"/>
  </g>
  <g transform="translate(346.96404 95.69577)" id="g5736-4-8-7">
-  <rect id="rect3673-5-1-9" x="96.49" y="77.79" width="2.5" height="12.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill:#bc2122;fill-rule:evenodd"/>
-  <rect id="rect3675-5-6-9" x="91.49" y="82.78" width="12.5" height="2.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill:#bc2122;fill-rule:evenodd"/>
+  <rect id="rect3673-5-1-9" x="96.49" y="77.79" width="2.5" height="12.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill-rule:evenodd;fill:#bc2122"/>
+  <rect id="rect3675-5-6-9" x="91.49" y="82.78" width="12.5" height="2.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill-rule:evenodd;fill:#bc2122"/>
  </g>
  <g transform="translate(245.0024 1026.4706)" id="g5736-4-1-5-2-0-9-1-0-4-2">
-  <rect id="rect3673-5-0-7-6-3-7-1-2-3-6" x="96.49" y="77.79" width="2.5" height="12.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill:#bc2122;fill-rule:evenodd"/>
-  <rect id="rect3675-5-1-9-4-4-2-3-5-5-0" x="91.49" y="82.78" width="12.5" height="2.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill:#bc2122;fill-rule:evenodd"/>
+  <rect id="rect3673-5-0-7-6-3-7-1-2-3-6" x="96.49" y="77.79" width="2.5" height="12.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill-rule:evenodd;fill:#bc2122"/>
+  <rect id="rect3675-5-1-9-4-4-2-3-5-5-0" x="91.49" y="82.78" width="12.5" height="2.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill-rule:evenodd;fill:#bc2122"/>
  </g>
  <g transform="translate(294.85089 1027.6828)" id="g5736-4-1-5-2-0-9-1-8-5">
-  <rect id="rect3673-5-0-7-6-3-7-1-4-8" x="96.49" y="77.79" width="2.5" height="12.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill:#bc2122;fill-rule:evenodd"/>
-  <rect id="rect3675-5-1-9-4-4-2-3-9-4" x="91.49" y="82.78" width="12.5" height="2.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill:#bc2122;fill-rule:evenodd"/>
+  <rect id="rect3673-5-0-7-6-3-7-1-4-8" x="96.49" y="77.79" width="2.5" height="12.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill-rule:evenodd;fill:#bc2122"/>
+  <rect id="rect3675-5-1-9-4-4-2-3-9-4" x="91.49" y="82.78" width="12.5" height="2.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill-rule:evenodd;fill:#bc2122"/>
  </g>
- <text line-height="normal" y="1144" x="530" id="text4017-8" block-progression="tb" text-indent="0" text-transform="none" style="font-size:10;font-family:cmr10;color:#000000"><tspan y="1144" x="530" id="tspan4019-7">Whole menu frame</tspan>
+ <text line-height="normal" y="1144" x="530" id="text4017-8" block-progression="tb" text-indent="0" text-transform="none" style="color:#000000;font-family:cmr10;font-size:10"><tspan y="1144" x="530" id="tspan4019-7">Whole menu frame</tspan>
  </text>
- <text line-height="normal" y="1205" x="90" id="text4149-5" block-progression="tb" text-indent="0" text-transform="none" style="font-size:10;font-family:cmr10;color:#000000"><tspan y="1205" x="90" id="tspan4151-8">Menu bar item</tspan>
+ <text line-height="normal" y="1205" x="90" id="text4149-5" block-progression="tb" text-indent="0" text-transform="none" style="color:#000000;font-family:cmr10;font-size:10"><tspan y="1205" x="90" id="tspan4151-8">Menu bar item</tspan>
  </text>
- <rect id="menubaritem-normal" height="8" width="8" y="1193.2122" x="201.24243" style="fill:#f4f4f4;fill-rule:evenodd"/>
- <rect id="menubaritem-normal-left" height="8" width="4" y="1199.3788" x="542.48486" style="fill:#d8d8d8;fill-rule:evenodd"/>
- <rect id="menubaritem-normal-right" height="8" width="4" y="1199.3788" x="558.48486" style="fill:#d8d8d8;fill-rule:evenodd"/>
- <rect id="menubaritem-normal-topright" height="4" width="4" y="1193.3788" x="558.48486" style="fill:#d8d8d8;fill-rule:evenodd"/>
- <rect id="menubaritem-normal-bottomright" height="4" width="4" y="1209.3788" x="558.48486" style="fill:#d8d8d8;fill-rule:evenodd"/>
- <rect id="menubaritem-normal-bottomleft" height="4" width="4" y="1209.3788" x="542.48486" style="fill:#d8d8d8;fill-rule:evenodd"/>
- <rect id="menubaritem-normal-topleft" height="4" width="4" y="1193.3788" x="542.48486" style="fill:#d8d8d8;fill-rule:evenodd"/>
- <rect id="menubaritem-normal-top" height="4" width="8" y="1193.3788" x="548.48486" style="fill:#d8d8d8;fill-rule:evenodd"/>
+ <rect id="menubaritem-normal" height="8" width="8" y="1193.2122" x="201.24243" style="fill-rule:evenodd;fill:#f4f4f4"/>
+ <rect id="menubaritem-normal-left" height="8" width="4" y="1199.3788" x="542.48486" style="fill-rule:evenodd;fill:#d8d8d8"/>
+ <rect id="menubaritem-normal-right" height="8" width="4" y="1199.3788" x="558.48486" style="fill-rule:evenodd;fill:#d8d8d8"/>
+ <rect id="menubaritem-normal-topright" height="4" width="4" y="1193.3788" x="558.48486" style="fill-rule:evenodd;fill:#d8d8d8"/>
+ <rect id="menubaritem-normal-bottomright" height="4" width="4" y="1209.3788" x="558.48486" style="fill-rule:evenodd;fill:#d8d8d8"/>
+ <rect id="menubaritem-normal-bottomleft" height="4" width="4" y="1209.3788" x="542.48486" style="fill-rule:evenodd;fill:#d8d8d8"/>
+ <rect id="menubaritem-normal-topleft" height="4" width="4" y="1193.3788" x="542.48486" style="fill-rule:evenodd;fill:#d8d8d8"/>
+ <rect id="menubaritem-normal-top" height="4" width="8" y="1193.3788" x="548.48486" style="fill-rule:evenodd;fill:#d8d8d8"/>
  <g id="menubaritem-normal-bottom" style="fill:#d8d8d8">
   <rect height="11" width="30" y="27.360001" x="102.5" id="rect4847-9" transform="matrix(.2667 0 0 .3636 521.18484 1199.3788)" style="fill-rule:evenodd"/>
  </g>
- <text line-height="normal" y="1189" x="530" id="text4017-8-2" block-progression="tb" text-indent="0" text-transform="none" style="font-size:10;font-family:cmr10;color:#000000"><tspan y="1189" x="530" id="tspan4019-7-9">Whole menu bar frame</tspan>
+ <text line-height="normal" y="1189" x="530" id="text4017-8-2" block-progression="tb" text-indent="0" text-transform="none" style="color:#000000;font-family:cmr10;font-size:10"><tspan y="1189" x="530" id="tspan4019-7-9">Whole menu bar frame</tspan>
  </text>
  <g transform="translate(242.95695 1071.3948)" id="g5736-4-1-5-2-0-9-1-0-4-2-8">
-  <rect id="rect3673-5-0-7-6-3-7-1-2-3-6-2" x="96.49" y="77.79" width="2.5" height="12.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill:#bc2122;fill-rule:evenodd"/>
-  <rect id="rect3675-5-1-9-4-4-2-3-5-5-0-6" x="91.49" y="82.78" width="12.5" height="2.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill:#bc2122;fill-rule:evenodd"/>
+  <rect id="rect3673-5-0-7-6-3-7-1-2-3-6-2" x="96.49" y="77.79" width="2.5" height="12.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill-rule:evenodd;fill:#bc2122"/>
+  <rect id="rect3675-5-1-9-4-4-2-3-5-5-0-6" x="91.49" y="82.78" width="12.5" height="2.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill-rule:evenodd;fill:#bc2122"/>
  </g>
  <g transform="translate(292.80544 1072.607)" id="g5736-4-1-5-2-0-9-1-8-5-6">
-  <rect id="rect3673-5-0-7-6-3-7-1-4-8-8" x="96.49" y="77.79" width="2.5" height="12.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill:#bc2122;fill-rule:evenodd"/>
-  <rect id="rect3675-5-1-9-4-4-2-3-9-4-4" x="91.49" y="82.78" width="12.5" height="2.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill:#bc2122;fill-rule:evenodd"/>
+  <rect id="rect3673-5-0-7-6-3-7-1-4-8-8" x="96.49" y="77.79" width="2.5" height="12.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill-rule:evenodd;fill:#bc2122"/>
+  <rect id="rect3675-5-1-9-4-4-2-3-9-4-4" x="91.49" y="82.78" width="12.5" height="2.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill-rule:evenodd;fill:#bc2122"/>
  </g>
- <rect id="menubaritem-disabled" height="8" width="8.787879" y="1198.6365" x="404.77274" style="fill:#f4f4f4;fill-rule:evenodd"/>
+ <rect id="menubaritem-disabled" height="8" width="8.787879" y="1198.6365" x="404.77274" style="fill-rule:evenodd;fill:#f4f4f4"/>
  <g id="header-hovered-top" transform="matrix(0-1.067-.795 0 282.65127 1234.7317)">
   <rect height="15.09" width="3.75" y="25" x="180" id="rect6489" style="fill:#729fcf"/>
   <rect height="15.09" width="3.75" y="25" x="183.8" id="rect6491" style="fill:#888888"/>
@@ -2553,12 +2553,12 @@
  <g id="header-hovered-left" transform="matrix(1.067 0 0 1.067 41.75127 1017.7317)">
   <rect height="15" width="3.75" y="25" x="191.2" id="rect6505" style="fill:#729fcf"/>
   <rect rx="0" ry=".1" height="7.5" width="3.75" y="25" x="191.2" id="rect6507" style="fill:url(#ab-3)"/>
-  <path d="m195 25l0 15-3.7 0 0-15 3.7 0" id="path6509" style="fill:url(#radialGradient8784);opacity:.8;fill-rule:evenodd"/>
+  <path d="m195 25l0 15-3.7 0 0-15 3.7 0" id="path6509" style="opacity:.8;fill-rule:evenodd;fill:url(#radialGradient8784)"/>
  </g>
  <g id="header-hovered-right" transform="matrix(1.067 0 0 1.067 71.75127 1017.7317)">
   <rect height="15" width="3.75" y="25" x="180" id="rect6512" style="fill:#729fcf"/>
   <rect rx="0" ry=".1" height="7.5" width="3.75" y="25" x="180" id="rect6514" style="fill:url(#ac-6)"/>
-  <path d="M 183.8,25 V 40 H 180 V 25 h 3.8 z" id="path6516" style="fill:url(#radialGradient8788);opacity:.8;fill-rule:evenodd"/>
+  <path d="M 183.8,25 V 40 H 180 V 25 h 3.8 z" id="path6516" style="opacity:.8;fill-rule:evenodd;fill:url(#radialGradient8788)"/>
  </g>
  <g id="header-hovered-topleft" transform="matrix(0-1.067-.265 0 256.35127 1234.7317)">
   <rect height="15.09" width="3.75" y="25" x="180" id="rect6519" style="fill:#729fcf"/>
@@ -2596,12 +2596,12 @@
  <g id="header-pressed-left" transform="matrix(1.067 0 0 1.067 93.75127 1017.7317)">
   <rect height="15" width="3.75" y="25" x="191.2" id="rect6567" style="fill:#d0d0d0"/>
   <rect rx="0" ry=".1" height="7.5" width="3.75" y="25" x="191.2" id="rect6569" style="fill:url(#ab-3)"/>
-  <path d="m195 25l0 15-3.7 0 0-15 3.7 0" id="path6571" style="fill:url(#radialGradient8784);opacity:.8;fill-rule:evenodd"/>
+  <path d="m195 25l0 15-3.7 0 0-15 3.7 0" id="path6571" style="opacity:.8;fill-rule:evenodd;fill:url(#radialGradient8784)"/>
  </g>
  <g id="header-pressed-right" transform="matrix(1.067 0 0 1.067 123.75127 1017.7317)">
   <rect height="15" width="3.75" y="25" x="180" id="rect6574" style="fill:#d0d0d0"/>
   <rect rx="0" ry=".1" height="7.5" width="3.75" y="25" x="180" id="rect6576" style="fill:url(#ac-6)"/>
-  <path d="M 183.8,25 V 40 H 180 V 25 h 3.8 z" id="path6578" style="fill:url(#radialGradient8788);opacity:.8;fill-rule:evenodd"/>
+  <path d="M 183.8,25 V 40 H 180 V 25 h 3.8 z" id="path6578" style="opacity:.8;fill-rule:evenodd;fill:url(#radialGradient8788)"/>
  </g>
  <g id="header-pressed-topleft" transform="matrix(0-1.067-.265 0 308.35127 1234.7317)">
   <rect height="15.09" width="3.75" y="25" x="180" id="rect6581" style="fill:#d0d0d0"/>
@@ -2647,12 +2647,12 @@
  <g id="header-toggled-left" transform="matrix(1.067 0 0 1.067 142.73612 1018.7166)">
   <rect height="15" width="3.75" y="25" x="191.2" id="rect6505-1" style="fill:#729fcf"/>
   <rect rx="0" ry=".1" height="7.5" width="3.75" y="25" x="191.2" id="rect6507-3" style="fill:url(#ab-3)"/>
-  <path d="m195 25l0 15-3.7 0 0-15 3.7 0" id="path6509-7" style="fill:url(#radialGradient8784);opacity:.8;fill-rule:evenodd"/>
+  <path d="m195 25l0 15-3.7 0 0-15 3.7 0" id="path6509-7" style="opacity:.8;fill-rule:evenodd;fill:url(#radialGradient8784)"/>
  </g>
  <g id="header-toggled-right" transform="matrix(1.067 0 0 1.067 172.73612 1018.7166)">
   <rect height="15" width="3.75" y="25" x="180" id="rect6512-7" style="fill:#729fcf"/>
   <rect rx="0" ry=".1" height="7.5" width="3.75" y="25" x="180" id="rect6514-6" style="fill:url(#ac-6)"/>
-  <path d="M 183.8,25 V 40 H 180 V 25 h 3.8 z" id="path6516-4" style="fill:url(#radialGradient8788);opacity:.8;fill-rule:evenodd"/>
+  <path d="M 183.8,25 V 40 H 180 V 25 h 3.8 z" id="path6516-4" style="opacity:.8;fill-rule:evenodd;fill:url(#radialGradient8788)"/>
  </g>
  <g id="header-toggled-topleft" transform="matrix(0-1.067-.265 0 357.33612 1235.7166)">
   <rect height="15.09" width="3.75" y="25" x="180" id="rect6519-5" style="fill:#729fcf"/>
@@ -2681,42 +2681,42 @@
   <rect rx="0" ry=".2" height="15" width="100" y="447.60001" x="98.73" id="rect7439-4-2" style="fill:url(#linearGradient5621)"/>
  </g>
  <g transform="translate(295.83574 1110.5615)" id="g5736-4-1-5-2-0-9-1-8-5-6-7">
-  <rect id="rect3673-5-0-7-6-3-7-1-4-8-8-1" x="96.49" y="77.79" width="2.5" height="12.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill:#bc2122;fill-rule:evenodd"/>
-  <rect id="rect3675-5-1-9-4-4-2-3-9-4-4-2" x="91.49" y="82.78" width="12.5" height="2.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill:#bc2122;fill-rule:evenodd"/>
+  <rect id="rect3673-5-0-7-6-3-7-1-4-8-8-1" x="96.49" y="77.79" width="2.5" height="12.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill-rule:evenodd;fill:#bc2122"/>
+  <rect id="rect3675-5-1-9-4-4-2-3-9-4-4-2" x="91.49" y="82.78" width="12.5" height="2.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill-rule:evenodd;fill:#bc2122"/>
  </g>
- <text line-height="normal" y="915" x="190" id="text4216-0" block-progression="tb" text-indent="0" text-transform="none" style="font-size:10;font-family:cmr10;color:#000000"><tspan y="915" x="190" id="tspan4218-7">Elapsed</tspan>
+ <text line-height="normal" y="915" x="190" id="text4216-0" block-progression="tb" text-indent="0" text-transform="none" style="color:#000000;font-family:cmr10;font-size:10"><tspan y="915" x="190" id="tspan4218-7">Elapsed</tspan>
  </text>
- <text line-height="normal" y="1265" x="185" id="text4216-1" block-progression="tb" text-indent="0" text-transform="none" style="font-size:10;font-family:cmr10;color:#000000"><tspan y="1265" x="185" id="tspan4218-5">Alternate</tspan>
+ <text line-height="normal" y="1265" x="185" id="text4216-1" block-progression="tb" text-indent="0" text-transform="none" style="color:#000000;font-family:cmr10;font-size:10"><tspan y="1265" x="185" id="tspan4218-5">Alternate</tspan>
  </text>
  <g transform="translate(247.42279 1151.9275)" id="g5736-4-1-5-2-0-9-1-0-4-2-8-4">
-  <rect id="rect3673-5-0-7-6-3-7-1-2-3-6-2-7" x="96.49" y="77.79" width="2.5" height="12.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill:#bc2122;fill-rule:evenodd"/>
-  <rect id="rect3675-5-1-9-4-4-2-3-5-5-0-6-1" x="91.49" y="82.78" width="12.5" height="2.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill:#bc2122;fill-rule:evenodd"/>
+  <rect id="rect3673-5-0-7-6-3-7-1-2-3-6-2-7" x="96.49" y="77.79" width="2.5" height="12.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill-rule:evenodd;fill:#bc2122"/>
+  <rect id="rect3675-5-1-9-4-4-2-3-5-5-0-6-1" x="91.49" y="82.78" width="12.5" height="2.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill-rule:evenodd;fill:#bc2122"/>
  </g>
  <g transform="translate(297.27128 1153.1396)" id="g5736-4-1-5-2-0-9-1-8-5-6-6">
-  <rect id="rect3673-5-0-7-6-3-7-1-4-8-8-4" x="96.49" y="77.79" width="2.5" height="12.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill:#bc2122;fill-rule:evenodd"/>
-  <rect id="rect3675-5-1-9-4-4-2-3-9-4-4-1" x="91.49" y="82.78" width="12.5" height="2.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill:#bc2122;fill-rule:evenodd"/>
+  <rect id="rect3673-5-0-7-6-3-7-1-4-8-8-4" x="96.49" y="77.79" width="2.5" height="12.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill-rule:evenodd;fill:#bc2122"/>
+  <rect id="rect3675-5-1-9-4-4-2-3-9-4-4-1" x="91.49" y="82.78" width="12.5" height="2.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill-rule:evenodd;fill:#bc2122"/>
  </g>
  <g transform="translate(347.59855 1151.7517)" id="g5736-4-1-5-2-0-9-1-0-4-2-8-7">
-  <rect id="rect3673-5-0-7-6-3-7-1-2-3-6-2-6" x="96.49" y="77.79" width="2.5" height="12.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill:#bc2122;fill-rule:evenodd"/>
-  <rect id="rect3675-5-1-9-4-4-2-3-5-5-0-6-7" x="91.49" y="82.78" width="12.5" height="2.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill:#bc2122;fill-rule:evenodd"/>
+  <rect id="rect3673-5-0-7-6-3-7-1-2-3-6-2-6" x="96.49" y="77.79" width="2.5" height="12.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill-rule:evenodd;fill:#bc2122"/>
+  <rect id="rect3675-5-1-9-4-4-2-3-5-5-0-6-7" x="91.49" y="82.78" width="12.5" height="2.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill-rule:evenodd;fill:#bc2122"/>
  </g>
  <g transform="translate(397.44704 1152.9639)" id="g5736-4-1-5-2-0-9-1-8-5-6-3">
-  <rect id="rect3673-5-0-7-6-3-7-1-4-8-8-8" x="96.49" y="77.79" width="2.5" height="12.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill:#bc2122;fill-rule:evenodd"/>
-  <rect id="rect3675-5-1-9-4-4-2-3-9-4-4-4" x="91.49" y="82.78" width="12.5" height="2.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill:#bc2122;fill-rule:evenodd"/>
+  <rect id="rect3673-5-0-7-6-3-7-1-4-8-8-8" x="96.49" y="77.79" width="2.5" height="12.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill-rule:evenodd;fill:#bc2122"/>
+  <rect id="rect3675-5-1-9-4-4-2-3-9-4-4-4" x="91.49" y="82.78" width="12.5" height="2.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill-rule:evenodd;fill:#bc2122"/>
  </g>
- <text line-height="normal" y="510" x="185" id="text4216-0-0" block-progression="tb" text-indent="0" text-transform="none" style="font-size:10;font-family:cmr10;color:#000000"><tspan y="510" x="185" id="tspan4218-7-4">Elapsed</tspan>
+ <text line-height="normal" y="510" x="185" id="text4216-0-0" block-progression="tb" text-indent="0" text-transform="none" style="color:#000000;font-family:cmr10;font-size:10"><tspan y="510" x="185" id="tspan4218-7-4">Elapsed</tspan>
  </text>
  <g transform="translate(292.83851 358.35103)" id="g5736-4-1-5-2-0-9-1-9">
-  <rect id="rect3673-5-0-7-6-3-7-1-1" x="96.49" y="77.79" width="2.5" height="12.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill:#bc2122;fill-rule:evenodd"/>
-  <rect id="rect3675-5-1-9-4-4-2-3-1" x="91.49" y="82.78" width="12.5" height="2.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill:#bc2122;fill-rule:evenodd"/>
+  <rect id="rect3673-5-0-7-6-3-7-1-1" x="96.49" y="77.79" width="2.5" height="12.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill-rule:evenodd;fill:#bc2122"/>
+  <rect id="rect3675-5-1-9-4-4-2-3-1" x="91.49" y="82.78" width="12.5" height="2.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill-rule:evenodd;fill:#bc2122"/>
  </g>
  <g transform="translate(342.83851 358.35103)" id="g5736-4-1-5-2-0-9-6-4-5">
-  <rect id="rect3673-5-0-7-6-3-7-2-8-2" x="96.49" y="77.79" width="2.5" height="12.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill:#bc2122;fill-rule:evenodd"/>
-  <rect id="rect3675-5-1-9-4-4-2-7-2-4" x="91.49" y="82.78" width="12.5" height="2.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill:#bc2122;fill-rule:evenodd"/>
+  <rect id="rect3673-5-0-7-6-3-7-2-8-2" x="96.49" y="77.79" width="2.5" height="12.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill-rule:evenodd;fill:#bc2122"/>
+  <rect id="rect3675-5-1-9-4-4-2-7-2-4" x="91.49" y="82.78" width="12.5" height="2.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill-rule:evenodd;fill:#bc2122"/>
  </g>
  <g transform="translate(242.38396 358.80554)" id="g5736-4-1-5-2-0-9-1-0-8">
-  <rect id="rect3673-5-0-7-6-3-7-1-2-8" x="96.49" y="77.79" width="2.5" height="12.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill:#bc2122;fill-rule:evenodd"/>
-  <rect id="rect3675-5-1-9-4-4-2-3-5-4" x="91.49" y="82.78" width="12.5" height="2.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill:#bc2122;fill-rule:evenodd"/>
+  <rect id="rect3673-5-0-7-6-3-7-1-2-8" x="96.49" y="77.79" width="2.5" height="12.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill-rule:evenodd;fill:#bc2122"/>
+  <rect id="rect3675-5-1-9-4-4-2-3-5-4" x="91.49" y="82.78" width="12.5" height="2.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill-rule:evenodd;fill:#bc2122"/>
  </g>
  <g id="scrollbar-normal-top" transform="matrix(0-1.067-1.06 0 240.86364 1591.9394)">
   <rect height="15.09" width="3.75" y="25" x="183.8" id="rect6963-7" style="fill:#a8a8a8"/>
@@ -2872,17 +2872,17 @@
   <path transform="matrix(0 .0877-.1031 0 108.1 424.6)" d="m123 272.9c0-26.8 25.5-48.5 57-48.5l0 48.5z" id="path7350-5" style="fill:#a8a8a8"/>
  </g>
  <g transform="translate(348.28478 1274.3288)" id="g5736-8-7-8-4-0-6-0">
-  <rect id="rect3673-69-5-4-8-0-1-6" x="96.49" y="77.79" width="2.5" height="12.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill:#bc2122;fill-rule:evenodd"/>
-  <rect id="rect3675-4-9-3-0-5-3-3" x="91.49" y="82.78" width="12.5" height="2.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill:#bc2122;fill-rule:evenodd"/>
+  <rect id="rect3673-69-5-4-8-0-1-6" x="96.49" y="77.79" width="2.5" height="12.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill-rule:evenodd;fill:#bc2122"/>
+  <rect id="rect3675-4-9-3-0-5-3-3" x="91.49" y="82.78" width="12.5" height="2.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill-rule:evenodd;fill:#bc2122"/>
  </g>
  <g id="scrollbar-disabled">
-  <rect height="15.99078" width="15.99078" y="1438.11819" x="397.49732" id="rect4130-2" rx="0" style="fill:#d8d8d8;fill-rule:evenodd;stroke-width:1.577"/>
+  <rect height="15.99078" width="15.99078" y="1438.11819" x="397.49732" id="rect4130-2" rx="0" style="fill-rule:evenodd;fill:#d8d8d8;stroke-width:1.577"/>
  </g>
  <g id="scrollbar-normal">
-  <rect height="15.99985" width="15.99985" y="1438.34099" x="197.59352" id="rect4144-6" rx="0" style="fill:#e0e0e0;fill-rule:evenodd;stroke-width:.4507"/>
+  <rect height="15.99985" width="15.99985" y="1438.34099" x="197.59352" id="rect4144-6" rx="0" style="fill-rule:evenodd;fill:#e0e0e0;stroke-width:.4507"/>
  </g>
  <g id="scrollbar-hovered">
-  <rect height="15.99985" width="15.99985" y="1438.34099" x="246.59352" id="rect4147-8" rx="0" style="fill:#f0f0f0;fill-rule:evenodd;stroke-width:.4507"/>
+  <rect height="15.99985" width="15.99985" y="1438.34099" x="246.59352" id="rect4147-8" rx="0" style="fill-rule:evenodd;fill:#f0f0f0;stroke-width:.4507"/>
  </g>
  <g id="scrollbar-pressed-top" transform="matrix(0-1.067-1.06 0 341.7562 1593.1904)">
   <rect height="15.09" width="3.75" y="25" x="183.8" id="rect7041-0-9" style="fill:#a8a8a8"/>
@@ -2940,14 +2940,14 @@
   <rect rx="0" ry=".236654" height="17.749056" width="22.931606" y="519.21375" x="107.74456" id="rect7439-4-3" style="fill:url(#g-8-0)"/>
  </g>
  <g transform="translate(349.28478 1318.3288)" id="g5736-8-7-8-4-0-6-0-9">
-  <rect id="rect3673-69-5-4-8-0-1-6-7" x="96.49" y="77.79" width="2.5" height="12.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill:#bc2122;fill-rule:evenodd"/>
-  <rect id="rect3675-4-9-3-0-5-3-3-6" x="91.49" y="82.78" width="12.5" height="2.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill:#bc2122;fill-rule:evenodd"/>
+  <rect id="rect3673-69-5-4-8-0-1-6-7" x="96.49" y="77.79" width="2.5" height="12.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill-rule:evenodd;fill:#bc2122"/>
+  <rect id="rect3675-4-9-3-0-5-3-3-6" x="91.49" y="82.78" width="12.5" height="2.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill-rule:evenodd;fill:#bc2122"/>
  </g>
  <g transform="translate(348.74909 1360.1124)" id="g5736-8-7-8-4-0-6-0-9-5">
-  <rect id="rect3673-69-5-4-8-0-1-6-7-5" x="96.49" y="77.79" width="2.5" height="12.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill:#bc2122;fill-rule:evenodd"/>
-  <rect id="rect3675-4-9-3-0-5-3-3-6-9" x="91.49" y="82.78" width="12.5" height="2.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill:#bc2122;fill-rule:evenodd"/>
+  <rect id="rect3673-69-5-4-8-0-1-6-7-5" x="96.49" y="77.79" width="2.5" height="12.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill-rule:evenodd;fill:#bc2122"/>
+  <rect id="rect3675-4-9-3-0-5-3-3-6-9" x="91.49" y="82.78" width="12.5" height="2.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill-rule:evenodd;fill:#bc2122"/>
  </g>
- <text line-height="normal" y="1918" x="90" id="text3474-6" block-progression="tb" text-indent="0" text-transform="none" style="font-size:10;font-family:cmr10;color:#000000"><tspan y="1918" x="90" id="tspan3476-5">Dial</tspan>
+ <text line-height="normal" y="1918" x="90" id="text3474-6" block-progression="tb" text-indent="0" text-transform="none" style="color:#000000;font-family:cmr10;font-size:10"><tspan y="1918" x="90" id="tspan3476-5">Dial</tspan>
  </text>
  <g id="frame-sunken-normal">
   <rect transform="matrix(.16 0 0-.5333 181.22121 114.36361)" height="30" width="100" y="-477.60001" x="98.73" id="rect4676-4" style="fill:url(#radialGradient6552)"/>
@@ -3062,22 +3062,22 @@
   <rect transform="matrix(.16 0 0-.5333 381.22121 114.36361)" height="30" width="100" y="-477.60001" x="98.73" id="rect6252-1" style="fill:url(#radialGradient6552)"/>
  </g>
  <g transform="translate(245.23718 234.52372)" id="g5736-4-14-6-8">
-  <rect id="rect3673-5-6-6-1" x="96.49" y="77.79" width="2.5" height="12.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill:#bc2122;fill-rule:evenodd"/>
-  <rect id="rect3675-5-8-2-8" x="91.49" y="82.78" width="12.5" height="2.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill:#bc2122;fill-rule:evenodd"/>
+  <rect id="rect3673-5-6-6-1" x="96.49" y="77.79" width="2.5" height="12.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill-rule:evenodd;fill:#bc2122"/>
+  <rect id="rect3675-5-8-2-8" x="91.49" y="82.78" width="12.5" height="2.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill-rule:evenodd;fill:#bc2122"/>
  </g>
  <g transform="translate(295.23719 234.52372)" id="g5736-4-14-3-42">
-  <rect id="rect3673-5-6-1-1" x="96.49" y="77.79" width="2.5" height="12.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill:#bc2122;fill-rule:evenodd"/>
-  <rect id="rect3675-5-8-1-9" x="91.49" y="82.78" width="12.5" height="2.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill:#bc2122;fill-rule:evenodd"/>
+  <rect id="rect3673-5-6-1-1" x="96.49" y="77.79" width="2.5" height="12.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill-rule:evenodd;fill:#bc2122"/>
+  <rect id="rect3675-5-8-1-9" x="91.49" y="82.78" width="12.5" height="2.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill-rule:evenodd;fill:#bc2122"/>
  </g>
  <g transform="translate(344.62362 234.52372)" id="g5736-4-14-3-4-1">
-  <rect id="rect3673-5-6-1-3-4" x="96.49" y="77.79" width="2.5" height="12.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill:#bc2122;fill-rule:evenodd"/>
-  <rect id="rect3675-5-8-1-5-0" x="91.49" y="82.78" width="12.5" height="2.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill:#bc2122;fill-rule:evenodd"/>
+  <rect id="rect3673-5-6-1-3-4" x="96.49" y="77.79" width="2.5" height="12.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill-rule:evenodd;fill:#bc2122"/>
+  <rect id="rect3675-5-8-1-5-0" x="91.49" y="82.78" width="12.5" height="2.5" transform="matrix(.7071.7071-.7071.7071 0 0)" style="fill-rule:evenodd;fill:#bc2122"/>
  </g>
- <text line-height="normal" y="298" x="115" id="text3697-1" block-progression="tb" text-indent="0" text-transform="none" style="font-size:10;font-family:cmr10;color:#000000"><tspan y="298" x="115" id="tspan3699-9">Raised</tspan>
+ <text line-height="normal" y="298" x="115" id="text3697-1" block-progression="tb" text-indent="0" text-transform="none" style="color:#000000;font-family:cmr10;font-size:10"><tspan y="298" x="115" id="tspan3699-9">Raised</tspan>
  </text>
- <text line-height="normal" y="362" x="115" id="text3697-1-0" block-progression="tb" text-indent="0" text-transform="none" style="font-size:10;font-family:cmr10;color:#000000"><tspan y="362" x="115" id="tspan3699-9-4">Sunken</tspan>
+ <text line-height="normal" y="362" x="115" id="text3697-1-0" block-progression="tb" text-indent="0" text-transform="none" style="color:#000000;font-family:cmr10;font-size:10"><tspan y="362" x="115" id="tspan3699-9-4">Sunken</tspan>
  </text>
- <text line-height="normal" y="90" x="90" id="text3621-5" block-progression="tb" text-indent="0" text-transform="none" style="font-size:10;font-family:cmr10;color:#000000"><tspan y="90" x="90" id="tspan3623-37">Tool button</tspan>
+ <text line-height="normal" y="90" x="90" id="text3621-5" block-progression="tb" text-indent="0" text-transform="none" style="color:#000000;font-family:cmr10;font-size:10"><tspan y="90" x="90" id="tspan3623-37">Tool button</tspan>
  </text>
  <g id="toolbutton-normal" transform="matrix(.16 0 0 .5333 181.2-152.7)">
   <rect height="30" width="100" y="447.60001" x="98.73" id="rect4234-3" style="fill:url(#cr-5)"/>
@@ -3355,46 +3355,46 @@
   <rect rx="0" ry=".2" height="15" width="100" y="447.60001" x="98.73" id="rect7439-2" style="fill:url(#linearGradient5621)"/>
  </g>
  <g id="toolbutton-disabled-toggled-topright" transform="translate(507.18939 60.45602)" style="fill-rule:evenodd">
-  <path d="m-43 12.36l0 5c6 0 10 4 10 10l5 0c0-10-5-15-15-15" id="path3702-9-3" style="fill:url(#linearGradient5886-4);opacity:.8"/>
-  <path d="m-43 20.36l0 7 7 0c0-5-2-7-7-7" id="path3704-5-5" style="fill:#cccccc;opacity:.8"/>
-  <path d="m-43 17.36l0 3c5 0 7 2 7 7l3 0c0-6-4-10-10-10" id="path3706-1-7" style="fill:#808080;opacity:.8"/>
+  <path d="m-43 12.36l0 5c6 0 10 4 10 10l5 0c0-10-5-15-15-15" id="path3702-9-3" style="opacity:.8;fill:url(#linearGradient5886-4)"/>
+  <path d="m-43 20.36l0 7 7 0c0-5-2-7-7-7" id="path3704-5-5" style="opacity:.8;fill:#cccccc"/>
+  <path d="m-43 17.36l0 3c5 0 7 2 7 7l3 0c0-6-4-10-10-10" id="path3706-1-7" style="opacity:.8;fill:#808080"/>
  </g>
  <g id="toolbutton-disabled-toggled-topleft" transform="translate(507.18939 60.45602)" style="fill-rule:evenodd">
-  <path d="m-60 12.36l0 5c-6 0-10 4-10 10l-5 0c0-10 5-15 15-15" id="path3709-2-5" style="fill:url(#linearGradient5886-4);opacity:.8"/>
-  <path d="m-60 20.36l0 7-7 0c0-5 2-7 7-7" id="path3711-8-1" style="fill:#cccccc;opacity:.8"/>
-  <path d="m-60 17.36l0 3c-5 0-7 2-7 7l-3 0c0-6 4-10 10-10" id="path3713-3-6" style="fill:#808080;opacity:.8"/>
+  <path d="m-60 12.36l0 5c-6 0-10 4-10 10l-5 0c0-10 5-15 15-15" id="path3709-2-5" style="opacity:.8;fill:url(#linearGradient5886-4)"/>
+  <path d="m-60 20.36l0 7-7 0c0-5 2-7 7-7" id="path3711-8-1" style="opacity:.8;fill:#cccccc"/>
+  <path d="m-60 17.36l0 3c-5 0-7 2-7 7l-3 0c0-6 4-10 10-10" id="path3713-3-6" style="opacity:.8;fill:#808080"/>
  </g>
  <g id="toolbutton-disabled-toggled-bottomright" transform="translate(507.18939 60.45602)" style="fill-rule:evenodd">
-  <path d="m-43 59.36l0-5c6 0 10-4 10-10l5 0c0 10-5 15-15 15" id="path3716-4-8" style="fill:url(#linearGradient5886-4);opacity:.8"/>
-  <path d="m-43 51.36l0-7 7 0c0 5-2 7-7 7" id="path3718-2-2" style="fill:#cccccc;opacity:.8"/>
-  <path d="m-43 54.36l0-3c5 0 7-2 7-7l3 0c0 6-4 10-10 10" id="path3720-3-2" style="fill:#808080;opacity:.8"/>
+  <path d="m-43 59.36l0-5c6 0 10-4 10-10l5 0c0 10-5 15-15 15" id="path3716-4-8" style="opacity:.8;fill:url(#linearGradient5886-4)"/>
+  <path d="m-43 51.36l0-7 7 0c0 5-2 7-7 7" id="path3718-2-2" style="opacity:.8;fill:#cccccc"/>
+  <path d="m-43 54.36l0-3c5 0 7-2 7-7l3 0c0 6-4 10-10 10" id="path3720-3-2" style="opacity:.8;fill:#808080"/>
  </g>
  <g id="toolbutton-disabled-toggled-bottomleft" transform="translate(507.18939 60.45602)" style="fill-rule:evenodd">
-  <path d="m-60 59.36l0-5c-6 0-10-4-10-10l-5 0c0 10 5 15 15 15" id="path3723-2-6" style="fill:url(#linearGradient5886-4);opacity:.8"/>
-  <path d="m-60 51.36l0-7-7 0c0 5 2 7 7 7" id="path3725-6-2" style="fill:#cccccc;opacity:.8"/>
-  <path d="m-60 54.36l0-3c-5 0-7-2-7-7l-3 0c0 6 4 10 10 10" id="path3727-9-1" style="fill:#808080;opacity:.8"/>
+  <path d="m-60 59.36l0-5c-6 0-10-4-10-10l-5 0c0 10 5 15 15 15" id="path3723-2-6" style="opacity:.8;fill:url(#linearGradient5886-4)"/>
+  <path d="m-60 51.36l0-7-7 0c0 5 2 7 7 7" id="path3725-6-2" style="opacity:.8;fill:#cccccc"/>
+  <path d="m-60 54.36l0-3c-5 0-7-2-7-7l-3 0c0 6 4 10 10 10" id="path3727-9-1" style="opacity:.8;fill:#808080"/>
  </g>
  <g id="toolbutton-disabled-toggled-top" transform="translate(507.18939 59.725161)" style="fill-rule:evenodd">
-  <rect height="5" width="15" y="12.36" x="-59" id="rect3730-7-0" style="fill:url(#linearGradient5886-4);opacity:.8"/>
-  <rect height="7" width="15" y="20.360001" x="-59" id="rect3732-5-1" style="fill:#cccccc;opacity:.8"/>
-  <rect height="3" width="15" y="17.360001" x="-59" id="rect3734-8-1" style="fill:#808080;opacity:.8"/>
+  <rect height="5" width="15" y="12.36" x="-59" id="rect3730-7-0" style="opacity:.8;fill:url(#linearGradient5886-4)"/>
+  <rect height="7" width="15" y="20.360001" x="-59" id="rect3732-5-1" style="opacity:.8;fill:#cccccc"/>
+  <rect height="3" width="15" y="17.360001" x="-59" id="rect3734-8-1" style="opacity:.8;fill:#808080"/>
  </g>
  <g id="toolbutton-disabled-toggled-bottom" transform="translate(507.18939 60.45602)" style="fill-rule:evenodd">
-  <rect transform="scale(1-1)" height="5" width="15" y="-59.36" x="-59" id="rect3737-6-2" style="fill:url(#ea-7);opacity:.8"/>
-  <rect transform="scale(1-1)" height="7" width="15" y="-51.36" x="-59" id="rect3739-3-4" style="fill:#cccccc;opacity:.8"/>
-  <rect transform="scale(1-1)" height="3" width="15" y="-54.36" x="-59" id="rect3741-6-4" style="fill:#808080;opacity:.8"/>
+  <rect transform="scale(1-1)" height="5" width="15" y="-59.36" x="-59" id="rect3737-6-2" style="opacity:.8;fill:url(#ea-7)"/>
+  <rect transform="scale(1-1)" height="7" width="15" y="-51.36" x="-59" id="rect3739-3-4" style="opacity:.8;fill:#cccccc"/>
+  <rect transform="scale(1-1)" height="3" width="15" y="-54.36" x="-59" id="rect3741-6-4" style="opacity:.8;fill:#808080"/>
  </g>
  <g id="toolbutton-disabled-toggled-left" transform="translate(507.18939 60.45602)" style="fill-rule:evenodd">
-  <rect transform="matrix(0-1 1 0 0 0)" height="5" width="15" y="-75" x="-43.36" id="rect3744-5-7" style="fill:url(#linearGradient9726);opacity:.8"/>
-  <rect transform="matrix(0-1 1 0 0 0)" height="7" width="15" y="-67" x="-43.36" id="rect3746-1-0" style="fill:#cccccc;opacity:.8"/>
-  <rect transform="matrix(0-1 1 0 0 0)" height="3" width="15" y="-70" x="-43.36" id="rect3748-0-4" style="fill:#808080;opacity:.8"/>
+  <rect transform="matrix(0-1 1 0 0 0)" height="5" width="15" y="-75" x="-43.36" id="rect3744-5-7" style="opacity:.8;fill:url(#linearGradient9726)"/>
+  <rect transform="matrix(0-1 1 0 0 0)" height="7" width="15" y="-67" x="-43.36" id="rect3746-1-0" style="opacity:.8;fill:#cccccc"/>
+  <rect transform="matrix(0-1 1 0 0 0)" height="3" width="15" y="-70" x="-43.36" id="rect3748-0-4" style="opacity:.8;fill:#808080"/>
  </g>
  <g id="toolbutton-disabled-toggled-right" transform="translate(507.18939 60.45602)" style="fill-rule:evenodd">
-  <rect transform="matrix(0-1-1 0 0 0)" height="5" width="15" y="28" x="-43.36" id="rect3751-4-1" style="fill:url(#linearGradient9726);opacity:.8"/>
-  <rect transform="matrix(0-1-1 0 0 0)" height="7" width="15" y="36" x="-43.36" id="rect3753-3-5" style="fill:#cccccc;opacity:.8"/>
-  <rect transform="matrix(0-1-1 0 0 0)" height="3" width="15" y="33" x="-43.36" id="rect3755-9-0" style="fill:#808080;opacity:.8"/>
+  <rect transform="matrix(0-1-1 0 0 0)" height="5" width="15" y="28" x="-43.36" id="rect3751-4-1" style="opacity:.8;fill:url(#linearGradient9726)"/>
+  <rect transform="matrix(0-1-1 0 0 0)" height="7" width="15" y="36" x="-43.36" id="rect3753-3-5" style="opacity:.8;fill:#cccccc"/>
+  <rect transform="matrix(0-1-1 0 0 0)" height="3" width="15" y="33" x="-43.36" id="rect3755-9-0" style="opacity:.8;fill:#808080"/>
  </g>
  <g id="toolbutton-disabled-toggled">
-  <rect height="15" width="15" y="88.81602" x="448.18939" id="rect3758-9-2" rx="0" style="fill:#cccccc;opacity:.8;fill-rule:evenodd"/>
+  <rect height="15" width="15" y="88.81602" x="448.18939" id="rect3758-9-2" rx="0" style="opacity:.8;fill-rule:evenodd;fill:#cccccc"/>
  </g>
 </svg>

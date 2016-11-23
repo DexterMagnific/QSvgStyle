@@ -20,7 +20,13 @@
 #include "ThemeBuilderUI.h"
 
 #include <QDebug>
+#include <QSettings>
 #include <QMetaObject>
+#if QT_VERSION >= 0x050000
+#include <QStandardPaths>
+#else
+#include <QDir>
+#endif
 
 // UI
 #include <QFile>
@@ -63,9 +69,9 @@
 #include <QSpinBox>
 
 #include "NewThemeUI.h"
-#include "../style/ThemeConfig.h"
-#include "../style/QSvgStyle.h"
-#include "../common/groups.h"
+#include "ThemeConfig.h"
+#include "../style/QSvgThemableStyle.h"
+#include "groups.h"
 
 // optimizer
 #include "keys.h"
@@ -558,7 +564,7 @@ ThemeBuilderUI::ThemeBuilderUI(QWidget* parent)
 
   // Get an instance of QSvgStyle
   if ( !style ) {
-    style = (QSvgStyle *) QStyleFactory::create("QSvgStyle");
+    style = (QSvgThemableStyle *) QStyleFactory::create("QSvgStyle");
     if ( !style ) {
       qWarning() << "[QSvgThemeBuilder]" << "Could not load QSvgStyle style, preview will not be available !";
       QMessageBox::warning(this,"QSvgStyle style not found",
@@ -569,10 +575,10 @@ ThemeBuilderUI::ThemeBuilderUI(QWidget* parent)
                            "Preview will not be available.").arg(QLibraryInfo::location(QLibraryInfo::PluginsPath)));
     }
     // Check that the style version is the same as the one we were compiled against
-    if ( style->Version /* dynamic load */ != QSvgStyle::Version /* compiled .h */) {
+    if ( style->Version /* dynamic load */ != QSvgThemableStyle::Version /* compiled .h */) {
       qWarning() << "[QSvgThemeBuilder]" << "QSvgStyle version mismatch !";
       qWarning() << "[QSvgThemeBuilder]" << "QStyleFactory reported version" << style->Version;
-      qWarning() << "[QSvgThemeBuilder]" << "ThemeBuilder was built with version" << QSvgStyle::Version;
+      qWarning() << "[QSvgThemeBuilder]" << "ThemeBuilder was built with version" << QSvgThemableStyle::Version;
       QMessageBox::warning(this,"QSvgStyle version mismatch",
                            "The version of the installed QSvgStyle style is not"
                            " the same as the one known by QSvgThemeBuilder.\n"
@@ -680,8 +686,11 @@ ThemeBuilderUI::ThemeBuilderUI(QWidget* parent)
           this,SLOT(slot_enableBtnClicked(bool)));
   connect(previewVariantBtn,SIGNAL(clicked(bool)),
           this,SLOT(slot_previewVariantBtnClicked(bool)));
-  connect(colorBtn,SIGNAL(clicked(bool)),
-          this,SLOT(slot_colorBtnClicked(bool)));
+  connect(intensitySlider,SIGNAL(valueChanged(int)),
+          this,SLOT(slot_intensityChanged(int)));
+  connect(use3dFrameBtn,SIGNAL(clicked(bool)),
+          this,SLOT(slot_use3dFrameBtnClicked(bool)));
+
 
   // style callbacks
   if ( style ) {
@@ -744,6 +753,7 @@ ThemeBuilderUI::ThemeBuilderUI(QWidget* parent)
           this,SLOT(slot_svgFileChanged(QString)));
 
   // Reset UI
+  loadRecentFiles();
   resetUi();
 
   // Setup optimizer arguments
@@ -808,6 +818,7 @@ void ThemeBuilderUI::closeEvent(QCloseEvent* e)
     return;
   }
 
+  saveRecentFiles();
   resetUi();
 
   QApplication::closeAllWindows();
@@ -959,7 +970,6 @@ void ThemeBuilderUI::resetUi()
   previewWidget = 0;
   currentWidget = 0;
   previewUpdateEnabled = false;
-  updateColorBtnIcon();
 
   // Reset state
   if ( config ) {
@@ -975,18 +985,6 @@ void ThemeBuilderUI::resetUi()
     QFile::remove(tempCfgFile);
   tempCfgFile.clear();
   svgFile.clear();
-}
-
-void ThemeBuilderUI::updateColorBtnIcon()
-{
-  QIcon i;
-  QPixmap p(colorBtn->iconSize()-QSize(5,5));
-  p.fill(baseColor);
-  QPainter _p(&p);
-  _p.setPen(Qt::black);
-  _p.drawRect(0,0,p.width()-1,p.height()-1);
-  i.addPixmap(p);
-  colorBtn->setIcon(i);
 }
 
 bool ThemeBuilderUI::ensureSettingsSaved()
@@ -1008,25 +1006,31 @@ bool ThemeBuilderUI::ensureSettingsSaved()
   return true;
 }
 
-void ThemeBuilderUI::schedulePreviewUpdate()
+void ThemeBuilderUI::schedulePreviewUpdate(bool modified)
 {
   timer->stop();
 
   if ( !previewUpdateEnabled )
     return;
 
+  cfgModified = modified;
+
   timer->start(500);
 }
 
-void ThemeBuilderUI::openTheme(const QString& filename)
+bool ThemeBuilderUI::openTheme(const QString& filename)
 {
   resetUi();
+
+  if ( !QFile::exists(filename) ) {
+    return false;
+  }
 
   // Get a unique temp filename
   QTemporaryFile f(QDir::tempPath()+"/qsvhthemebuilder_XXXXXX");
   if ( !f.open() ) {
     qWarning() << "[QSvgThemeBuilder]" << "Could not create temporary file";
-    return;
+    return false;
   } else {
     qDebug() << "[QSvgThemeBuilder]" << "Temporary file" << f.fileName() << "created";
   }
@@ -1079,7 +1083,17 @@ void ThemeBuilderUI::openTheme(const QString& filename)
                          "The matching SVG file for this config"
                          " is missing in this directory. Preview will not be available");
 
-  recentFiles->addAction(cfgFile);
+  QAction *a = new QAction(recentFiles);
+  a->setText(cfgFile);
+  a->setData(cfgFile);
+  recentFiles->addAction(a);
+  while ( recentFiles->actions().count() > 5 ) {
+    QAction *a = recentFiles->actions().at(0);
+    recentFiles->removeAction(a);
+    delete a;
+  }
+  connect(a,SIGNAL(triggered(bool)), this,SLOT(slot_openRecentTheme()));
+
   recentBtn->setEnabled(true);
 
   toolBox->setEnabled(true);
@@ -1104,6 +1118,10 @@ void ThemeBuilderUI::openTheme(const QString& filename)
   authorEdit->setText(ts.author);
   descrEdit->setText(ts.descr);
 
+  // preview tab
+  intensitySlider->setValue(ts.intensity);
+  use3dFrameBtn->setChecked(ts.use3dFrame);
+
   // fill in Specific tree
   QTreeWidgetItemIterator it(specificTree, QTreeWidgetItemIterator::Editable);
   while (*it) {
@@ -1115,6 +1133,63 @@ void ThemeBuilderUI::openTheme(const QString& filename)
   }
 
   slot_toolboxTabChanged(toolBox->currentIndex());
+
+  return true;
+}
+
+void ThemeBuilderUI::saveRecentFiles()
+{
+#if QT_VERSION >= 0x050000
+  QString dir = QStandardPaths::locate(QStandardPaths::ConfigLocation,"",QStandardPaths::LocateDirectory);
+#else
+  QString dir = QDir::homePath().append("/.config");
+#endif
+  QString filename = QString("%1/QSvgThemeBuilder/qsvgthemebuilder.cfg").arg(dir);
+
+  QSettings f(filename,QSettings::NativeFormat);
+
+  f.beginGroup("General");
+
+  QString s;
+  Q_FOREACH(QAction *a, recentFiles->actions()) {
+    s.append(a->data().toString()).append(":");
+  }
+
+  f.setValue("recentFiles",s);
+
+  f.endGroup();
+}
+
+void ThemeBuilderUI::loadRecentFiles()
+{
+#if QT_VERSION >= 0x050000
+  QString dir = QStandardPaths::locate(QStandardPaths::ConfigLocation,"",QStandardPaths::LocateDirectory);
+#else
+  QString dir = QDir::homePath().append("/.config");
+#endif
+  QString filename = QString("%1/QSvgThemeBuilder/qsvgthemebuilder.cfg").arg(dir);
+
+  if ( !QFile::exists( filename ) )
+    return;
+
+  QSettings f(filename,QSettings::NativeFormat);
+
+  f.beginGroup("General");
+
+  QStringList sl = f.value("recentFiles").toString().split(":",QString::SkipEmptyParts);
+
+  Q_FOREACH(QString s, sl) {
+    QAction *a = new QAction(recentFiles);
+    a->setText(s);
+    a->setData(s);
+    recentFiles->addAction(a);
+    connect(a,SIGNAL(triggered(bool)), this,SLOT(slot_openRecentTheme()));
+  }
+
+  if ( !sl.isEmpty() )
+    recentBtn->setEnabled(true);
+  else
+    recentBtn->setEnabled(false);
 }
 
 void ThemeBuilderUI::slot_newTheme()
@@ -1182,6 +1257,28 @@ void ThemeBuilderUI::slot_openTheme()
     return;
 
   openTheme(s);
+}
+
+void ThemeBuilderUI::slot_openRecentTheme()
+{
+  QAction *a = qobject_cast<QAction *> (QObject::sender());
+  if ( !a )
+    return; /* ??? */
+
+  if ( !ensureSettingsSaved() )
+    return;
+
+  QString filename = a->data().toString();
+  recentFiles->removeAction(a);
+  a->deleteLater();
+  if ( recentFiles->actions().isEmpty() )
+    recentBtn->setEnabled(false);
+
+  if ( !openTheme(filename) ) {
+    QMessageBox::warning(this,"Could not open theme",
+                         QString("Could not open theme %1")
+                         .arg(filename));
+  }
 }
 
 void ThemeBuilderUI::slot_saveTheme()
@@ -1775,21 +1872,49 @@ void ThemeBuilderUI::setupPreviewForWidget(const QListWidgetItem *current)
   }
 
   if ( group == PE_group(QStyle::PE_FrameLineEdit) ) {
-    variants = 1;
+    variants = 2;
 
     QLineEdit *widget = new QLineEdit();
     widget->setText("This is a line edit");
     widget->setPlaceholderText("type some text here");
 
+    switch ( currentPreviewVariant % variants ) {
+      case 0:
+        widget->setFrame(true);
+        break;
+      case 1:
+        widget->setFrame(false);
+        break;
+    }
+
     previewWidget = widget;
   }
 
   if ( group == CC_group(QStyle::CC_SpinBox) ) {
-    variants = 1;
+    variants = 4;
 
     QSpinBox *widget = new QSpinBox();
     widget->setSuffix(" suffix");
     widget->setPrefix("prefix ");
+
+    switch ( currentPreviewVariant % variants ) {
+      case 0:
+        widget->setButtonSymbols(QAbstractSpinBox::UpDownArrows);
+        widget->setFrame(true);
+        break;
+      case 1:
+        widget->setButtonSymbols(QAbstractSpinBox::PlusMinus);
+        widget->setFrame(true);
+        break;
+      case 2:
+        widget->setButtonSymbols(QAbstractSpinBox::NoButtons);
+        widget->setFrame(true);
+        break;
+      case 3:
+        widget->setButtonSymbols(QAbstractSpinBox::UpDownArrows);
+        widget->setFrame(false);
+        break;
+    }
 
     previewWidget = widget;
   }
@@ -1804,6 +1929,7 @@ void ThemeBuilderUI::setupPreviewForWidget(const QListWidgetItem *current)
         widget->setOrientation(Qt::Horizontal);
         break;
       case 1:
+        widget->setOrientation(Qt::Vertical);
         break;
     }
 
@@ -1821,6 +1947,7 @@ void ThemeBuilderUI::setupPreviewForWidget(const QListWidgetItem *current)
         widget->setOrientation(Qt::Horizontal);
         break;
       case 1:
+        widget->setOrientation(Qt::Vertical);
         break;
     }
 
@@ -2048,6 +2175,7 @@ void ThemeBuilderUI::setupPreviewForWidget(const QListWidgetItem *current)
 
 end:
   if ( previewWidget ) {
+    previewWidget->setBackgroundRole(previewArea->backgroundRole());
     repaintBtn->setEnabled(true);
     rtlBtn->setEnabled(true);
     drawModeBtn->setEnabled(true);
@@ -2072,8 +2200,6 @@ end:
     slot_enableBtnClicked(enableBtn->isChecked());
     slot_rtlBtnClicked(rtlBtn->isChecked());
     slot_fontSizeChanged(fontSizeSpin->value());
-    QPalette p(baseColor);
-    previewWidget->setPalette(p);
   } else {
     repaintBtn->setEnabled(false);
     rtlBtn->setEnabled(false);
@@ -2104,6 +2230,8 @@ void ThemeBuilderUI::saveSettingsFromUi(const QListWidgetItem *current)
   _ts.author = authorEdit->text();
   _ts.name = themeNameEdit->text();
   _ts.descr = descrEdit->text();
+  _ts.intensity = intensitySlider->value();
+  _ts.use3dFrame = use3dFrameBtn->isChecked();
 
   config->setThemeSpec(_ts);
 
@@ -2187,11 +2315,13 @@ void ThemeBuilderUI::slot_uiSettingsChanged()
 {
   timer->stop();
 
-  cfgModified = true;
-  saveBtn->setEnabled(true);
-  setWindowModified(true);
+  if ( cfgModified ) {
+    saveBtn->setEnabled(true);
+    setWindowModified(true);
 
-  saveSettingsFromUi(currentWidget);
+    saveSettingsFromUi(currentWidget);
+  }
+
   if ( previewWidget ) {
     // HACK: this will force geometry recalculation
     slot_fontSizeChanged(previewWidget->font().pointSize()-1);
@@ -2280,26 +2410,6 @@ void ThemeBuilderUI::slot_fontSizeChanged(int val)
   }
 }
 
-void ThemeBuilderUI::slot_colorBtnClicked(bool checked)
-{
-  Q_UNUSED(checked);
-
-  int res = QDialog::Rejected;
-
-  QColorDialog dlg(baseColor);
-  res = dlg.exec();
-  if ( res == QDialog::Rejected )
-    return;
-
-  if ( previewWidget ) {
-    QPalette p(dlg.selectedColor());
-    previewWidget->setPalette(p);
-  }
-
-  baseColor = dlg.selectedColor();
-  updateColorBtnIcon();
-}
-
 void ThemeBuilderUI::slot_enableBtnClicked(bool checked)
 {
   if ( previewWidget )
@@ -2332,6 +2442,20 @@ void ThemeBuilderUI::slot_themeNameEditChanged(const QString& text)
 void ThemeBuilderUI::slot_descrEditChanged(const QString& text)
 {
   Q_UNUSED(text);
+
+  schedulePreviewUpdate();
+}
+
+void ThemeBuilderUI::slot_intensityChanged(int value)
+{
+  Q_UNUSED(value);
+
+  schedulePreviewUpdate();
+}
+
+void ThemeBuilderUI::slot_use3dFrameBtnClicked(bool checked)
+{
+  Q_UNUSED(checked);
 
   schedulePreviewUpdate();
 }
