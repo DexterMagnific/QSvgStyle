@@ -146,3 +146,15 @@ color_spec_t PaletteConfig::getColorSpec(const QString& group) const
 
   return r;
 }
+
+palette_spec_t PaletteConfig::getPaletteSpec() const
+{
+  palette_spec_t r;
+
+  r.name = getRawValue("General","name");
+  r.author = getRawValue("General","author");
+  r.descr = getRawValue("General","comment");
+  r.path = settings->fileName();
+
+  return r;
+}

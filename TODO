@@ -1,11 +1,10 @@
 QSvgStyle
 ---------
 * Rework animation framework
-* add optional support for color schemes (read widget->palette())
 
 QSvgThemeBuilder
 ----------------
 
-QSvgThemeChooser
+QSvgThemeManager
 ----------------
-* Implement me
+

@@ -24,7 +24,6 @@
 #include <QShowEvent>
 #include <QFileSystemWatcher>
 #include <QElapsedTimer>
-#include <QStyledItemDelegate>
 #include <QColor>
 
 #include "ui_ThemeBuilderUIBase.h"
@@ -102,9 +101,6 @@ class ThemeBuilderUI : public QMainWindow, private Ui::ThemeBuilderUIBase {
     void slot_labelMarginHSpinChanged(int val);
     void slot_labelMarginVSpinChanged(int val);
 
-    // called on specific tab changes
-    void slot_specificChanged(QTreeWidgetItem *item, int column);
-
     // called on preview tab changes
     void slot_repaintBtnClicked(bool checked);
     //void slot_sizeAdjBtnClicked(bool checked);
@@ -114,8 +110,7 @@ class ThemeBuilderUI : public QMainWindow, private Ui::ThemeBuilderUIBase {
     void slot_enableBtnClicked(bool checked);
     void slot_previewVariantBtnClicked(bool checked);
     void slot_fontSizeChanged(int val);
-    void slot_intensityChanged(int);
-    void slot_use3dFrameBtnClicked(bool checked);
+    void slot_paletteChanged(int val);
 
     // Callbacks from QSvgStyle that are triggered when it renders widgets
     void slot_drawPrimitive_begin(const QString &s);
@@ -238,35 +233,11 @@ class ThemeBuilderUI : public QMainWindow, private Ui::ThemeBuilderUIBase {
     QTimer *timer, *timer2;
     // New theme dialog
     NewThemeUI *newThemeDlg;
-    // Current palette color for preview widget
-    QColor baseColor;
 
     // Temporary file, a copy of the current opened theme
     QString tempCfgFile;
     // to watch SVG file for file changes
     QFileSystemWatcher svgWatcher;
-};
-
-// Spin Box item delegate
-class SpinBoxDelegate : public QStyledItemDelegate {
-  Q_OBJECT
-
-  public:
-    SpinBoxDelegate(QObject *parent = 0);
-
-    QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem &option,
-                          const QModelIndex &index) const;
-
-    void setEditorData(QWidget *editor, const QModelIndex &index) const;
-    void setModelData(QWidget *editor, QAbstractItemModel *model,
-                      const QModelIndex &index) const;
-
-    void updateEditorGeometry(QWidget *editor,
-                              const QStyleOptionViewItem &option,
-                              const QModelIndex &index) const;
-
-  private slots:
-    void slot_valueChanged(int);
 };
 
 #endif // THEMEBUILDERUI_H

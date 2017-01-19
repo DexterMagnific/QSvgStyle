@@ -48,6 +48,7 @@ class PaletteConfig {
 
     /* Get post-processed color spec after 'inherits' resolution */
     color_spec_t getColorSpec(const QString &group) const;
+    palette_spec_t getPaletteSpec() const;
 
     /* Get frame spec exactly as read from the configuration file */
     color_spec_t getRawColorSpec(const QString &group) const;

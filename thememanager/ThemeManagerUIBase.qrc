@@ -1,0 +1,8 @@
+<RCC>
+  <qresource prefix="pixmaps">
+    <file>pixmaps/adjustsize.png</file>
+    <file>pixmaps/preview.png</file>
+    <file>pixmaps/color.png</file>
+    <file>pixmaps/qtlogo.png</file>
+  </qresource>
+</RCC>

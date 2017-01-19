@@ -17,66 +17,79 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef THEMECONFIG_H
-#define THEMECONFIG_H
+#ifndef STYLEONFIG_H
+#define STYLECONFIG_H
 
 #include "specs.h"
 
-class QString;
+#include <QString>
+
+#include "ThemeConfig.h"
+#include "PaletteConfig.h"
+
 class QVariant;
 class QSettings;
-class QStringList;
+class QDir;
+template<typename T> class QList;
 
 /**
- * Class that loads, saves (and in the future caches) theme settings
+ * Class that loads, saves style settings
  */
-class ThemeConfig {
+class StyleConfig {
   public:
-    ThemeConfig();
-    ThemeConfig(const QString &theme);
-    ~ThemeConfig();
+    StyleConfig();
+    StyleConfig(const QString &style);
+    ~StyleConfig();
 
     /**
-     * Loads a configuration from the given theme filename
+     * Loads a configuration from the given style filename
      */
-    void load(const QString &theme);
+    void load(const QString &style);
 
     /**
      * Forces an immediate disk write of the current settings
      */
     void sync();
 
-    /* Get post-processed frame spec after 'inherits' resolution */
-    frame_spec_t getFrameSpec(const QString &group) const;
-    interior_spec_t getInteriorSpec(const QString &group) const;
-    indicator_spec_t getIndicatorSpec(const QString &group) const;
-    label_spec_t getLabelSpec(const QString &group) const;
-    element_spec_t getElementSpec(const QString &group) const;
-    theme_spec_t getThemeSpec() const;
+    style_spec_t getStyleSpec() const;
 
-    /* Get frame spec exactly as read from the configuration file */
-    frame_spec_t getRawFrameSpec(const QString &group) const;
-    interior_spec_t getRawInteriorSpec(const QString &group) const;
-    indicator_spec_t getRawIndicatorSpec(const QString &group) const;
-    label_spec_t getRawLabelSpec(const QString &group) const;
-    element_spec_t getRawElementSpec(const QString &group) const;
+    void setStyleSpec(const style_spec_t &cs) const;
 
-    /* Get the frame as read from the configuration file and recursively
-     * following inheritance if some values are unset within the specified
-     * group.
-     * At the end, if some values remain unset, they are filled with default
-     * values so they can be safely read, but are left with the unset status
+    QVariant getSpecificValue(const QString &key) const {
+        return getRawValue("Tweaks",key);
+    }
+
+    void setSpecificValue(const QString &key, const QVariant &v) const {
+        setValue("Tweaks",key,v);
+    }
+
+    /**
+     * Returns the list of themes. List contains user themes first
      */
-    void setFrameSpec(const QString &group, const frame_spec_t &fs) const;
-    void setInteriorSpec(const QString& group, const interior_spec_t& is) const;
-    void setIndicatorSpec(const QString &group, const indicator_spec_t &ds) const;
-    void setLabelSpec(const QString &group, const label_spec_t &ls) const;
-    void setElementSpec(const QString &group, const element_spec_t &es) const;
-    void setThemeSpec(const theme_spec_t &ts) const;
+    static QList<theme_spec_t> getThemeList();
 
+    /**
+     * Returns the list of palettes. List contains user palettes first
+     */
+    static QList<palette_spec_t> getPaletteList();
+
+    /**
+     * Returns the system config dir
+     */
+    static QDir getSystemConfigDir();
+
+    /**
+     * Returns the user config dir
+     */
+    static QDir getUserConfigDir();
+
+    /**
+     * Returns the user config file
+     */
+    static QString getUserConfigFile();
 
   private:
-    friend class ThemeBuilderUIBase;
+    //friend class StyleBuilderUIBase;
 
     /**
      * Returns the value of the @ref key key in the group @ref group
@@ -96,7 +109,7 @@ class ThemeConfig {
                       int depth = 0) const;
 
     /**
-     * sets the value of the given key from the given group in the theme config file
+     * sets the value of the given key from the given group in the style config file
      * If the key has a null value (i.e. QVariant::isNull() is true),
      * the key is removed from the configuration file
      */
@@ -105,4 +118,4 @@ class ThemeConfig {
     QSettings *settings;
 };
 
-#endif // THEMECONFIG_H
+#endif // STYLECONFIG_H

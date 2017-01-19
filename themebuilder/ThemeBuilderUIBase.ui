@@ -6,15 +6,15 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1121</width>
-    <height>737</height>
+    <width>1229</width>
+    <height>736</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>QSvgStyle theme builder</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="ThemeBuilderUIBase.qrc">
+   <iconset>
     <normaloff>:/icon/pixmaps/welcome.png</normaloff>:/icon/pixmaps/welcome.png</iconset>
   </property>
   <widget class="QWidget" name="centralwidget">
@@ -42,22 +42,58 @@
       </property>
       <widget class="QWidget" name="previewTab">
        <attribute name="icon">
-        <iconset resource="ThemeBuilderUIBase.qrc">
+        <iconset>
          <normaloff>:/icon/pixmaps/preview.png</normaloff>:/icon/pixmaps/preview.png</iconset>
        </attribute>
        <attribute name="title">
         <string>Preview</string>
        </attribute>
        <layout class="QGridLayout" name="previewLayout">
+        <item row="1" column="0">
+         <widget class="QScrollArea" name="previewArea">
+          <property name="widgetResizable">
+           <bool>true</bool>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+          <widget class="QWidget" name="previewAreaWidgetContents">
+           <property name="geometry">
+            <rect>
+             <x>0</x>
+             <y>0</y>
+             <width>609</width>
+             <height>100</height>
+            </rect>
+           </property>
+          </widget>
+         </widget>
+        </item>
         <item row="0" column="0">
          <layout class="QGridLayout" name="gridLayout_8">
+          <item row="0" column="6">
+           <spacer name="horizontalSpacer_14">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeType">
+             <enum>QSizePolicy::Fixed</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>20</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
           <item row="0" column="1">
            <widget class="QToolButton" name="rtlBtn">
             <property name="toolTip">
              <string>Right to left layout</string>
             </property>
             <property name="icon">
-             <iconset resource="ThemeBuilderUIBase.qrc">
+             <iconset>
               <normaloff>:/icon/pixmaps/righttoleft.png</normaloff>:/icon/pixmaps/righttoleft.png</iconset>
             </property>
             <property name="checkable">
@@ -68,6 +104,73 @@
             </property>
            </widget>
           </item>
+          <item row="0" column="13">
+           <widget class="QToolButton" name="detachBtn">
+            <property name="text">
+             <string>Detach</string>
+            </property>
+            <property name="icon">
+             <iconset>
+              <normaloff>:/icon/pixmaps/widget.png</normaloff>:/icon/pixmaps/widget.png</iconset>
+            </property>
+            <property name="toolButtonStyle">
+             <enum>Qt::ToolButtonTextBesideIcon</enum>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="2">
+           <widget class="QToolButton" name="enableBtn">
+            <property name="toolTip">
+             <string>Enable/Disable</string>
+            </property>
+            <property name="icon">
+             <iconset>
+              <normaloff>:/icon/pixmaps/checkbox.png</normaloff>:/icon/pixmaps/checkbox.png</iconset>
+            </property>
+            <property name="checkable">
+             <bool>true</bool>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+            <property name="toolButtonStyle">
+             <enum>Qt::ToolButtonTextBesideIcon</enum>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="3">
+           <widget class="QToolButton" name="previewVariantBtn">
+            <property name="toolTip">
+             <string>Preview variant</string>
+            </property>
+            <property name="text">
+             <string>1/1</string>
+            </property>
+            <property name="icon">
+             <iconset>
+              <normaloff>:/icon/pixmaps/widgetstack.png</normaloff>:/icon/pixmaps/widgetstack.png</iconset>
+            </property>
+            <property name="toolButtonStyle">
+             <enum>Qt::ToolButtonTextBesideIcon</enum>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="8" colspan="4">
+           <spacer name="horizontalSpacer_12">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeType">
+             <enum>QSizePolicy::MinimumExpanding</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>20</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
           <item row="0" column="0">
            <widget class="QToolButton" name="repaintBtn">
             <property name="toolTip">
@@ -77,7 +180,7 @@
              <string/>
             </property>
             <property name="icon">
-             <iconset resource="ThemeBuilderUIBase.qrc">
+             <iconset>
               <normaloff>:/icon/pixmaps/insertimage.png</normaloff>:/icon/pixmaps/insertimage.png</iconset>
             </property>
             <property name="toolButtonStyle">
@@ -95,193 +198,13 @@
             </property>
            </widget>
           </item>
-          <item row="0" column="3">
-           <widget class="QToolButton" name="previewVariantBtn">
-            <property name="toolTip">
-             <string>Preview variant</string>
-            </property>
-            <property name="text">
-             <string>1/1</string>
-            </property>
-            <property name="icon">
-             <iconset resource="ThemeBuilderUIBase.qrc">
-              <normaloff>:/icon/pixmaps/widgetstack.png</normaloff>:/icon/pixmaps/widgetstack.png</iconset>
-            </property>
-            <property name="toolButtonStyle">
-             <enum>Qt::ToolButtonTextBesideIcon</enum>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="11">
-           <widget class="QToolButton" name="detachBtn">
-            <property name="text">
-             <string>Detach</string>
-            </property>
-            <property name="icon">
-             <iconset resource="ThemeBuilderUIBase.qrc">
-              <normaloff>:/icon/pixmaps/widget.png</normaloff>:/icon/pixmaps/widget.png</iconset>
-            </property>
-            <property name="toolButtonStyle">
-             <enum>Qt::ToolButtonTextBesideIcon</enum>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="2">
-           <widget class="QToolButton" name="enableBtn">
-            <property name="toolTip">
-             <string>Enable/Disable</string>
-            </property>
-            <property name="icon">
-             <iconset resource="ThemeBuilderUIBase.qrc">
-              <normaloff>:/icon/pixmaps/checkbox.png</normaloff>:/icon/pixmaps/checkbox.png</iconset>
-            </property>
-            <property name="checkable">
-             <bool>true</bool>
-            </property>
-            <property name="checked">
-             <bool>true</bool>
-            </property>
-            <property name="toolButtonStyle">
-             <enum>Qt::ToolButtonTextBesideIcon</enum>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="6" colspan="4">
-           <spacer name="horizontalSpacer_12">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeType">
-             <enum>QSizePolicy::MinimumExpanding</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>20</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-         </layout>
-        </item>
-        <item row="1" column="0">
-         <widget class="QScrollArea" name="previewArea">
-          <property name="widgetResizable">
-           <bool>true</bool>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-          <widget class="QWidget" name="previewAreaWidgetContents">
-           <property name="geometry">
-            <rect>
-             <x>0</x>
-             <y>0</y>
-             <width>522</width>
-             <height>86</height>
-            </rect>
-           </property>
-          </widget>
-         </widget>
-        </item>
-        <item row="2" column="0">
-         <layout class="QGridLayout" name="gridLayout_3">
-          <item row="0" column="5">
-           <widget class="QSlider" name="intensitySlider">
-            <property name="toolTip">
-             <string>Color intensity</string>
-            </property>
-            <property name="maximum">
-             <number>255</number>
-            </property>
-            <property name="value">
-             <number>128</number>
-            </property>
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="2">
-           <widget class="QToolButton" name="usePaletteBtn">
-            <property name="toolTip">
-             <string>Use palette</string>
-            </property>
-            <property name="text">
-             <string/>
-            </property>
-            <property name="icon">
-             <iconset resource="ThemeBuilderUIBase.qrc">
-              <normaloff>:/icon/pixmaps/color.png</normaloff>:/icon/pixmaps/color.png</iconset>
-            </property>
-            <property name="checkable">
-             <bool>true</bool>
-            </property>
-            <property name="toolButtonStyle">
-             <enum>Qt::ToolButtonTextBesideIcon</enum>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="1">
-           <spacer name="horizontalSpacer_14">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeType">
-             <enum>QSizePolicy::Fixed</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>20</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-          <item row="0" column="0">
-           <widget class="QToolButton" name="use3dFrameBtn">
-            <property name="text">
-             <string>3D</string>
-            </property>
-            <property name="checkable">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
           <item row="0" column="7">
-           <widget class="QComboBox" name="PaletteCombo">
+           <widget class="QComboBox" name="paletteCombo">
             <property name="toolTip">
              <string>Choose a palette</string>
             </property>
             <property name="sizeAdjustPolicy">
              <enum>QComboBox::AdjustToContents</enum>
-            </property>
-            <item>
-             <property name="text">
-              <string>&lt;System Palette&gt;</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>lkjhlkhlhkjhjgykjhkhljjjjjlijlkj</string>
-             </property>
-            </item>
-           </widget>
-          </item>
-          <item row="0" column="8">
-           <widget class="QToolButton" name="paletteBuilderBtn">
-            <property name="toolTip">
-             <string>Open the palette builder</string>
-            </property>
-            <property name="text">
-             <string/>
-            </property>
-            <property name="icon">
-             <iconset resource="ThemeBuilderUIBase.qrc">
-              <normaloff>:/icon/pixmaps/wizard.png</normaloff>:/icon/pixmaps/wizard.png</iconset>
-            </property>
-            <property name="toolButtonStyle">
-             <enum>Qt::ToolButtonTextBesideIcon</enum>
             </property>
            </widget>
           </item>
@@ -305,7 +228,7 @@
          <string>Save</string>
         </property>
         <property name="icon">
-         <iconset resource="ThemeBuilderUIBase.qrc">
+         <iconset>
           <normaloff>:/icon/pixmaps/save.png</normaloff>:/icon/pixmaps/save.png</iconset>
         </property>
         <property name="toolButtonStyle">
@@ -322,7 +245,7 @@
          <string>New</string>
         </property>
         <property name="icon">
-         <iconset resource="ThemeBuilderUIBase.qrc">
+         <iconset>
           <normaloff>:/icon/pixmaps/new.png</normaloff>:/icon/pixmaps/new.png</iconset>
         </property>
         <property name="toolButtonStyle">
@@ -355,7 +278,7 @@
          <string>Recent</string>
         </property>
         <property name="icon">
-         <iconset resource="ThemeBuilderUIBase.qrc">
+         <iconset>
           <normaloff>:/icon/pixmaps/openrecent.png</normaloff>:/icon/pixmaps/openrecent.png</iconset>
         </property>
         <property name="popupMode">
@@ -378,7 +301,7 @@
          <string>Optimize SVG</string>
         </property>
         <property name="icon">
-         <iconset resource="ThemeBuilderUIBase.qrc">
+         <iconset>
           <normaloff>:/icon/pixmaps/optimize.png</normaloff>:/icon/pixmaps/optimize.png</iconset>
         </property>
         <property name="toolButtonStyle">
@@ -392,7 +315,7 @@
          <string>Quit</string>
         </property>
         <property name="icon">
-         <iconset resource="ThemeBuilderUIBase.qrc">
+         <iconset>
           <normaloff>:/icon/pixmaps/quit.png</normaloff>:/icon/pixmaps/quit.png</iconset>
         </property>
         <property name="toolButtonStyle">
@@ -409,7 +332,7 @@
          <string>Open</string>
         </property>
         <property name="icon">
-         <iconset resource="ThemeBuilderUIBase.qrc">
+         <iconset>
           <normaloff>:/icon/pixmaps/open.png</normaloff>:/icon/pixmaps/open.png</iconset>
         </property>
         <property name="toolButtonStyle">
@@ -506,7 +429,7 @@
          <string>Edit SVG</string>
         </property>
         <property name="icon">
-         <iconset resource="ThemeBuilderUIBase.qrc">
+         <iconset>
           <normaloff>:/icon/pixmaps/insertimage.png</normaloff>:/icon/pixmaps/insertimage.png</iconset>
         </property>
         <property name="toolButtonStyle">
@@ -523,7 +446,7 @@
       </property>
       <widget class="QWidget" name="propsTab">
        <attribute name="icon">
-        <iconset resource="ThemeBuilderUIBase.qrc">
+        <iconset>
          <normaloff>:/icon/pixmaps/lineedit.png</normaloff>:/icon/pixmaps/lineedit.png</iconset>
        </attribute>
        <attribute name="title">
@@ -581,6 +504,19 @@
              </property>
             </widget>
            </item>
+           <item row="3" column="1">
+            <spacer name="verticalSpacer">
+             <property name="orientation">
+              <enum>Qt::Vertical</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>20</width>
+               <height>40</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
           </layout>
          </widget>
         </item>
@@ -600,324 +536,11 @@
           </property>
          </spacer>
         </item>
-        <item row="2" column="0">
-         <layout class="QGridLayout" name="gridLayout_5">
-          <item row="0" column="0">
-           <widget class="QLabel" name="label_4">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="pixmap">
-             <pixmap resource="ThemeBuilderUIBase.qrc">:/icon/pixmaps/hslider.png</pixmap>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="1">
-           <widget class="QLabel" name="label_5">
-            <property name="text">
-             <string>Misc options</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </item>
-        <item row="3" column="0">
-         <widget class="QTreeWidget" name="specificTree">
-          <property name="editTriggers">
-           <set>QAbstractItemView::CurrentChanged|QAbstractItemView::EditKeyPressed</set>
-          </property>
-          <property name="alternatingRowColors">
-           <bool>true</bool>
-          </property>
-          <column>
-           <property name="text">
-            <string>Setting</string>
-           </property>
-          </column>
-          <column>
-           <property name="text">
-            <string>Value</string>
-           </property>
-          </column>
-          <item>
-           <property name="text">
-            <string>Radio buttons/Check boxes</string>
-           </property>
-           <item>
-            <property name="text">
-             <string>Indicator size</string>
-            </property>
-            <property name="text">
-             <string>15</string>
-            </property>
-            <property name="flags">
-             <set>ItemIsSelectable|ItemIsEditable|ItemIsUserCheckable|ItemIsEnabled</set>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>Button--Label space</string>
-            </property>
-            <property name="text">
-             <string>5</string>
-            </property>
-            <property name="flags">
-             <set>ItemIsSelectable|ItemIsEditable|ItemIsUserCheckable|ItemIsEnabled</set>
-            </property>
-           </item>
-          </item>
-          <item>
-           <property name="text">
-            <string>Layout default margins</string>
-           </property>
-           <property name="text">
-            <string/>
-           </property>
-           <item>
-            <property name="text">
-             <string>Left</string>
-            </property>
-            <property name="text">
-             <string>4</string>
-            </property>
-            <property name="flags">
-             <set>ItemIsSelectable|ItemIsEditable|ItemIsUserCheckable|ItemIsEnabled</set>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>Right</string>
-            </property>
-            <property name="text">
-             <string>4</string>
-            </property>
-            <property name="flags">
-             <set>ItemIsSelectable|ItemIsEditable|ItemIsUserCheckable|ItemIsEnabled</set>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>Top</string>
-            </property>
-            <property name="text">
-             <string>4</string>
-            </property>
-            <property name="flags">
-             <set>ItemIsSelectable|ItemIsEditable|ItemIsUserCheckable|ItemIsEnabled</set>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>Bottom</string>
-            </property>
-            <property name="text">
-             <string>4</string>
-            </property>
-            <property name="flags">
-             <set>ItemIsSelectable|ItemIsEditable|ItemIsUserCheckable|ItemIsEnabled</set>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>H spacing</string>
-            </property>
-            <property name="text">
-             <string>2</string>
-            </property>
-            <property name="flags">
-             <set>ItemIsSelectable|ItemIsEditable|ItemIsUserCheckable|ItemIsEnabled</set>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>V Spacing</string>
-            </property>
-            <property name="text">
-             <string>2</string>
-            </property>
-            <property name="flags">
-             <set>ItemIsSelectable|ItemIsEditable|ItemIsUserCheckable|ItemIsEnabled</set>
-            </property>
-           </item>
-          </item>
-          <item>
-           <property name="text">
-            <string>Menu Items &amp; Menu bars</string>
-           </property>
-           <item>
-            <property name="text">
-             <string>Menu bar item spacing</string>
-            </property>
-            <property name="text">
-             <string>2</string>
-            </property>
-            <property name="flags">
-             <set>ItemIsSelectable|ItemIsEditable|ItemIsUserCheckable|ItemIsEnabled</set>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>Menu bar H margin</string>
-            </property>
-            <property name="text">
-             <string>0</string>
-            </property>
-            <property name="flags">
-             <set>ItemIsSelectable|ItemIsEditable|ItemIsUserCheckable|ItemIsEnabled</set>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>Menu tearoff height</string>
-            </property>
-            <property name="text">
-             <string>7</string>
-            </property>
-            <property name="flags">
-             <set>ItemIsSelectable|ItemIsEditable|ItemIsUserCheckable|ItemIsEnabled</set>
-            </property>
-           </item>
-          </item>
-          <item>
-           <property name="text">
-            <string>Toolbars</string>
-           </property>
-           <item>
-            <property name="text">
-             <string>Item spacing</string>
-            </property>
-            <property name="text">
-             <string>0</string>
-            </property>
-            <property name="flags">
-             <set>ItemIsSelectable|ItemIsEditable|ItemIsUserCheckable|ItemIsEnabled</set>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>Handle width</string>
-            </property>
-            <property name="text">
-             <string>8</string>
-            </property>
-            <property name="flags">
-             <set>ItemIsSelectable|ItemIsEditable|ItemIsUserCheckable|ItemIsEnabled</set>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>Separator width</string>
-            </property>
-            <property name="text">
-             <string>2</string>
-            </property>
-            <property name="flags">
-             <set>ItemIsSelectable|ItemIsEditable|ItemIsUserCheckable|ItemIsEnabled</set>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>Extension button width</string>
-            </property>
-            <property name="text">
-             <string>20</string>
-            </property>
-            <property name="flags">
-             <set>ItemIsSelectable|ItemIsEditable|ItemIsUserCheckable|ItemIsEnabled</set>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>Icon size (hint)</string>
-            </property>
-            <property name="text">
-             <string>16</string>
-            </property>
-            <property name="flags">
-             <set>ItemIsSelectable|ItemIsEditable|ItemIsUserCheckable|ItemIsEnabled</set>
-            </property>
-           </item>
-          </item>
-          <item>
-           <property name="text">
-            <string>Scroll bars</string>
-           </property>
-           <item>
-            <property name="text">
-             <string>Thickness</string>
-            </property>
-            <property name="text">
-             <string>16</string>
-            </property>
-            <property name="flags">
-             <set>ItemIsSelectable|ItemIsEditable|ItemIsUserCheckable|ItemIsEnabled</set>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>Slider minimum size</string>
-            </property>
-            <property name="text">
-             <string>20</string>
-            </property>
-            <property name="flags">
-             <set>ItemIsSelectable|ItemIsEditable|ItemIsUserCheckable|ItemIsEnabled</set>
-            </property>
-           </item>
-          </item>
-          <item>
-           <property name="text">
-            <string>Sliders</string>
-           </property>
-           <item>
-            <property name="text">
-             <string>Thickness</string>
-            </property>
-            <property name="text">
-             <string>4</string>
-            </property>
-            <property name="flags">
-             <set>ItemIsSelectable|ItemIsEditable|ItemIsUserCheckable|ItemIsEnabled</set>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>Cursor size</string>
-            </property>
-            <property name="text">
-             <string>15</string>
-            </property>
-            <property name="flags">
-             <set>ItemIsSelectable|ItemIsEditable|ItemIsUserCheckable|ItemIsEnabled</set>
-            </property>
-           </item>
-          </item>
-          <item>
-           <property name="text">
-            <string>Progress bars</string>
-           </property>
-           <item>
-            <property name="text">
-             <string>Chunk width</string>
-            </property>
-            <property name="text">
-             <string>20</string>
-            </property>
-            <property name="flags">
-             <set>ItemIsSelectable|ItemIsEditable|ItemIsUserCheckable|ItemIsEnabled</set>
-            </property>
-           </item>
-          </item>
-         </widget>
-        </item>
        </layout>
       </widget>
       <widget class="QWidget" name="debugTab">
        <attribute name="icon">
-        <iconset resource="ThemeBuilderUIBase.qrc">
+        <iconset>
          <normaloff>:/icon/pixmaps/debug.png</normaloff>:/icon/pixmaps/debug.png</iconset>
        </attribute>
        <attribute name="title">
@@ -935,7 +558,7 @@
              <string>N</string>
             </property>
             <property name="icon">
-             <iconset resource="ThemeBuilderUIBase.qrc">
+             <iconset>
               <normaloff>:/icon/pixmaps/debug.png</normaloff>:/icon/pixmaps/debug.png</iconset>
             </property>
             <property name="toolButtonStyle">
@@ -1003,7 +626,7 @@
       </widget>
       <widget class="QWidget" name="aboutTab">
        <attribute name="icon">
-        <iconset resource="ThemeBuilderUIBase.qrc">
+        <iconset>
          <normaloff>:/icon/pixmaps/hint.png</normaloff>:/icon/pixmaps/hint.png</iconset>
        </attribute>
        <attribute name="title">
@@ -1144,7 +767,7 @@
          <x>0</x>
          <y>0</y>
          <width>256</width>
-         <height>462</height>
+         <height>449</height>
         </rect>
        </property>
        <attribute name="label">
@@ -1181,7 +804,7 @@
          <x>0</x>
          <y>0</y>
          <width>256</width>
-         <height>462</height>
+         <height>449</height>
         </rect>
        </property>
        <attribute name="label">
@@ -1218,7 +841,7 @@
          <x>0</x>
          <y>0</y>
          <width>256</width>
-         <height>462</height>
+         <height>449</height>
         </rect>
        </property>
        <attribute name="label">
@@ -1255,7 +878,7 @@
          <x>0</x>
          <y>0</y>
          <width>256</width>
-         <height>462</height>
+         <height>449</height>
         </rect>
        </property>
        <attribute name="label">
@@ -1292,7 +915,7 @@
          <x>0</x>
          <y>0</y>
          <width>256</width>
-         <height>462</height>
+         <height>449</height>
         </rect>
        </property>
        <attribute name="label">
@@ -1341,7 +964,7 @@
       </property>
       <widget class="QWidget" name="commonPage">
        <attribute name="icon">
-        <iconset resource="ThemeBuilderUIBase.qrc">
+        <iconset>
          <normaloff>:/icon/pixmaps/color.png</normaloff>:/icon/pixmaps/color.png</iconset>
        </attribute>
        <attribute name="title">
@@ -1358,7 +981,7 @@
           </property>
          </widget>
         </item>
-        <item row="26" column="0" colspan="3">
+        <item row="25" column="0" colspan="3">
          <spacer name="verticalSpacer_4">
           <property name="orientation">
            <enum>Qt::Vertical</enum>
@@ -1410,19 +1033,19 @@
           </property>
          </widget>
         </item>
+        <item row="3" column="2">
+         <widget class="QLineEdit" name="frameEdit">
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
         <item row="22" column="0">
          <widget class="QCheckBox" name="labelMarginCb">
           <property name="text">
            <string>Label margins</string>
           </property>
           <property name="tristate">
-           <bool>true</bool>
-          </property>
-         </widget>
-        </item>
-        <item row="3" column="2">
-         <widget class="QLineEdit" name="frameEdit">
-          <property name="readOnly">
            <bool>true</bool>
           </property>
          </widget>
@@ -1667,7 +1290,7 @@
              </sizepolicy>
             </property>
             <property name="pixmap">
-             <pixmap resource="ThemeBuilderUIBase.qrc">:/icon/pixmaps/hslider.png</pixmap>
+             <pixmap>:/icon/pixmaps/hslider.png</pixmap>
             </property>
            </widget>
           </item>
@@ -1723,7 +1346,7 @@
              </sizepolicy>
             </property>
             <property name="pixmap">
-             <pixmap resource="ThemeBuilderUIBase.qrc">:/icon/pixmaps/hslider.png</pixmap>
+             <pixmap>:/icon/pixmaps/hslider.png</pixmap>
             </property>
            </widget>
           </item>
@@ -1779,7 +1402,7 @@
              </sizepolicy>
             </property>
             <property name="pixmap">
-             <pixmap resource="ThemeBuilderUIBase.qrc">:/icon/pixmaps/hslider.png</pixmap>
+             <pixmap>:/icon/pixmaps/hslider.png</pixmap>
             </property>
            </widget>
           </item>
@@ -1835,7 +1458,7 @@
              </sizepolicy>
             </property>
             <property name="pixmap">
-             <pixmap resource="ThemeBuilderUIBase.qrc">:/icon/pixmaps/hslider.png</pixmap>
+             <pixmap>:/icon/pixmaps/hslider.png</pixmap>
             </property>
            </widget>
           </item>
@@ -1861,62 +1484,6 @@
           </item>
           <item row="0" column="0">
            <widget class="Line" name="line_5">
-            <property name="minimumSize">
-             <size>
-              <width>20</width>
-              <height>0</height>
-             </size>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>20</width>
-              <height>16777215</height>
-             </size>
-            </property>
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </item>
-        <item row="24" column="0" colspan="3">
-         <layout class="QGridLayout" name="gridLayout_22">
-          <item row="0" column="1">
-           <widget class="QLabel" name="label_19">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="pixmap">
-             <pixmap resource="ThemeBuilderUIBase.qrc">:/icon/pixmaps/hslider.png</pixmap>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="2">
-           <widget class="QLabel" name="label_20">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="text">
-             <string>Misc</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="3">
-           <widget class="Line" name="line_10">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="0">
-           <widget class="Line" name="line_11">
             <property name="minimumSize">
              <size>
               <width>20</width>

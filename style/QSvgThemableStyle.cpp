@@ -22,10 +22,6 @@
 #include <stdlib.h>
 #include <limits.h>
 
-#ifdef QS_INSTRUMENTATION
-#include <sys/time.h>
-#endif
-
 #include <QApplication>
 #include <QWidget>
 #include <QPainter>
@@ -34,6 +30,7 @@
 #include <QStyleOption>
 #include <QSettings>
 #include <QFile>
+#include <QDir>
 #include <QVariant>
 #include <QBoxLayout>
 #include <QGridLayout>
@@ -44,11 +41,6 @@
 #include <QDebug>
 #include <QMatrix>
 #include <QtAlgorithms>
-#if QT_VERSION >= 0x050000
-#include <QStandardPaths>
-#else
-#include <QDir>
-#endif
 
 #include <QSpinBox>
 #include <QToolButton>
@@ -66,6 +58,7 @@
 
 #include "ThemeConfig.h"
 #include "PaletteConfig.h"
+#include "StyleConfig.h"
 #include "groups.h"
 
 QSvgThemableStyle::QSvgThemableStyle()
@@ -74,19 +67,16 @@ QSvgThemableStyle::QSvgThemableStyle()
     themeRndr(NULL),
     themeSettings(NULL),
     paletteSettings(NULL),
+    styleSettings(NULL),
     progresstimer(NULL),
     dbgWireframe(false),
     dbgOverdraw(false)
 {
-  loadBuiltinTheme();
-  loadUserTheme();
-  loadUserPalette();
+  loadUserConfig();
 
   progresstimer = new QTimer(this);
 
   connect(progresstimer,SIGNAL(timeout()), this,SLOT(slot_animateProgressBars()));
-
-  theme_spec_t tspec = themeSettings->getThemeSpec();
 }
 
 QSvgThemableStyle::~QSvgThemableStyle()
@@ -95,86 +85,140 @@ QSvgThemableStyle::~QSvgThemableStyle()
   delete themeRndr;
 }
 
+void QSvgThemableStyle::loadUserConfig()
+{
+  QString filename = StyleConfig::getUserConfigFile();
+
+  delete styleSettings;
+  styleSettings = NULL;
+
+  if ( !QFile::exists(filename) ) {
+    QDir().mkpath(StyleConfig::getUserConfigDir().absolutePath());
+      QFile in(":/qsvgstyle.cfg");
+    in.open(QIODevice::ReadOnly);
+    QByteArray data = in.readAll();
+    in.close();
+
+    QFile f(filename);
+    f.open(QIODevice::WriteOnly);
+    f.write(data);
+    f.close();
+  }
+
+  styleSettings = new StyleConfig(filename);
+
+  loadUserTheme();
+  loadUserPalette();
+}
+
+void QSvgThemableStyle::loadCustomStyleConfig(const QString& filename)
+{
+  if ( !QFile::exists(filename) )
+    return;
+
+  delete styleSettings;
+  styleSettings = NULL;
+
+  styleSettings = new StyleConfig(filename);
+
+  qDebug() << "[QSvgStyle]" << "Loaded custom config file" << filename;
+
+  loadTheme(styleSettings->getStyleSpec().theme);
+  loadPalette(styleSettings->getStyleSpec().palette);
+}
+
 void QSvgThemableStyle::loadBuiltinTheme()
 {
-  if ( themeRndr ) {
-    delete themeRndr;
-    themeRndr = NULL;
-  }
-  if ( themeSettings ) {
-    delete themeSettings;
-    themeSettings = NULL;
-  }
+  if ( curTheme == "<builtin>" )
+    return;
 
-  themeSettings = new ThemeConfig(":default.cfg");
+  delete themeRndr;
+  themeRndr = NULL;
+
+  delete themeSettings;
+  themeSettings = NULL;
+
+  themeSettings = new ThemeConfig(":/default.cfg");
   themeRndr = new QSvgRenderer();
-  themeRndr->load(QString(":default.svg"));
+  themeRndr->load(QString(":/default.svg"));
 
+  curTheme = "<builtin>";
   qDebug() << "[QSvgStyle]" << "Loaded built in theme";
 }
 
 void QSvgThemableStyle::loadTheme(const QString& theme)
 {
-#if QT_VERSION >= 0x050000
-  QString dir = QStandardPaths::locate(QStandardPaths::ConfigLocation,"",QStandardPaths::LocateDirectory);
-#else
-  QString dir = QDir::homePath().append("/.config");
-#endif
+  if ( curTheme == theme )
+    return;
 
-  if ( !theme.isNull() &&
-       !theme.isEmpty() &&
-       QFile::exists(QString("%1/QSvgStyle/%2/%2.cfg").arg(dir).arg(theme)) &&
-       QFile::exists(QString("%1/QSvgStyle/%2/%2.svg").arg(dir).arg(theme))
-     ) {
-    if ( themeSettings ) {
-      delete themeSettings;
-      themeSettings = NULL;
-    }
-    if ( themeRndr ) {
-      delete themeRndr;
-      themeRndr = NULL;
-    }
-
-    themeSettings = new ThemeConfig(QString("%1/QSvgStyle/%2/%2.cfg").arg(dir).arg(theme));
-    themeRndr = new QSvgRenderer();
-    themeRndr->load(QString("%1/QSvgStyle/%2/%2.svg").arg(dir).arg(theme));
-
-    if ( !themeRndr->isValid() ) {
-      qWarning() << "Invalid SVG file" << QString("%1/QSvgStyle/%2/%2.svg").arg(dir).arg(theme);
-      loadBuiltinTheme();
-    } else {
-      qDebug() << "[QSvgStyle]" << "Loaded theme " << theme;
-    }
-  } else
+  if ( theme.isNull() || theme.isEmpty() || theme == "<builtin>" ) {
     loadBuiltinTheme();
+    return;
+  }
+
+  QDir udir = StyleConfig::getUserConfigDir();
+  QDir sdir = StyleConfig::getSystemConfigDir();
+
+  QString cfgfilename;
+  QString svgfilename;
+
+  // try user config dir first
+  cfgfilename = QString("%1/%2/%2.cfg").arg(udir.absolutePath()).arg(theme);
+  svgfilename = QString("%1/%2/%2.svg").arg(udir.absolutePath()).arg(theme);
+
+  if ( !QFile::exists(svgfilename) && !QFile::exists(cfgfilename) ) {
+    // switch to system config dir
+    cfgfilename = QString("%1/%2/%2.cfg").arg(sdir.absolutePath()).arg(theme);
+    svgfilename = QString("%1/%2/%2.svg").arg(sdir.absolutePath()).arg(theme);
+  }
+
+  if ( !QFile::exists(svgfilename) && !QFile::exists(cfgfilename) ) {
+    // not found
+    qDebug() << "[QSvgStyle]" << "Theme" << theme << "not found";
+    loadBuiltinTheme();
+    return;
+  }
+
+  delete themeSettings;
+  themeSettings = NULL;
+
+  delete themeRndr;
+  themeRndr = NULL;
+
+  themeSettings = new ThemeConfig(cfgfilename);
+  themeRndr = new QSvgRenderer();
+  themeRndr->load(svgfilename);
+
+  if ( !themeRndr->isValid() ) {
+    qWarning() << "Invalid SVG file" << svgfilename;
+    loadBuiltinTheme();
+  } else {
+    curTheme = theme;
+    qDebug() << "[QSvgStyle]" << "Loaded theme " << theme;
+  }
 }
 
 void QSvgThemableStyle::loadUserTheme()
 {
   QString theme;
 
-#if QT_VERSION >= 0x050000
-  QString dir = QStandardPaths::locate(QStandardPaths::ConfigLocation,"",QStandardPaths::LocateDirectory);
-#else
-  QString dir = QDir::homePath().append("/.config");
-#endif
-  QString filename = QString("%1/QSvgStyle/qsvgstyle.cfg").arg(dir);
+  QString filename = StyleConfig::getUserConfigFile();
 
   // load global config file
   if ( QFile::exists(filename) ) {
-    QSettings globalSettings(filename,QSettings::NativeFormat);
-
-    if (globalSettings.contains("theme"))
-      loadTheme(globalSettings.value("theme").toString());
-  }
+    StyleConfig cfg(filename);
+    loadTheme(cfg.getStyleSpec().theme);
+  } else
+    loadBuiltinTheme();
 }
 
 void QSvgThemableStyle::loadCustomSVG(const QString& filename)
 {
-  if ( themeRndr ) {
-    delete themeRndr;
-    themeRndr = NULL;
-  }
+  if ( !QFile::exists(filename) )
+    return;
+
+  delete themeRndr;
+  themeRndr = NULL;
 
   themeRndr = new QSvgRenderer();
   themeRndr->load(filename);
@@ -184,78 +228,101 @@ void QSvgThemableStyle::loadCustomSVG(const QString& filename)
 
 void QSvgThemableStyle::loadCustomThemeConfig(const QString& filename)
 {
-  if ( themeSettings ) {
-    delete themeSettings;
-    themeSettings = NULL;
-  }
+  if ( !QFile::exists(filename) )
+    return;
 
-  if ( QFile::exists(filename) )
-    themeSettings = new ThemeConfig(filename);
+  delete themeSettings;
+  themeSettings = NULL;
 
-  qDebug() << "[QSvgStyle] loaded custom config file" << filename;
+  themeSettings = new ThemeConfig(filename);
+
+  curTheme = QString("custom:%1").arg(filename);
+  qDebug() << "[QSvgStyle] loaded custom theme file" << filename;
 }
 
 void QSvgThemableStyle::loadPalette(const QString& palette)
 {
-  #if QT_VERSION >= 0x050000
-  QString dir = QStandardPaths::locate(QStandardPaths::ConfigLocation,"",QStandardPaths::LocateDirectory);
-  #else
-  QString dir = QDir::homePath().append("/.config");
-  #endif
+  if ( palette.isNull() || palette.isEmpty() || (palette == "<none>") ) {
+    unloadPalette();
+    return;
+  }
 
-  if ( !palette.isNull() &&
-    !palette.isEmpty() &&
-    QFile::exists(QString("%1/QSvgStyle/%2.pal").arg(dir).arg(palette))
-  ) {
-    if ( paletteSettings ) {
-      delete paletteSettings;
-      paletteSettings = NULL;
-    }
-
-    paletteSettings = new PaletteConfig(QString("%1/QSvgStyle/%2.pal").arg(dir).arg(palette));
-
-    qDebug() << "[QSvgStyle]" << "Loaded palette " << palette;
-  } else
+  if ( palette == "<system>" ) {
     loadSystemPalette();
+    return;
+  }
+
+  QDir udir = StyleConfig::getUserConfigDir();
+  QDir sdir = StyleConfig::getSystemConfigDir();
+
+  QString palettefilename;
+
+  // try user config dir first
+  palettefilename = QString("%1/%2.pal").arg(udir.absolutePath()).arg(palette);
+
+  if ( !QFile::exists(palettefilename) ) {
+    // switch to system palette
+    palettefilename = QString("%1/%2.pal").arg(sdir.absolutePath()).arg(palette);
+  }
+
+  if ( !QFile::exists(palettefilename) ) {
+    // not found
+    qDebug() << "[QSvgStyle]" << "Palette" << palette << "not found";
+    unloadPalette();
+    return;
+  }
+
+  delete paletteSettings;
+  paletteSettings = NULL;
+
+  paletteSettings = new PaletteConfig(palettefilename);
+
+  curPalette = palette;
+  qDebug() << "[QSvgStyle]" << "Loaded palette " << palette;
 }
 
 void QSvgThemableStyle::loadUserPalette()
 {
-  QString theme;
+  QString palette;
 
-  #if QT_VERSION >= 0x050000
-  QString dir = QStandardPaths::locate(QStandardPaths::ConfigLocation,"",QStandardPaths::LocateDirectory);
-  #else
-  QString dir = QDir::homePath().append("/.config");
-  #endif
-  QString filename = QString("%1/QSvgStyle/qsvgstyle.cfg").arg(dir);
+  QString filename = StyleConfig::getUserConfigFile();
 
   // load global config file
   if ( QFile::exists(filename) ) {
-    QSettings globalSettings(filename,QSettings::NativeFormat);
-
-    if (globalSettings.contains("palette"))
-      loadPalette(globalSettings.value("palette").toString());
-  }
+    StyleConfig cfg(filename);
+    loadPalette(cfg.getStyleSpec().palette);
+  } else
+    unloadPalette();
 }
 
 void QSvgThemableStyle::loadSystemPalette()
 {
   delete paletteSettings;
   paletteSettings = NULL;
+
+  curPalette = "<system>";
+}
+
+void QSvgThemableStyle::unloadPalette()
+{
+  delete paletteSettings;
+  paletteSettings = NULL;
+
+  curPalette = "<none>";
 }
 
 void QSvgThemableStyle::loadCustomPaletteConfig(const QString& filename)
 {
   if ( paletteSettings ) {
-    delete paletteSettings;
-    paletteSettings = NULL;
+    unloadPalette();
   }
 
-  if ( QFile::exists(filename) )
+  if ( QFile::exists(filename) ) {
     paletteSettings = new PaletteConfig(filename);
 
-  qDebug() << "[QSvgStyle] loaded custom palette file" << filename;
+    curPalette = QString("custom:%1").arg(filename);
+    qDebug() << "[QSvgStyle] loaded custom palette file" << filename;
+  }
 }
 
 bool QSvgThemableStyle::isContainerWidget(const QWidget * widget) const
@@ -397,7 +464,7 @@ void QSvgThemableStyle::drawPrimitive(PrimitiveElement e, const QStyleOption * o
   bool focus = option->state & State_HasFocus;
   Orientation orn = option->state & State_Horizontal ? Horizontal : Vertical;
   bool en = option->state & State_Enabled;
-  QPalette pal = widget ? widget->palette() : QApplication::palette();
+  QPalette pal = option->palette;
   QPalette::ColorGroup cg = en ? QPalette::Normal : QPalette::Disabled;
   pal.setCurrentColorGroup(cg);
 
@@ -553,6 +620,12 @@ void QSvgThemableStyle::drawPrimitive(PrimitiveElement e, const QStyleOption * o
     }
     case PE_FrameMenu :  {
       // Frame for menus
+      QStyleOption o(*option);
+      o.state &= ~State_On;
+      o.state |= State_Enabled;
+
+      st = state_str(o.state,widget);
+
       renderFrame(p,cs2b(cs.bg,pal.button()),r,fs,fs.element+"-"+st,dir);
       break;
     }
@@ -694,6 +767,11 @@ void QSvgThemableStyle::drawPrimitive(PrimitiveElement e, const QStyleOption * o
     }
     case PE_PanelMenuBar : {
       // Menu bar "border" (see QMenuBar.cpp)
+      QStyleOption o(*option);
+      o.state |= State_Enabled;
+
+      st = state_str(o.state,widget);
+
       renderFrame(p,cs2b(cs.bg,pal.button()),r,fs,fs.element+"-"+st,dir);
       break;
     }
@@ -782,7 +860,7 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
   QIcon::State ics = state_iconstate(option->state);
   Orientation orn = option->state & State_Horizontal ? Horizontal : Vertical;
   bool en = option->state & State_Enabled;
-  QPalette pal = widget ? widget->palette() : QApplication::palette();
+  QPalette pal = option->palette;
   QPalette::ColorGroup cg = en ? QPalette::Normal : QPalette::Disabled;
   pal.setCurrentColorGroup(cg);
 
@@ -881,22 +959,23 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
           // draw menu text (label+shortcut)
           if (l.size() > 0) {
             // menu label
-            renderLabel(p,dir,
+            renderLabel(p,cs2b(cs.fg,pal.text()),
+                        dir,
                         rtext,
                         fs,is,ls,
                         Qt::AlignLeft|Qt::AlignVCenter | Qt::TextShowMnemonic,
                         l[0],
-                        !(option->state & State_Enabled),
                         opt->icon.pixmap(opt->maxIconWidth,icm,ics));
           }
 
           if (l.size() > 1) {
             // shortcut
-            renderLabel(p,dir,
+            renderLabel(p,cs2b(cs.fg,pal.text()),
+                        dir,
                         rtext,
                         fs,is,ls,
                         Qt::AlignRight|Qt::AlignVCenter,
-                        l[1],!(option->state & State_Enabled));
+                        l[1]);
           }
 
           // menu check mark
@@ -937,9 +1016,10 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
         fs.top = fs.bottom = fs.left = fs.right = 0;
 
         renderInterior(p,cs2b(cs.bg,pal.button()),option->rect,fs,is,is.element+"-"+st,dir);
-        renderLabel(p,dir,r,fs,is,ls,
+        renderLabel(p,cs2b(cs.fg,pal.text()),
+                    dir,r,fs,is,ls,
                     Qt::AlignCenter | Qt::AlignVCenter | Qt::TextShowMnemonic,
-                    opt->text,!(option->state & State_Enabled));
+                    opt->text);
       }
 
       break;
@@ -969,9 +1049,10 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
       if ( const QStyleOptionButton *opt =
            qstyleoption_cast<const QStyleOptionButton *>(option) ) {
 
-        renderLabel(p,dir,r,fs,is,ls,
+        renderLabel(p,cs2b(cs.fg,pal.text()),
+                    dir,r,fs,is,ls,
                     Qt::AlignLeft | Qt::AlignVCenter | Qt::TextShowMnemonic,
-                    opt->text,!(option->state & State_Enabled),
+                    opt->text,
                     opt->icon.pixmap(opt->iconSize,icm,ics));
       }
       break;
@@ -981,9 +1062,10 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
       if ( const QStyleOptionButton *opt =
           qstyleoption_cast<const QStyleOptionButton *>(option) ) {
 
-        renderLabel(p,dir,r,fs,is,ls,
+        renderLabel(p,cs2b(cs.fg,pal.text()),
+                    dir,r,fs,is,ls,
                     Qt::AlignLeft | Qt::AlignVCenter | Qt::TextShowMnemonic,
-                    opt->text,!(option->state & State_Enabled),
+                    opt->text,
                     opt->icon.pixmap(opt->iconSize,icm,ics));
       }
       break;
@@ -997,18 +1079,18 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
           // NOTE Editable label is rendered by an embedded QLineEdit
           // inside the QComboBox object, except icon
           // See QComboBox's qcombobox.cpp::updateLineEditGeometry()
-          renderLabel(p,dir,r,fs,is,ls,
+          renderLabel(p,cs2b(cs.fg,pal.text()),
+                      dir,r,fs,is,ls,
                       Qt::AlignLeft | Qt::AlignVCenter | Qt::TextShowMnemonic,
                       opt->currentText,
-                      !(option->state & State_Enabled),
                       opt->currentIcon.pixmap(opt->iconSize,icm,ics));
         } else {
           // NOTE Non editable combo boxes: the embedded QLineEdit is not
           // able to draw the item icon, so do it here
-          renderLabel(p,dir,r,fs,is,ls,
+          renderLabel(p,cs2b(cs.fg,pal.text()),
+                      dir,r,fs,is,ls,
                       Qt::AlignLeft | Qt::AlignVCenter | Qt::TextShowMnemonic,
                       " ", // NOTE renderLabel centers icons if text is empty
-                      !(option->state & State_Enabled),
                       opt->currentIcon.pixmap(opt->iconSize,icm,ics));
         }
       }
@@ -1028,6 +1110,8 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
           st = state_str(o.state,widget);
         }
 
+        //qDebug() << st;
+
         fs.hasCapsule = true;
         int capsule = 2;
 
@@ -1043,6 +1127,7 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
         if ( (opt->shape == QTabBar::RoundedNorth) ||
              (opt->shape == QTabBar::TriangularNorth)
         ) {
+          orn = Horizontal;
           fs.capsuleH = capsule;
           fs.capsuleV = -1;
         }
@@ -1050,6 +1135,7 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
         if ( (opt->shape == QTabBar::RoundedSouth) ||
              (opt->shape == QTabBar::TriangularSouth)
         ) {
+          orn = Horizontal;
           fs.capsuleH = capsule;
           fs.capsuleV = 1;
         }
@@ -1057,6 +1143,7 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
         if ( (opt->shape == QTabBar::RoundedWest) ||
              (opt->shape == QTabBar::TriangularWest)
         ) {
+          orn = Vertical;
           fs.capsuleV = capsule;
           // RTL layout won't make West transformed into East, so
           // cheat on the capsule
@@ -1069,6 +1156,7 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
         if ( (opt->shape == QTabBar::RoundedEast) ||
              (opt->shape == QTabBar::TriangularEast)
         ) {
+          orn = Vertical;
           fs.capsuleV = capsule;
           if ( dir == Qt::LeftToRight )
             fs.capsuleH = 1;
@@ -1076,6 +1164,7 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
             fs.capsuleH = -1;
         }
 
+        // FIXME vertical tabs
         renderInterior(p,cs2b(cs.bg,pal.button()),r,fs,is,is.element+"-"+st,dir);
         renderFrame(p,cs2b(cs.bg,pal.button()),r,fs,fs.element+"-"+st,dir);
       }
@@ -1087,7 +1176,14 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
       if ( const QStyleOptionTab *opt =
            qstyleoption_cast<const QStyleOptionTab *>(option) ) {
 
-        renderLabel(p,dir,option->rect,fs,is,ls,Qt::AlignLeft | Qt::AlignVCenter | Qt::TextShowMnemonic,opt->text,!(option->state & State_Enabled),opt->icon.pixmap(pixelMetric(PM_TabBarIconSize),icm,ics));
+        // FIXME vertical text
+        renderLabel(p,cs2b(cs.fg,pal.text()),
+                    dir,
+                    option->rect,
+                    fs,is,ls,
+                    Qt::AlignLeft | Qt::AlignVCenter| Qt::TextShowMnemonic,
+                    opt->text,
+                    opt->icon.pixmap(pixelMetric(PM_TabBarIconSize),icm,ics));
       }
 
       break;
@@ -1111,9 +1207,10 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
       if ( const QStyleOptionToolBox *opt =
            qstyleoption_cast<const QStyleOptionToolBox *>(option) ) {
 
-        renderLabel(p,dir,r,fs,is,ls,
+        renderLabel(p,cs2b(cs.fg,pal.text()),
+                    dir,r,fs,is,ls,
                     Qt::AlignCenter | Qt::TextShowMnemonic,
-                    opt->text,!(option->state & State_Enabled),
+                    opt->text,
                     opt->icon.pixmap(pixelMetric(PM_TabBarIconSize),icm,ics));
       }
 
@@ -1153,9 +1250,9 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
       if ( const QStyleOptionProgressBarV2 *opt =
            qstyleoption_cast<const QStyleOptionProgressBarV2 *>(option) ) {
 
-        renderLabel(p,dir,r,fs,is,ls,
+        renderLabel(p,cs2b(cs.fg,pal.text()),
+                    dir,r,fs,is,ls,
                     opt->textAlignment,opt->text,
-                    !(option->state & State_Enabled),
                     QPixmap());
       }
 
@@ -1331,10 +1428,10 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
         QStyleOptionHeader o(*opt);
 
         o.rect = subElementRect(SE_HeaderLabel,opt,widget);
-        renderLabel(p,dir,o.rect,fs,is,ls,
+        renderLabel(p,cs2b(cs.fg,pal.text()),
+                    dir,o.rect,fs,is,ls,
                     opt->textAlignment,
                     opt->text,
-                    !(option->state & State_Enabled),
                     opt->icon.pixmap(pixelMetric(PM_SmallIconSize),icm,ics));
         o.rect = subElementRect(SE_HeaderArrow,opt,widget);
         if ( opt->sortIndicator == QStyleOptionHeader::SortDown )
@@ -1375,16 +1472,18 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
 
         if ( opt->features & QStyleOptionButton::HasMenu ) {
           QStyleOptionButton o(*opt);
-          renderLabel(p,dir,r.adjusted(0,0,-ds.size-ls.tispace,0),fs,is,ls,
+          renderLabel(p,cs2b(cs.fg,pal.text()),
+                      dir,r.adjusted(0,0,-ds.size-ls.tispace,0),fs,is,ls,
                       Qt::AlignCenter | Qt::AlignVCenter | Qt::TextShowMnemonic,
-                      opt->text,!(option->state & State_Enabled),
+                      opt->text,
                       opt->icon.pixmap(opt->iconSize,icm,ics));
-          o.rect = QRect(x+w-ls.tispace-ds.size-fs.right,y,ds.size,h);
+          o.rect = QRect(x+w-ds.size-fs.right,y,ds.size,h);
           drawPrimitive(PE_IndicatorArrowDown,&o,p,widget);
         } else {
-          renderLabel(p,dir,r,fs,is,ls,
+          renderLabel(p,cs2b(cs.fg,pal.text()),
+                      dir,r,fs,is,ls,
                       Qt::AlignCenter | Qt::AlignVCenter | Qt::TextShowMnemonic,
-                      opt->text,!(option->state & State_Enabled),
+                      opt->text,
                       opt->icon.pixmap(opt->iconSize,icm,ics));
         }
       }
@@ -1398,22 +1497,25 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
           qstyleoption_cast<const QStyleOptionToolButton *>(option) ) {
 
         if (opt->arrowType == Qt::NoArrow)
-          renderLabel(p,dir,r,fs,is,ls,
+          renderLabel(p,cs2b(cs.fg,pal.text()),
+                      dir,r,fs,is,ls,
                       Qt::AlignCenter | Qt::TextShowMnemonic,
-                      opt->text,!(option->state & State_Enabled),
+                      opt->text,
                       opt->icon.pixmap(opt->iconSize,icm,ics),
                       opt->toolButtonStyle);
         else {
           if ( dir == Qt::LeftToRight )
-            renderLabel(p,dir,r.adjusted(ds.size+ls.tispace,0,0,0),fs,is,ls,
+            renderLabel(p,cs2b(cs.fg,pal.text()),
+                        dir,r.adjusted(ds.size+ls.tispace,0,0,0),fs,is,ls,
                         Qt::AlignCenter | Qt::TextShowMnemonic,
-                        opt->text,!(option->state & State_Enabled),
+                        opt->text,
                         opt->icon.pixmap(opt->iconSize,icm,ics),
                         opt->toolButtonStyle);
           else
-            renderLabel(p,dir,r.adjusted(0,0,-ds.size-ls.tispace,0),fs,is,ls,
+            renderLabel(p,cs2b(cs.fg,pal.text()),
+                        dir,r.adjusted(0,0,-ds.size-ls.tispace,0),fs,is,ls,
                         Qt::AlignCenter | Qt::TextShowMnemonic,
-                        opt->text,!(option->state & State_Enabled),
+                        opt->text,
                         opt->icon.pixmap(opt->iconSize,icm,ics),
                         opt->toolButtonStyle);
         }
@@ -1458,9 +1560,10 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
 
         renderFrame(p,cs2b(cs.bg,pal.button()),r,fs,fs.element+"-"+st,dir);
         renderInterior(p,cs2b(cs.bg,pal.button()),r,fs,is,is.element+"-"+st,dir);
-        renderLabel(p,dir,r,fs,is,ls,
+        renderLabel(p,cs2b(cs.fg,pal.text()),
+                    dir,r,fs,is,ls,
                     Qt::AlignLeft | Qt::AlignVCenter | Qt::TextShowMnemonic,
-                    opt->title,!(option->state & State_Enabled));
+                    opt->title);
       }
 
       break;
@@ -1513,7 +1616,7 @@ void QSvgThemableStyle::drawComplexControl(ComplexControl control, const QStyleO
   QFontMetrics fm = option->fontMetrics;
   Orientation orn = option->state & State_Horizontal ? Horizontal : Vertical;
   bool en = option->state & State_Enabled;
-  QPalette pal = widget ? widget->palette() : QApplication::palette();
+  QPalette pal = option->palette;
   QPalette::ColorGroup cg = en ? QPalette::Normal : QPalette::Disabled;
   pal.setCurrentColorGroup(cg);
 
@@ -1854,21 +1957,24 @@ void QSvgThemableStyle::drawComplexControl(ComplexControl control, const QStyleO
         r2 = subControlRect(CC_GroupBox,&o,SC_GroupBoxLabel,widget);
         if ( opt->subControls & SC_GroupBoxCheckBox ) {
           if ( dir == Qt::LeftToRight )
-            renderLabel(p,dir,
+            renderLabel(p,cs2b(cs.fg,pal.text()),
+                        dir,
                         r2.adjusted(pixelMetric(PM_IndicatorWidth)+pixelMetric(PM_CheckBoxLabelSpacing),0,0,0),
                         fs,is,ls,opt->textAlignment | Qt::TextShowMnemonic,
-                        opt->text,!(opt->state & State_Enabled));
+                        opt->text);
           else
-            renderLabel(p,dir,
+            renderLabel(p,cs2b(cs.fg,pal.text()),
+                        dir,
                         r2.adjusted(0,0,-pixelMetric(PM_IndicatorWidth)-pixelMetric(PM_CheckBoxLabelSpacing),0),
                         fs,is,ls,opt->textAlignment | Qt::TextShowMnemonic,
-                        opt->text,!(opt->state & State_Enabled));
+                        opt->text);
           o.rect= subControlRect(CC_GroupBox,opt,SC_GroupBoxCheckBox,widget);
           drawPrimitive(PE_IndicatorCheckBox,&o,p,NULL);
         } else
-          renderLabel(p,dir,r2,fs,is,ls,
+          renderLabel(p,cs2b(cs.fg,pal.text()),
+                      dir,r2,fs,is,ls,
                       opt->textAlignment | Qt::TextShowMnemonic,
-                      opt->text,!(opt->state & State_Enabled));
+                      opt->text);
       }
       break;
     }
@@ -2287,7 +2393,13 @@ QSize QSvgThemableStyle::sizeFromContents ( ContentsType type, const QStyleOptio
                              opt->icon.pixmap(pixelMetric(PM_ToolBarIconSize)));
 
         if ( qobject_cast< const QTabBar* >(widget)->tabsClosable() ) {
-            s.rwidth() += ls.tispace;
+            s.rwidth() += ls.tispace+pixelMetric(PM_SmallIconSize);
+        }
+
+        if ( opt->shape == QTabBar::TriangularEast ||
+             opt->shape == QTabBar::TriangularWest ||
+             opt->shape == QTabBar::RoundedEast ||
+             opt->shape == QTabBar::RoundedWest ) {
         }
       }
 
@@ -3125,18 +3237,12 @@ void QSvgThemableStyle::renderFrame(QPainter *p,
   emit(sig_renderFrame_begin(e));
 
   int x0,y0,w,h;
-  value_t< unsigned int > intensity;
-  value_t< bool > use3dFrame;
+  int intensity;
+  bool use3dFrame;
 
   bounds.getRect(&x0,&y0,&w,&h);
-  intensity = themeSettings->getThemeSpec().intensity;
-  use3dFrame = themeSettings->getThemeSpec().use3dFrame;
-
-  if ( !intensity.present )
-    intensity = 128;
-
-  if ( !use3dFrame.present )
-    use3dFrame = false;
+  intensity = getSpecificValue("specific.palette.intensity").toInt();
+  use3dFrame = getSpecificValue("specific.palette.3dframes").toBool();
 
   // rects to draw frame parts
   QRect top, bottom, left, right, topleft, topright, bottomleft, bottomright;
@@ -3245,7 +3351,7 @@ void QSvgThemableStyle::renderFrame(QPainter *p,
   darkColor.setAlpha(intensity);
   darkBrush.setColor(darkColor);
 
-  if ( !dbgWireframe ) {
+  if ( !dbgWireframe && (curPalette != "<none>") ) {
     if ( !fs.pressed ) {
       p->fillPath(lightPath,lightColor);
       p->fillPath(darkPath,darkColor);
@@ -3363,13 +3469,10 @@ void QSvgThemableStyle::renderInterior(QPainter *p,
   emit(sig_renderInterior_begin(e));
 
   int x0,y0,w,h;
-  value_t< unsigned int > intensity;
+  int intensity;
 
   bounds.getRect(&x0,&y0,&w,&h);
-  intensity = themeSettings->getThemeSpec().intensity;
-
-  if ( !intensity.present )
-    intensity = 128;
+  intensity = getSpecificValue("specific.palette.intensity").toInt();
 
   // drawing rect
   QRect r;
@@ -3398,7 +3501,7 @@ void QSvgThemableStyle::renderInterior(QPainter *p,
   interiorColor.setAlpha(intensity);
   interiorBrush.setColor(interiorColor);
 
-  if ( !dbgWireframe )
+  if ( !dbgWireframe && (curPalette != "<none>") )
     p->fillRect(r,interiorColor);
 
   // debugging facilities
@@ -3481,17 +3584,11 @@ void QSvgThemableStyle::colorizeIndicator(QPainter *p,
                        /* direction */ Qt::LayoutDirection dir,
                        Qt::Alignment alignment) const
 {
-  value_t< unsigned int > intensity;
-  value_t< bool > use3dFrame;
+  int intensity;
+  bool use3dFrame;
 
-  intensity = themeSettings->getThemeSpec().intensity;
-  use3dFrame = themeSettings->getThemeSpec().use3dFrame;
-
-  if ( !intensity.present )
-    intensity = 128;
-
-  if ( !use3dFrame.present )
-    use3dFrame = false;
+  intensity = getSpecificValue("specific.palette.intensity").toInt();
+  use3dFrame = getSpecificValue("specific.palette.3dframes").toBool();
 
   // drawing rect
   QRect r = squaredRect(interiorRect(bounds,fs,is));
@@ -3552,6 +3649,7 @@ void QSvgThemableStyle::colorizeIndicator(QPainter *p,
 }
 
 void QSvgThemableStyle::renderLabel(QPainter* p,
+                            const QBrush &b,
                             Qt::LayoutDirection dir,
                             const QRect& bounds,
                             const frame_spec_t& fs,
@@ -3559,7 +3657,6 @@ void QSvgThemableStyle::renderLabel(QPainter* p,
                             const label_spec_t& ls,
                             int talign,
                             const QString& text,
-                            bool disabled,
                             const QPixmap& icon,
                             const Qt::ToolButtonStyle tialign) const
 {
@@ -3590,12 +3687,6 @@ void QSvgThemableStyle::renderLabel(QPainter* p,
   rtext = visualRect(dir,bounds,rtext);
   ricon = visualRect(dir,bounds,ricon);
 
-  if (disabled) {
-    // FIXME use palette
-    p->save();
-    p->setPen(QPen(QColor(100,100,100)));
-  }
-
   if (tialign != Qt::ToolButtonIconOnly) {
     if ( !text.isNull() && !text.isEmpty() ) {
 //       if (ls.hasShadow) {
@@ -3605,6 +3696,10 @@ void QSvgThemableStyle::renderLabel(QPainter* p,
 //           p->drawText(rtext.adjusted(ls.xshift+i,ls.yshift+i,0,0),talign,text);
 //         p->restore();
 //       }
+      if ( curPalette != "<none>" )
+        p->setBrush(b);
+      else
+        p->setBrush(Qt::black);
       p->drawText(rtext,visualAlignment(dir,static_cast<Qt::Alignment>(talign)),text);
     }
   }
@@ -3614,9 +3709,6 @@ void QSvgThemableStyle::renderLabel(QPainter* p,
       p->drawPixmap(ricon,icon);
     }
   }
-
-  if (disabled)
-    p->restore();
 
   // debugging facilities
   if ( dbgWireframe || dbgOverdraw ) {
@@ -3669,7 +3761,7 @@ inline label_spec_t QSvgThemableStyle::getLabelSpec(const QString& group) const
 
 inline QVariant QSvgThemableStyle::getSpecificValue(const QString &key) const
 {
-  return themeSettings->getSpecificValue(key);
+  return styleSettings->getSpecificValue(key);
 }
 
 inline color_spec_t QSvgThemableStyle::getColorSpec(const QString& group) const
@@ -3714,10 +3806,10 @@ void QSvgThemableStyle::capsulePosition(const QWidget *widget, bool &capsule, in
           const QHBoxLayout *hbox = qobject_cast<const QHBoxLayout *>(l);
           if (hbox) {
             // layout is a horizontal box
-                        if ( hbox->spacing() != 0 ) {
-                          capsule = false;
-                          return;
-                        }
+            if ( hbox->spacing() != 0 ) {
+              capsule = false;
+              return;
+            }
             if ( (index == 0) && (index == hbox->count()-1) )
               h = 2;
             else if (index == hbox->count()-1)
@@ -3733,10 +3825,10 @@ void QSvgThemableStyle::capsulePosition(const QWidget *widget, bool &capsule, in
           const QVBoxLayout *vbox = qobject_cast<const QVBoxLayout *>(l);
           if (vbox) {
             // layout is a horizontal box
-                        if ( vbox->spacing() != 0 ) {
-                          capsule = false;
-                          return;
-                        }
+            if ( vbox->spacing() != 0 ) {
+              capsule = false;
+              return;
+            }
             if ( (index == 0) && (index == vbox->count()-1) )
               v = 2;
             else if (index == vbox->count()-1)
@@ -3752,15 +3844,13 @@ void QSvgThemableStyle::capsulePosition(const QWidget *widget, bool &capsule, in
           const QGridLayout *gbox = qobject_cast<const QGridLayout *>(l);
           if (gbox) {
             // layout is a grid
-                        if ( (gbox->horizontalSpacing() != 0) || (gbox->verticalSpacing() != 0) ) {
-                          capsule = false;
-                          return;
-                        }
+            if ( (gbox->horizontalSpacing() != 0) || (gbox->verticalSpacing() != 0) ) {
+              capsule = false;
+              return;
+            }
 
             const int rows = gbox->rowCount();
             const int cols = gbox->columnCount();
-
-                        qDebug() << "rows,cols" << rows << cols;
 
             if (rows == 1)
               v = 2;

@@ -30,3 +30,13 @@ SOURCES += \
 
 RESOURCES += \
   defaulttheme.qrc
+
+unix {
+  isEmpty(PREFIX) {
+    PREFIX = /usr
+  }
+
+  #MAKE INSTALL
+  target.path = $$[QT_INSTALL_PLUGINS]/styles
+  INSTALLS += target
+}

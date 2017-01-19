@@ -16,10 +16,12 @@ INCLUDEPATH += ..
 SOURCES += \
   groups.cpp \
   ThemeConfig.cpp \
-  PaletteConfig.cpp
+  PaletteConfig.cpp \
+  StyleConfig.cpp
 
 HEADERS += \
   specs.h  \
   groups.h \
   ThemeConfig.h \
-  PaletteConfig.h
+  PaletteConfig.h \
+  StyleConfig.h

@@ -36,6 +36,7 @@ template<typename T1, typename T2> class QMap;
 
 class ThemeConfig;
 class PaletteConfig;
+class StyleConfig;
 
 class QSvgThemableStyle : public QCommonStyle {
   Q_OBJECT
@@ -92,38 +93,54 @@ class QSvgThemableStyle : public QCommonStyle {
     Q_INVOKABLE void loadCustomSVG(const QString &filename);
     /* Used internally by QSvgPaletteBuilder */
     Q_INVOKABLE void loadCustomPaletteConfig(const QString &filename);
+    /* User internally by QSvgThemeManager */
+    Q_INVOKABLE void loadCustomStyleConfig(const QString &filename);
+
+    /* Loads user config in ~/.config/QSvgStyle/qsvgstyle.cfg */
+    void loadUserConfig();
+
+    /**
+     * Loads and sets the built-in default theme
+     */
+    Q_INVOKABLE void loadBuiltinTheme();
 
     /**
      * Loads and sets the given theme
      * Theme is searched for in ~/.config/QSvgStyle/theme directory
      */
-    void loadTheme(const QString &theme);
+    Q_INVOKABLE void loadTheme(const QString &theme);
+    Q_INVOKABLE QString currentTheme() const { return curTheme; };
+
     /**
      * Wrapper method around @ref loadTheme that reads
      * ~/.config/QSvgStyle/qsvgstyle.cfg configuration file and loads
      * the theme set with the variable theme=
      */
     void loadUserTheme();
-    /**
-     * Loads and sets the built-in default theme
-     */
-    void loadBuiltinTheme();
 
     /**
      * Loads and sets the given palette
      * Palette is searched for in ~/.config/QSvgStyle/palette.pal file
      */
-    void loadPalette(const QString& palette);
+    Q_INVOKABLE void loadPalette(const QString& palette);
+    Q_INVOKABLE QString currentPalette() const { return curPalette; };
+
     /**
      * Wrapper method around @ref loadPalette that reads
      * ~/.config/QSvgStyle/qsvgstyle.cfg configuration file and loads
      * the palette set with the variable palette=
      */
     void loadUserPalette();
+
     /**
      * Loads and sets the system palette
      */
-    void loadSystemPalette();
+    Q_INVOKABLE void loadSystemPalette();
+
+    /**
+     * Do not use palette
+     */
+    Q_INVOKABLE void unloadPalette();
 
   signals:
     /**
@@ -314,6 +331,7 @@ class QSvgThemableStyle : public QCommonStyle {
      * Generic method that draws a label (text and/or icon)
      */
     void renderLabel(QPainter *p,
+                     /* color spec */ const QBrush &b,
                      /* text direction */ Qt::LayoutDirection dir,
                      /* frame bounds */ const QRect &bounds,
                      /* frame spec */ const frame_spec_t &fs,
@@ -321,7 +339,6 @@ class QSvgThemableStyle : public QCommonStyle {
                      /* label spec */ const label_spec_t &ls,
                      /* text alignment */ int talign,
                      /* text */ const QString &text,
-                     /* disabled text ? */ bool disabled = false,
                      /* icon */ const QPixmap &icon = QPixmap(),
                      /* text-icon alignment */ const Qt::ToolButtonStyle tialign = Qt::ToolButtonTextBesideIcon) const;
 
@@ -395,7 +412,7 @@ class QSvgThemableStyle : public QCommonStyle {
     void drawRealRect(QPainter *p, const QRect &r) const;
 
     /**
-     * Converts a color_spec_t fr or bg field to a QBrush.
+     * Converts a color_spec_t fg or bg field to a QBrush.
      * If the field is not set, takes the defaut supplied brush b
      */
     QBrush cs2b(value_t<int> c, const QBrush &b) const {
@@ -436,6 +453,9 @@ class QSvgThemableStyle : public QCommonStyle {
     QSvgRenderer *themeRndr;
     ThemeConfig *themeSettings;
     PaletteConfig *paletteSettings;
+    StyleConfig *styleSettings;
+
+    QString curTheme, curPalette;
 
     /* timer used for progress bars */
     QTimer *progresstimer;

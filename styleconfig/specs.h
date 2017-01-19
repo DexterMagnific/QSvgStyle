@@ -70,8 +70,8 @@ typedef struct {
   value_t<QString> name;
   value_t<QString> author;
   value_t<QString> descr;
-  value_t<unsigned> intensity;
-  value_t<bool> use3dFrame;
+  /* theme path, ThemeConfig::getThemeSpec() */
+  value_t<QString> path;
 } theme_spec_t;
 
 /** Generic information about a frame */
@@ -153,5 +153,20 @@ typedef struct {
   label_spec_t label;
   color_spec_t color;
 } element_spec_t;
+
+/** Generic information about a palette */
+typedef struct {
+  value_t<QString> name;
+  value_t<QString> author;
+  value_t<QString> descr;
+  /* theme path, PaletteConfig::getThemeSpec() */
+  value_t<QString> path;
+} palette_spec_t;
+
+/** QSvgStyle global config */
+typedef struct {
+  value_t<QString> theme;
+  value_t<QString> palette;
+} style_spec_t;
 
 #endif

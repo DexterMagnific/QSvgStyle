@@ -5,6 +5,7 @@ SUBDIRS += \
   style \
   thirdparty/svgcleaner \
   themebuilder \
+  thememanager
 
 CONFIG += \
   ordered

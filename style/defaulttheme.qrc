@@ -2,5 +2,6 @@
   <qresource prefix="/" >
     <file>default.svg</file>
     <file>default.cfg</file>
+    <file>qsvgstyle.cfg</file>
   </qresource>
 </RCC>

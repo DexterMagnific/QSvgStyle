@@ -22,14 +22,10 @@
 #include <QDebug>
 #include <QSettings>
 #include <QMetaObject>
-#if QT_VERSION >= 0x050000
-#include <QStandardPaths>
-#else
+#include <QFile>
 #include <QDir>
-#endif
 
 // UI
-#include <QFile>
 #include <QListWidget>
 #include <QFileDialog>
 #include <QTreeWidget>
@@ -70,6 +66,8 @@
 
 #include "NewThemeUI.h"
 #include "ThemeConfig.h"
+#include "PaletteConfig.h"
+#include "StyleConfig.h"
 #include "../style/QSvgThemableStyle.h"
 #include "groups.h"
 
@@ -79,68 +77,12 @@
 #include "remover.h"
 #include "replacer.h"
 
-SpinBoxDelegate::SpinBoxDelegate(QObject *parent)
-  : QStyledItemDelegate(parent)
-{
-}
-
-QWidget *SpinBoxDelegate::createEditor(QWidget *parent,
-                                       const QStyleOptionViewItem &/* option */,
-                                       const QModelIndex &index) const
-{
-  if (index.column() != 0) {
-    QSpinBox *editor = new QSpinBox(parent);
-    editor->setMinimum(0);
-    editor->setMaximum(99);
-
-    // update model without waiting the close of the editor
-    connect(editor,SIGNAL(valueChanged(int)),
-            this,SLOT(slot_valueChanged(int)));
-
-    return editor;
-  } else
-    return NULL;
-}
-
-void SpinBoxDelegate::setEditorData(QWidget *editor,
-                                    const QModelIndex &index) const
-{
-  int value = index.model()->data(index, Qt::EditRole).toInt();
-
-  QSpinBox *spinBox = static_cast<QSpinBox*>(editor);
-  spinBox->setValue(value);
-}
-
-void SpinBoxDelegate::setModelData(QWidget *editor, QAbstractItemModel *model,
-                                   const QModelIndex &index) const
-{
-  QSpinBox *spinBox = static_cast<QSpinBox*>(editor);
-  spinBox->interpretText();
-  int value = spinBox->value();
-
-  model->setData(index, value, Qt::EditRole);
-}
-
-void SpinBoxDelegate::updateEditorGeometry(QWidget *editor,
-                                           const QStyleOptionViewItem &option,
-                                           const QModelIndex &/* index */) const
-{
-  editor->setGeometry(option.rect);
-}
-
-void SpinBoxDelegate::slot_valueChanged(int val)
-{
-  Q_UNUSED(val);
-  emit commitData(static_cast<QSpinBox *>(sender()));
-}
-
 ThemeBuilderUI::ThemeBuilderUI(QWidget* parent)
  : QMainWindow(parent), config(0), style(0), previewWidget(0),
    currentWidget(0),
    currentDrawStackItem(0), currentDrawMode(0), currentPreviewVariant(0),
    cfgModified(0), previewUpdateEnabled(false),
    timer(0), timer2(0), newThemeDlg(0),
-   baseColor(QApplication::palette().color(QPalette::Normal,QPalette::Button)),
    svgWatcher(this)
 {
   qDebug() << "Current style:" << QApplication::style()->metaObject()->className();
@@ -394,174 +336,6 @@ ThemeBuilderUI::ThemeBuilderUI(QWidget* parent)
   // setup font size spin
   fontSizeSpin->setValue(font().pointSize());
 
-  // Populate Specific tree (code copied from auto-generated .ui file)
-  specificTree->clear();
-
-  QTreeWidgetItem *qtwi = new QTreeWidgetItem(specificTree);
-  QTreeWidgetItem *qtwi1 = new QTreeWidgetItem(qtwi);
-  qtwi1->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEditable|Qt::ItemIsUserCheckable|Qt::ItemIsEnabled);
-  QTreeWidgetItem *qtwi2 = new QTreeWidgetItem(qtwi);
-  qtwi2->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEditable|Qt::ItemIsUserCheckable|Qt::ItemIsEnabled);
-  QTreeWidgetItem *qtwi3 = new QTreeWidgetItem(specificTree);
-  QTreeWidgetItem *qtwi4 = new QTreeWidgetItem(qtwi3);
-  qtwi4->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEditable|Qt::ItemIsUserCheckable|Qt::ItemIsEnabled);
-  QTreeWidgetItem *qtwi5 = new QTreeWidgetItem(qtwi3);
-  qtwi5->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEditable|Qt::ItemIsUserCheckable|Qt::ItemIsEnabled);
-  QTreeWidgetItem *qtwi6 = new QTreeWidgetItem(qtwi3);
-  qtwi6->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEditable|Qt::ItemIsUserCheckable|Qt::ItemIsEnabled);
-  QTreeWidgetItem *qtwi7 = new QTreeWidgetItem(qtwi3);
-  qtwi7->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEditable|Qt::ItemIsUserCheckable|Qt::ItemIsEnabled);
-  QTreeWidgetItem *qtwi8 = new QTreeWidgetItem(qtwi3);
-  qtwi8->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEditable|Qt::ItemIsUserCheckable|Qt::ItemIsEnabled);
-  QTreeWidgetItem *qtwi9 = new QTreeWidgetItem(qtwi3);
-  qtwi9->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEditable|Qt::ItemIsUserCheckable|Qt::ItemIsEnabled);
-  QTreeWidgetItem *qtwi10 = new QTreeWidgetItem(specificTree);
-  QTreeWidgetItem *qtwi11 = new QTreeWidgetItem(qtwi10);
-  qtwi11->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEditable|Qt::ItemIsUserCheckable|Qt::ItemIsEnabled);
-  QTreeWidgetItem *qtwi12 = new QTreeWidgetItem(qtwi10);
-  qtwi12->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEditable|Qt::ItemIsUserCheckable|Qt::ItemIsEnabled);
-  QTreeWidgetItem *qtwi13 = new QTreeWidgetItem(qtwi10);
-  qtwi13->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEditable|Qt::ItemIsUserCheckable|Qt::ItemIsEnabled);
-  QTreeWidgetItem *qtwi14 = new QTreeWidgetItem(specificTree);
-  QTreeWidgetItem *qtwi15 = new QTreeWidgetItem(qtwi14);
-  qtwi15->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEditable|Qt::ItemIsUserCheckable|Qt::ItemIsEnabled);
-  QTreeWidgetItem *qtwi16 = new QTreeWidgetItem(qtwi14);
-  qtwi16->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEditable|Qt::ItemIsUserCheckable|Qt::ItemIsEnabled);
-  QTreeWidgetItem *qtwi17 = new QTreeWidgetItem(qtwi14);
-  qtwi17->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEditable|Qt::ItemIsUserCheckable|Qt::ItemIsEnabled);
-  QTreeWidgetItem *qtwi18 = new QTreeWidgetItem(qtwi14);
-  qtwi18->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEditable|Qt::ItemIsUserCheckable|Qt::ItemIsEnabled);
-  QTreeWidgetItem *qtwi19 = new QTreeWidgetItem(qtwi14);
-  qtwi19->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEditable|Qt::ItemIsUserCheckable|Qt::ItemIsEnabled);
-  QTreeWidgetItem *qtwi20 = new QTreeWidgetItem(specificTree);
-  QTreeWidgetItem *qtwi21 = new QTreeWidgetItem(qtwi20);
-  qtwi21->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEditable|Qt::ItemIsUserCheckable|Qt::ItemIsEnabled);
-  QTreeWidgetItem *qtwi22 = new QTreeWidgetItem(qtwi20);
-  qtwi22->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEditable|Qt::ItemIsUserCheckable|Qt::ItemIsEnabled);
-  QTreeWidgetItem *qtwi23 = new QTreeWidgetItem(specificTree);
-  QTreeWidgetItem *qtwi24 = new QTreeWidgetItem(qtwi23);
-  qtwi24->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEditable|Qt::ItemIsUserCheckable|Qt::ItemIsEnabled);
-  QTreeWidgetItem *qtwi25 = new QTreeWidgetItem(qtwi23);
-  qtwi25->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEditable|Qt::ItemIsUserCheckable|Qt::ItemIsEnabled);
-  QTreeWidgetItem *qtwi26 = new QTreeWidgetItem(specificTree);
-  QTreeWidgetItem *qtwi27 = new QTreeWidgetItem(qtwi26);
-  qtwi27->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEditable|Qt::ItemIsUserCheckable|Qt::ItemIsEnabled);
-
-  QTreeWidgetItem *_qtwi1 = specificTree->topLevelItem(0);
-  _qtwi1->setText(0, "Radio buttons/Check boxes");
-  QTreeWidgetItem *_qtwi2 = _qtwi1->child(0);
-  _qtwi2->setText(1, "15");
-  _qtwi2->setData(1, SettingRole, "specific.radiocheckbox.indicator.size");
-  _qtwi2->setText(0, "Indicator size");
-  QTreeWidgetItem *_qtwi3 = _qtwi1->child(1);
-  _qtwi3->setText(1, "5");
-  _qtwi3->setData(1, SettingRole, "specific.radiocheckbox.label.tispace");
-  _qtwi3->setText(0, "Button--Label space");
-
-  QTreeWidgetItem *_qtwi4 = specificTree->topLevelItem(1);
-  _qtwi4->setText(0, "Layout default margins");
-  QTreeWidgetItem *_qtwi5 = _qtwi4->child(0);
-  _qtwi5->setText(1, "4");
-  _qtwi5->setData(1, SettingRole, "specific.layoutmargins.left");
-  _qtwi5->setText(0, "Left");
-  QTreeWidgetItem *_qtwi6 = _qtwi4->child(1);
-  _qtwi6->setText(1, "4");
-  _qtwi6->setData(1, SettingRole, "specific.layoutmargins.right");
-  _qtwi6->setText(0, "Right");
-  QTreeWidgetItem *_qtwi7 = _qtwi4->child(2);
-  _qtwi7->setText(1, "4");
-  _qtwi7->setData(1, SettingRole, "specific.layoutmargins.top");
-  _qtwi7->setText(0, "Top");
-  QTreeWidgetItem *_qtwi8 = _qtwi4->child(3);
-  _qtwi8->setText(1, "4");
-  _qtwi8->setData(1, SettingRole, "specific.layoutmargins.bottom");
-  _qtwi8->setText(0, "Bottom");
-  QTreeWidgetItem *_qtwi9 = _qtwi4->child(4);
-  _qtwi9->setText(1, "2");
-  _qtwi9->setData(1, SettingRole, "specific.layoutmargins.hspace");
-  _qtwi9->setText(0, "H spacing");
-  QTreeWidgetItem *_qtwi10 = _qtwi4->child(5);
-  _qtwi10->setText(1, "2");
-  _qtwi10->setData(1, SettingRole, "specific.layoutmargins.vspace");
-  _qtwi10->setText(0, "V Spacing");
-
-  QTreeWidgetItem *_qtwi11 = specificTree->topLevelItem(2);
-  _qtwi11->setText(0, "Menu Items & Menu bars");
-  QTreeWidgetItem *_qtwi12 = _qtwi11->child(0);
-  _qtwi12->setText(1, "2");
-  _qtwi12->setData(1, SettingRole, "specific.menubar.space");
-  _qtwi12->setText(0, "Menu bar item spacing");
-  QTreeWidgetItem *_qtwi13 = _qtwi11->child(1);
-  _qtwi13->setText(1, "0");
-  _qtwi13->setData(1, SettingRole, "specific.menubar.hspace");
-  _qtwi13->setText(0, "Menu bar H margin");
-  QTreeWidgetItem *_qtwi14 = _qtwi11->child(2);
-  _qtwi14->setText(1, "7");
-  _qtwi14->setData(1, SettingRole, "specific.menu.tearoff.height");
-  _qtwi14->setText(0, "Menu tearoff height");
-
-  QTreeWidgetItem *_qtwi15 = specificTree->topLevelItem(3);
-  _qtwi15->setText(0, "Toolbars");
-  QTreeWidgetItem *_qtwi16 = _qtwi15->child(0);
-  _qtwi16->setText(1, "0");
-  _qtwi16->setData(1, SettingRole, "specific.toolbar.space");
-  _qtwi16->setText(0, "Item spacing");
-  QTreeWidgetItem *_qtwi17 = _qtwi15->child(1);
-  _qtwi17->setText(1, "8");
-  _qtwi17->setData(1, SettingRole, "specific.toolbar.handle.width");
-  _qtwi17->setText(0, "Handle width");
-  QTreeWidgetItem *_qtwi18 = _qtwi15->child(2);
-  _qtwi18->setText(1, "2");
-  _qtwi18->setData(1, SettingRole, "specific.toolbar.separator.width");
-  _qtwi18->setText(0, "Separator width");
-  QTreeWidgetItem *_qtwi19 = _qtwi15->child(3);
-  _qtwi19->setText(1, "20");
-  _qtwi19->setData(1, SettingRole, "specific.toolbar.extension.width");
-  _qtwi19->setText(0, "Extension button width");
-  QTreeWidgetItem *_qtwi20 = _qtwi15->child(4);
-  _qtwi20->setText(1, "16");
-  _qtwi20->setData(1, SettingRole, "specific.toolbar.icon.size");
-  _qtwi20->setText(0, "Icon size (hint)");
-
-  QTreeWidgetItem *_qtwi21 = specificTree->topLevelItem(4);
-  _qtwi21->setText(0, "Scroll bars");
-  QTreeWidgetItem *_qtwi22 = _qtwi21->child(0);
-  _qtwi22->setText(1, "16");
-  _qtwi22->setData(1, SettingRole, "specific.scrollbar.thickness");
-  _qtwi22->setText(0, "Thickness");
-  QTreeWidgetItem *_qtwi23 = _qtwi21->child(1);
-  _qtwi23->setText(1, "20");
-  _qtwi23->setData(1, SettingRole, "specific.scrollbar.slider.minsize");
-  _qtwi23->setText(0, "Slider minimum size");
-
-  QTreeWidgetItem *_qtwi24 = specificTree->topLevelItem(5);
-  _qtwi24->setText(0, "Sliders");
-  QTreeWidgetItem *_qtwi25 = _qtwi24->child(0);
-  _qtwi25->setText(1, "4");
-  _qtwi25->setData(1, SettingRole, "specific.slider.thickness");
-  _qtwi25->setText(0, "Thickness");
-  QTreeWidgetItem *_qtwi26 = _qtwi24->child(1);
-  _qtwi26->setText(1, "15");
-  _qtwi26->setData(1, SettingRole, "specific.slider.cursor.size");
-  _qtwi26->setText(0, "Cursor size");
-
-  QTreeWidgetItem *_qtwi27 = specificTree->topLevelItem(6);
-  _qtwi27->setText(0, "Progress bars");
-  QTreeWidgetItem *_qtwi28 = _qtwi27->child(0);
-  _qtwi28->setText(1, "20");
-  _qtwi28->setData(1, SettingRole, "specific.progressbar.chunk.width");
-  _qtwi28->setText(0, "Chunk width");
-
-#if QT_VERSION < 0x050000
-  specificTree->header()->setResizeMode(0,QHeaderView::ResizeToContents);
-#else
-  specificTree->header()->setSectionResizeMode(0,QHeaderView::ResizeToContents);
-#endif
-
-  // Setup spin box item delegate for Specific tree
-  SpinBoxDelegate *spinDelegate = new SpinBoxDelegate(0);
-  specificTree->setItemDelegate(spinDelegate);
-
   // Get an instance of QSvgStyle
   if ( !style ) {
     style = (QSvgThemableStyle *) QStyleFactory::create("QSvgStyle");
@@ -585,6 +359,25 @@ ThemeBuilderUI::ThemeBuilderUI(QWidget* parent)
                            " You may experience crashes when previewing.\n");
     }
   }
+
+  // Populate palette combo
+  paletteCombo->addItem("<none>");
+  paletteCombo->addItem("<system>");
+  Q_FOREACH(palette_spec_t p, StyleConfig::getPaletteList()) {
+    paletteCombo->addItem(p.name);
+  }
+
+  // current palette
+  QString startupPalette;
+  QStyle::staticMetaObject.invokeMethod(style,"currentPalette",
+                                        Qt::DirectConnection,
+                                        Q_RETURN_ARG(QString,startupPalette));
+
+  int idx = paletteCombo->findText(startupPalette);
+  if ( idx > -1 )
+    paletteCombo->setCurrentIndex(idx);
+  else
+    paletteCombo->setCurrentIndex(0);
 
   // install event filter on previewArea so that we can react to resize and
   // close events and save its geometry
@@ -667,10 +460,6 @@ ThemeBuilderUI::ThemeBuilderUI(QWidget* parent)
   connect(labelMarginVSpin,SIGNAL(valueChanged(int)),
           this,SLOT(slot_labelMarginVSpinChanged(int)));
 
-  // Specific tab
-  connect(specificTree,SIGNAL(itemChanged(QTreeWidgetItem *, int)),
-          this,SLOT(slot_specificChanged(QTreeWidgetItem *,int)));
-
   // Preview tab
   connect(repaintBtn,SIGNAL(clicked(bool)),
           this,SLOT(slot_repaintBtnClicked(bool)));
@@ -686,10 +475,8 @@ ThemeBuilderUI::ThemeBuilderUI(QWidget* parent)
           this,SLOT(slot_enableBtnClicked(bool)));
   connect(previewVariantBtn,SIGNAL(clicked(bool)),
           this,SLOT(slot_previewVariantBtnClicked(bool)));
-  connect(intensitySlider,SIGNAL(valueChanged(int)),
-          this,SLOT(slot_intensityChanged(int)));
-  connect(use3dFrameBtn,SIGNAL(clicked(bool)),
-          this,SLOT(slot_use3dFrameBtnClicked(bool)));
+  connect(paletteCombo,SIGNAL(currentIndexChanged(int)),
+          this,SLOT(slot_paletteChanged(int)));
 
 
   // style callbacks
@@ -941,7 +728,6 @@ void ThemeBuilderUI::resetUi()
   saveBtn->setEnabled(false);
   optimizeSvgBtn->setEnabled(false);
   editSvgBtn->setEnabled(false);
-  specificTree->setEnabled(false);
 
   // clear theme file name
   themeNameLbl->clear();
@@ -1027,7 +813,7 @@ bool ThemeBuilderUI::openTheme(const QString& filename)
   }
 
   // Get a unique temp filename
-  QTemporaryFile f(QDir::tempPath()+"/qsvhthemebuilder_XXXXXX");
+  QTemporaryFile f(QDir::tempPath()+"/qsvgthemebuilder_XXXXXX");
   if ( !f.open() ) {
     qWarning() << "[QSvgThemeBuilder]" << "Could not create temporary file";
     return false;
@@ -1101,7 +887,6 @@ bool ThemeBuilderUI::openTheme(const QString& filename)
   tabWidget2->setTabEnabled(1,true);
   tabWidget2->setCurrentIndex(0);
   tabWidget3->setEnabled(true);
-  specificTree->setEnabled(true);
   themeNameLbl->setText(QFileInfo(cfgFile).fileName());
   themeNameLbl->setToolTip(cfgFile);
 
@@ -1119,18 +904,6 @@ bool ThemeBuilderUI::openTheme(const QString& filename)
   descrEdit->setText(ts.descr);
 
   // preview tab
-  intensitySlider->setValue(ts.intensity);
-  use3dFrameBtn->setChecked(ts.use3dFrame);
-
-  // fill in Specific tree
-  QTreeWidgetItemIterator it(specificTree, QTreeWidgetItemIterator::Editable);
-  while (*it) {
-    if ( !(*it)->data(1,SettingRole).isNull() ) {
-      value_t<int> v = config->getSpecificValue((*it)->data(1,SettingRole).toString());
-      (*it)->setText(1, QString("%1").arg(v));
-    }
-    ++it;
-  }
 
   slot_toolboxTabChanged(toolBox->currentIndex());
 
@@ -2036,6 +1809,7 @@ void ThemeBuilderUI::setupPreviewForWidget(const QListWidgetItem *current)
     widget->addTab(new QLabel("content 1"),icon,"First Tab");
     widget->addTab(new QLabel("content 2"),icon,"Middle Tab");
     widget->addTab(new QLabel("content 3"),"Last Tab");
+    widget->setTabsClosable(true);
 
     switch (currentPreviewVariant % variants) {
       case 0:
@@ -2230,20 +2004,8 @@ void ThemeBuilderUI::saveSettingsFromUi(const QListWidgetItem *current)
   _ts.author = authorEdit->text();
   _ts.name = themeNameEdit->text();
   _ts.descr = descrEdit->text();
-  _ts.intensity = intensitySlider->value();
-  _ts.use3dFrame = use3dFrameBtn->isChecked();
 
   config->setThemeSpec(_ts);
-
-  // Specific tree options
-  QTreeWidgetItemIterator it(specificTree, QTreeWidgetItemIterator::Editable);
-  while (*it) {
-    QTreeWidgetItem *item = (*it);
-    if ( !item->data(1,SettingRole).isNull() ) {
-      config->setSpecificValue(item->data(1,SettingRole).toString(),item->text(1));
-    }
-    ++it;
-  }
 
   // Group options
   if ( !current )
@@ -2425,6 +2187,15 @@ void ThemeBuilderUI::slot_previewVariantBtnClicked(bool checked)
   setupPreviewForWidget(currentWidget);
 }
 
+void ThemeBuilderUI::slot_paletteChanged(int val)
+{
+  QStyle::staticMetaObject.invokeMethod(style,"loadPalette",
+                                        Qt::DirectConnection,
+                                        Q_ARG(QString,paletteCombo->itemText(val)));
+
+  schedulePreviewUpdate(0);
+}
+
 void ThemeBuilderUI::slot_authorEditChanged(const QString& text)
 {
   Q_UNUSED(text);
@@ -2442,20 +2213,6 @@ void ThemeBuilderUI::slot_themeNameEditChanged(const QString& text)
 void ThemeBuilderUI::slot_descrEditChanged(const QString& text)
 {
   Q_UNUSED(text);
-
-  schedulePreviewUpdate();
-}
-
-void ThemeBuilderUI::slot_intensityChanged(int value)
-{
-  Q_UNUSED(value);
-
-  schedulePreviewUpdate();
-}
-
-void ThemeBuilderUI::slot_use3dFrameBtnClicked(bool checked)
-{
-  Q_UNUSED(checked);
 
   schedulePreviewUpdate();
 }
@@ -2766,16 +2523,6 @@ void ThemeBuilderUI::slot_labelMarginVSpinChanged(int val)
 {
   Q_UNUSED(val);
 
-  schedulePreviewUpdate();
-}
-
-void ThemeBuilderUI::slot_specificChanged(QTreeWidgetItem *item, int column)
-{
-  Q_UNUSED(column);
-  Q_UNUSED(item);
-  // qDebug() << "specific option" << item->data(1,SettingRole).toString();
-
-  //QString opt = item->data(1,SettingRole);
   schedulePreviewUpdate();
 }
 
