@@ -173,6 +173,7 @@ QList<theme_spec_t> StyleConfig::getThemeList()
 
       ThemeConfig t(QString(basename).append(".cfg"));
       theme_spec_t ts = t.getThemeSpec();
+      ts.path = QString(basename).append(".cfg");
 
       result.append(ts);
     }
@@ -193,6 +194,7 @@ QList<theme_spec_t> StyleConfig::getThemeList()
 
       ThemeConfig t(QString(basename).append(".cfg"));
       theme_spec_t ts = t.getThemeSpec();
+      ts.path = QString(basename).append(".cfg");
 
       result.append(ts);
     }

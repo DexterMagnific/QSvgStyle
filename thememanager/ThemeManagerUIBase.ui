@@ -719,6 +719,14 @@
            <set>ItemIsSelectable|ItemIsEditable|ItemIsUserCheckable|ItemIsEnabled</set>
           </property>
          </item>
+         <item>
+          <property name="text">
+           <string>Item Margin</string>
+          </property>
+          <property name="text">
+           <string>specific.toolbar.itemmargin</string>
+          </property>
+         </item>
         </item>
         <item>
          <property name="text">
@@ -950,9 +958,7 @@
     </item>
    </layout>
    <zorder>frame</zorder>
-   <zorder>previewWidget</zorder>
    <zorder>line_5</zorder>
-   <zorder>previewWidget</zorder>
    <zorder>verticalSpacer_6</zorder>
    <zorder>horizontalSpacer_11</zorder>
   </widget>

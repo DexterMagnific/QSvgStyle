@@ -269,7 +269,7 @@ class QSvgThemableStyle : public QCommonStyle {
     /**
      * Helper function that computers the 9 rects of a frame
      * NOTE: if @ref orn is @ref Vertical, returned results
-     * are for the transposed @ref bounds. Drawinf routines like @ref renderFrame
+     * are for the transposed @ref bounds. Drawing routines like @ref renderFrame
      * will manage to apply appriopriate rotations when drawing
      */
     void computeFrameRects(/* element bounds */ const QRect &bounds,

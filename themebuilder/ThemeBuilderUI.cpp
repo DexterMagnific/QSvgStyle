@@ -256,13 +256,6 @@ ThemeBuilderUI::ThemeBuilderUI(QWidget* parent)
   i->setText("Indicators");
   i->setData(GroupRole,PE_group(QStyle::PE_IndicatorArrowDown));
 
-  QIcon icon21;
-  icon21.addFile(QString::fromUtf8(":/icon/pixmaps/adjustsize.png"), QSize(), QIcon::Normal, QIcon::Off);
-  i = new QListWidgetItem(miscList);
-  i->setIcon(icon21);
-  i->setText("Size grip");
-  i->setData(GroupRole,CE_group(QStyle::CE_SizeGrip));
-
 //   QIcon icon22;
 //   icon22.addFile(QString::fromUtf8(":/icon/pixmaps/optimize.png"), QSize(), QIcon::Normal, QIcon::Off);
 //   i = new QListWidgetItem(miscList);

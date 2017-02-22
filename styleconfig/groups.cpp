@@ -29,7 +29,7 @@ QString PE_group(QStyle::PrimitiveElement element)
     case QStyle::PE_Frame : return "Frame";
     case QStyle::PE_FrameDefaultButton : return "PushButton";
     case QStyle::PE_FrameDockWidget : return "DockWidget";
-    case QStyle::PE_FrameFocusRect : return "Focus";
+    case QStyle::PE_FrameFocusRect : return "Frame";
     case QStyle::PE_FrameGroupBox : return "GroupBox";
     case QStyle::PE_FrameLineEdit : return "LineEdit";
     case QStyle::PE_FrameMenu : return "MenuItem";
@@ -111,7 +111,7 @@ QString CE_group(QStyle::ControlElement element)
     case QStyle::CE_HeaderSection : return "Header";
     case QStyle::CE_HeaderLabel : return "Header";
     case QStyle::CE_ToolBoxTab : return "ToolBox";
-    case QStyle::CE_SizeGrip : return "SizeGrip";
+    case QStyle::CE_SizeGrip : return "Indicator";
     case QStyle::CE_Splitter : return "Splitter";
     case QStyle::CE_RubberBand : return "RubberBand";
     case QStyle::CE_DockWidgetTitle : return "DockWidget";
@@ -122,7 +122,7 @@ QString CE_group(QStyle::ControlElement element)
     case QStyle::CE_ScrollBarSlider : return "ScrollBar";
     case QStyle::CE_ScrollBarFirst : return "ScrollBar";
     case QStyle::CE_ScrollBarLast : return "ScrollBar";
-    case QStyle::CE_FocusFrame : return "Focus";
+    case QStyle::CE_FocusFrame : return "Frame";
     case QStyle::CE_ComboBoxLabel : return "ComboBox";
     case QStyle::CE_ToolBar : return "ToolBar";
     case QStyle::CE_ToolBoxTabShape : return "ToolBox";
@@ -167,17 +167,17 @@ QString SE_group(QStyle::SubElement element)
 {
   switch(element) {
     case QStyle::SE_PushButtonContents : return "PushButton";
-    case QStyle::SE_PushButtonFocusRect : return "PushButton";
+    case QStyle::SE_PushButtonFocusRect : return "Frame";
     case QStyle::SE_CheckBoxIndicator : return "CheckBox";
     case QStyle::SE_CheckBoxContents : return "CheckBox";
-    case QStyle::SE_CheckBoxFocusRect : return "CheckBox";
+    case QStyle::SE_CheckBoxFocusRect : return "Frame";
     case QStyle::SE_CheckBoxClickRect : return "CheckBox";
     case QStyle::SE_RadioButtonIndicator : return "RadioButton";
     case QStyle::SE_RadioButtonContents : return "RadioButton";
-    case QStyle::SE_RadioButtonFocusRect : return "RadioButton";
+    case QStyle::SE_RadioButtonFocusRect : return "Frame";
     case QStyle::SE_RadioButtonClickRect : return "RadioButton";
-    case QStyle::SE_ComboBoxFocusRect : return "ComboBox";
-    case QStyle::SE_SliderFocusRect : return "Slider";
+    case QStyle::SE_ComboBoxFocusRect : return "Frame";
+    case QStyle::SE_SliderFocusRect : return "Frame";
     case QStyle::SE_ProgressBarGroove : return "ProgressBar";
     case QStyle::SE_ProgressBarContents : return "ProgressBar";
     case QStyle::SE_ProgressBarLabel : return "ProgressBar";
@@ -199,7 +199,7 @@ QString SE_group(QStyle::SubElement element)
     case QStyle::SE_DockWidgetIcon : return "DockWidget";
     case QStyle::SE_ItemViewItemDecoration : return "ItemView";
     case QStyle::SE_ItemViewItemText : return "ItemView";
-    case QStyle::SE_ItemViewItemFocusRect : return "ItemView";
+    case QStyle::SE_ItemViewItemFocusRect : return "Frame";
     case QStyle::SE_TabBarTabLeftButton : return "TabBar";
     case QStyle::SE_TabBarTabRightButton : return "TabBar";
     case QStyle::SE_TabBarTabText : return "TabBar";
