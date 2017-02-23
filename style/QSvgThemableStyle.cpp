@@ -891,8 +891,28 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
     }
 
     case CE_PushButtonBevel : {
-      drawPrimitive(PE_FrameButtonBevel,option,p,widget);
-      drawPrimitive(PE_PanelButtonBevel,option,p,widget);
+      if ( const QStyleOptionButton *opt =
+           qstyleoption_cast<const QStyleOptionButton *>(option) ) {
+
+        QStyleOptionButton o(*opt);
+
+        drawPrimitive(PE_FrameButtonBevel,&o,p,widget);
+
+        if ( opt->features & QStyleOptionButton::Flat ) {
+          // flat buttons
+          if ( (option->state & State_Enabled) &&
+                ((option->state & State_Sunken) ||
+                (option->state & State_On) ||
+                (option->state & State_MouseOver))
+              ) {
+            // Draw interior around normal non flat tool buttons
+            drawPrimitive(PE_PanelButtonBevel,&o,p,widget);
+          }
+        } else {
+          drawPrimitive(PE_PanelButtonBevel,option,p,widget);
+        }
+      }
+
       break;
     }
 
@@ -1163,7 +1183,6 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
             fs.capsuleH = -1;
         }
 
-        // FIXME vertical tabs
         renderInterior(p,cs2b(cs.bg,pal.button()),r,fs,is,is.element+"-"+st,dir);
         renderFrame(p,cs2b(cs.bg,pal.button()),r,fs,fs.element+"-"+st,dir);
 
@@ -1181,14 +1200,44 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
       if ( const QStyleOptionTab *opt =
            qstyleoption_cast<const QStyleOptionTab *>(option) ) {
 
-        // FIXME vertical text
+        // TODO move transform code to renderLabel()
+        if ( opt->shape == QTabBar::TriangularEast ||
+             opt->shape == QTabBar::RoundedEast ||
+             opt->shape == QTabBar::TriangularWest ||
+             opt->shape == QTabBar::RoundedWest ) {
+          p->save();
+          int newX = w+x;
+          int newY = y;
+          int newRot = 90;
+          if ( opt->shape == QTabBar::TriangularWest ||
+               opt->shape == QTabBar::RoundedWest ) {
+            newX = x;
+            newY = y+h;
+            newRot = -90;
+          }
+          QTransform m = QTransform::fromTranslate(newX,newY);
+          m.rotate(newRot);
+          p->setTransform(m,true);
+
+          r.setRect(0,0,r.height(),r.width()); /* because of transform */
+          /* TabWidget does not swap close button position on vertical
+           * tabs with RTL layouts */
+          dir = Qt::LeftToRight;
+        }
         renderLabel(p,cs2b(cs.fg,pal.text()),
                     dir,
-                    option->rect,
+                    r,
                     fs,is,ls,
                     Qt::AlignLeft | Qt::AlignVCenter| Qt::TextShowMnemonic,
                     opt->text,
                     opt->icon.pixmap(pixelMetric(PM_TabBarIconSize),icm,ics));
+
+        if ( opt->shape == QTabBar::TriangularEast ||
+             opt->shape == QTabBar::RoundedEast ||
+             opt->shape == QTabBar::TriangularWest ||
+             opt->shape == QTabBar::RoundedWest ) {
+          p->restore();
+        }
       }
 
       break;
@@ -1262,12 +1311,30 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
       if ( const QStyleOptionProgressBarV2 *opt =
            qstyleoption_cast<const QStyleOptionProgressBarV2 *>(option) ) {
 
-        // FIXME vertical text
-        // FIXME top to bottom text
+        // TODO move transform code to renderLabel()
+        if ( orn == Vertical ) {
+          p->save();
+          int newX = w+x;
+          int newY = y;
+          int newRot = 90;
+          if ( opt->bottomToTop ) {
+            newX = x;
+            newY = y+h;
+            newRot = -90;
+          }
+          QTransform m = QTransform::fromTranslate(newX,newY);
+          m.rotate(newRot);
+          p->setTransform(m,true);
+
+          r.setRect(0,0,r.height(),r.width());
+        }
         renderLabel(p,cs2b(cs.fg,pal.text()),
                     dir,r,fs,is,ls,
                     opt->textAlignment,opt->text,
                     QPixmap());
+        if ( orn == Vertical ) {
+          p->restore();
+        }
       }
 
       break;
@@ -1554,7 +1621,7 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
                       Qt::AlignCenter | Qt::AlignVCenter | Qt::TextShowMnemonic,
                       opt->text,
                       opt->icon.pixmap(opt->iconSize,icm,ics));
-          o.rect = QRect(x+w-ds.size-fs.right,y,ds.size,h);
+          o.rect = QRect(x+w-ds.size-ls.tispace-fs.right,y,ds.size,h);
           drawPrimitive(PE_IndicatorArrowDown,&o,p,widget);
         } else {
           renderLabel(p,cs2b(cs.fg,pal.text()),
@@ -1731,6 +1798,21 @@ void QSvgThemableStyle::drawComplexControl(ComplexControl control, const QStyleO
 
         QStyleOptionToolButton o(*opt);
 
+        QRect dropRect = subControlRect(CC_ToolButton,opt,SC_ToolButtonMenu,widget);
+        QRect buttonRect = subControlRect(CC_ToolButton,opt,SC_ToolButton,widget);
+
+        QStyle::State buttonState = opt->state;
+        QStyle::State dropState = opt->state;
+
+        if ( opt->features & QStyleOptionToolButton::Menu ) {
+          // with drop down menu -> apply State only to the
+          // selected subcontrol
+          if ( !(opt->activeSubControls & QStyle::SC_ToolButton) )
+            buttonState &= ~(State_On | State_Sunken | State_MouseOver);
+          if ( !(opt->activeSubControls & QStyle::SC_ToolButtonMenu) )
+            dropState &= ~(State_On | State_Sunken | State_MouseOver);
+        }
+
         // draw frame and interior
         if ( option->state & State_AutoRaise ) {
           // Auto raise buttons (found on toolbars)
@@ -1740,27 +1822,47 @@ void QSvgThemableStyle::drawComplexControl(ComplexControl control, const QStyleO
                 (option->state & State_MouseOver))
               ) {
             // Draw frame and interior around normal non autoraise tool buttons
+            o.rect = r;
+            o.state = opt->state;
             drawPrimitive(PE_FrameButtonTool,&o,p,widget);
+            o.state = buttonState;
             drawPrimitive(PE_PanelButtonTool,&o,p,widget);
+            if ( opt->features & QStyleOptionToolButton::Menu ) {
+              o.rect = dropRect;
+              o.state = dropState;
+              drawPrimitive(PE_PanelButtonTool,&o,p,widget);
+            }
           }
         } else {
+          o.rect = r;
+          o.state = opt->state;
           drawPrimitive(PE_FrameButtonTool,&o,p,widget);
+          o.state = buttonState;
           drawPrimitive(PE_PanelButtonTool,&o,p,widget);
+          if ( opt->features & QStyleOptionToolButton::Menu ) {
+            o.rect = dropRect;
+            o.state = dropState;
+            drawPrimitive(PE_PanelButtonTool,&o,p,widget);
+          }
         }
 
         // Draw label
-        o.rect = subControlRect(CC_ToolButton,opt,SC_ToolButton,widget);
+        o.rect = buttonRect;
+        o.state = opt->state;
         drawControl(CE_ToolButtonLabel,&o,p,widget);
 
         // Draw arrow
-        o.rect = subControlRect(CC_ToolButton,opt,SC_ToolButtonMenu,widget);
-        if (opt->features & QStyleOptionToolButton::Menu)
+        o.rect = dropRect;
+        if (opt->features & QStyleOptionToolButton::Menu) {
           // FIXME draw drop down button separator
           // Tool button with independant drop down button
+          o.state = dropState;
           drawPrimitive(PE_IndicatorButtonDropDown,&o,p,widget);
-        else if (opt->features & QStyleOptionToolButton::HasMenu)
+        } else if (opt->features & QStyleOptionToolButton::HasMenu) {
           // Simple down arrow for tool buttons with menus
+          o.state = opt->state;
           drawPrimitive(PE_IndicatorArrowDown,&o,p,widget);
+        }
 
         if ( focus ) {
           QStyleOptionFocusRect fropt;
@@ -2439,9 +2541,13 @@ QSize QSvgThemableStyle::sizeFromContents ( ContentsType type, const QStyleOptio
            qstyleoption_cast<const QStyleOptionProgressBar *>(option) )  {
 
         s = sizeFromContents(fm,fs,is,ls,
-                             (opt->textVisible &&
-                              opt->text.isEmpty()) ? "W" : opt->text,
+                             opt->textVisible ?
+                               opt->text.isEmpty() ? "W" : opt->text
+                               : QString::null,
                              QPixmap());
+
+//         if ( orn == Vertical )
+//           s.transpose();
       }
 
       break;
@@ -2519,6 +2625,7 @@ QSize QSvgThemableStyle::sizeFromContents ( ContentsType type, const QStyleOptio
              opt->shape == QTabBar::TriangularWest ||
              opt->shape == QTabBar::RoundedEast ||
              opt->shape == QTabBar::RoundedWest ) {
+          s.transpose();
         }
       }
 
@@ -2604,7 +2711,7 @@ QSize QSvgThemableStyle::sizeFromContents(const QFontMetrics &fm,
   }
 
   // compute width and height of text
-  QSize ts = fm.size(Qt::TextShowMnemonic,text);
+  QSize ts = text.isNull() ? QSize(0,0) : fm.size(Qt::TextShowMnemonic,text);
   int tw = ts.width();
   int th = ts.height();
 
@@ -3012,8 +3119,7 @@ QRect QSvgThemableStyle::subControlRect(ComplexControl control, const QStyleOpti
                qstyleoption_cast<const QStyleOptionToolButton *>(option) ) {
 
             if (opt->features & QStyleOptionToolButton::Menu)
-              ret = r.adjusted(x+w-pixelMetric(PM_MenuButtonIndicator)-fs.right,
-                               fs.top,-fs.right,-fs.bottom);
+              ret = r.adjusted(x+w-pixelMetric(PM_MenuButtonIndicator),0,0,0);
             else if (opt->features & QStyleOptionToolButton::HasMenu)
               ret = QRect(x+w-ls.tispace-ds.size-fs.right,y+h-ds.size-fs.bottom,ds.size,ds.size);
           }

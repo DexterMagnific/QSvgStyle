@@ -1436,6 +1436,8 @@ void ThemeBuilderUI::setupPreviewForWidget(const QListWidgetItem *current)
         widget->setIcon(icon);
         break;
       case 3:
+        widget->setText("This is a flat push button");
+        widget->setFlat(true);
         break;
     }
 

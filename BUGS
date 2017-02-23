@@ -4,10 +4,8 @@ QSvgStyle
 * Capsule drawing is still incorrect : use painter clipping instead of performing capsule related calculation (warning : eval impact on performance ?)
 * Capsule drawing : use specific hsep/vsep element that maintains interior consistency
 
-* fix vertical sliders: sometimes  slider is not centered
 * implement frame for default buttons
 * implement default button indicator for auto default buttons
-* tabs: vertical text
 
 QSvgThemeBuilder
 ----------------
