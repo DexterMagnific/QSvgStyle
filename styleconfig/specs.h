@@ -65,6 +65,16 @@ public:
   }
 };
 
+/** Some defines about widget variants */
+#define VA_SPINBOX_BUTTONS_SIDEBYSIDE 0
+#define VA_SPINBOX_BUTTONS_OPPOSITE   1
+
+#define VA_PROGRESSBAR_BUSY_WRAP 0
+#define VA_PROGRESSBAR_BUSY_BACKANDFORTH 1
+#define VA_PROGRESSBAR_BUSY_FULLLENGTH 2
+#define VA_PROGRESSBAR_BUSY_FULLLENGTH_DIRECTION_FWD 0
+#define VA_PROGRESSBAR_BUSY_FULLLENGTH_DIRECTION_BWD 1
+
 /** Generic information about a theme */
 typedef struct {
   value_t<QString> name;

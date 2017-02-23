@@ -5,10 +5,9 @@ QSvgStyle
 * Capsule drawing : use specific hsep/vsep element that maintains interior consistency
 
 * fix vertical sliders: sometimes  slider is not centered
-* replace static 20 by PM_MenuButtonIndicator
 * implement frame for default buttons
 * implement default button indicator for auto default buttons
-
+* tabs: vertical text
 
 QSvgThemeBuilder
 ----------------

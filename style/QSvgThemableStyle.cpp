@@ -352,18 +352,27 @@ void QSvgThemableStyle::polish(QWidget * widget)
 
   // Remove WA_OpaquePaintEvent from scrollbars to correctly render them
   // when the svg items have non opaque colors
-  if ( qobject_cast< const QScrollBar* >(widget) ) {
-    widget->setAttribute(Qt::WA_OpaquePaintEvent, false);
+  if ( QScrollBar *s = qobject_cast< QScrollBar* >(widget) ) {
+    s->setAttribute(Qt::WA_OpaquePaintEvent, false);
   }
 
   // Install event filter on progress bars to animate them
-  if ( qobject_cast< const QProgressBar* >(widget) ) {
-    widget->installEventFilter(this);
+  if ( QProgressBar *b = qobject_cast< QProgressBar* >(widget) ) {
+    b->installEventFilter(this);
   }
 
   // Enable menu tear off
-  if ( qobject_cast< QMenu* >(widget) ) {
-    (qobject_cast< QMenu* >(widget))->setTearOffEnabled(true);
+  if ( QMenu *m = qobject_cast< QMenu* >(widget) ) {
+    m->setTearOffEnabled(true);
+  }
+
+  // QLineEdit inside a SpinBox of variant VA_SPINBOX_BUTTONS_OPPOSITE : center text
+  if ( QLineEdit *l = qobject_cast< QLineEdit * >(widget) ) {
+    if ( QSpinBox *s = qobject_cast< QSpinBox * >(l->parent()) )
+      if ( s->buttonSymbols() != QAbstractSpinBox::NoButtons )
+        if ( getSpecificValue("specific.spinbox.variant").toInt() ==
+            VA_SPINBOX_BUTTONS_OPPOSITE )
+          l->setAlignment(Qt::AlignHCenter);
   }
 }
 
@@ -583,7 +592,6 @@ void QSvgThemableStyle::drawPrimitive(PrimitiveElement e, const QStyleOption * o
     case PE_FrameFocusRect : {
       // The frame of a focus rectangle, used on focusable widgets
       renderFrame(p,cs2b(cs.bg,pal.button()),r,fs,fs.element+"-focus-normal",dir);
-      qDebug() << "focus" << (widget ? widget->objectName() : "???");
       break;
     }
     case PE_IndicatorBranch : {
@@ -720,12 +728,20 @@ void QSvgThemableStyle::drawPrimitive(PrimitiveElement e, const QStyleOption * o
     }
     case PE_IndicatorSpinUp : {
       // Up spin box indicator
-      renderIndicator(p,r,fs,is,ds,ds.element+"-up-"+st,dir);
+      if ( getSpecificValue("specific.spinbox.variant").toInt() ==
+         VA_SPINBOX_BUTTONS_OPPOSITE )
+        renderIndicator(p,r,fs,is,ds,ds.element+"-right-"+st,dir);
+      else
+        renderIndicator(p,r,fs,is,ds,ds.element+"-up-"+st,dir);
       break;
     }
     case PE_IndicatorSpinDown : {
       // down spin box indicator
-      renderIndicator(p,r,fs,is,ds,ds.element+"-down-"+st,dir);
+      if ( getSpecificValue("specific.spinbox.variant").toInt() ==
+         VA_SPINBOX_BUTTONS_OPPOSITE )
+        renderIndicator(p,r,fs,is,ds,ds.element+"-left-"+st,dir);
+      else
+        renderIndicator(p,r,fs,is,ds,ds.element+"-down-"+st,dir);
       break;
     }
     case PE_IndicatorHeaderArrow : {
@@ -898,7 +914,8 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
 
         if (opt->menuItemType == QStyleOptionMenuItem::Separator)
           // Menu separator
-          renderElement(p,is.element+"-separator",r,20,0);
+          renderElement(p,is.element+"-separator",r,
+                        pixelMetric(PM_ProgressBarChunkWidth,opt,widget),0);
         else if (opt->menuItemType == QStyleOptionMenuItem::TearOff)
           // Menu tear off
           drawControl(CE_MenuTearoff,opt,p,widget);
@@ -1245,6 +1262,8 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
       if ( const QStyleOptionProgressBarV2 *opt =
            qstyleoption_cast<const QStyleOptionProgressBarV2 *>(option) ) {
 
+        // FIXME vertical text
+        // FIXME top to bottom text
         renderLabel(p,cs2b(cs.fg,pal.text()),
                     dir,r,fs,is,ls,
                     opt->textAlignment,opt->text,
@@ -1270,7 +1289,6 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
         is.px = pixelMetric(PM_ProgressBarChunkWidth);
 
         if ( opt->progress >= 0 ) {
-          // FIXME top to bottom text
           // Normal progress bar
           int empty = sliderPositionFromValue(opt->minimum,
                                               opt->maximum,
@@ -1293,60 +1311,111 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
                          dir,
                          orn);
         } else { // busy progressbar
-          QWidget *wd = (QWidget *)widget;
+          int variant = getSpecificValue("specific.progressbar.busy.variant").toInt();
 
+          QWidget *wd = (QWidget *)widget;
           int animcount = progressbars[wd];
           int pm = pixelMetric(PM_ProgressBarChunkWidth);
-          r = r.adjusted(animcount%w,0,0,0);
-          r.setWidth(pm);
-          if ( r.x()+r.width()-1 > x+w-1 ) {
-            // wrap busy indicator
-            int ww = x+w-r.x();
 
-            if ( orn == Horizontal )
-              r = visualRect(dir,orig,r);
+          switch (variant) {
+            case VA_PROGRESSBAR_BUSY_WRAP : {
+              r = r.adjusted(animcount%w,0,0,0);
+              r.setWidth(pm);
+              if ( r.x()+r.width()-1 > x+w-1 ) {
+                // wrap busy indicator
+                int ww = x+w-r.x();
 
-            if ( opt->invertedAppearance )
-              r = visualRect(Qt::RightToLeft,orig,r);
+                if ( orn == Horizontal )
+                  r = visualRect(dir,orig,r);
 
-            p->setClipRect(r.x(),r.y(),ww,r.height());
-            renderInterior(p,cs2b(cs.bg,pal.button()),
-                           (orn != Horizontal) ? transposedRect(r) : r,
-                           fs,is,
-                           is.element+"-elapsed-"+st,
-                           dir,
-                           orn);
-            p->setClipRect(QRect());
+                if ( opt->invertedAppearance )
+                  r = visualRect(Qt::RightToLeft,orig,r);
 
-            r = QRect(orig.x()-ww,orig.y(),pm,h);
+                p->setClipRect(r.x(),r.y(),ww,r.height());
+                renderInterior(p,cs2b(cs.bg,pal.button()),
+                              (orn != Horizontal) ? transposedRect(r) : r,
+                              fs,is,
+                              is.element+"-elapsed-"+st,
+                              dir,
+                              orn);
+                p->setClipRect(QRect());
 
-            if ( orn == Horizontal )
-              r = visualRect(dir,orig,r);
+                r = QRect(orig.x()-ww,orig.y(),pm,h);
 
-            if ( opt->invertedAppearance )
-              r = visualRect(Qt::RightToLeft,orig,r);
+                if ( orn == Horizontal )
+                  r = visualRect(dir,orig,r);
 
-            p->setClipRect(orig.x(),orig.y(),pm,h);
-            renderInterior(p,cs2b(cs.bg,pal.button()),
-                           (orn != Horizontal) ? transposedRect(r) : r,
-                           fs,is,
-                           is.element+"-elapsed-"+st,
-                           dir,
-                           orn);
-            p->setClipRect(QRect());
-          } else {
-            if ( orn == Horizontal )
-              r = visualRect(dir,orig,r);
+                if ( opt->invertedAppearance )
+                  r = visualRect(Qt::RightToLeft,orig,r);
 
-            if ( opt->invertedAppearance )
-              r = visualRect(Qt::RightToLeft,orig,r);
+                p->setClipRect(orig.x(),orig.y(),pm,h);
+                renderInterior(p,cs2b(cs.bg,pal.button()),
+                              (orn != Horizontal) ? transposedRect(r) : r,
+                              fs,is,
+                              is.element+"-elapsed-"+st,
+                              dir,
+                              orn);
+                p->setClipRect(QRect());
+              } else {
+                if ( orn == Horizontal )
+                  r = visualRect(dir,orig,r);
 
-            renderInterior(p,cs2b(cs.bg,pal.button()),
-                           (orn != Horizontal) ? transposedRect(r) : r,
-                           fs,is,
-                           is.element+"-elapsed-"+st,
-                           dir,
-                           orn);
+                if ( opt->invertedAppearance )
+                  r = visualRect(Qt::RightToLeft,orig,r);
+
+                renderInterior(p,cs2b(cs.bg,pal.button()),
+                              (orn != Horizontal) ? transposedRect(r) : r,
+                              fs,is,
+                              is.element+"-elapsed-"+st,
+                              dir,
+                              orn);
+              }
+              break;
+            }
+            case VA_PROGRESSBAR_BUSY_BACKANDFORTH : {
+              r = r.adjusted(animcount%(2*(w-pm)),0,0,0);
+              if ( r.x() > x+w-pm )
+                r.setX(x+2*(w-pm)-r.x());
+              r.setWidth(pm);
+
+              if ( orn == Horizontal )
+                r = visualRect(dir,orig,r);
+
+              if ( opt->invertedAppearance )
+                r = visualRect(Qt::RightToLeft,orig,r);
+
+              renderInterior(p,cs2b(cs.bg,pal.button()),
+                            (orn != Horizontal) ? transposedRect(r) : r,
+                            fs,is,
+                            is.element+"-elapsed-"+st,
+                            dir,
+                            orn);
+              break;
+            }
+            case VA_PROGRESSBAR_BUSY_FULLLENGTH :
+            default: {
+              int ni = animcount%pm;
+              if ( getSpecificValue("specific.progressbar.busy.full.variant").toInt() ==
+                   VA_PROGRESSBAR_BUSY_FULLLENGTH_DIRECTION_FWD )
+                ni = pm-ni;
+              r.adjust(-ni,0,w+ni,0);
+
+              if ( orn == Horizontal )
+                r = visualRect(dir,orig,r);
+
+              if ( opt->invertedAppearance )
+                r = visualRect(Qt::RightToLeft,orig,r);
+
+              p->setClipRect(orig);
+              renderInterior(p,cs2b(cs.bg,pal.button()),
+                            (orn != Horizontal) ? transposedRect(r) : r,
+                            fs,is,
+                            is.element+"-elapsed-"+st,
+                            dir,
+                            orn);
+              p->setClipRect(QRect());
+              break;
+            }
           }
         }
       }
@@ -2026,6 +2095,10 @@ int QSvgThemableStyle::pixelMetric(PixelMetric metric, const QStyleOption * opti
     case PM_ExclusiveIndicatorHeight :
       return getSpecificValue("specific.radiocheckbox.indicator.size").toInt();
 
+    // drop down menu + spin box up/down/plus/minus
+    case PM_MenuButtonIndicator :
+      return getSpecificValue("specific.dropdown.size").toInt();
+
     // Custom layout margins
     case PM_LayoutLeftMargin :
       return getSpecificValue("specific.layoutmargins.left").toInt();
@@ -2225,12 +2298,13 @@ QSize QSvgThemableStyle::sizeFromContents ( ContentsType type, const QStyleOptio
 
         s += QSize(4,0); // QLineEdit hard-coded margins
         if ( opt->buttonSymbols != QAbstractSpinBox::NoButtons ) {
-          s += QSize(40,0); // buttons
+          s += QSize(2*pixelMetric(PM_MenuButtonIndicator),0); // buttons
         }
         if ( !opt->frame)
-          s = s.expandedTo(QSize(0,20)); // minimum height
+          s = s.expandedTo(QSize(0,pixelMetric(PM_MenuButtonIndicator))); // minimum height
         else
-          s = s.expandedTo(QSize(fs.left+fs.right,20+fs.top+fs.bottom));
+          s = s.expandedTo(QSize(fs.left+fs.right,
+                                 pixelMetric(PM_MenuButtonIndicator)+fs.top+fs.bottom));
       }
 
       break;
@@ -2252,14 +2326,15 @@ QSize QSvgThemableStyle::sizeFromContents ( ContentsType type, const QStyleOptio
 
         if ( opt->editable )
           s += QSize(4,0); // QLineEdit hard-coded margins
-        s += QSize(20,0); // drop down button;
+        s += QSize(pixelMetric(PM_MenuButtonIndicator),0); // drop down button;
 
         s += QSize(8,0); // QComboBox missing in csz ?
 
         if ( !opt->frame )
           s = s.expandedTo(QSize(0,20)); // minimum height
         else
-          s = s.expandedTo(QSize(fs.left+fs.right,20+fs.top+fs.bottom));
+          s = s.expandedTo(QSize(fs.left+fs.right,
+                                 pixelMetric(PM_MenuButtonIndicator)+fs.top+fs.bottom));
       }
 
       break;
@@ -2419,7 +2494,7 @@ QSize QSvgThemableStyle::sizeFromContents ( ContentsType type, const QStyleOptio
         // add room for simple down arrow or drop down arrow
         if (opt->features & QStyleOptionToolButton::Menu) {
           // Tool button with drop down button
-          s.rwidth() += 20;
+          s.rwidth() += pixelMetric(PM_MenuButtonIndicator);
         } else if (opt->features & QStyleOptionToolButton::HasMenu) {
           // Tool button with down arrow
           s.rwidth() += 2*ls.tispace+ds.size;
@@ -2682,6 +2757,9 @@ QRect QSvgThemableStyle::subControlRect(ComplexControl control, const QStyleOpti
       // OK
       const QStyleOptionSpinBox *opt =
         qstyleoption_cast<const QStyleOptionSpinBox *>(option);
+
+      int variant = getSpecificValue("specific.spinbox.variant").toInt();
+
       if ( !opt->frame )
         fs.hasFrame = false;
 
@@ -2695,18 +2773,50 @@ QRect QSvgThemableStyle::subControlRect(ComplexControl control, const QStyleOpti
 
           if ( opt->buttonSymbols == QAbstractSpinBox::NoButtons )
             ret = r;
-          else
-            ret = r.adjusted(0,0,-40,0);
+          else {
+            switch(variant) {
+              case VA_SPINBOX_BUTTONS_SIDEBYSIDE :
+                ret = r.adjusted(0,0,-2*pixelMetric(PM_MenuButtonIndicator),0);
+                break;
+              case VA_SPINBOX_BUTTONS_OPPOSITE :
+                ret = r.adjusted(pixelMetric(PM_MenuButtonIndicator),0,
+                                 -pixelMetric(PM_MenuButtonIndicator),0);
+                break;
+              default:
+                break;
+            }
+          }
           break;
         case SC_SpinBoxUp :
             r = interiorRect(option->rect, fs,is);
             r.getRect(&x,&y,&w,&h);
-            ret = QRect(x+w-20,y,20,h);
+            switch(variant) {
+              case VA_SPINBOX_BUTTONS_SIDEBYSIDE :
+                ret = QRect(x+w-pixelMetric(PM_MenuButtonIndicator),
+                        y,pixelMetric(PM_MenuButtonIndicator),h);
+                break;
+              case VA_SPINBOX_BUTTONS_OPPOSITE :
+                ret = QRect(x+w-pixelMetric(PM_MenuButtonIndicator),
+                        y,pixelMetric(PM_MenuButtonIndicator),h);
+                break;
+              default:
+                break;
+            }
           break;
         case SC_SpinBoxDown :
             r = interiorRect(option->rect, fs,is);
             r.getRect(&x,&y,&w,&h);
-            ret = QRect(x+w-40,y,20,h);
+            switch(variant) {
+              case VA_SPINBOX_BUTTONS_SIDEBYSIDE :
+                ret = QRect(x+w-2*pixelMetric(PM_MenuButtonIndicator),y,
+                        pixelMetric(PM_MenuButtonIndicator),h);
+                break;
+              case VA_SPINBOX_BUTTONS_OPPOSITE :
+                ret = QRect(x,y,pixelMetric(PM_MenuButtonIndicator),h);
+                break;
+              default:
+                break;
+            }
           break;
         default :
           ret = QCommonStyle::subControlRect(control,option,subControl,widget);
@@ -2728,12 +2838,13 @@ QRect QSvgThemableStyle::subControlRect(ComplexControl control, const QStyleOpti
         case SC_ComboBoxEditField :
           r = interiorRect(r,fs,is);
           r.getRect(&x,&y,&w,&h);
-          ret = r.adjusted(0,0,-20,0);
+          ret = r.adjusted(0,0,-pixelMetric(PM_MenuButtonIndicator),0);
           break;
         case SC_ComboBoxArrow :
           r = interiorRect(r,fs,is);
           r.getRect(&x,&y,&w,&h);
-          ret = QRect(x+w-20,y,20,h);
+          ret = QRect(x+w-pixelMetric(PM_MenuButtonIndicator),y,
+                      pixelMetric(PM_MenuButtonIndicator),h);
           break;
         case SC_ComboBoxListBoxPopup :
           ret = r;
@@ -2890,7 +3001,7 @@ QRect QSvgThemableStyle::subControlRect(ComplexControl control, const QStyleOpti
 
             // remove room for drop down buttons or down arrows
             if (opt->features & QStyleOptionToolButton::Menu)
-              ret = r.adjusted(0,0,-20,0);
+              ret = r.adjusted(0,0,-pixelMetric(PM_MenuButtonIndicator),0);
             else if (opt->features & QStyleOptionToolButton::HasMenu)
               ret = r.adjusted(0,0,-ds.size-2*ls.tispace,0);
           }
@@ -2901,7 +3012,8 @@ QRect QSvgThemableStyle::subControlRect(ComplexControl control, const QStyleOpti
                qstyleoption_cast<const QStyleOptionToolButton *>(option) ) {
 
             if (opt->features & QStyleOptionToolButton::Menu)
-              ret = r.adjusted(x+w-20-fs.right,fs.top,-fs.right,-fs.bottom);
+              ret = r.adjusted(x+w-pixelMetric(PM_MenuButtonIndicator)-fs.right,
+                               fs.top,-fs.right,-fs.bottom);
             else if (opt->features & QStyleOptionToolButton::HasMenu)
               ret = QRect(x+w-ls.tispace-ds.size-fs.right,y+h-ds.size-fs.bottom,ds.size,ds.size);
           }

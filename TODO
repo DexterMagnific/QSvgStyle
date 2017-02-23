@@ -1,20 +1,16 @@
 QSvgStyle
 ---------
 * Rework animation framework
-* Switch from SVG to custom format (smaller, faster). Keep ability to export
-  to SVG
+* enable caching of config values
 
-* progressbars: add busy progressbar types option
-  improve busy indicator drawing when wrapping
 * scrollbars: add pgup/pgdown buttons option
-
-* spin box: add variants
 
 QSvgThemeBuilder
 ----------------
 * add magnifier tool
 * add measure tool/tracer
+* add quick svg frame/interior generator+ability to copy/paste from Inkscape
 
 QSvgThemeManager
 ----------------
-
+* switch to QtPropertyBrowser
