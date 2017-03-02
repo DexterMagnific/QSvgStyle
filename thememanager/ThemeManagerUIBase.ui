@@ -155,7 +155,7 @@
              </sizepolicy>
             </property>
             <property name="text">
-             <string>theme des&amp;cr</string>
+             <string>the&amp;me descr</string>
             </property>
             <property name="buddy">
              <cstring>themeCombo</cstring>
@@ -823,6 +823,14 @@
           </property>
           <property name="flags">
            <set>ItemIsSelectable|ItemIsEditable|ItemIsUserCheckable|ItemIsEnabled</set>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Ticks offset</string>
+          </property>
+          <property name="text">
+           <string>specific.slider.ticks.offset</string>
           </property>
          </item>
         </item>

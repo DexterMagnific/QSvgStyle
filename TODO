@@ -4,6 +4,7 @@ QSvgStyle
 * enable caching of config values
 
 * scrollbars: add pgup/pgdown buttons option
+* lineedit : minimum width should be sufficient to show placeholder text
 
 QSvgThemeBuilder
 ----------------

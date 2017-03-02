@@ -63,6 +63,7 @@
 #include <QMenu>
 #include <QListView>
 #include <QSpinBox>
+#include <QDial>
 
 #include "NewThemeUI.h"
 #include "ThemeConfig.h"
@@ -151,12 +152,12 @@ ThemeBuilderUI::ThemeBuilderUI(QWidget* parent)
   i->setText("Slider");
   i->setData(GroupRole,CC_group(QStyle::CC_Slider));
 
-//   QIcon icon9;
-//   icon9.addFile(QString::fromUtf8(":/icon/pixmaps/dial.png"), QSize(), QIcon::Normal, QIcon::Off);
-//   i = new QListWidgetItem(inputList);
-//   i->setIcon(icon9);
-//   i->setText("Dial");
-//   i->setData(GroupRole,CC_group(QStyle::CC_Dial));
+  QIcon icon9;
+  icon9.addFile(QString::fromUtf8(":/icon/pixmaps/dial.png"), QSize(), QIcon::Normal, QIcon::Off);
+  i = new QListWidgetItem(inputList);
+  i->setIcon(icon9);
+  i->setText("Dial");
+  i->setData(GroupRole,CC_group(QStyle::CC_Dial));
 
   QIcon icon10;
   icon10.addFile(QString::fromUtf8(":/icon/pixmaps/progress.png"), QSize(), QIcon::Normal, QIcon::Off);
@@ -1420,7 +1421,7 @@ void ThemeBuilderUI::setupPreviewForWidget(const QListWidgetItem *current)
 
   // Push button
   if ( group == CE_group(QStyle::CE_PushButton) ) {
-    variants = 4;
+    variants = 5;
 
     QPushButton *widget = new QPushButton();
 
@@ -1438,6 +1439,12 @@ void ThemeBuilderUI::setupPreviewForWidget(const QListWidgetItem *current)
       case 3:
         widget->setText("This is a flat push button");
         widget->setFlat(true);
+        break;
+      case 4:
+        widget->setText("This one has a menu");
+        QMenu *m = new QMenu("popup menu",widget);
+        m->addAction("menu item");
+        widget->setMenu(m);
         break;
     }
 
@@ -1640,7 +1647,7 @@ void ThemeBuilderUI::setupPreviewForWidget(const QListWidgetItem *current)
   }
 
   if ( group == PE_group(QStyle::PE_FrameLineEdit) ) {
-    variants = 2;
+    variants = 5;
 
     QLineEdit *widget = new QLineEdit();
     widget->setText("This is a line edit");
@@ -1652,6 +1659,16 @@ void ThemeBuilderUI::setupPreviewForWidget(const QListWidgetItem *current)
         break;
       case 1:
         widget->setFrame(false);
+        break;
+      case 2:
+        widget->setClearButtonEnabled(true);
+        break;
+      case 3:
+        widget->setText("Read Only");
+        widget->setReadOnly(true);
+        break;
+      case 4:
+        widget->setEchoMode(QLineEdit::PasswordEchoOnEdit);
         break;
     }
 
@@ -1706,7 +1723,7 @@ void ThemeBuilderUI::setupPreviewForWidget(const QListWidgetItem *current)
   }
 
   if ( group == CC_group(QStyle::CC_Slider) ) {
-    variants = 2;
+    variants = 4;
 
     QSlider *widget = new QSlider();
 
@@ -1716,6 +1733,31 @@ void ThemeBuilderUI::setupPreviewForWidget(const QListWidgetItem *current)
         break;
       case 1:
         widget->setOrientation(Qt::Vertical);
+        break;
+      case 2:
+        widget->setOrientation(Qt::Horizontal);
+        widget->setTickPosition(QSlider::TicksBothSides);
+        break;
+      case 3:
+        widget->setOrientation(Qt::Vertical);
+        widget->setTickPosition(QSlider::TicksBothSides);
+        break;
+    }
+
+    previewWidget = widget;
+    qsz = widget->sizePolicy();
+  }
+
+  if ( group == CC_group(QStyle::CC_Dial) ) {
+    variants = 2;
+
+    QDial *widget = new QDial();
+
+    switch (currentPreviewVariant % variants) {
+      case 0:
+        break;
+      case 1:
+        widget->setNotchesVisible(true);
         break;
     }
 
@@ -1727,7 +1769,7 @@ void ThemeBuilderUI::setupPreviewForWidget(const QListWidgetItem *current)
     variants = 4;
 
     QProgressBar *widget = new QProgressBar();
-    widget->setTextVisible(true);
+    widget->setTextVisible(false);
 
     switch (currentPreviewVariant % variants) {
       case 0:
@@ -1738,11 +1780,13 @@ void ThemeBuilderUI::setupPreviewForWidget(const QListWidgetItem *current)
       case 2:
         widget->setRange(0,100);
         widget->setValue(25);
+        widget->setTextVisible(true);
         break;
       case 3:
         widget->setOrientation(Qt::Vertical);
         widget->setRange(0,100);
         widget->setValue(25);
+        widget->setTextVisible(true);
         break;
     }
 

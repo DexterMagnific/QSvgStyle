@@ -1,11 +1,21 @@
 QSvgStyle
 ---------
-* fix knob drawing
 * Capsule drawing is still incorrect : use painter clipping instead of performing capsule related calculation (warning : eval impact on performance ?)
 * Capsule drawing : use specific hsep/vsep element that maintains interior consistency
 
 * implement frame for default buttons
 * implement default button indicator for auto default buttons
+* slider full part in vertical mode: not centered
+  (same for empty part when controls are inverted)
+  (groove seems 1 pixel wider than expected)
+* view items: size does not take into account label margins
+
+Qt limitations
+--------------
+* Toolboxes: QToolBox does not ask the style for a size (sizeFromContents()),
+  as such glitches will appear when the toolbox tab frame width is > 2
+* Frames of types HLine and VLine: height/width is hardcoded to 3
+
 
 QSvgThemeBuilder
 ----------------

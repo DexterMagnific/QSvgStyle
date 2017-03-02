@@ -157,6 +157,7 @@ QString CT_group(QStyle::ContentsType type)
     case QStyle::CT_TabWidget : return "TabWidget";
     case QStyle::CT_HeaderSection : return "Header";
     case QStyle::CT_GroupBox : return "GroupBox";
+    case QStyle::CT_ItemViewItem : return "ViewItem";
     default: return QString();
   }
 

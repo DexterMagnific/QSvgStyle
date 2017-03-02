@@ -41,6 +41,7 @@
 #include <QDebug>
 #include <QMatrix>
 #include <QtAlgorithms>
+#include <QtMath>
 
 #include <QSpinBox>
 #include <QToolButton>
@@ -322,6 +323,7 @@ bool QSvgThemableStyle::isContainerWidget(const QWidget * widget) const
     widget->inherits("QDesktopWidget") ||
     widget->inherits("QToolBar") ||
     // Ok this one is not a container widget but we want to treat it as such
+    // because it has its own groove
     widget->inherits("QProgressBar") ||
     (QString(widget->metaObject()->className()) == "QWidget")
   ));
@@ -553,6 +555,7 @@ void QSvgThemableStyle::drawPrimitive(PrimitiveElement e, const QStyleOption * o
         : "disabled";
       if ( option->state & State_On )
         st = "checked-"+st;
+      fs.hasFrame = false;
       renderIndicator(p,r,fs,is,ds,ds.element+"-"+st,dir);
       break;
     }
@@ -569,6 +572,7 @@ void QSvgThemableStyle::drawPrimitive(PrimitiveElement e, const QStyleOption * o
         st = "checked-"+st;
       else if ( option->state & State_NoChange )
         st = "tristate-"+st;
+      fs.hasFrame = false;
       renderIndicator(p,r,fs,is,ds,ds.element+"-"+st,dir);
       break;
     }
@@ -650,7 +654,13 @@ void QSvgThemableStyle::drawPrimitive(PrimitiveElement e, const QStyleOption * o
     }
     case PE_FrameDockWidget : {
       // Frame for "detached" dock widgets
-      renderFrame(p,cs2b(cs.bg,pal.button()),r,fs,fs.element+"-"+st,dir);
+      if ( const QStyleOptionFrame *opt =
+        qstyleoption_cast<const QStyleOptionFrame *>(option) ) {
+        if ( opt->lineWidth ) {
+          renderFrame(p,cs2b(cs.bg,pal.button()),r,fs,fs.element+"-"+st,dir);
+          renderInterior(p,cs2b(cs.bg,pal.button()),r,fs,is,is.element+"-"+st,dir);
+        }
+      }
       break;
     }
     case PE_FrameStatusBarItem : {
@@ -1068,6 +1078,9 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
       if ( const QStyleOptionButton *opt =
            qstyleoption_cast<const QStyleOptionButton *>(option) ) {
 
+        if ( opt->state & State_MouseOver )
+          renderInterior(p,cs2b(cs.bg,pal.button()),r,fs,is,is.element+"-"+st,dir);
+
         renderLabel(p,cs2b(cs.fg,pal.text()),
                     dir,r,fs,is,ls,
                     Qt::AlignLeft | Qt::AlignVCenter | Qt::TextShowMnemonic,
@@ -1080,6 +1093,9 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
     case CE_CheckBoxLabel : {
       if ( const QStyleOptionButton *opt =
           qstyleoption_cast<const QStyleOptionButton *>(option) ) {
+
+        if ( opt->state & State_MouseOver )
+          renderInterior(p,cs2b(cs.bg,pal.button()),r,fs,is,is.element+"-"+st,dir);
 
         renderLabel(p,cs2b(cs.fg,pal.text()),
                     dir,r,fs,is,ls,
@@ -1200,7 +1216,6 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
       if ( const QStyleOptionTab *opt =
            qstyleoption_cast<const QStyleOptionTab *>(option) ) {
 
-        // TODO move transform code to renderLabel()
         if ( opt->shape == QTabBar::TriangularEast ||
              opt->shape == QTabBar::RoundedEast ||
              opt->shape == QTabBar::TriangularWest ||
@@ -1311,7 +1326,6 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
       if ( const QStyleOptionProgressBarV2 *opt =
            qstyleoption_cast<const QStyleOptionProgressBarV2 *>(option) ) {
 
-        // TODO move transform code to renderLabel()
         if ( orn == Vertical ) {
           p->save();
           int newX = w+x;
@@ -1704,10 +1718,21 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
 
         renderFrame(p,cs2b(cs.bg,pal.button()),r,fs,fs.element+"-"+st,dir);
         renderInterior(p,cs2b(cs.bg,pal.button()),r,fs,is,is.element+"-"+st,dir);
+
+        if ( opt->verticalTitleBar ) {
+          p->save();
+          r = transposedRect(r);
+          p->translate(r.left(), r.top() + r.width());
+          p->rotate(-90);
+          p->translate(-r.left(), -r.top());
+        }
         renderLabel(p,cs2b(cs.fg,pal.text()),
                     dir,r,fs,is,ls,
                     Qt::AlignLeft | Qt::AlignVCenter | Qt::TextShowMnemonic,
                     opt->title);
+        if ( opt->verticalTitleBar ) {
+          p->restore();
+        }
       }
 
       break;
@@ -2025,8 +2050,9 @@ void QSvgThemableStyle::drawComplexControl(ComplexControl control, const QStyleO
         o.state &= ~State_Sunken;
         st = state_str(o.state,widget);
 
-        QRect empty = subControlRect(CC_Slider,opt,SC_SliderGroove,widget);
-        QRect full = subControlRect(CC_Slider,opt,SC_SliderGroove,widget);
+        QRect groove = subControlRect(CC_Slider,opt,SC_SliderGroove,widget);
+        QRect empty = groove;
+        QRect full = empty;
         QRect slider = subControlRect(CC_Slider,opt,SC_SliderHandle,widget);
 
         // Groove
@@ -2091,10 +2117,69 @@ void QSvgThemableStyle::drawComplexControl(ComplexControl control, const QStyleO
 
         renderInterior(p,cs2b(cs.bg,pal.button()),full,fs,is,is.element+"-elapsed-"+st,dir,orn);
 
+        // ticks
+        o.state &= ~(State_MouseOver | State_Sunken);
+        st = state_str(o.state,widget);
+        if ( opt->subControls & QStyle::SC_SliderTickmarks ) {
+          int interval = opt->tickInterval;
+          int range = orn == Horizontal ? groove.width() : groove.height();
+          if ( interval <= 0 ) {
+            interval = opt->singleStep;
+            // make ticks not too close to each other
+            if (sliderPositionFromValue(opt->minimum,opt->maximum, interval, range)
+                - sliderPositionFromValue(opt->minimum,opt->maximum,0,range) < 3)
+              interval = opt->pageStep;
+          }
+          if ( !interval )
+            interval = 3;
+
+          // draw
+          int tickOffset = pixelMetric(PM_SliderTickmarkOffset, opt, widget);
+          int tickPos = opt->tickPosition;
+
+          int val = opt->minimum;
+          int pos;
+          while ( val <= opt->maximum+1 ) {
+            pos = sliderPositionFromValue(opt->minimum,opt->maximum,
+                                          val, range);
+
+            if ( orn == Horizontal ) {
+              if ( tickPos & QSlider::TicksBelow ) {
+                renderElement(p,is.element+"-htick-"+st,
+                              QRect(groove.x()+pos,groove.y()+groove.height()+tickOffset,
+                                    1,3)
+                              );
+              }
+              if ( tickPos & QSlider::TicksAbove ) {
+                renderElement(p,is.element+"-htick-"+st,
+                              QRect(groove.x()+pos,groove.y()-tickOffset-3,
+                                    1,3)
+                              );
+              }
+            } else {
+              if ( tickPos & QSlider::TicksRight ) {
+                renderElement(p,is.element+"-vtick-"+st,
+                              QRect(groove.x()+groove.width()+tickOffset,groove.y()+pos,
+                                    3,1)
+                              );
+              }
+              if ( tickPos & QSlider::TicksLeft ) {
+                renderElement(p,is.element+"-vtick-"+st,
+                              QRect(groove.x()-tickOffset-3,groove.y()+pos,
+                                    3,1)
+                              );
+              }
+            }
+
+            val += interval;
+          }
+        }
+
         // cursor
         o.state = option->state;
         st = state_str(o.state,widget);
         fs.hasFrame = false;
+        fs.hasCapsule = false;
         o.rect = subControlRect(CC_Slider,opt,SC_SliderHandle,widget);
         renderInterior(p,cs2b(cs.bg,pal.button()),o.rect,fs,is,is.element+"-cursor-"+st,dir,orn);
       }
@@ -2102,21 +2187,70 @@ void QSvgThemableStyle::drawComplexControl(ComplexControl control, const QStyleO
       break;
     }
 
-    case CC_Dial : { // FIXME
+    case CC_Dial : {
       const QStyleOptionSlider *opt =
           qstyleoption_cast<const QStyleOptionSlider *>(option);
 
       if (opt) {
         QStyleOptionSlider o(*opt);
 
-        QRect empty(squaredRect(subControlRect(CC_Dial,opt,SC_DialGroove,widget)));
-        QRect full(squaredRect(subControlRect(CC_Dial,opt,SC_DialHandle,widget)));
+        // QDials have vertical orientation which is wrong for us
+        orn = Horizontal;
 
-        renderElement(p,"dial-empty",empty);
-            p->save();
-            p->setClipRect(full);
-        renderElement(p,"dial-full",empty);
-            p->restore();
+        QRect groove = squaredRect(subControlRect(CC_Dial,opt,SC_DialGroove,widget));
+        o.rect = groove;
+        renderInterior(p,cs2b(cs.bg,pal.button()),o.rect,fs,is,is.element+"-"+st,dir,orn);
+
+        // TODO make configurable
+        qreal startAngle = -60;
+        qreal endAngle = 230;
+
+        // tick marks
+        if ( opt->subControls & QStyle::SC_DialTickmarks ) {
+          o.state &= ~(State_MouseOver | State_Sunken);
+          st = state_str(o.state,widget);
+
+          // clip tickmarks in the startAngle..endAngle pie
+//           QPainterPath clip;
+//           clip.addPolygon(QPolygonF()
+//             << groove.center()
+//             << QPointF(x,y+h/2+qAbs(qSin(qDegreesToRadians(startAngle)))*w/2)
+//             << QPointF(x,y)
+//             << QPointF(x+w-1,y)
+//             << QPointF(x+w-1,y+h/2+qAbs(qSin(qDegreesToRadians(endAngle)))*w/2)
+//             << groove.center()
+//           );
+//           qDebug() << "sin start" << qSin(qDegreesToRadians(startAngle));
+//           qDebug() << "sin end" << qSin(qDegreesToRadians(endAngle));
+//           qDebug() << clip;
+//           p->drawPath(clip);
+//           p->save();
+//           p->setClipPath(clip);
+          renderInterior(p,cs2b(cs.bg,pal.button()),o.rect,fs,is,is.element+"-ticks-"+st,dir,orn);
+//           p->restore();
+        }
+
+        // handle
+        const qreal range = endAngle-startAngle;
+        qreal pos = sliderPositionFromValue(opt->minimum,opt->maximum,
+                                            opt->sliderValue, range,
+                                            !opt->upsideDown);
+        qreal angle = startAngle+pos;
+         if ( dir == Qt::LeftToRight )
+           angle = 180+startAngle+pos; // 0° at 9 o'clock
+         else
+           angle = 180-(startAngle+pos);  // we want CCW rotations in RTL
+
+        o.rect = QRect(-groove.width()/2,-groove.height()/2,
+                       groove.width(),groove.height());
+        o.state = opt->state;
+        st = state_str(o.state,widget);
+
+        p->save();
+        p->translate(QPoint(groove.center().x(),groove.center().y()));
+        p->rotate(angle);
+        renderInterior(p,cs2b(cs.bg,pal.button()),o.rect,fs,is,is.element+"-handle-"+st,dir,orn);
+        p->restore();
       }
 
       break;
@@ -2281,6 +2415,19 @@ int QSvgThemableStyle::pixelMetric(PixelMetric metric, const QStyleOption * opti
     case PM_SliderLength :
     case PM_SliderControlThickness :
       return getSpecificValue("specific.slider.cursor.size").toInt();
+    case PM_SliderTickmarkOffset :
+      return getSpecificValue("specific.slider.ticks.offset").toInt();
+    case PM_SliderSpaceAvailable:
+      if (const QStyleOptionSlider *opt =
+          qstyleoption_cast<const QStyleOptionSlider *>(option)) {
+          if ( opt->orientation == Qt::Horizontal )
+              return opt->rect.width()-pixelMetric(PM_SliderLength, opt, widget);
+          else
+              return opt->rect.height()-pixelMetric(PM_SliderLength, opt, widget);
+      } else {
+          return 0;
+      }
+      break;
 
     case PM_ProgressBarChunkWidth :
       return getSpecificValue("specific.progressbar.chunk.width").toInt();
@@ -2297,15 +2444,38 @@ int QSvgThemableStyle::pixelMetric(PixelMetric metric, const QStyleOption * opti
     case PM_MenuPanelWidth :
       return getFrameSpec(PE_group(PE_FrameMenu)).width;
 
-    case PM_DockWidgetFrameWidth :
-      return getFrameSpec(PE_group(PE_FrameDockWidget)).width;
-
     case PM_ToolTipLabelFrameWidth :
       return getFrameSpec(PE_group(PE_PanelTipLabel)).width;
 
-    case PM_DockWidgetTitleMargin :
+    case PM_DockWidgetTitleMargin : {
       // NOTE used by QDockWidgetLayout to compute title size
-      return getLabelSpec(CE_group(CE_DockWidgetTitle)).margin;
+      int ret = 0;
+      ret += getLabelSpec(CE_group(CE_DockWidgetTitle)).margin;
+      // TODO make configurable whether title has frame in non floating docks
+      if ( const QDockWidget *w =
+        qobject_cast<const QDockWidget *>(widget)) {
+        Q_UNUSED(w);
+        //if ( w->isFloating() )
+          ret += getFrameSpec(CE_group(CE_DockWidgetTitle)).width;
+      }
+      return ret;
+    }
+    break;
+    case PM_DockWidgetFrameWidth :
+      /// NOTE Only used for floatable docks
+      return getFrameSpec(PE_group(PE_FrameDockWidget)).width;
+    case PM_DockWidgetTitleBarButtonMargin : {
+      // NOTE Dock widget button "margins" are used in their sizeHint() calculation
+      // CHEAT: they must include both the label margins and the frame size
+      // since their sizeHint() does not take into account frame size
+      int ret = 0;
+      if ( styleHint(QStyle::SH_DockWidget_ButtonsHaveFrame, 0, widget) )
+        ret += getFrameSpec(CC_group(CC_ToolButton)).width;
+      ret += getLabelSpec(CC_group(CC_ToolButton)).margin;
+      ret *= 2; // HACK why ? sizeHint() already has it
+      return ret;
+    }
+    break;
 
     case PM_TextCursorWidth : return 1;
 
@@ -2433,7 +2603,7 @@ QSize QSvgThemableStyle::sizeFromContents ( ContentsType type, const QStyleOptio
         s += QSize(8,0); // QComboBox missing in csz ?
 
         if ( !opt->frame )
-          s = s.expandedTo(QSize(0,20)); // minimum height
+          s = s.expandedTo(QSize(0,pixelMetric(PM_MenuButtonIndicator))); // minimum height
         else
           s = s.expandedTo(QSize(fs.left+fs.right,
                                  pixelMetric(PM_MenuButtonIndicator)+fs.top+fs.bottom));
@@ -2546,8 +2716,8 @@ QSize QSvgThemableStyle::sizeFromContents ( ContentsType type, const QStyleOptio
                                : QString::null,
                              QPixmap());
 
-//         if ( orn == Vertical )
-//           s.transpose();
+        if ( opt->orientation == Qt::Vertical )
+          s.transpose();
       }
 
       break;
@@ -2647,9 +2817,9 @@ QSize QSvgThemableStyle::sizeFromContents ( ContentsType type, const QStyleOptio
 
     case CT_Slider : {
       if (option->state & State_Horizontal)
-        s = QSize(csw,pixelMetric(PM_SliderControlThickness,option,widget)+2); // +2 for frame
+        s = QSize(csw,pixelMetric(PM_SliderControlThickness,option,widget)+1);
       else
-        s = QSize(pixelMetric(PM_SliderControlThickness,option,widget)+2,csh);
+        s = QSize(pixelMetric(PM_SliderLength,option,widget)+1,csh);
 
       break;
     }
@@ -2668,6 +2838,22 @@ QSize QSvgThemableStyle::sizeFromContents ( ContentsType type, const QStyleOptio
                   csz.height()+s.height()+fs.top+fs.bottom);
       }
 
+      break;
+    }
+
+    case CT_ItemViewItem :  {
+      if ( const QStyleOptionViewItemV4 *opt =
+           qstyleoption_cast<const QStyleOptionViewItemV4 *>(option) ) {
+
+        s = sizeFromContents(fm,fs,is,ls,
+                             opt->text,
+                             opt->icon.pixmap(pixelMetric(PM_SmallIconSize)));
+
+        if ( opt->features & QStyleOptionViewItemV4::HasCheckIndicator ) {
+          s += QSize(pixelMetric(PM_CheckBoxLabelSpacing)+pixelMetric(PM_IndicatorWidth),0);
+        }
+        s = s.expandedTo(QSize(pixelMetric(PM_IndicatorWidth),pixelMetric(PM_IndicatorHeight))); // minimal checkbox size is size of indicator
+      }
       break;
     }
 
@@ -2702,18 +2888,23 @@ QSize QSvgThemableStyle::sizeFromContents(const QFontMetrics &fm,
     s.rheight() += fs.top+fs.bottom;
   }
 
-  s.rwidth() += 2*ls.hmargin;
-  s.rheight() += 2*ls.vmargin;
-
-  if (ls.hasShadow) {
-    s.rwidth() += ls.xshift+ls.depth;
-    s.rheight() += ls.yshift+ls.depth;
+  int th = 0, tw = 0;
+  if ( !text.isNull() || !icon.isNull() ) {
+    s.rwidth() += 2*ls.hmargin;
+    s.rheight() += 2*ls.vmargin;
   }
 
-  // compute width and height of text
-  QSize ts = text.isNull() ? QSize(0,0) : fm.size(Qt::TextShowMnemonic,text);
-  int tw = ts.width();
-  int th = ts.height();
+  if ( !text.isNull() ) {
+    if (ls.hasShadow) {
+      s.rwidth() += ls.xshift+ls.depth;
+      s.rheight() += ls.yshift+ls.depth;
+    }
+
+    // compute width and height of text
+    QSize ts = text.isNull() ? QSize(0,0) : fm.size(Qt::TextShowMnemonic,text);
+    tw = ts.width();
+    th = ts.height();
+  }
 
   if (tialign == Qt::ToolButtonIconOnly) {
     s.rwidth() += icon.width();
@@ -2728,6 +2919,12 @@ QSize QSvgThemableStyle::sizeFromContents(const QFontMetrics &fm,
     s.rwidth() += qMax(icon.width(),tw);
     s.rheight() += icon.height() + (icon.isNull() ? 0 : ls.tispace) + th;
   }
+
+  // minimum size : frame + 2 pixels of interior
+  if ( fs.hasFrame )
+    s = s.expandedTo(QSize(fs.top+fs.bottom+2,fs.left+fs.right+2));
+  else
+    s = s.expandedTo(QSize(2,2));
 
   return s;
 }
@@ -2807,6 +3004,14 @@ QRect QSvgThemableStyle::subElementRect(SubElement e, const QStyleOption * optio
     case SE_HeaderArrow : {
       ret = labelRect(r,fs,is,ls);
       ret = ret.adjusted(ret.width()-ds.size-ls.tispace,0,0,0);
+      break;
+    }
+    case SE_CheckBoxFocusRect : {
+      ret = subElementRect(SE_CheckBoxContents,option,widget);
+      break;
+    }
+    case SE_RadioButtonFocusRect : {
+      ret = subElementRect(SE_RadioButtonContents,option,widget);
       break;
     }
 
@@ -2963,6 +3168,7 @@ QRect QSvgThemableStyle::subControlRect(ComplexControl control, const QStyleOpti
     }
 
     case CC_ScrollBar : {
+      // OK
       const int extent = pixelMetric(PM_ScrollBarExtent,option,widget);
       if (option->state & State_Horizontal)
         switch (subControl) {
@@ -3060,33 +3266,40 @@ QRect QSvgThemableStyle::subControlRect(ComplexControl control, const QStyleOpti
 
     case CC_Slider : {
       // OK
-      const int thick = pixelMetric(PM_SliderThickness,option,widget);
+      const int avail = pixelMetric(PM_SliderSpaceAvailable,option,widget);
+      const int thickness = pixelMetric(PM_SliderThickness, option, widget);
       const bool horiz = (option->state & State_Horizontal);
       switch (subControl) {
         case SC_SliderGroove :
           if (horiz)
-            ret = QRect(x,y+(h-thick)/2,w,thick);
+            ret = alignedRect(option->direction, Qt::AlignCenter,
+              QSize(avail,thickness), r);
           else
-            ret = QRect(x+(w-thick)/2,y,thick,h);
+            ret = alignedRect(option->direction, Qt::AlignCenter,
+              QSize(thickness,avail), r);
           break;
         case SC_SliderHandle : {
           if ( const QStyleOptionSlider *opt =
                qstyleoption_cast<const QStyleOptionSlider *>(option) ) {
 
+            const int handleWidth = pixelMetric(PM_SliderLength, option, widget);
+            const int handleHeight = pixelMetric(PM_SliderControlThickness, option, widget);
+
             subControlRect(CC_Slider,option,SC_SliderGroove,widget).getRect(&x,&y,&w,&h);
 
-            const int len = pixelMetric(PM_SliderLength, option, widget);
-            const int thickness = pixelMetric(PM_SliderControlThickness, option, widget);
+
             const int sliderPos(sliderPositionFromValue(opt->minimum,
                                                         opt->maximum,
                                                         opt->sliderPosition,
-                                                        (horiz ? w : h) - len,
+                                                        horiz ? w : h,
                                                         opt->upsideDown));
 
             if (horiz)
-              ret = QRect(x+sliderPos,y+(h-thickness)/2,len,thickness);
+              ret = QRect(x+sliderPos-handleWidth/2,y+(h-handleHeight)/2,
+                          handleWidth,handleHeight);
             else
-              ret = QRect(x+(w-len)/2,y+sliderPos,thickness,len);
+              ret = QRect(x+(w-handleHeight)/2,y+sliderPos-handleHeight/2,
+                          handleHeight,handleWidth);
           }
 
           break;
@@ -3177,6 +3390,19 @@ QRect QSvgThemableStyle::subControlRect(ComplexControl control, const QStyleOpti
           break;
         }
 
+        default : ret = QCommonStyle::subControlRect(control,option,subControl,widget);
+      }
+
+      break;
+    }
+
+    case CC_Dial: {
+      switch (subControl) {
+        case SC_DialGroove : {
+          ret = alignedRect(Qt::LeftToRight,Qt::AlignCenter,
+                            QSize(qMin(w,h),qMin(w,h)),r);
+          break;
+        }
         default : ret = QCommonStyle::subControlRect(control,option,subControl,widget);
       }
 
@@ -3327,7 +3553,7 @@ QIcon QSvgThemableStyle::standardIconImplementation ( QStyle::StandardPixmap sta
 }
 
 QRect QSvgThemableStyle::squaredRect(const QRect& r) const {
-  int e = (r.width() > r.height()) ? r.height() : r.width();
+  int e = qMin(r.height(),r.width());
   return QRect(r.x(),r.y(),e,e);
 }
 

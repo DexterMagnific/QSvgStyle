@@ -973,7 +973,11 @@
          </spacer>
         </item>
         <item row="7" column="2">
-         <widget class="QLineEdit" name="interiorEdit"/>
+         <widget class="QLineEdit" name="interiorEdit">
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
+         </widget>
         </item>
         <item row="19" column="2">
          <widget class="QComboBox" name="indicatorIdCombo">
