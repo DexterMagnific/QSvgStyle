@@ -1888,11 +1888,23 @@ void ThemeBuilderUI::setupPreviewForWidget(const QListWidgetItem *current)
   }
 
   if ( group == CE_group(QStyle::CE_DockWidgetTitle) ) {
-    variants = 1;
+    variants = 2;
 
     QDockWidget *widget = new QDockWidget();
     widget->setWidget(new QLabel("contents", widget));
     widget->setWindowTitle("This is a dock widget");
+    widget->setFeatures(widget->features()
+      | QDockWidget::DockWidgetClosable
+      | QDockWidget::DockWidgetMovable
+      | QDockWidget::DockWidgetFloatable);
+
+    switch (currentPreviewVariant % variants) {
+      case 0:
+        break;
+      case 1:
+        widget->setFeatures(widget->features() | QDockWidget::DockWidgetVerticalTitleBar);
+        break;
+    }
 
     previewWidget = widget;
     qsz = widget->sizePolicy();

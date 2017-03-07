@@ -267,10 +267,13 @@ class QSvgThemableStyle : public QCommonStyle {
     void capsulePosition(const QWidget *widget, bool &capsule, int &h, int &v) const;
 
     /**
-     * Helper function that computers the 9 rects of a frame
+     * Helper function that computes the 9 rects of a frame
      * NOTE: if @ref orn is @ref Vertical, returned results
      * are for the transposed @ref bounds. Drawing routines like @ref renderFrame
      * will manage to apply appriopriate rotations when drawing
+     * NOTE: This function considers a Left to Right layout.
+     * Appropriate transformations will be done in @ref renderFrame function
+     * when drawing
      */
     void computeFrameRects(/* element bounds */ const QRect &bounds,
                            /* frame spec */ const frame_spec_t &fs,
@@ -286,7 +289,8 @@ class QSvgThemableStyle : public QCommonStyle {
                            QRect &bottomright) const;
 
     /**
-     * Helper function that computes the interior rect
+     * Helper function that computes the interior rect. The same notes
+     * as for @ref computeFrameRects apply
      */
     void computeInteriorRect(/* element bounds */ const QRect &bounds,
                              /* frame spec */ frame_spec_t fs,
@@ -378,12 +382,14 @@ class QSvgThemableStyle : public QCommonStyle {
      * Returns a QRect for drawing the interior inside the given @ref bounds
      * with regards to the frame spec @ref f
      * QSvgStyle draws interiors immediately after the frame with no margins
+     * @warning this is a convenience function and returns the interior rect
+     * assuming a horizontal LTR widget
      */
     QRect interiorRect(const QRect &bounds,
                        frame_spec_t fs,
                        interior_spec_t is) const {
       QRect r;
-      computeInteriorRect(bounds,fs,is,Horizontal, r);
+      computeInteriorRect(bounds,fs,is, Horizontal, r);
       return r;
     }
     /**

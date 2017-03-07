@@ -654,12 +654,14 @@ void QSvgThemableStyle::drawPrimitive(PrimitiveElement e, const QStyleOption * o
     }
     case PE_FrameDockWidget : {
       // Frame for "detached" dock widgets
-      if ( const QStyleOptionFrame *opt =
-        qstyleoption_cast<const QStyleOptionFrame *>(option) ) {
-        if ( opt->lineWidth ) {
-          renderFrame(p,cs2b(cs.bg,pal.button()),r,fs,fs.element+"-"+st,dir);
-          renderInterior(p,cs2b(cs.bg,pal.button()),r,fs,is,is.element+"-"+st,dir);
-        }
+      if ( const QStyleOptionDockWidget *opt =
+        qstyleoption_cast<const QStyleOptionDockWidget *>(option) ) {
+        if ( opt->verticalTitleBar )
+          orn = Vertical;
+        else
+          orn = Horizontal;
+        renderFrame(p,cs2b(cs.bg,pal.button()),r,fs,fs.element+"-"+st,dir,orn);
+        renderInterior(p,cs2b(cs.bg,pal.button()),r,fs,is,is.element+"-"+st,dir,orn);
       }
       break;
     }
@@ -1150,6 +1152,14 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
         fs.hasCapsule = true;
         int capsule = 2;
 
+        if ( (opt->shape == QTabBar::RoundedNorth) ||
+             (opt->shape == QTabBar::TriangularNorth) ||
+             (opt->shape == QTabBar::RoundedSouth) ||
+             (opt->shape == QTabBar::TriangularSouth) )
+          orn = Horizontal;
+        else
+          orn = Vertical;
+
         if (opt->position == QStyleOptionTab::Beginning)
           capsule = -1;
         else if (opt->position == QStyleOptionTab::Middle)
@@ -1159,48 +1169,46 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
         else if (opt->position == QStyleOptionTab::OnlyOneTab)
           capsule = 2;
 
+        if ( (orn == Vertical) && (dir == Qt::RightToLeft) ) {
+          // TabWidget bug :
+          // In vertical position with RTL layout, the tabs do not
+          // swap positions (first is always at top, last always at
+          // bottom), contrary to horizontal RTL
+          // given the flip done by render* functions, this won't give
+          // the expected result
+          // so cheat on the capsule
+          if ( (capsule == -1) || (capsule == 1) )
+            capsule = -capsule;
+        }
+
+        fs.capsuleH = capsule;
+
         if ( (opt->shape == QTabBar::RoundedNorth) ||
              (opt->shape == QTabBar::TriangularNorth)
         ) {
-          orn = Horizontal;
-          fs.capsuleH = capsule;
           fs.capsuleV = -1;
         }
 
         if ( (opt->shape == QTabBar::RoundedSouth) ||
              (opt->shape == QTabBar::TriangularSouth)
         ) {
-          orn = Horizontal;
-          fs.capsuleH = capsule;
           fs.capsuleV = 1;
         }
 
         if ( (opt->shape == QTabBar::RoundedWest) ||
              (opt->shape == QTabBar::TriangularWest)
         ) {
-          orn = Vertical;
-          fs.capsuleV = capsule;
-          // RTL layout won't make West transformed into East, so
-          // cheat on the capsule
-          if ( dir == Qt::LeftToRight )
-            fs.capsuleH = -1;
-          else
-            fs.capsuleH = 1;
+          fs.capsuleV = 1;
         }
 
         if ( (opt->shape == QTabBar::RoundedEast) ||
              (opt->shape == QTabBar::TriangularEast)
         ) {
-          orn = Vertical;
-          fs.capsuleV = capsule;
-          if ( dir == Qt::LeftToRight )
-            fs.capsuleH = 1;
-          else
-            fs.capsuleH = -1;
+          fs.capsuleV = -1;
         }
 
-        renderInterior(p,cs2b(cs.bg,pal.button()),r,fs,is,is.element+"-"+st,dir);
-        renderFrame(p,cs2b(cs.bg,pal.button()),r,fs,fs.element+"-"+st,dir);
+        renderInterior(p,cs2b(cs.bg,pal.button()),r,fs,is,is.element+"-"+st,dir,orn);
+        renderFrame(p,cs2b(cs.bg,pal.button()),r,fs,fs.element+"-"+st,dir,orn);
 
         if ( focus ) {
           QStyleOptionFocusRect fropt;
@@ -1245,7 +1253,7 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
                     fs,is,ls,
                     Qt::AlignLeft | Qt::AlignVCenter| Qt::TextShowMnemonic,
                     opt->text,
-                    opt->icon.pixmap(pixelMetric(PM_TabBarIconSize),icm,ics));
+                    opt->icon.pixmap(opt->iconSize,icm,ics));
 
         if ( opt->shape == QTabBar::TriangularEast ||
              opt->shape == QTabBar::RoundedEast ||
@@ -1318,6 +1326,7 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
     case CE_ProgressBarGroove : {
       // "background" of a progress bar
       renderFrame(p,cs2b(cs.bg,pal.window()),r,fs,fs.element+"-"+st,dir,orn);
+      renderInterior(p,cs2b(cs.bg,pal.window()),r,fs,is,is.element+"-"+st,dir,orn);
 
       break;
     }
@@ -1396,7 +1405,7 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
 
           QWidget *wd = (QWidget *)widget;
           int animcount = progressbars[wd];
-          int pm = pixelMetric(PM_ProgressBarChunkWidth);
+          int pm = pixelMetric(PM_ProgressBarChunkWidth)+fs.left+fs.right;
 
           switch (variant) {
             case VA_PROGRESSBAR_BUSY_WRAP : {
@@ -1599,8 +1608,8 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
     }
 
     case CE_ToolBar : {
-      renderFrame(p,cs2b(cs.bg,pal.button()),option->rect,fs,fs.element+"-"+st,dir);
-      renderInterior(p,cs2b(cs.bg,pal.button()),option->rect,fs,is,is.element+"-"+st,dir);
+      renderFrame(p,cs2b(cs.bg,pal.button()),option->rect,fs,fs.element+"-"+st,dir,orn);
+      renderInterior(p,cs2b(cs.bg,pal.button()),option->rect,fs,is,is.element+"-"+st,dir,orn);
       break;
     }
 
@@ -1716,8 +1725,13 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
       if ( const QStyleOptionDockWidget *opt =
            qstyleoption_cast<const QStyleOptionDockWidget *>(option) ) {
 
-        renderFrame(p,cs2b(cs.bg,pal.button()),r,fs,fs.element+"-"+st,dir);
-        renderInterior(p,cs2b(cs.bg,pal.button()),r,fs,is,is.element+"-"+st,dir);
+        if ( opt->verticalTitleBar )
+          orn = Vertical;
+        else
+          orn = Horizontal;
+
+        renderFrame(p,cs2b(cs.bg,pal.button()),r,fs,fs.element+"-"+st,dir,orn);
+        renderInterior(p,cs2b(cs.bg,pal.button()),r,fs,is,is.element+"-"+st,dir,orn);
 
         if ( opt->verticalTitleBar ) {
           p->save();
@@ -2785,10 +2799,10 @@ QSize QSvgThemableStyle::sizeFromContents ( ContentsType type, const QStyleOptio
 
         s = sizeFromContents(fm,fs,is,ls,
                              opt->text,
-                             opt->icon.pixmap(pixelMetric(PM_ToolBarIconSize)));
+                             opt->icon.pixmap(opt->iconSize));
 
         if ( qobject_cast< const QTabBar* >(widget)->tabsClosable() ) {
-            s.rwidth() += ls.tispace+pixelMetric(PM_SmallIconSize);
+            s.rwidth() += ls.tispace+opt->iconSize.width();
         }
 
         if ( opt->shape == QTabBar::TriangularEast ||
@@ -3013,6 +3027,10 @@ QRect QSvgThemableStyle::subElementRect(SubElement e, const QStyleOption * optio
     case SE_RadioButtonFocusRect : {
       ret = subElementRect(SE_RadioButtonContents,option,widget);
       break;
+    }
+
+    case SE_TabBarTabText : {
+      ret = labelRect(r,fs,is,ls);
     }
 
     default :
@@ -3635,6 +3653,12 @@ void QSvgThemableStyle::computeFrameRects(const QRect& bounds,
   // drawing rect
   QRect r = bounds;
 
+  top = bottom = left = right = topleft = topright = bottomleft = bottomright
+    = QRect();
+
+  if ( !fs.hasFrame )
+    return;
+
   if ( orn != Horizontal ) {
     // Vertical orientation: perform calculations on "horizontalized"
     // rect
@@ -3740,7 +3764,9 @@ void QSvgThemableStyle::renderFrame(QPainter *p,
   // rects to draw frame parts
   QRect top, bottom, left, right, topleft, topright, bottomleft, bottomright;
 
-  computeFrameRects(bounds,fs,orn, top,bottom,left,right,topleft,topright,bottomleft,bottomright);
+  computeFrameRects(bounds,fs,orn,
+                    top,bottom,left,right,
+                    topleft,topright,bottomleft,bottomright);
 
   if ( !topright.isNull() )
     topright.adjust(0,0,1,1);
@@ -3806,13 +3832,20 @@ void QSvgThemableStyle::renderFrame(QPainter *p,
 
   if ( dir == Qt::RightToLeft ) {
     p->save();
-    p->scale(-1.0,1.0);
-    p->translate(-2*x0-w,0);
+    if ( orn == Horizontal ) {
+      p->scale(-1.0,1.0);
+      p->translate(-2*x0-w,0);
+    } else {
+      p->scale(1.0,-1.0);
+      p->translate(0,-2*y0-h);
+    }
   }
 
   if ( orn == Vertical ) {
     p->save();
-    p->setMatrix(QMatrix(0,1,1,0,0,0));
+    p->scale(-1.0,1.0);
+    p->translate(-2*x0-w,0);
+    p->setMatrix(QMatrix(0,1,1,0,0,0),true);
   }
 
   // Render !
@@ -3903,47 +3936,22 @@ void QSvgThemableStyle::computeInteriorRect(const QRect& bounds,
   // drawing rect
   r = bounds;
 
-  if ( orn != Horizontal ) {
-    // Vertical orientation: perform calculations on "horizontalized"
-    // rect
-    r = transposedRect(r);
-  }
+  // work on horizontalized rect
+  if ( orn != Horizontal )
+    r = transposedRect(bounds);
 
-  if (fs.hasFrame)
-    r.adjust(fs.left,fs.top,-fs.right,-fs.bottom);
+  QRect top, bottom, left, right, topleft, topright, bottomleft, bottomright;
 
-  if ( r.width() < 0 )
+  computeFrameRects(bounds,fs,orn, top,bottom,left,right,
+                    topleft,topright,bottomleft,bottomright);
+
+  QMargins m(left.width(),top.height(),right.width(),bottom.height());
+
+  r = r.marginsRemoved(m);
+
+  if ( !r.isValid() ) {
     r.setWidth(0);
-  if ( r.height() < 0 )
     r.setHeight(0);
-
-  int x0,y0,w,h;
-  r.getRect(&x0,&y0,&w,&h);
-
-  if (fs.hasCapsule) {
-    // add these to compensate the absence of the frame
-    int left = 0, right = 0, top = 0, bottom = 0;
-    if (fs.capsuleH == 0) {
-      left = fs.left;
-      right = fs.right;
-    }
-    if (fs.capsuleH == -1) {
-      right = fs.right;
-    }
-    if (fs.capsuleH == 1) {
-      left = fs.left;
-    }
-    if (fs.capsuleV == 0) {
-      top = fs.top;
-      bottom = fs.bottom;
-    }
-    if (fs.capsuleV == -1) {
-      bottom = fs.bottom;
-    }
-    if (fs.capsuleV == 1) {
-      top = fs.top;
-    }
-    r.adjust(-left,-top,right,bottom);
   }
 }
 
@@ -3974,13 +3982,20 @@ void QSvgThemableStyle::renderInterior(QPainter *p,
 
   if ( dir == Qt::RightToLeft ) {
     p->save();
-    p->scale(-1.0,1.0);
-    p->translate(-2*x0-w,0);
+    if ( orn == Horizontal ) {
+      p->scale(-1.0,1.0);
+      p->translate(-2*x0-w,0);
+    } else {
+      p->scale(1.0,-1.0);
+      p->translate(0,-2*y0-h);
+    }
   }
 
   if ( orn == Vertical ) {
     p->save();
-    p->setMatrix(QMatrix(0,1,1,0,0,0));
+    p->scale(-1.0,1.0);
+    p->translate(-2*x0-w,0);
+    p->setMatrix(QMatrix(0,1,1,0,0,0),true);
   }
 
   // Render !

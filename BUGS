@@ -9,6 +9,7 @@ QSvgStyle
   (same for empty part when controls are inverted)
   (groove seems 1 pixel wider than expected)
 * view items: size does not take into account label margins
+* tab bar close button overlaps frame (thick frames)
 
 Qt limitations
 --------------
