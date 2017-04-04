@@ -7,7 +7,7 @@ TARGET = qsvgthemebuilder
 DESTDIR = bin
 TEMPLATE = app
 
-QT += core gui
+QT += core gui xml
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 INCLUDEPATH += . ../styleconfig ../thirdparty/svgcleaner
@@ -21,17 +21,20 @@ LIBS += \
   ../thirdparty/svgcleaner/lib/libsvgcleaner-cli.a
 
 HEADERS += \
+  SvgGen.h \
   ThemeBuilderUI.h \
-  NewThemeUI.h
+  NewThemeUI.h \
 
 SOURCES += \
   main.cpp \
+  SvgGen.cpp \
   ThemeBuilderUI.cpp \
   NewThemeUI.cpp
 
 FORMS += \
   ThemeBuilderUIBase.ui \
-  NewThemeUIBase.ui
+  NewThemeUIBase.ui \
+  SvgGenFrameUIBase.ui
 
 RESOURCES += \
   ThemeBuilderUIBase.qrc

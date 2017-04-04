@@ -45,6 +45,7 @@
 #include <QPainter>
 #include <QPen>
 #include <QPixmap>
+#include <QGraphicsScene>
 
 // Includes for preview
 #include <QPushButton>
@@ -69,6 +70,7 @@
 #include "ThemeConfig.h"
 #include "PaletteConfig.h"
 #include "StyleConfig.h"
+#include "SvgGen.h"
 #include "../style/QSvgThemableStyle.h"
 #include "groups.h"
 
@@ -84,7 +86,7 @@ ThemeBuilderUI::ThemeBuilderUI(QWidget* parent)
    currentDrawStackItem(0), currentDrawMode(0), currentPreviewVariant(0),
    cfgModified(0), previewUpdateEnabled(false),
    timer(0), timer2(0), newThemeDlg(0),
-   svgWatcher(this)
+   svgWatcher(this), svgGen(NULL)
 {
   qDebug() << "Current style:" << QApplication::style()->metaObject()->className();
 
@@ -285,6 +287,18 @@ ThemeBuilderUI::ThemeBuilderUI(QWidget* parent)
 
   toolBox->setSizePolicy(QSizePolicy::Fixed,QSizePolicy::Expanding);
 
+  // Adjust gen tool box size
+  // Shitty QToolBox in fact renders its pages inside a QScrollArea
+  // whose sizeHint is clipped to 36*h,24*h, h=fontMetrics().height()
+  maxW = 0;
+  int j;
+  for (j=0; j<genToolbox->count(); j++) {
+    maxW = qMax(maxW,genToolbox->widget(j)->sizeHint().width());
+  }
+  maxW += 10;
+
+  //genToolbox->setFixedWidth(maxW);
+
   // also populate inherit combo box
   foreach(QListWidgetItem *i, buttonList->findItems("*",Qt::MatchWildcard)) {
     inheritCombo->addItem(i->icon(),i->text(),i->data(GroupRole));
@@ -376,6 +390,13 @@ ThemeBuilderUI::ThemeBuilderUI(QWidget* parent)
   // install event filter on previewArea so that we can react to resize and
   // close events and save its geometry
   tabWidget3->installEventFilter(this);
+
+  // SVG Quick generator
+  QGraphicsScene *scene = new QGraphicsScene();
+  genSvgView->setScene(scene);
+  //genSvgView->setRenderHints(QPainter::Antialiasing);
+//  genSvgView->scale(1.5,1.5);
+  svgGen = new SvgGen(scene, this);
 
   // connections
   // main buttons
@@ -472,6 +493,21 @@ ThemeBuilderUI::ThemeBuilderUI(QWidget* parent)
   connect(paletteCombo,SIGNAL(currentIndexChanged(int)),
           this,SLOT(slot_paletteChanged(int)));
 
+  // SVG quick gen tab
+  connect(genFrameBtn,SIGNAL(clicked(bool)),
+          this,SLOT(slot_genFrameBtnClicked(bool)));
+  connect(genInteriorBtn,SIGNAL(clicked(bool)),
+          this,SLOT(slot_genInteriorBtnClicked(bool)));
+  connect(genRoundBtn,SIGNAL(clicked(bool)),
+          this,SLOT(slot_genRoundBtnClicked(bool)));
+  connect(genSplitBtn,SIGNAL(clicked(bool)),
+          this,SLOT(slot_genSplitBtnClicked(bool)));
+  connect(genFrameWidthSpin,SIGNAL(valueChanged(int)),
+          this,SLOT(slot_genFrameWidthChanged(int)));
+  connect(genInteriorRoundnessSpin,SIGNAL(valueChanged(qreal)),
+          this,SLOT(slot_genInteriorRoundnessChanged(qreal)));
+  connect(genSquareBtn,SIGNAL(clicked(bool)),
+          this,SLOT(slot_genSquareBtnClicked(bool)));
 
   // style callbacks
   if ( style ) {
@@ -547,7 +583,9 @@ ThemeBuilderUI::ThemeBuilderUI(QWidget* parent)
     << "--remove-corel-elts"
     << "--remove-msvisio-elts"
     << "--remove-sketch-elts"
-    << "--remove-invisible-elts"
+    // NOTE do not set, invisible elements are used to give larger bounding boxes
+    // to elements than the contents of drawings (e.g. margins)
+    ///<< "--remove-invisible-elts"
     << "--remove-empty-containers"
     << "--remove-duplicated-defs"
     << "--remove-gaussian-blur=0"
@@ -575,8 +613,6 @@ ThemeBuilderUI::ThemeBuilderUI(QWidget* parent)
   Keys.parseOptions(options);
 
   // TESTING remove me in release
-  //aboutFrame->hide();
-  //toolBox->setEnabled(true);
   // TESTING end
 
   // set minimal and sufficient window size
@@ -2266,6 +2302,82 @@ void ThemeBuilderUI::slot_descrEditChanged(const QString& text)
   Q_UNUSED(text);
 
   schedulePreviewUpdate();
+}
+
+void ThemeBuilderUI::slot_genFrameBtnClicked(bool checked)
+{
+  svgGen->setHasFrame(checked);
+  genFramePage->setEnabled(checked);
+}
+
+void ThemeBuilderUI::slot_genInteriorBtnClicked(bool checked)
+{
+  svgGen->setHasInterior(checked);
+  genInteriorPage->setEnabled(checked);
+}
+
+void ThemeBuilderUI::slot_genRoundBtnClicked(bool checked)
+{
+  svgGen->setRoundMode(checked);
+}
+
+void ThemeBuilderUI::slot_genSplitBtnClicked(bool checked)
+{
+  svgGen->setSplitMode(checked);
+}
+
+void ThemeBuilderUI::slot_genFrameWidthChanged(int val)
+{
+  svgGen->setFrameWidth(val);
+
+  int n = sbFrameWidthsSpins.count();
+  if ( n == val )
+    return;
+
+  if ( val > n ) {
+    QGridLayout *l = qobject_cast<QGridLayout *> (genSubFrameWidthsScrollContents->layout());
+    if ( !l )
+      return;
+
+    while ( n++ < val ) {
+      QDoubleSpinBox *w = new QDoubleSpinBox(genSubFrameWidthsScrollContents);
+      l->addWidget(w,n-1,0);
+      w->setValue(svgGen->subFrameWidth(n-1));
+      w->setMinimum(0.1f);
+      sbFrameWidthsSpins.append(w);
+      w->show();
+
+      connect(w,SIGNAL(valueChanged(qreal)),
+              this,SLOT(slot_genSubFrameWidthChanged(qreal)));
+    }
+  } else {
+    while ( n-- > val ) {
+      QDoubleSpinBox *w = sbFrameWidthsSpins.takeLast();
+      delete w;
+    }
+  }
+}
+
+void ThemeBuilderUI::slot_genSubFrameWidthChanged(qreal val)
+{
+  QDoubleSpinBox *w = qobject_cast<QDoubleSpinBox *>(sender());
+  int n = sbFrameWidthsSpins.indexOf(w);
+  if ( n < 0 )
+    return;
+  svgGen->setSubFrameWidth(n, val);
+}
+
+void ThemeBuilderUI::slot_genInteriorRoundnessChanged(qreal val)
+{
+  svgGen->setRoundness(val);
+}
+
+void ThemeBuilderUI::slot_genSquareBtnClicked(bool checked)
+{
+  if ( checked )
+    svgGen->setSize(QSizeF(100,100));
+  else
+    svgGen->setSize(QSizeF(200,100));
 }
 
 void ThemeBuilderUI::slot_inheritCbChanged(int state)

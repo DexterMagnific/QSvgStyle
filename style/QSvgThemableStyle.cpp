@@ -56,6 +56,7 @@
 #include <QDockWidget>
 #include <QScrollBar>
 #include <QTreeWidget>
+#include <QToolBox>
 
 #include "ThemeConfig.h"
 #include "PaletteConfig.h"
@@ -376,6 +377,11 @@ void QSvgThemableStyle::polish(QWidget * widget)
             VA_SPINBOX_BUTTONS_OPPOSITE )
           l->setAlignment(Qt::AlignHCenter);
   }
+
+  // QToolBox: set background role to Window as in Tab Widgets
+  if ( QToolBox *t = qobject_cast< QToolBox * >(widget) ) {
+    t->setBackgroundRole(QPalette::Window);
+  }
 }
 
 void QSvgThemableStyle::unpolish(QWidget * widget)
@@ -457,6 +463,7 @@ void QSvgThemableStyle::drawPrimitive(PrimitiveElement e, const QStyleOption * o
   QPalette pal = option->palette;
   QPalette::ColorGroup cg = en ? QPalette::Normal : QPalette::Disabled;
   pal.setCurrentColorGroup(cg);
+  QPalette::ColorRole brole = widget ? widget->backgroundRole() : QPalette::NoRole;
 
   Q_UNUSED(focus);
   Q_UNUSED(orn);
@@ -542,8 +549,8 @@ void QSvgThemableStyle::drawPrimitive(PrimitiveElement e, const QStyleOption * o
     }
     case PE_PanelTipLabel : {
       // frame and interior for tool tips
-      renderFrame(p,cs2b(cs.bg,pal.toolTipBase()),r,fs,fs.element+"-"+st,dir);
-      renderInterior(p,cs2b(cs.bg,pal.toolTipBase()),r,fs,is,is.element+"-"+st,dir);
+      renderFrame(p,cs2b(cs.bg,pal.brush(brole)),r,fs,fs.element+"-"+st,dir);
+      renderInterior(p,cs2b(cs.bg,pal.brush(brole)),r,fs,is,is.element+"-"+st,dir);
       break;
     }
     case PE_IndicatorRadioButton : {
@@ -595,7 +602,7 @@ void QSvgThemableStyle::drawPrimitive(PrimitiveElement e, const QStyleOption * o
     }
     case PE_FrameFocusRect : {
       // The frame of a focus rectangle, used on focusable widgets
-      renderFrame(p,cs2b(cs.bg,pal.button()),r,fs,fs.element+"-focus-normal",dir);
+      renderFrame(p,cs2b(cs.bg,pal.brush(brole)),r,fs,fs.element+"-focus-normal",dir);
       break;
     }
     case PE_IndicatorBranch : {
@@ -617,12 +624,12 @@ void QSvgThemableStyle::drawPrimitive(PrimitiveElement e, const QStyleOption * o
 
       st = state_str(o.state,widget);
 
-      renderFrame(p,cs2b(cs.bg,pal.button()),r,fs,fs.element+"-"+st,dir);
+      renderFrame(p,cs2b(cs.bg,pal.brush(brole)),r,fs,fs.element+"-"+st,dir);
       break;
     }
     case PE_FrameWindow : {
       // Frame for windows
-      renderFrame(p,cs2b(cs.bg,pal.window()),r,fs,fs.element+"-"+st,dir);
+      renderFrame(p,cs2b(cs.bg,pal.brush(brole)),r,fs,fs.element+"-"+st,dir);
       break;
     }
     case PE_FrameTabBarBase : {
@@ -639,15 +646,15 @@ void QSvgThemableStyle::drawPrimitive(PrimitiveElement e, const QStyleOption * o
         st = state_str(o.state,widget);
 
         if ( opt->state & State_Sunken )
-          renderFrame(p,cs2b(cs.bg,pal.window()),r,fs,fs.element+"-sunken-"+st,dir);
+          renderFrame(p,cs2b(cs.bg,pal.brush(brole)),r,fs,fs.element+"-sunken-"+st,dir);
         else
-          renderFrame(p,cs2b(cs.bg,pal.window()),r,fs,fs.element+"-raised-"+st,dir);
+          renderFrame(p,cs2b(cs.bg,pal.brush(brole)),r,fs,fs.element+"-raised-"+st,dir);
 
         if ( !qobject_cast< const QTreeWidget* >(widget) ) {
           if ( opt->state & State_Sunken )
-            renderInterior(p,cs2b(cs.bg,pal.window()),r,fs,is,is.element+"-sunken-"+st,dir);
+            renderInterior(p,cs2b(cs.bg,pal.brush(brole)),r,fs,is,is.element+"-sunken-"+st,dir);
           if ( opt->state & State_Raised )
-            renderInterior(p,cs2b(cs.bg,pal.window()),r,fs,is,is.element+"-raised-"+st,dir);
+            renderInterior(p,cs2b(cs.bg,pal.brush(brole)),r,fs,is,is.element+"-raised-"+st,dir);
         }
       }
       break;
@@ -660,25 +667,25 @@ void QSvgThemableStyle::drawPrimitive(PrimitiveElement e, const QStyleOption * o
           orn = Vertical;
         else
           orn = Horizontal;
-        renderFrame(p,cs2b(cs.bg,pal.button()),r,fs,fs.element+"-"+st,dir,orn);
-        renderInterior(p,cs2b(cs.bg,pal.button()),r,fs,is,is.element+"-"+st,dir,orn);
+        renderFrame(p,cs2b(cs.bg,pal.brush(brole)),r,fs,fs.element+"-"+st,dir,orn);
+        renderInterior(p,cs2b(cs.bg,pal.brush(brole)),r,fs,is,is.element+"-"+st,dir,orn);
       }
       break;
     }
     case PE_FrameStatusBarItem : {
       // Frame for status bar items
-      renderFrame(p,cs2b(cs.bg,pal.button()),r,fs,fs.element+"-"+st,dir);
+      renderFrame(p,cs2b(cs.bg,pal.brush(brole)),r,fs,fs.element+"-"+st,dir);
       break;
     }
     case PE_FrameGroupBox : {
       // Frame and interior for group boxes
-      renderFrame(p,cs2b(cs.bg,pal.button()),r,fs,fs.element+"-"+st,dir);
-      renderInterior(p,cs2b(cs.bg,pal.button()),r,fs,is,is.element+"-"+st,dir);
+      renderFrame(p,cs2b(cs.bg,pal.brush(brole)),r,fs,fs.element+"-"+st,dir);
+      renderInterior(p,cs2b(cs.bg,pal.brush(brole)),r,fs,is,is.element+"-"+st,dir);
       break;
     }
     case PE_FrameTabWidget : {
       // Frame for tab widgets (contents)
-      renderFrame(p,cs2b(cs.bg,pal.button()),r,fs,fs.element+"-raised-"+st,dir);
+      renderFrame(p,cs2b(cs.bg,pal.brush(brole)),r,fs,fs.element+"-raised-"+st,dir);
       break;
     }
     case PE_FrameLineEdit : {
@@ -689,7 +696,7 @@ void QSvgThemableStyle::drawPrimitive(PrimitiveElement e, const QStyleOption * o
       QStyleOption o(*option);
       o.state &= ~(State_Sunken | State_On);
       st = state_str(o.state,widget);
-      renderFrame(p,cs2b(cs.bg,pal.window()),r,fs,fs.element+"-"+st,dir);
+      renderFrame(p,cs2b(cs.bg,pal.base()),r,fs,fs.element+"-"+st,dir);
       break;
     }
     case PE_PanelLineEdit : {
@@ -714,8 +721,8 @@ void QSvgThemableStyle::drawPrimitive(PrimitiveElement e, const QStyleOption * o
     }
     case PE_PanelToolBar : {
       // toolbar frame and interior
-      renderFrame(p,cs2b(cs.bg,pal.button()),r,fs,fs.element+"-"+st,dir);
-      renderInterior(p,cs2b(cs.bg,pal.button()),r,fs,is,is.element+"-"+st,dir);
+      renderFrame(p,cs2b(cs.bg,pal.brush(brole)),r,fs,fs.element+"-"+st,dir);
+      renderInterior(p,cs2b(cs.bg,pal.brush(brole)),r,fs,is,is.element+"-"+st,dir);
       break;
     }
     case PE_IndicatorToolBarHandle : {
@@ -779,7 +786,7 @@ void QSvgThemableStyle::drawPrimitive(PrimitiveElement e, const QStyleOption * o
 
       st = state_str(o.state,widget);
 
-      renderFrame(p,cs2b(cs.bg,pal.button()),r,fs,fs.element+"-"+st,dir);
+      renderFrame(p,cs2b(cs.bg,pal.brush(brole)),r,fs,fs.element+"-"+st,dir);
       break;
     }
     case PE_PanelMenu : {
@@ -835,7 +842,7 @@ void QSvgThemableStyle::drawPrimitive(PrimitiveElement e, const QStyleOption * o
             st = "alt-"+st;
           }
       }
-      renderInterior(p,cs2b(cs.bg,pal.button()),r,fs,is,is.element+"-"+st,dir);
+      renderInterior(p,cs2b(cs.bg,pal.brush(brole)),r,fs,is,is.element+"-"+st,dir);
       break;
     }
     case PE_PanelStatusBar : {
@@ -870,6 +877,7 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
   QPalette pal = option->palette;
   QPalette::ColorGroup cg = en ? QPalette::Normal : QPalette::Disabled;
   pal.setCurrentColorGroup(cg);
+  QPalette::ColorRole brole = widget ? widget->backgroundRole() : QPalette::NoRole;
 
 //   // Get QSvgStyle configuration group used to render this element
   QString g = CE_group(e);
@@ -898,7 +906,7 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
 
   switch (e) {
     case CE_FocusFrame : {
-      qDebug() << "CE_FocusFrame" << (widget ? widget->objectName() : "???");
+      //qDebug() << "CE_FocusFrame" << (widget ? widget->objectName() : "???");
       break;
     }
 
@@ -956,7 +964,7 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
           // NOTE QSvgStyle ignore pressed state
           o.state &= ~State_Sunken;
           st = state_str(o.state,widget);
-          renderInterior(p,cs2b(cs.bg,pal.button()),r,fs,is,is.element+"-"+st,dir);
+          renderInterior(p,cs2b(cs.bg,pal.brush(brole)),r,fs,is,is.element+"-"+st,dir);
 
           QRect rtext = r; // text rect (menu item label+shortcut)
           QRect rcheckmark, rarrow;
@@ -1046,7 +1054,7 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
         fs.hasFrame = false;
         fs.top = fs.bottom = fs.left = fs.right = 0;
 
-        renderInterior(p,cs2b(cs.bg,pal.button()),option->rect,fs,is,is.element+"-"+st,dir);
+        renderInterior(p,cs2b(cs.bg,pal.brush(brole)),option->rect,fs,is,is.element+"-"+st,dir);
         renderLabel(p,cs2b(cs.fg,pal.text()),
                     dir,r,fs,is,ls,
                     Qt::AlignCenter | Qt::AlignVCenter | Qt::TextShowMnemonic,
@@ -1058,7 +1066,7 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
 
     case CE_MenuBarEmptyArea : {
       // Menu bar interior
-      renderInterior(p,cs2b(cs.bg,pal.button()),r,fs,is,is.element+"-"+st,dir);
+      renderInterior(p,cs2b(cs.bg,pal.brush(brole)),r,fs,is,is.element+"-"+st,dir);
       break;
     }
 
@@ -1081,7 +1089,7 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
            qstyleoption_cast<const QStyleOptionButton *>(option) ) {
 
         if ( opt->state & State_MouseOver )
-          renderInterior(p,cs2b(cs.bg,pal.button()),r,fs,is,is.element+"-"+st,dir);
+          renderInterior(p,cs2b(cs.bg,pal.brush(brole)),r,fs,is,is.element+"-"+st,dir);
 
         renderLabel(p,cs2b(cs.fg,pal.text()),
                     dir,r,fs,is,ls,
@@ -1097,7 +1105,7 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
           qstyleoption_cast<const QStyleOptionButton *>(option) ) {
 
         if ( opt->state & State_MouseOver )
-          renderInterior(p,cs2b(cs.bg,pal.button()),r,fs,is,is.element+"-"+st,dir);
+          renderInterior(p,cs2b(cs.bg,pal.brush(brole)),r,fs,is,is.element+"-"+st,dir);
 
         renderLabel(p,cs2b(cs.fg,pal.text()),
                     dir,r,fs,is,ls,
@@ -1140,14 +1148,12 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
 
         QStyleOptionTab o(*opt);
 
-//         if ( o.state & State_Sunken ) {
-//           // Remove "pressed" state and replace it by "toggled" state
-//           o.state &= ~State_Sunken;
-//           o.state |= State_On;
-//           st = state_str(o.state,widget);
-//         }
-
-        //qDebug() << st;
+        if ( o.state & State_Sunken ) {
+          // Remove "pressed" state and replace it by "toggled" state
+          o.state &= ~State_Sunken;
+          o.state |= State_On;
+          st = state_str(o.state,widget);
+        }
 
         fs.hasCapsule = true;
         int capsule = 2;
@@ -1207,6 +1213,31 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
           fs.capsuleV = -1;
         }
 
+        // In order to colorize tabs, look up the tab widget contents
+        // and apply its palette to the tab
+        // That's the way Qt Designer applies palettes to individual tabs
+        if ( const QTabBar *tb = qobject_cast<const QTabBar *>(widget) ) {
+          // From tab tar
+          if ( const QTabWidget *tw = qobject_cast<const QTabWidget *>(tb->parent()) ) {
+            // to parent tab widget
+            int i;
+            for (i=0; i<tb->count(); i++) {
+              if ( tb->tabText(i) == opt->text ) {
+                // compare tab texts to determine tab index as QStyleOptionTab
+                // does not suppy it. Assume that tabs have different names
+                // which is a good heuristic in real apps
+                QWidget *contents = tw->widget(i);
+                if ( contents ) {
+                  pal = contents->palette();
+                  pal.setCurrentColorGroup(cg);
+                  brole = contents->backgroundRole();
+                }
+                break;
+              }
+            }
+          }
+        }
+
         renderInterior(p,cs2b(cs.bg,pal.button()),r,fs,is,is.element+"-"+st,dir,orn);
         renderFrame(p,cs2b(cs.bg,pal.button()),r,fs,fs.element+"-"+st,dir,orn);
 
@@ -1247,6 +1278,32 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
            * tabs with RTL layouts */
           dir = Qt::LeftToRight;
         }
+
+        // In order to colorize tabs, look up the tab widget contents
+        // and apply its palette to the tab
+        // That's the way Qt Designer applies palettes to individual tabs
+        if ( const QTabBar *tb = qobject_cast<const QTabBar *>(widget) ) {
+          // From tab tar
+          if ( const QTabWidget *tw = qobject_cast<const QTabWidget *>(tb->parent()) ) {
+            // to parent tab widget
+            int i;
+            for (i=0; i<tb->count(); i++) {
+              if ( tb->tabText(i) == opt->text ) {
+                // compare tab texts to determine tab index as QStyleOptionTab
+                // does not suppy it. Assume that tabs have different names
+                // which is a good heuristic in real apps
+                QWidget *contents = tw->widget(i);
+                if ( contents ) {
+                  pal = contents->palette();
+                  pal.setCurrentColorGroup(cg);
+                  brole = contents->backgroundRole();
+                }
+                break;
+              }
+            }
+          }
+        }
+
         renderLabel(p,cs2b(cs.fg,pal.text()),
                     dir,
                     r,
@@ -1274,8 +1331,33 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
     }
 
     case CE_ToolBoxTabShape : {
-      renderFrame(p,cs2b(cs.bg,pal.button()),option->rect,fs,fs.element+"-"+st,dir);
-      renderInterior(p,cs2b(cs.bg,pal.button()),option->rect,fs,is,is.element+"-"+st,dir);
+      // In order to colorize tabs, look up the tool box widget contents
+      // and apply its palette to the tab
+      if ( const QStyleOptionToolBox *opt =
+           qstyleoption_cast<const QStyleOptionToolBox *>(option) ) {
+
+        if ( const QToolBox *tb = qobject_cast<const QToolBox *>(widget) ) {
+          int i;
+          for (i=0; i<tb->count(); i++) {
+            if ( tb->itemText(i) == opt->text ) {
+              // compare tab texts to determine tab index as QStyleOptionTab
+              // does not suppy it. Assume that tabs have different names
+              // which is a good heuristic in real apps
+              QWidget *contents = tb->widget(i);
+              if ( contents ) {
+                pal = contents->palette();
+                cg = contents->isEnabled() ? QPalette::Normal : QPalette::Disabled;
+                pal.setCurrentColorGroup(cg);
+                brole = contents->backgroundRole();
+              }
+              break;
+            }
+          }
+        }
+
+        renderFrame(p,cs2b(cs.bg,pal.button()),option->rect,fs,fs.element+"-"+st,dir);
+        renderInterior(p,cs2b(cs.bg,pal.button()),option->rect,fs,is,is.element+"-"+st,dir);
+      }
 
       break;
     }
@@ -1283,6 +1365,25 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
     case CE_ToolBoxTabLabel : {
       if ( const QStyleOptionToolBox *opt =
            qstyleoption_cast<const QStyleOptionToolBox *>(option) ) {
+
+        if ( const QToolBox *tb = qobject_cast<const QToolBox *>(widget) ) {
+          int i;
+          for (i=0; i<tb->count(); i++) {
+            if ( tb->itemText(i) == opt->text ) {
+              // compare tab texts to determine tab index as QStyleOptionTab
+              // does not suppy it. Assume that tabs have different names
+              // which is a good heuristic in real apps
+              QWidget *contents = tb->widget(i);
+              if ( contents ) {
+                pal = contents->palette();
+                cg = contents->isEnabled() ? QPalette::Normal : QPalette::Disabled;
+                pal.setCurrentColorGroup(cg);
+                brole = contents->backgroundRole();
+              }
+              break;
+            }
+          }
+        }
 
         renderLabel(p,cs2b(cs.fg,pal.text()),
                     dir,r,fs,is,ls,
@@ -1325,8 +1426,8 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
 
     case CE_ProgressBarGroove : {
       // "background" of a progress bar
-      renderFrame(p,cs2b(cs.bg,pal.window()),r,fs,fs.element+"-"+st,dir,orn);
-      renderInterior(p,cs2b(cs.bg,pal.window()),r,fs,is,is.element+"-"+st,dir,orn);
+      renderFrame(p,cs2b(cs.bg,pal.brush(brole)),r,fs,fs.element+"-"+st,dir,orn);
+      renderInterior(p,cs2b(cs.bg,pal.brush(brole)),r,fs,is,is.element+"-"+st,dir,orn);
 
       break;
     }
@@ -1394,7 +1495,7 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
           if ( opt->invertedAppearance )
             r = visualRect(Qt::RightToLeft,orig,r);
 
-          renderInterior(p,cs2b(cs.bg,pal.button()),
+          renderInterior(p,cs2b(cs.bg,pal.brush(brole)),
                          (orn != Horizontal) ? transposedRect(r) : r,
                          fs,is,
                          is.element+"-elapsed-"+st,
@@ -1422,7 +1523,7 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
                   r = visualRect(Qt::RightToLeft,orig,r);
 
                 p->setClipRect(r.x(),r.y(),ww,r.height());
-                renderInterior(p,cs2b(cs.bg,pal.button()),
+                renderInterior(p,cs2b(cs.bg,pal.brush(brole)),
                               (orn != Horizontal) ? transposedRect(r) : r,
                               fs,is,
                               is.element+"-elapsed-"+st,
@@ -1439,7 +1540,7 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
                   r = visualRect(Qt::RightToLeft,orig,r);
 
                 p->setClipRect(orig.x(),orig.y(),pm,h);
-                renderInterior(p,cs2b(cs.bg,pal.button()),
+                renderInterior(p,cs2b(cs.bg,pal.brush(brole)),
                               (orn != Horizontal) ? transposedRect(r) : r,
                               fs,is,
                               is.element+"-elapsed-"+st,
@@ -1453,7 +1554,7 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
                 if ( opt->invertedAppearance )
                   r = visualRect(Qt::RightToLeft,orig,r);
 
-                renderInterior(p,cs2b(cs.bg,pal.button()),
+                renderInterior(p,cs2b(cs.bg,pal.brush(brole)),
                               (orn != Horizontal) ? transposedRect(r) : r,
                               fs,is,
                               is.element+"-elapsed-"+st,
@@ -1474,7 +1575,7 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
               if ( opt->invertedAppearance )
                 r = visualRect(Qt::RightToLeft,orig,r);
 
-              renderInterior(p,cs2b(cs.bg,pal.button()),
+              renderInterior(p,cs2b(cs.bg,pal.brush(brole)),
                             (orn != Horizontal) ? transposedRect(r) : r,
                             fs,is,
                             is.element+"-elapsed-"+st,
@@ -1497,7 +1598,7 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
                 r = visualRect(Qt::RightToLeft,orig,r);
 
               p->setClipRect(orig);
-              renderInterior(p,cs2b(cs.bg,pal.button()),
+              renderInterior(p,cs2b(cs.bg,pal.brush(brole)),
                             (orn != Horizontal) ? transposedRect(r) : r,
                             fs,is,
                             is.element+"-elapsed-"+st,
@@ -1514,8 +1615,8 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
     }
 
     case CE_Splitter : {
-      renderFrame(p,cs2b(cs.bg,pal.button()),option->rect,fs,fs.element+"-"+st,dir,orn);
-      renderInterior(p,cs2b(cs.bg,pal.button()),option->rect,fs,is,is.element+"-"+st,dir,orn);
+      renderFrame(p,cs2b(cs.bg,pal.brush(brole)),option->rect,fs,fs.element+"-"+st,dir,orn);
+      renderInterior(p,cs2b(cs.bg,pal.brush(brole)),option->rect,fs,is,is.element+"-"+st,dir,orn);
 
       break;
     }
@@ -1529,8 +1630,8 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
         if ( opt->activeSubControls & SC_ScrollBarAddLine )
           o.state = opt->state;
         st = state_str(o.state,widget);
-        renderFrame(p,cs2b(cs.bg,pal.button()),option->rect,fs,fs.element+"-"+st,dir);
-      renderInterior(p,cs2b(cs.bg,pal.button()),option->rect,fs,is,is.element+"-"+st,dir);
+        renderFrame(p,cs2b(cs.bg,pal.brush(brole)),option->rect,fs,fs.element+"-"+st,dir);
+      renderInterior(p,cs2b(cs.bg,pal.brush(brole)),option->rect,fs,is,is.element+"-"+st,dir);
         if (option->state & State_Horizontal) {
             drawPrimitive(PE_IndicatorArrowRight,option,p,widget);
         } else
@@ -1548,8 +1649,8 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
         if ( opt->activeSubControls & SC_ScrollBarSubLine )
           o.state = opt->state;
         st = state_str(o.state,widget);
-        renderFrame(p,cs2b(cs.bg,pal.button()),option->rect,fs,fs.element+"-"+st,dir);
-        renderInterior(p,cs2b(cs.bg,pal.button()),option->rect,fs,is,is.element+"-"+st,dir);
+        renderFrame(p,cs2b(cs.bg,pal.brush(brole)),option->rect,fs,fs.element+"-"+st,dir);
+        renderInterior(p,cs2b(cs.bg,pal.brush(brole)),option->rect,fs,is,is.element+"-"+st,dir);
         if (option->state & State_Horizontal) {
             drawPrimitive(PE_IndicatorArrowLeft,option,p,widget);
         } else
@@ -1567,15 +1668,15 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
         if ( opt->activeSubControls & SC_ScrollBarSlider )
           o.state = opt->state;
         st = state_str(o.state,widget);
-        renderFrame(p,cs2b(cs.bg,pal.button()),option->rect,fs,fs.element+"-cursor-"+st,dir);
-        renderInterior(p,cs2b(cs.bg,pal.button()),option->rect,fs,is,is.element+"-cursor-"+st,dir);
+        renderFrame(p,cs2b(cs.bg,pal.brush(brole)),option->rect,fs,fs.element+"-cursor-"+st,dir);
+        renderInterior(p,cs2b(cs.bg,pal.brush(brole)),option->rect,fs,is,is.element+"-cursor-"+st,dir);
       }
       break;
     }
 
     case CE_HeaderSection : {
-      renderFrame(p,cs2b(cs.bg,pal.button()),r,fs,fs.element+"-"+st,dir);
-      renderInterior(p,cs2b(cs.bg,pal.button()),r,fs,is,is.element+"-"+st,dir);
+      renderFrame(p,cs2b(cs.bg,pal.brush(brole)),r,fs,fs.element+"-"+st,dir);
+      renderInterior(p,cs2b(cs.bg,pal.brush(brole)),r,fs,is,is.element+"-"+st,dir);
       break;
     }
 
@@ -1608,8 +1709,8 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
     }
 
     case CE_ToolBar : {
-      renderFrame(p,cs2b(cs.bg,pal.button()),option->rect,fs,fs.element+"-"+st,dir,orn);
-      renderInterior(p,cs2b(cs.bg,pal.button()),option->rect,fs,is,is.element+"-"+st,dir,orn);
+      renderFrame(p,cs2b(cs.bg,pal.brush(brole)),option->rect,fs,fs.element+"-"+st,dir,orn);
+      renderInterior(p,cs2b(cs.bg,pal.brush(brole)),option->rect,fs,is,is.element+"-"+st,dir,orn);
       break;
     }
 
@@ -1730,8 +1831,8 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
         else
           orn = Horizontal;
 
-        renderFrame(p,cs2b(cs.bg,pal.button()),r,fs,fs.element+"-"+st,dir,orn);
-        renderInterior(p,cs2b(cs.bg,pal.button()),r,fs,is,is.element+"-"+st,dir,orn);
+        renderFrame(p,cs2b(cs.bg,pal.brush(brole)),r,fs,fs.element+"-"+st,dir,orn);
+        renderInterior(p,cs2b(cs.bg,pal.brush(brole)),r,fs,is,is.element+"-"+st,dir,orn);
 
         if ( opt->verticalTitleBar ) {
           p->save();
@@ -1802,6 +1903,7 @@ void QSvgThemableStyle::drawComplexControl(ComplexControl control, const QStyleO
   QPalette pal = option->palette;
   QPalette::ColorGroup cg = en ? QPalette::Normal : QPalette::Disabled;
   pal.setCurrentColorGroup(cg);
+  QPalette::ColorRole brole = widget ? widget->backgroundRole() : QPalette::NoRole;
 
   Q_UNUSED(focus);
   Q_UNUSED(icm);
@@ -1847,7 +1949,7 @@ void QSvgThemableStyle::drawComplexControl(ComplexControl control, const QStyleO
           // with drop down menu -> apply State only to the
           // selected subcontrol
           if ( !(opt->activeSubControls & QStyle::SC_ToolButton) )
-            buttonState &= ~(State_On | State_Sunken | State_MouseOver);
+            buttonState &= ~(State_Sunken | State_MouseOver);
           if ( !(opt->activeSubControls & QStyle::SC_ToolButtonMenu) )
             dropState &= ~(State_On | State_Sunken | State_MouseOver);
         }
@@ -2032,8 +2134,8 @@ void QSvgThemableStyle::drawComplexControl(ComplexControl control, const QStyleO
         o.state &= ~(State_Sunken | State_Selected | State_On | State_MouseOver);
         st = state_str(o.state,widget);
         o.rect = subControlRect(CC_ScrollBar,opt,SC_ScrollBarGroove,widget);
-        renderFrame(p,cs2b(cs.bg,pal.button()),o.rect,fs,fs.element+"-"+st,dir,orn);
-        renderInterior(p,cs2b(cs.bg,pal.button()),o.rect,fs,is,is.element+"-"+st,dir,orn);
+        renderFrame(p,cs2b(cs.bg,pal.brush(brole)),o.rect,fs,fs.element+"-"+st,dir,orn);
+        renderInterior(p,cs2b(cs.bg,pal.brush(brole)),o.rect,fs,is,is.element+"-"+st,dir,orn);
 
         // 'Next' arrow
         o.state = opt->state;
@@ -2070,7 +2172,7 @@ void QSvgThemableStyle::drawComplexControl(ComplexControl control, const QStyleO
         QRect slider = subControlRect(CC_Slider,opt,SC_SliderHandle,widget);
 
         // Groove
-        renderFrame(p,cs2b(cs.bg,pal.button()),empty,fs,fs.element+"-"+st,dir,orn);
+        renderFrame(p,cs2b(cs.bg,pal.brush(brole)),empty,fs,fs.element+"-"+st,dir,orn);
 
         // compute elapsed and empty part of groove
         if (opt->orientation == Qt::Horizontal) {
@@ -2112,7 +2214,7 @@ void QSvgThemableStyle::drawComplexControl(ComplexControl control, const QStyleO
           }
         }
 
-        renderInterior(p,cs2b(cs.bg,pal.button()),empty,fs,is,is.element+"-"+st,dir,orn);
+        renderInterior(p,cs2b(cs.bg,pal.brush(brole)),empty,fs,is,is.element+"-"+st,dir,orn);
 
         // draw elapsed part
         if (option->state & State_Horizontal) {
@@ -2129,7 +2231,7 @@ void QSvgThemableStyle::drawComplexControl(ComplexControl control, const QStyleO
           }
         }
 
-        renderInterior(p,cs2b(cs.bg,pal.button()),full,fs,is,is.element+"-elapsed-"+st,dir,orn);
+        renderInterior(p,cs2b(cs.bg,pal.brush(brole)),full,fs,is,is.element+"-elapsed-"+st,dir,orn);
 
         // ticks
         o.state &= ~(State_MouseOver | State_Sunken);
@@ -2195,7 +2297,7 @@ void QSvgThemableStyle::drawComplexControl(ComplexControl control, const QStyleO
         fs.hasFrame = false;
         fs.hasCapsule = false;
         o.rect = subControlRect(CC_Slider,opt,SC_SliderHandle,widget);
-        renderInterior(p,cs2b(cs.bg,pal.button()),o.rect,fs,is,is.element+"-cursor-"+st,dir,orn);
+        renderInterior(p,cs2b(cs.bg,pal.brush(brole)),o.rect,fs,is,is.element+"-cursor-"+st,dir,orn);
       }
 
       break;
@@ -2213,7 +2315,7 @@ void QSvgThemableStyle::drawComplexControl(ComplexControl control, const QStyleO
 
         QRect groove = squaredRect(subControlRect(CC_Dial,opt,SC_DialGroove,widget));
         o.rect = groove;
-        renderInterior(p,cs2b(cs.bg,pal.button()),o.rect,fs,is,is.element+"-"+st,dir,orn);
+        renderInterior(p,cs2b(cs.bg,pal.brush(brole)),o.rect,fs,is,is.element+"-"+st,dir,orn);
 
         // TODO make configurable
         qreal startAngle = -60;
@@ -2240,7 +2342,7 @@ void QSvgThemableStyle::drawComplexControl(ComplexControl control, const QStyleO
 //           p->drawPath(clip);
 //           p->save();
 //           p->setClipPath(clip);
-          renderInterior(p,cs2b(cs.bg,pal.button()),o.rect,fs,is,is.element+"-ticks-"+st,dir,orn);
+          renderInterior(p,cs2b(cs.bg,pal.brush(brole)),o.rect,fs,is,is.element+"-ticks-"+st,dir,orn);
 //           p->restore();
         }
 
@@ -2263,7 +2365,7 @@ void QSvgThemableStyle::drawComplexControl(ComplexControl control, const QStyleO
         p->save();
         p->translate(QPoint(groove.center().x(),groove.center().y()));
         p->rotate(angle);
-        renderInterior(p,cs2b(cs.bg,pal.button()),o.rect,fs,is,is.element+"-handle-"+st,dir,orn);
+        renderInterior(p,cs2b(cs.bg,pal.brush(brole)),o.rect,fs,is,is.element+"-handle-"+st,dir,orn);
         p->restore();
       }
 
@@ -2282,15 +2384,15 @@ void QSvgThemableStyle::drawComplexControl(ComplexControl control, const QStyleO
         r2 = subControlRect(CC_GroupBox,&o,SC_GroupBoxLabel,widget);
 
         // Draw frame and interior around contents
-        renderFrame(p,cs2b(cs.bg,pal.button()),r1,fs,fs.element+"-"+st,dir);
-        renderInterior(p,cs2b(cs.bg,pal.button()),r1,fs,is,is.element+"-"+st,dir);
+        renderFrame(p,cs2b(cs.bg,pal.brush(brole)),r1,fs,fs.element+"-"+st,dir);
+        renderInterior(p,cs2b(cs.bg,pal.brush(brole)),r1,fs,is,is.element+"-"+st,dir);
 
         // Draw frame and interior around title
         fs.hasCapsule = true;
         fs.capsuleH = 2;
         fs.capsuleV = -1; // FIXME bottom titles
-        renderFrame(p,cs2b(cs.bg,pal.button()),r2,fs,fs.element+"-"+st,dir);
-        renderInterior(p,cs2b(cs.bg,pal.button()),r2,fs,is,is.element+"-"+st,dir);
+        renderFrame(p,cs2b(cs.bg,pal.brush(brole)),r2,fs,fs.element+"-"+st,dir);
+        renderInterior(p,cs2b(cs.bg,pal.brush(brole)),r2,fs,is,is.element+"-"+st,dir);
 
         // Draw title
         fs.hasCapsule = false;
@@ -4204,10 +4306,11 @@ void QSvgThemableStyle::renderLabel(QPainter* p,
 //           p->drawText(rtext.adjusted(ls.xshift+i,ls.yshift+i,0,0),talign,text);
 //         p->restore();
 //       }
-      if ( curPalette != "<none>" )
-        p->setBrush(b);
-      else
-        p->setBrush(Qt::black);
+      if ( curPalette != "<none>" ) {
+        p->setPen(b.color());
+      } else {
+        p->setPen(Qt::black);
+      }
       p->drawText(rtext,visualAlignment(dir,static_cast<Qt::Alignment>(talign)),text);
     }
   }
@@ -4278,110 +4381,187 @@ inline color_spec_t QSvgThemableStyle::getColorSpec(const QString& group) const
   return paletteSettings ? paletteSettings->getColorSpec(group) : cs;
 }
 
+QLayout * QSvgThemableStyle::layoutForWidget(const QWidget* widget, QLayout *l) const
+{
+  if ( !widget )
+    return NULL;
+
+  QLayout *pLayout = l; /* parent layout */
+
+  if ( !pLayout && widget->parentWidget() )
+    pLayout = widget->parentWidget()->layout();
+
+  if ( !pLayout )
+    return NULL;
+
+  for (int i = 0; i < pLayout->count(); ++i) {
+    // item is a widget -> compare
+    if ( pLayout->itemAt(i)->widget() == widget )
+      return pLayout;
+
+    // item is a sub layout -> look inside
+    if ( pLayout->itemAt(i)->layout() ) {
+      QLayout *sub = layoutForWidget(widget, pLayout->itemAt(i)->layout());
+      if ( sub )
+        return sub;
+    }
+  }
+
+  return NULL;
+}
+
 void QSvgThemableStyle::capsulePosition(const QWidget *widget, bool &capsule, int &h, int &v) const
 {
   capsule = false;
   h = v = 2;
-  if (widget && widget->parent()) {
-    // get parent widget
-    const QWidget *parent = qobject_cast<const QWidget *>(widget->parent());
-    if (parent) {
-      // get its layout
-      QLayout *l = parent->layout();
-      if (l) {
-        capsule = true;
-        // ensure that all widgets in the layout have the same type
-        for (int i = 0; i < l->count(); ++i) {
-          if (l->itemAt(i)->widget()) {
-            //printf("classname %s\n",l->itemAt(i)->widget()->metaObject()->className());
-            if (l->itemAt(i)->widget()->metaObject()->className() != widget->metaObject()->className()) {
-              capsule = false;
-              break;
-            }
-          }
-        }
 
-        if (capsule) {
-          int index = -1;
-          // get index of this widget
-          for (int i = 0; i < l->count(); ++i) {
-            if (l->itemAt(i)->widget() == widget) {
-              index = i;
-              break;
-            }
-          }
+  QLayout *myLayout = layoutForWidget(widget);
+  if ( !myLayout )
+    return;
 
-          const QHBoxLayout *hbox = qobject_cast<const QHBoxLayout *>(l);
-          if (hbox) {
-            // layout is a horizontal box
-            if ( hbox->spacing() != 0 ) {
-              capsule = false;
-              return;
-            }
-            if ( (index == 0) && (index == hbox->count()-1) )
-              h = 2;
-            else if (index == hbox->count()-1)
-              h = 1;
-            else if (index == 0)
-              h = -1;
-            else
-              h = 0;
+  if ( myLayout->spacing() != 0 ) { // space between widgets -> no capsule
+    capsule = false;
+    return;
+  }
 
-            v = 2;
-          }
+  //qDebug() << "widget" << widget->objectName() << "is in layout" << myLayout->objectName();
 
-          const QVBoxLayout *vbox = qobject_cast<const QVBoxLayout *>(l);
-          if (vbox) {
-            // layout is a horizontal box
-            if ( vbox->spacing() != 0 ) {
-              capsule = false;
-              return;
-            }
-            if ( (index == 0) && (index == vbox->count()-1) )
-              v = 2;
-            else if (index == vbox->count()-1)
-              v = 1;
-            else if (index == 0)
-              v = -1;
-            else
-              v = 0;
+  int cnt = myLayout->count();
+  if ( cnt == 1 ) { // only one widget -> easy
+    capsule = true;
+    h = v = 2;
+    return;
+  }
 
-            h = 2;
-          }
+  QString myClass = widget->metaObject()->className();
 
-          const QGridLayout *gbox = qobject_cast<const QGridLayout *>(l);
-          if (gbox) {
-            // layout is a grid
-            if ( (gbox->horizontalSpacing() != 0) || (gbox->verticalSpacing() != 0) ) {
-              capsule = false;
-              return;
-            }
-
-            const int rows = gbox->rowCount();
-            const int cols = gbox->columnCount();
-
-            if (rows == 1)
-              v = 2;
-            else if (index < cols)
-              v = -1;
-            else if (index > cols*(rows-1)-1)
-              v = 1;
-            else
-              v = 0;
-
-            if (cols == 1)
-              h = 2;
-            else if (index%cols == 0)
-              h = -1;
-            else if (index%cols == cols-1)
-              h = 1;
-            else
-              h = 0;
-          }
-        }
-      }
+  int myIdx = -1;
+  for (int i=0; i<cnt; i++) {
+    if ( myLayout->itemAt(i)->widget() == widget ) {
+      myIdx = i;
+      break;
     }
   }
+
+  const QHBoxLayout *hbox = qobject_cast<const QHBoxLayout *>(myLayout);
+  const QVBoxLayout *vbox = qobject_cast<const QVBoxLayout *>(myLayout);
+  const QGridLayout *grid = qobject_cast<const QGridLayout *>(myLayout);
+
+  QWidget *myLeftWidget = 0, *myRightWidget = 0;
+  QWidget *myTopWidget = 0, *myBottomWidget = 0;
+
+  // QHBoxLayout
+  if ( hbox ) {
+    if ( myIdx > 0 )
+      myLeftWidget = myLayout->itemAt(myIdx-1) ?
+        myLayout->itemAt(myIdx-1)->widget() : 0;
+    if ( myIdx < cnt-1 )
+      myRightWidget = myLayout->itemAt(myIdx+1) ?
+        myLayout->itemAt(myIdx+1)->widget() : 0;
+  }
+
+  // QVBoxLayout
+  if ( vbox ) {
+    if ( myIdx > 0 )
+      myTopWidget = myLayout->itemAt(myIdx-1) ?
+        myLayout->itemAt(myIdx-1)->widget() : 0;
+    if ( myIdx < cnt-1 )
+      myBottomWidget = myLayout->itemAt(myIdx+1) ?
+        myLayout->itemAt(myIdx+1)->widget() : 0;
+  }
+
+  // QGridLayout
+  if ( grid ) {
+    if ( (grid->horizontalSpacing() != 0) || (grid->verticalSpacing() != 0) ) {
+      // space between widgets -> no capsule
+      capsule = false;
+      return;
+    }
+
+    int nrows = grid->rowCount();
+    int ncols = grid->columnCount();
+
+    int myRow, myCol, myRowSpan, myColSpan;
+    grid->getItemPosition(myIdx, &myRow,&myCol, &myRowSpan,&myColSpan);
+
+    //qDebug() << "myidx,myrow,mycol" << myIdx << myRow << myCol;
+
+    if ( (myRowSpan != 1) && (myColSpan != 1) ) {
+      // widgets that span accross multiple rows/cols cannot be in a capsule
+      capsule = false;
+      return;
+    }
+
+    if ( nrows == 1 ) {
+      capsule = true;
+      v = 2;
+    }
+
+    if ( ncols == 1 ) {
+      capsule = true;
+      h = 2;
+    }
+
+    if ( myCol > 0 )
+      myLeftWidget = grid->itemAtPosition(myRow,myCol-1) ?
+        grid->itemAtPosition(myRow,myCol-1)->widget() : 0;
+    if ( myCol < ncols-1 )
+      myRightWidget = grid->itemAtPosition(myRow,myCol+1) ?
+        grid->itemAtPosition(myRow,myCol+1)->widget() : 0;
+
+    if ( myRow > 0 )
+      myTopWidget = grid->itemAtPosition(myRow-1,myCol) ?
+        grid->itemAtPosition(myRow-1,myCol)->widget() : 0;
+    if ( myRow < nrows-1 )
+      myBottomWidget = grid->itemAtPosition(myRow+1,myCol) ?
+        grid->itemAtPosition(myRow+1,myCol)->widget() : 0;
+  }
+
+  if ( grid || hbox ) {
+    if ( myLeftWidget && (myLeftWidget->metaObject()->className() == myClass) &&
+         myRightWidget && (myRightWidget->metaObject()->className() == myClass) ) {
+      capsule = true;
+      h = 0;
+      goto next;
+    }
+
+    if ( myLeftWidget && (myLeftWidget->metaObject()->className() == myClass) ) {
+      capsule = true;
+      h = 1;
+      goto next;
+    }
+
+    if ( myRightWidget && (myRightWidget->metaObject()->className() == myClass) ) {
+      capsule = true;
+      h = -1;
+      goto next;
+    }
+  }
+
+next:
+  if ( grid || vbox ) {
+    if ( myTopWidget && (myTopWidget->metaObject()->className() == myClass) &&
+         myBottomWidget && (myBottomWidget->metaObject()->className() == myClass) ) {
+      capsule = true;
+      v = 0;
+      goto end;
+    }
+
+    if ( myTopWidget && (myTopWidget->metaObject()->className() == myClass) ) {
+      capsule = true;
+      v = 1;
+      goto end;
+    }
+
+    if ( myBottomWidget && (myBottomWidget->metaObject()->className() == myClass) ) {
+      capsule = true;
+      v = -1;
+      goto end;
+    }
+  }
+
+end:
+  ;
 }
 
 void QSvgThemableStyle::drawRealRect(QPainter* p, const QRect& r) const

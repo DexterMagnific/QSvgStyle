@@ -31,6 +31,7 @@ class QSettings;
 class QVariant;
 class QFont;
 class QTimer;
+class QLayout;
 template<typename T> class QList;
 template<typename T1, typename T2> class QMap;
 
@@ -265,6 +266,14 @@ class QSvgThemableStyle : public QCommonStyle {
      * uses it mostly on button widgets (push buttons and tool buttons)
      */
     void capsulePosition(const QWidget *widget, bool &capsule, int &h, int &v) const;
+
+    /**
+     * Recursively looks for the given widget inside the given layout
+     * and returns the layout containing the widget.
+     * If @a layout is NULL, looks for the widget inside the layout of its parent
+     * @returns NULL if the widget is not found
+     */
+    QLayout * layoutForWidget(const QWidget *widget, QLayout *layout = 0) const;
 
     /**
      * Helper function that computes the 9 rects of a frame

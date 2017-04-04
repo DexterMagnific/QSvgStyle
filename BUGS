@@ -10,11 +10,14 @@ QSvgStyle
   (groove seems 1 pixel wider than expected)
 * view items: size does not take into account label margins
 * tab bar close button overlaps frame (thick frames)
+* implement CC_TitleBar support
 
 Qt limitations
 --------------
 * Toolboxes: QToolBox does not ask the style for a size (sizeFromContents()),
   as such glitches will appear when the toolbox tab frame width is > 2
+* ToolBoxes: tool box tab is not repainted when underlying content widget
+  changes enabled status
 * Frames of types HLine and VLine: height/width is hardcoded to 3
 
 

@@ -28,6 +28,7 @@
 
 #include "ui_ThemeBuilderUIBase.h"
 #include <specs.h>
+#include "SvgGen.h"
 
 class ThemeConfig;
 class QTreeWidget;
@@ -112,6 +113,17 @@ class ThemeBuilderUI : public QMainWindow, private Ui::ThemeBuilderUIBase {
     void slot_fontSizeChanged(int val);
     void slot_paletteChanged(int val);
 
+    // called on SVG Gen tab changes
+    void slot_genFrameBtnClicked(bool checked);
+    void slot_genInteriorBtnClicked(bool checked);
+    void slot_genRoundBtnClicked(bool checked);
+    void slot_genSplitBtnClicked(bool checked);
+    void slot_genFrameWidthChanged(int val);
+    void slot_genInteriorRoundnessChanged(qreal val);
+    void slot_genSquareBtnClicked(bool checked);
+    void slot_genSubFrameWidthChanged(qreal val);
+
+
     // Callbacks from QSvgStyle that are triggered when it renders widgets
     void slot_drawPrimitive_begin(const QString &s);
     void slot_drawPrimitive_end(const QString &s);
@@ -133,7 +145,6 @@ class ThemeBuilderUI : public QMainWindow, private Ui::ThemeBuilderUIBase {
     void slot_sizeFromContents_end(const QString &s);
 
   protected:
-    // intercept some events from previewArea and previewWidget
     virtual bool eventFilter(QObject *o, QEvent *e);
     virtual void closeEvent(QCloseEvent *e);
 
@@ -238,6 +249,9 @@ class ThemeBuilderUI : public QMainWindow, private Ui::ThemeBuilderUIBase {
     QString tempCfgFile;
     // to watch SVG file for file changes
     QFileSystemWatcher svgWatcher;
+    // SVG quick generator
+    SvgGen *svgGen;
+    QVector<QDoubleSpinBox *> sbFrameWidthsSpins;
 };
 
 #endif // THEMEBUILDERUI_H

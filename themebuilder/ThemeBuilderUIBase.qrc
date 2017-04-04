@@ -1,5 +1,10 @@
 <RCC>
   <qresource prefix="icon">
+    <file>pixmaps/bringtofront.png</file>
+    <file>pixmaps/inkscape.png</file>
+    <file>pixmaps/round-corner.png</file>
+    <file>pixmaps/gen-frame.png</file>
+    <file>pixmaps/gen-interior.png</file>
     <file>pixmaps/fork.png</file>
     <file>pixmaps/widgetstack.png</file>
     <file>pixmaps/cleartext.png</file>
