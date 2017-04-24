@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1312</width>
-    <height>736</height>
+    <width>1091</width>
+    <height>755</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -108,8 +108,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>747</width>
-             <height>71</height>
+             <width>526</width>
+             <height>81</height>
             </rect>
            </property>
           </widget>
@@ -751,8 +751,8 @@
                 <rect>
                  <x>0</x>
                  <y>0</y>
-                 <width>262</width>
-                 <height>248</height>
+                 <width>175</width>
+                 <height>231</height>
                 </rect>
                </property>
                <attribute name="label">
@@ -778,8 +778,8 @@
                     <rect>
                      <x>0</x>
                      <y>0</y>
-                     <width>250</width>
-                     <height>142</height>
+                     <width>163</width>
+                     <height>109</height>
                     </rect>
                    </property>
                    <layout class="QGridLayout" name="gridLayout_27">
@@ -844,8 +844,8 @@ widths</string>
                 <rect>
                  <x>0</x>
                  <y>0</y>
-                 <width>262</width>
-                 <height>248</height>
+                 <width>96</width>
+                 <height>74</height>
                 </rect>
                </property>
                <attribute name="label">
@@ -878,6 +878,14 @@ widths</string>
                </layout>
               </widget>
               <widget class="QWidget" name="genShadowPage">
+               <property name="geometry">
+                <rect>
+                 <x>0</x>
+                 <y>0</y>
+                 <width>96</width>
+                 <height>74</height>
+                </rect>
+               </property>
                <attribute name="label">
                 <string>Shadow</string>
                </attribute>
@@ -1270,7 +1278,7 @@ widths</string>
          <x>0</x>
          <y>0</y>
          <width>256</width>
-         <height>477</height>
+         <height>468</height>
         </rect>
        </property>
        <property name="palette">
@@ -1344,7 +1352,7 @@ widths</string>
          <x>0</x>
          <y>0</y>
          <width>256</width>
-         <height>477</height>
+         <height>468</height>
         </rect>
        </property>
        <property name="palette">
@@ -1418,7 +1426,7 @@ widths</string>
          <x>0</x>
          <y>0</y>
          <width>256</width>
-         <height>477</height>
+         <height>468</height>
         </rect>
        </property>
        <property name="palette">
@@ -1492,7 +1500,7 @@ widths</string>
          <x>0</x>
          <y>0</y>
          <width>256</width>
-         <height>477</height>
+         <height>468</height>
         </rect>
        </property>
        <property name="palette">
@@ -1566,7 +1574,7 @@ widths</string>
          <x>0</x>
          <y>0</y>
          <width>256</width>
-         <height>477</height>
+         <height>468</height>
         </rect>
        </property>
        <property name="palette">

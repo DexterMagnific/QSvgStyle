@@ -72,7 +72,8 @@ QString PE_group(QStyle::PrimitiveElement element)
     case QStyle::PE_IndicatorSpinUp : return "Indicator";
     case QStyle::PE_IndicatorToolBarHandle : return "ToolBar";
     case QStyle::PE_IndicatorToolBarSeparator : return "ToolBar";
-    case QStyle::PE_IndicatorTabTear : return "TabWidget";
+    case QStyle::PE_IndicatorTabTearLeft : return "TabWidget";
+    case QStyle::PE_IndicatorTabTearRight : return "TabWidget";
     case QStyle::PE_IndicatorColumnViewArrow : return "Indicator";
     case QStyle::PE_IndicatorItemViewItemDrop : return "Indicator";
     case QStyle::PE_IndicatorTabClose : return "TabWidget";
@@ -158,6 +159,7 @@ QString CT_group(QStyle::ContentsType type)
     case QStyle::CT_HeaderSection : return "Header";
     case QStyle::CT_GroupBox : return "GroupBox";
     case QStyle::CT_ItemViewItem : return "ViewItem";
+    case QStyle::CT_SizeGrip : return "Indicator";
     default: return QString();
   }
 

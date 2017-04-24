@@ -257,8 +257,7 @@ class QSvgThemableStyle : public QCommonStyle {
      * left/top and right/bottom position
      *
      * Capsule grouping has the following restrictions:
-     *   - all widgets inside the layout where @ref widget is must be of the
-     *     same type
+     *   - only widgets of the same type are grouped together
      *   - the layout must be eiter a QHBoxLayout, QVBoxLayout or QGridLayout
      *   - the layout spacing must be zero
      *

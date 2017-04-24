@@ -638,9 +638,9 @@ void QSvgThemableStyle::drawPrimitive(PrimitiveElement e, const QStyleOption * o
     }
     case PE_Frame : {
       // Generic frame
-      if ( const QStyleOptionFrameV3 *opt =
-        qstyleoption_cast<const QStyleOptionFrameV3 *>(option) ) {
-        QStyleOptionFrameV3 o(*opt);
+      if ( const QStyleOptionFrame *opt =
+        qstyleoption_cast<const QStyleOptionFrame *>(option) ) {
+        QStyleOptionFrame o(*opt);
         // NOTE remove hovered, toggled and pressed states
         o.state &= ~(State_MouseOver | State_Sunken | State_On);
         st = state_str(o.state,widget);
@@ -835,10 +835,10 @@ void QSvgThemableStyle::drawPrimitive(PrimitiveElement e, const QStyleOption * o
     case PE_PanelItemViewItem : {
       // An item of a view item
       if ( (option->state & State_Enabled) && (st == "normal") ) {
-        if ( const QStyleOptionViewItemV4 *opt =
-          qstyleoption_cast<const QStyleOptionViewItemV4 *>(option) ) {
+        if ( const QStyleOptionViewItem *opt =
+          qstyleoption_cast<const QStyleOptionViewItem *>(option) ) {
 
-          if ( opt->features & QStyleOptionViewItemV2::Alternate )
+          if ( opt->features & QStyleOptionViewItem::Alternate )
             st = "alt-"+st;
           }
       }
@@ -1404,10 +1404,10 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
 
     case CE_ProgressBar : {
       // whole progress bar widget
-      if ( const QStyleOptionProgressBarV2 *opt =
-          qstyleoption_cast<const QStyleOptionProgressBarV2 *>(option) ) {
+      if ( const QStyleOptionProgressBar *opt =
+          qstyleoption_cast<const QStyleOptionProgressBar *>(option) ) {
 
-        QStyleOptionProgressBarV2 o(*opt);
+        QStyleOptionProgressBar o(*opt);
 
         o.rect = subElementRect(SE_ProgressBarGroove, opt, widget);
         drawControl(CE_ProgressBarGroove, &o, p, widget);
@@ -1433,8 +1433,8 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
     }
 
     case CE_ProgressBarLabel : {
-      if ( const QStyleOptionProgressBarV2 *opt =
-           qstyleoption_cast<const QStyleOptionProgressBarV2 *>(option) ) {
+      if ( const QStyleOptionProgressBar *opt =
+           qstyleoption_cast<const QStyleOptionProgressBar *>(option) ) {
 
         if ( orn == Vertical ) {
           p->save();
@@ -1466,8 +1466,8 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
 
     case CE_ProgressBarContents : {
       // the progress indicator
-      if ( const QStyleOptionProgressBarV2 *opt =
-           qstyleoption_cast<const QStyleOptionProgressBarV2 *>(option) ) {
+      if ( const QStyleOptionProgressBar *opt =
+           qstyleoption_cast<const QStyleOptionProgressBar *>(option) ) {
 
         if ( orn != Horizontal ) {
           // perform computations on horizontalized widget
@@ -1854,8 +1854,8 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
     }
 
     case CE_ShapedFrame : {
-      if ( const QStyleOptionFrameV3 *opt =
-           qstyleoption_cast<const QStyleOptionFrameV3 *>(option) ) {
+      if ( const QStyleOptionFrame *opt =
+           qstyleoption_cast<const QStyleOptionFrame *>(option) ) {
 
         if ( opt && (opt->frameShape == QFrame::HLine) ) {
           renderElement(p,
@@ -2594,6 +2594,8 @@ int QSvgThemableStyle::pixelMetric(PixelMetric metric, const QStyleOption * opti
     break;
 
     case PM_TextCursorWidth : return 1;
+    case PM_SizeGripSize :
+      return 15;
 
     default : return QCommonStyle::pixelMetric(metric,option,widget);
   }
@@ -2896,8 +2898,8 @@ QSize QSvgThemableStyle::sizeFromContents ( ContentsType type, const QStyleOptio
     }
 
     case CT_TabBarTab : {
-      if ( const QStyleOptionTabV3 *opt =
-           qstyleoption_cast<const QStyleOptionTabV3 *>(option) ) {
+      if ( const QStyleOptionTab *opt =
+           qstyleoption_cast<const QStyleOptionTab *>(option) ) {
 
         s = sizeFromContents(fm,fs,is,ls,
                              opt->text,
@@ -2958,14 +2960,14 @@ QSize QSvgThemableStyle::sizeFromContents ( ContentsType type, const QStyleOptio
     }
 
     case CT_ItemViewItem :  {
-      if ( const QStyleOptionViewItemV4 *opt =
-           qstyleoption_cast<const QStyleOptionViewItemV4 *>(option) ) {
+      if ( const QStyleOptionViewItem *opt =
+           qstyleoption_cast<const QStyleOptionViewItem *>(option) ) {
 
         s = sizeFromContents(fm,fs,is,ls,
                              opt->text,
                              opt->icon.pixmap(pixelMetric(PM_SmallIconSize)));
 
-        if ( opt->features & QStyleOptionViewItemV4::HasCheckIndicator ) {
+        if ( opt->features & QStyleOptionViewItem::HasCheckIndicator ) {
           s += QSize(pixelMetric(PM_CheckBoxLabelSpacing)+pixelMetric(PM_IndicatorWidth),0);
         }
         s = s.expandedTo(QSize(pixelMetric(PM_IndicatorWidth),pixelMetric(PM_IndicatorHeight))); // minimal checkbox size is size of indicator
@@ -4617,13 +4619,6 @@ QIcon::State QSvgThemableStyle::state_iconstate(State st) const
 QString QSvgThemableStyle::PE_str(PrimitiveElement element) const
 {
   switch (element) {
-#if QT_VERSION < 0x050000
-    case PE_Q3CheckListController : return "PE_Q3CheckListController";
-    case PE_Q3CheckListExclusiveIndicator : return "PE_Q3CheckListExclusiveIndicator";
-    case PE_Q3CheckListIndicator : return "PE_Q3CheckListIndicator";
-    case PE_Q3DockWindowSeparator : return "PE_Q3DockWindowSeparator";
-    case PE_Q3Separator : return "PE_Q3Separator";
-#endif
     case PE_Frame : return "PE_Frame";
     case PE_FrameDefaultButton : return "PE_FrameDefaultButton";
     case PE_FrameDockWidget : return "PE_FrameDockWidget";
@@ -4663,7 +4658,8 @@ QString QSvgThemableStyle::PE_str(PrimitiveElement element) const
     case PE_IndicatorToolBarHandle : return "PE_IndicatorToolBarHandle";
     case PE_IndicatorToolBarSeparator : return "PE_IndicatorToolBarSeparator";
     case PE_PanelTipLabel : return "PE_PanelTipLabel";
-    case PE_IndicatorTabTear : return "PE_IndicatorTabTear";
+    case PE_IndicatorTabTearLeft : return "PE_IndicatorTabTearLeft";
+    case PE_IndicatorTabTearRight : return "PE_IndicatorTabTearRight";
     case PE_PanelScrollAreaCorner : return "PE_PanelScrollAreaCorner";
     case PE_Widget : return "PE_Widget";
     case PE_IndicatorColumnViewArrow : return "PE_IndicatorColumnViewArrow";
@@ -4682,9 +4678,6 @@ QString QSvgThemableStyle::PE_str(PrimitiveElement element) const
 QString QSvgThemableStyle::CE_str(QStyle::ControlElement element) const
 {
   switch(element) {
-#if QT_VERSION < 0x050000
-    case CE_Q3DockWindowEmptyArea : return "CE_Q3DockWindowEmptyArea";
-#endif
     case CE_PushButton : return "CE_PushButton";
     case CE_PushButtonBevel : return "CE_PushButtonBevel";
     case CE_PushButtonLabel : return "CE_PushButtonLabel";
@@ -4741,9 +4734,6 @@ QString QSvgThemableStyle::CE_str(QStyle::ControlElement element) const
 QString QSvgThemableStyle::SE_str(QStyle::SubElement element) const
 {
   switch(element) {
-#if QT_VERSION < 0x050000
-    case SE_Q3DockWindowHandleRect : return "SE_Q3DockWindowHandleRect";
-#endif
     case SE_PushButtonContents : return "SE_PushButtonContents";
     case SE_PushButtonFocusRect : return "SE_PushButtonFocusRect";
     case SE_CheckBoxIndicator : return "SE_CheckBoxIndicator";
@@ -4759,17 +4749,6 @@ QString QSvgThemableStyle::SE_str(QStyle::SubElement element) const
     case SE_ProgressBarGroove : return "SE_ProgressBarGroove";
     case SE_ProgressBarContents : return "SE_ProgressBarContents";
     case SE_ProgressBarLabel : return "SE_ProgressBarLabel";
-#if QT_VERSION < 0x050000
-    case SE_DialogButtonAccept : return "SE_DialogButtonAccept";
-    case SE_DialogButtonReject : return "SE_DialogButtonReject";
-    case SE_DialogButtonApply : return "SE_DialogButtonApply";
-    case SE_DialogButtonHelp : return "SE_DialogButtonHelp";
-    case SE_DialogButtonAll : return "SE_DialogButtonAll";
-    case SE_DialogButtonAbort : return "SE_DialogButtonAbort";
-    case SE_DialogButtonIgnore : return "SE_DialogButtonIgnore";
-    case SE_DialogButtonRetry : return "SE_DialogButtonRetry";
-    case SE_DialogButtonCustom : return "SE_DialogButtonCustom";
-#endif
     case SE_ToolBoxTabContents : return "SE_ToolBoxTabContents";
     case SE_HeaderLabel : return "SE_HeaderLabel";
     case SE_HeaderArrow : return "SE_HeaderArrow";
@@ -4779,7 +4758,8 @@ QString QSvgThemableStyle::SE_str(QStyle::SubElement element) const
     case SE_TabWidgetLeftCorner : return "SE_TabWidgetLeftCorner";
     case SE_TabWidgetRightCorner : return "SE_TabWidgetRightCorner";
     case SE_ItemViewItemCheckIndicator : return "SE_ItemViewItemCheckIndicator (= SE_ViewItemCheckIndicator)";
-    case SE_TabBarTearIndicator : return "SE_TabBarTearIndicator";
+    case SE_TabBarTearIndicatorLeft : return "SE_TabBarTearIndicatorLeft";
+    case SE_TabBarTearIndicatorRight : return "SE_TabBarTearIndicatorRight";
     case SE_TreeViewDisclosureItem : return "SE_TreeViewDisclosureItem";
     case SE_LineEditContents : return "SE_LineEditContents";
     case SE_FrameContents : return "SE_FrameContents";
@@ -4801,6 +4781,8 @@ QString QSvgThemableStyle::SE_str(QStyle::SubElement element) const
     case SE_FrameLayoutItem : return "SE_FrameLayoutItem";
     case SE_GroupBoxLayoutItem : return "SE_GroupBoxLayoutItem";
     case SE_TabWidgetLayoutItem : return "SE_TabWidgetLayoutItem";
+    case SE_TabBarScrollLeftButton : return "SE_TabBarScrollLeftButton";
+    case SE_TabBarScrollRightButton : return "SE_TabBarScrollRightButton";
     case SE_ItemViewItemDecoration : return "SE_ItemViewItemDecoration";
     case SE_ItemViewItemText : return "SE_ItemViewItemText";
     case SE_ItemViewItemFocusRect : return "SE_ItemViewItemFocusRect";
@@ -4818,9 +4800,6 @@ QString QSvgThemableStyle::SE_str(QStyle::SubElement element) const
 QString QSvgThemableStyle::CC_str(QStyle::ComplexControl element) const
 {
   switch (element) {
-#if QT_VERSION < 0x050000
-    case CC_Q3ListView : return "CC_Q3ListView";
-#endif
     case CC_SpinBox : return "CC_SpinBox";
     case CC_ComboBox : return "CC_ComboBox";
     case CC_ScrollBar : return "CC_ScrollBar";
@@ -4893,15 +4872,6 @@ QString QSvgThemableStyle::SC_str(QStyle::ComplexControl control, QStyle::SubCon
       case SC_None : return "SC_None";
       default : return "SC_Unknown";
     }
-#if QT_VERSION < 0x050000
-    case CC_Q3ListView : switch (subControl) {
-      case SC_Q3ListView : return "SC_Q3ListView";
-      case SC_Q3ListViewBranch : return "SC_Q3ListViewBranch";
-      case SC_Q3ListViewExpand : return "SC_Q3ListViewExpand";
-      case SC_None : return "SC_None";
-      default : return "SC_Unknown";
-    }
-#endif
     case CC_Dial : switch (subControl) {
       case SC_DialGroove : return "SC_DialGroove";
       case SC_DialHandle : return "SC_DialHandle";
@@ -4924,7 +4894,9 @@ QString QSvgThemableStyle::SC_str(QStyle::ComplexControl control, QStyle::SubCon
       case SC_None : return "SC_None";
       default : return "SC_Unknown";
     };
-    default: return "SC_Unknown";
+    case CC_CustomBase : switch (subControl) {
+      default : return "SC_Unknown";
+    }
   }
 
   return "SC_Unknown";
@@ -4933,10 +4905,6 @@ QString QSvgThemableStyle::SC_str(QStyle::ComplexControl control, QStyle::SubCon
 QString QSvgThemableStyle::CT_str(QStyle::ContentsType type) const
 {
   switch (type) {
-#if QT_VERSION < 0x050000
-    case CT_Q3Header : return "CT_Q3Header";
-    case CT_Q3DockWindow : return "CT_Q3DockWindow";
-#endif
     case CT_PushButton : return "CT_PushButton";
     case CT_CheckBox : return "CT_CheckBox";
     case CT_RadioButton : return "CT_RadioButton";
@@ -4961,7 +4929,6 @@ QString QSvgThemableStyle::CT_str(QStyle::ContentsType type) const
     case CT_MdiControls : return "CT_MdiControls";
     case CT_ItemViewItem : return "CT_ItemViewItem";
     case CT_CustomBase : return "CT_CustomBase";
-    default: return "CT_Unknown";
   }
 
   return "CT_Unknown";

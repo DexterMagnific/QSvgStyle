@@ -33,8 +33,7 @@ SOURCES += \
 
 FORMS += \
   ThemeBuilderUIBase.ui \
-  NewThemeUIBase.ui \
-  SvgGenFrameUIBase.ui
+  NewThemeUIBase.ui
 
 RESOURCES += \
   ThemeBuilderUIBase.qrc

@@ -6,6 +6,8 @@ QSvgStyle
 * scrollbars: add pgup/pgdown buttons option
 * lineedit : minimum width should be sufficient to show placeholder text
 * add ability to animate non busy progress bars
+* add ability for widgets to alter qsvgstyle theme config by using
+  dynamic widget properties. e.g. qsvgstyle_frame_width=3
 
 QSvgThemeBuilder
 ----------------

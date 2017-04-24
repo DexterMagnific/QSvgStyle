@@ -23,6 +23,7 @@ Qt limitations
 
 QSvgThemeBuilder
 ----------------
+* cannot tune indicator size
 
 QSvgThemeManager
 ----------------

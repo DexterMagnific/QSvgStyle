@@ -24,6 +24,7 @@
 #include <QMetaObject>
 #include <QFile>
 #include <QDir>
+#include <QMimeData>
 
 // UI
 #include <QListWidget>
@@ -613,6 +614,8 @@ ThemeBuilderUI::ThemeBuilderUI(QWidget* parent)
   Keys.parseOptions(options);
 
   // TESTING remove me in release
+  connect(qApp->clipboard(), SIGNAL(changed(QClipboard::Mode)),
+          this,SLOT(slot_clipboardChanged(QClipboard::Mode)));
   // TESTING end
 
   // set minimal and sufficient window size
@@ -2308,12 +2311,14 @@ void ThemeBuilderUI::slot_genFrameBtnClicked(bool checked)
 {
   svgGen->setHasFrame(checked);
   genFramePage->setEnabled(checked);
+  genToolbox->repaint();
 }
 
 void ThemeBuilderUI::slot_genInteriorBtnClicked(bool checked)
 {
   svgGen->setHasInterior(checked);
   genInteriorPage->setEnabled(checked);
+  genToolbox->repaint();
 }
 
 void ThemeBuilderUI::slot_genRoundBtnClicked(bool checked)
@@ -2379,6 +2384,22 @@ void ThemeBuilderUI::slot_genSquareBtnClicked(bool checked)
   else
     svgGen->setSize(QSizeF(200,100));
 }
+
+void ThemeBuilderUI::slot_clipboardChanged(QClipboard::Mode mode)
+{
+//  qDebug() << "Clipboard changed" << mode;
+
+//  QClipboard *c = qApp->clipboard();
+
+//  const QMimeData *m = c->mimeData(mode);
+
+//  qDebug() << "Formats" << m->formats();
+//  Q_FOREACH(QString fmt, m->formats()) {
+//    qDebug() << "dumping format" << fmt;
+//    qDebug() << m->data(fmt);
+//  }
+}
+
 
 void ThemeBuilderUI::slot_inheritCbChanged(int state)
 {
@@ -2608,7 +2629,7 @@ void ThemeBuilderUI::slot_interiorRepeatXSpinChanged(int val)
 
 void ThemeBuilderUI::slot_interiorRepeatYSpinChanged(int val)
 {
-  Q_UNUSED(val)
+  Q_UNUSED(val);
 
   schedulePreviewUpdate();
 }

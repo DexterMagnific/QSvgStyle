@@ -25,6 +25,7 @@
 #include <QFileSystemWatcher>
 #include <QElapsedTimer>
 #include <QColor>
+#include <QClipboard>
 
 #include "ui_ThemeBuilderUIBase.h"
 #include <specs.h>
@@ -104,7 +105,6 @@ class ThemeBuilderUI : public QMainWindow, private Ui::ThemeBuilderUIBase {
 
     // called on preview tab changes
     void slot_repaintBtnClicked(bool checked);
-    //void slot_sizeAdjBtnClicked(bool checked);
     void slot_rtlBtnClicked(bool checked);
     void slot_drawModeBtnClicked(bool checked);
     void slot_detachBtnClicked(bool checked);
@@ -122,7 +122,6 @@ class ThemeBuilderUI : public QMainWindow, private Ui::ThemeBuilderUIBase {
     void slot_genInteriorRoundnessChanged(qreal val);
     void slot_genSquareBtnClicked(bool checked);
     void slot_genSubFrameWidthChanged(qreal val);
-
 
     // Callbacks from QSvgStyle that are triggered when it renders widgets
     void slot_drawPrimitive_begin(const QString &s);
@@ -144,6 +143,10 @@ class ThemeBuilderUI : public QMainWindow, private Ui::ThemeBuilderUIBase {
     void slot_sizeFromContents_begin(const QString &s);
     void slot_sizeFromContents_end(const QString &s);
 
+    // TESTING
+    void slot_clipboardChanged(QClipboard::Mode mode);
+
+    // END TESTING
   protected:
     virtual bool eventFilter(QObject *o, QEvent *e);
     virtual void closeEvent(QCloseEvent *e);
