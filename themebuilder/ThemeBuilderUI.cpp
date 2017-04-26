@@ -509,6 +509,14 @@ ThemeBuilderUI::ThemeBuilderUI(QWidget* parent)
           this,SLOT(slot_genInteriorRoundnessChanged(qreal)));
   connect(genSquareBtn,SIGNAL(clicked(bool)),
           this,SLOT(slot_genSquareBtnClicked(bool)));
+  connect(genCopyBtn,SIGNAL(clicked(bool)),
+          this,SLOT(slot_genCopyBtnClicked(bool)));
+  connect(genBasenameEdit,SIGNAL(textChanged(QString)),
+          this,SLOT(slot_genBasenameChanged(QString)));
+  connect(genVariantEdit,SIGNAL(textChanged(QString)),
+          this,SLOT(slot_genVariantChanged(QString)));
+  connect(genStatusCombo,SIGNAL(editTextChanged(QString)),
+          this,SLOT(slot_genStatusChanged(QString)));
 
   // style callbacks
   if ( style ) {
@@ -2312,6 +2320,10 @@ void ThemeBuilderUI::slot_genFrameBtnClicked(bool checked)
   svgGen->setHasFrame(checked);
   genFramePage->setEnabled(checked);
   genToolbox->repaint();
+
+  for (int i=0; i<sbFrameWidthsSpins.count(); i++) {
+    sbFrameWidthsSpins[i]->setValue(svgGen->subFrameWidth(i));
+  }
 }
 
 void ThemeBuilderUI::slot_genInteriorBtnClicked(bool checked)
@@ -2372,6 +2384,33 @@ void ThemeBuilderUI::slot_genSubFrameWidthChanged(qreal val)
   svgGen->setSubFrameWidth(n, val);
 }
 
+void ThemeBuilderUI::slot_genCopyBtnClicked(bool checked)
+{
+  Q_UNUSED(checked);
+
+  QByteArray data(svgGen->toSvg().toString().toLatin1());
+
+  QMimeData *m = new QMimeData();
+  m->setData("image/svg+xml", data);
+
+  qApp->clipboard()->setMimeData(m, QClipboard::Clipboard);
+}
+
+void ThemeBuilderUI::slot_genBasenameChanged(const QString &text)
+{
+  svgGen->setBaseName(text);
+}
+
+void ThemeBuilderUI::slot_genVariantChanged(const QString &text)
+{
+  svgGen->setVariant(text);
+}
+
+void ThemeBuilderUI::slot_genStatusChanged(const QString &text)
+{
+  svgGen->setStatus(text);
+}
+
 void ThemeBuilderUI::slot_genInteriorRoundnessChanged(qreal val)
 {
   svgGen->setRoundness(val);
@@ -2399,7 +2438,6 @@ void ThemeBuilderUI::slot_clipboardChanged(QClipboard::Mode mode)
 //    qDebug() << m->data(fmt);
 //  }
 }
-
 
 void ThemeBuilderUI::slot_inheritCbChanged(int state)
 {

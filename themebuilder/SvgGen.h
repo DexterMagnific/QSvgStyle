@@ -42,18 +42,15 @@ class SvgGenInterior : public QGraphicsPathItem {
     void setInteriorRoundness(qreal val);
     void setSize(const QSizeF &sz);
 
-    void setBaseName(const QString &val) { basename = val; }
-    void setVariant(const QString &val) { variant = val; }
-    void setStatus(const QString &val) { status = val; }
+    qreal interiorRoundness() const { return roundness; }
 
-    QDomElement *toSvg();
+    QDomDocumentFragment toSvg(QDomDocument &doc);
 
   private:
     void calcInterior();
 
     qreal width, height, roundness;
     bool roundInterior;
-    QString basename, variant, status;
 };
 
 /**
@@ -99,10 +96,6 @@ class SvgGenSubFrame : public QObject, public QGraphicsPathItem {
     QRectF outerSubFrameRect() const;
     qreal outerCornerRoundness() const { return roundness+sbwidth; }
 
-    void setBaseName(const QString &val) { basename = val; }
-    void setVariant(const QString &val) { variant = val; }
-    void setStatus(const QString &val) { status = val; }
-
     /* We have to reimplement this as the default implementation calls
      * shape()->contains().
      * The problem is that shape() is a QPainterPathStroker of path(),
@@ -112,18 +105,7 @@ class SvgGenSubFrame : public QObject, public QGraphicsPathItem {
     bool contains(const QPointF &point) const;
     //QPainterPath shape() const;
 
-    enum subFramePart {
-      TopPart = 0,
-      BottomPart,
-      LeftPart,
-      RightPart,
-      TopLeftPart,
-      TopRightPart,
-      BottomLeftPart,
-      BottomRightPart,
-    };
-
-    QDomElement *toSvg(subFramePart part);
+    QDomDocumentFragment toSvg(QDomDocument doc, const QString &part);
 
   protected:
     virtual void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
@@ -139,7 +121,6 @@ class SvgGenSubFrame : public QObject, public QGraphicsPathItem {
 
     qreal width, height, roundness, sbwidth, roundCorners, split;
     QPainterPath top,bottom,left,right,topleft,topright,bottomleft,bottomright;
-    QString basename, variant, status;
     QTimer hoverTimer;
 };
 
@@ -168,9 +149,9 @@ class SvgGen : public QObject {
     /* roundness of iterior when object does not have a frame */
     void setRoundness(qreal val);
 
-    void setBaseName(const QString &val);
-    void setVariant(const QString &val);
-    void setStatus(const QString &val);
+    void setBaseName(const QString &val) { basename = val; }
+    void setVariant(const QString &val) { variant = val; }
+    void setStatus(const QString &val) { status = val; }
 
     qreal subFrameWidth(int n) const {
       if ( subFrames.count()-1 >= n )
@@ -180,7 +161,7 @@ class SvgGen : public QObject {
     }
     int frameWidth() const { return framewidth; }
 
-    QDomElement *toSvg();
+    QDomDocument toSvg();
 
   private:
     void pushSubFrame();
@@ -190,6 +171,7 @@ class SvgGen : public QObject {
     qreal width,height,shadowwidth;
     int framewidth;
     bool hasShadow, hasInterior, hasFrame, roundMode, splitMode;
+    QString basename, variant, status;
     QPointF center;
     QGraphicsScene *scene;
     QVector<SvgGenSubFrame *> subFrames;

@@ -24,6 +24,43 @@
 #include <QGraphicsScene>
 #include <QGraphicsSceneMouseEvent>
 
+/*
+ * Converts a QPainterPath to an SVG d="..." attribute of a <path> element
+ *
+ * Note that it is too bad QPainterPath translates arcTo() directives
+ * into a series of cubicTo() calls because arcTo() has a direct mapping
+ * into a 'd' attribute.
+ */
+static QString painterPathToSvgD(const QPainterPath &p)
+{
+  QString res;
+
+  for (int i=0; i<p.elementCount(); i++) {
+    QPainterPath::Element e = p.elementAt(i);
+
+    switch (e.type) {
+      case QPainterPath::MoveToElement:
+        res.append(QString("M %1 %2 ").arg(e.x).arg(e.y));
+        break;
+      case QPainterPath::LineToElement:
+        res.append(QString("L %1 %2 ").arg(e.x).arg(e.y));
+        break;
+      case QPainterPath::CurveToElement: {
+        QPainterPath::Element e2 = p.elementAt(i+1);
+        QPainterPath::Element e3 = p.elementAt(i+2);
+        res.append(QString("C %1 %2 %3 %4 %5 %6 ").arg(e.x).arg(e.y).arg(e2.x)
+            .arg(e2.y).arg(e3.x).arg(e3.y));
+        break;
+      }
+      case QPainterPath::CurveToDataElement:
+        /* nothing, handled within CurveToElement */
+        break;
+    }
+  }
+
+  return res;
+}
+
 SvgGenInterior::SvgGenInterior(QGraphicsItem* parent)
   : QGraphicsPathItem(parent), roundness(10), roundInterior(false)
 {
@@ -68,6 +105,20 @@ void SvgGenInterior::calcInterior()
   setPath(p);
 }
 
+QDomDocumentFragment SvgGenInterior::toSvg(QDomDocument &doc)
+{
+  QDomDocumentFragment res = doc.createDocumentFragment();
+  QDomElement p = doc.createElement("path");
+
+  p.setAttribute("d", painterPathToSvgD(path()));
+  p.setAttribute("style","stroke:none;fill:#ff0000");
+  p.setAttribute("transform", QString("translate(%1,%2)").arg(pos().x()).arg(pos().y()));
+
+  res.appendChild(p);
+
+  return res;
+}
+
 SvgGenSubFrame::SvgGenSubFrame(QGraphicsItem* parent)
   : QObject(), QGraphicsPathItem(parent)
 {
@@ -76,7 +127,6 @@ SvgGenSubFrame::SvgGenSubFrame(QGraphicsItem* parent)
   sbwidth = 10;
   split = false;
 
-  setFlags(QGraphicsItem::ItemIsMovable | QGraphicsItem::ItemIsSelectable);
   setAcceptHoverEvents(true);
 
   connect(&hoverTimer,SIGNAL(timeout()),
@@ -100,7 +150,6 @@ SvgGenSubFrame::SvgGenSubFrame(const SvgGenSubFrame* prev)
   setPos(p);
   //setZValue(prev->zValue()-1);
 
-  setFlags(QGraphicsItem::ItemIsMovable | QGraphicsItem::ItemIsSelectable);
   setAcceptHoverEvents(true);
 
   connect(&hoverTimer,SIGNAL(timeout()),
@@ -120,7 +169,6 @@ SvgGenSubFrame::SvgGenSubFrame(const QSizeF &sz, qreal sbwidth, qreal roundness,
   roundCorners = round;
   this->split = split;
 
-  setFlags(QGraphicsItem::ItemIsMovable | QGraphicsItem::ItemIsSelectable);
   setAcceptHoverEvents(true);
 
   connect(&hoverTimer,SIGNAL(timeout()),
@@ -181,7 +229,7 @@ void SvgGenSubFrame::hoverEnterEvent(QGraphicsSceneHoverEvent* event)
 
 void SvgGenSubFrame::hoverMoveEvent(QGraphicsSceneHoverEvent* event)
 {
-    qDebug() << event->pos() << contains(event->pos());
+  //qDebug() << event->pos() << contains(event->pos());
 
   QGraphicsPathItem::hoverMoveEvent(event);
 }
@@ -485,8 +533,41 @@ void SvgGenSubFrame::calcSubFrame()
 bool SvgGenSubFrame::contains(const QPointF& point) const
 {
   //return QGraphicsPathItem::contains(point);
-  qDebug() << "contains" << path().contains(point);
+  //qDebug() << "contains" << path().contains(point);
   return path().contains(point);
+}
+
+QDomDocumentFragment SvgGenSubFrame::toSvg(QDomDocument doc, const QString &part)
+{
+  QDomDocumentFragment res = doc.createDocumentFragment();
+
+  QPainterPath &path = top;
+  if ( part == "top" )
+    path = top;
+  else if ( part == "bottom" )
+    path = bottom;
+  else if ( part == "left" )
+    path = left;
+  else if ( part == "right" )
+    path = right;
+  else if ( part == "topleft" )
+    path = topleft;
+  else if ( part == "topright" )
+    path = topright;
+  else if ( part == "bottomleft" )
+    path = bottomleft;
+  else if ( part == "bottomright" )
+    path = bottomright;
+
+  QDomElement p = doc.createElement("path");
+
+  p.setAttribute("d", painterPathToSvgD(path));
+  p.setAttribute("style","stroke:none;fill:#ff0000");
+  p.setAttribute("transform", QString("translate(%1,%2)").arg(pos().x()).arg(pos().y()));
+
+  res.appendChild(p);
+
+  return res;
 }
 
 // QPainterPath SvgGenSubFrame::shape() const
@@ -504,6 +585,9 @@ SvgGen::SvgGen(QGraphicsScene *scene, QObject *parent)
   hasInterior(true),
   hasFrame(true),
   roundMode(true),
+  basename("basename"),
+  variant("variant"),
+  status("status"),
   center(QPointF(0,0)),
   scene(scene),
   interior(0),
@@ -725,4 +809,87 @@ void SvgGen::setCenter(const QPointF &p)
   oldCenter = cross->pos()+cross->boundingRect().center();
   delta = p-oldCenter;
   cross->moveBy(delta.x(),delta.y());
+}
+
+QDomDocument SvgGen::toSvg()
+{
+  QDomDocument doc;
+
+  QDomProcessingInstruction xml =
+    doc.createProcessingInstruction("xml",
+      "version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"");
+
+  QDomElement svg = doc.createElement("svg");
+  svg.setAttributeNS("xmlns","svg","http://www.w3.org/2000/svg");
+  svg.setAttribute("xmlns","http://www.w3.org/2000/svg");
+  svg.setAttribute("version","1.1");
+
+  QDomElement g = doc.createElement("g");
+  g.setAttribute("id",QString("qsvggen-%1-%2-%3").arg(basename).arg(variant).arg(status));
+
+  QDomElement qsvg_global = doc.createElement("qsvgstyle");
+  qsvg_global.setAttribute("type","gen");
+  qsvg_global.setAttribute("interior", hasInterior ? "true" : "false");
+  qsvg_global.setAttribute("frame", hasFrame ? "true" : "false");
+  qsvg_global.setAttribute("shadow", hasShadow ? "true" : "false");
+  qsvg_global.setAttribute("split", splitMode ? "true" : "false");
+  qsvg_global.setAttribute("square", (width == height) ? "true" : "false");
+  qsvg_global.setAttribute("round", roundMode ? "true" : "false");
+  qsvg_global.setAttribute("basename", basename);
+  qsvg_global.setAttribute("variant", variant);
+  qsvg_global.setAttribute("status", status);
+
+  QDomElement _interior = doc.createElement("g");
+  _interior.setAttribute("id", QString("%1-%2").arg(basename).arg(status));
+  QDomElement qsvg_interior = doc.createElement("qsvgstyle");
+  if ( hasInterior ) {
+    qsvg_interior.setAttribute("type", "interior");
+    qsvg_interior.setAttribute("roundness", interior->interiorRoundness());
+  }
+
+  QDomElement frame = doc.createElement("g");
+  frame.setAttribute("id", QString("%1-frame-%2").arg(basename).arg(status));
+  QDomElement qsvg_frame = doc.createElement("qsvgstyle");
+  if ( hasFrame ) {
+    qsvg_frame.setAttribute("type", "frame");
+    qsvg_frame.setAttribute("width", framewidth);
+    QString subwidths;
+    Q_FOREACH(SvgGenSubFrame *sf, subFrames)
+      subwidths.append(QString("%1,").arg(sf->subFrameWidth()));
+    qsvg_frame.setAttribute("subframewidths", subwidths);
+  }
+
+  // Organize nodes inside SVG+XML document
+  doc.appendChild(xml);
+  doc.appendChild(svg);
+
+  if ( hasInterior || hasFrame ) {
+    svg.appendChild(g);
+    g.appendChild(qsvg_global);
+  }
+
+  if ( hasInterior ) {
+    g.appendChild(_interior);
+    _interior.appendChild(qsvg_interior);
+    _interior.appendChild(interior->toSvg(doc));
+  }
+
+  if ( hasFrame ) {
+    g.appendChild(frame);
+    frame.appendChild(qsvg_frame);
+
+    QVector<QString> parts;
+    parts << "top" << "bottom" << "left" << "right" << "topleft" << "topright"
+          << "bottomleft" << "bottomright";
+    Q_FOREACH(QString part, parts) {
+      QDomElement gpart = doc.createElement("g");
+      gpart.setAttribute("id", QString("%1-%2-%3").arg(basename).arg(status).arg(part));
+      Q_FOREACH(SvgGenSubFrame *sf, subFrames) {
+        gpart.appendChild(sf->toSvg(doc, part));
+      }
+      frame.appendChild(gpart);
+    }
+  }
+
+  return doc;
 }

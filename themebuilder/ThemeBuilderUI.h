@@ -122,6 +122,10 @@ class ThemeBuilderUI : public QMainWindow, private Ui::ThemeBuilderUIBase {
     void slot_genInteriorRoundnessChanged(qreal val);
     void slot_genSquareBtnClicked(bool checked);
     void slot_genSubFrameWidthChanged(qreal val);
+    void slot_genCopyBtnClicked(bool checked);
+    void slot_genBasenameChanged(const QString &text);
+    void slot_genVariantChanged(const QString &text);
+    void slot_genStatusChanged(const QString &text);
 
     // Callbacks from QSvgStyle that are triggered when it renders widgets
     void slot_drawPrimitive_begin(const QString &s);
