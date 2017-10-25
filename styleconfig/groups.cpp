@@ -38,7 +38,7 @@ QString PE_group(QStyle::PrimitiveElement element)
     case QStyle::PE_FrameWindow : return "Window";
     case QStyle::PE_FrameButtonBevel : return "PushButton";
     case QStyle::PE_FrameButtonTool : return "ToolButton";
-    case QStyle::PE_FrameTabBarBase : return "TabWidget";
+    case QStyle::PE_FrameTabBarBase : return "TabBar";
     // Panels (interiors)
     case QStyle::PE_PanelButtonCommand : return "PushButton";
     case QStyle::PE_PanelButtonBevel : return "PushButton";
@@ -47,36 +47,36 @@ QString PE_group(QStyle::PrimitiveElement element)
     case QStyle::PE_PanelToolBar : return "ToolBar";
     case QStyle::PE_PanelLineEdit : return "LineEdit";
     case QStyle::PE_PanelTipLabel : return "Tooltip";
-    case QStyle::PE_PanelScrollAreaCorner : return "PE_PanelScrollAreaCorner";
+    case QStyle::PE_PanelScrollAreaCorner : return "ScrollBar";
     case QStyle::PE_PanelItemViewItem : return "ViewItem";
     case QStyle::PE_PanelItemViewRow : return "ViewItem";
     case QStyle::PE_PanelStatusBar : return "StatusBar";
     case QStyle::PE_PanelMenu : return "Menu";
     // Indicators
-    case QStyle::PE_IndicatorArrowDown : return "Indicator";
-    case QStyle::PE_IndicatorArrowLeft : return "Indicator";
-    case QStyle::PE_IndicatorArrowRight : return "Indicator";
-    case QStyle::PE_IndicatorArrowUp : return "Indicator";
-    case QStyle::PE_IndicatorBranch : return "Indicator";
-    case QStyle::PE_IndicatorButtonDropDown : return "Indicator";
+    case QStyle::PE_IndicatorArrowDown : return "PushButton";
+    case QStyle::PE_IndicatorArrowLeft : return "PushButton";
+    case QStyle::PE_IndicatorArrowRight : return "PushButton";
+    case QStyle::PE_IndicatorArrowUp : return "PushButton";
+    case QStyle::PE_IndicatorBranch : return "ViewItem";
+    case QStyle::PE_IndicatorButtonDropDown : return "PushButton";
     case QStyle::PE_IndicatorItemViewItemCheck : return "CheckBox";
     case QStyle::PE_IndicatorCheckBox : return "CheckBox";
     case QStyle::PE_IndicatorDockWidgetResizeHandle : return "DockWidget";
-    case QStyle::PE_IndicatorHeaderArrow : return "Indicator";
+    case QStyle::PE_IndicatorHeaderArrow : return "Header";
     case QStyle::PE_IndicatorMenuCheckMark : return "CheckBox";
-    case QStyle::PE_IndicatorProgressChunk : return "ProgressbarContents";
+    case QStyle::PE_IndicatorProgressChunk : return "ProgressBar";
     case QStyle::PE_IndicatorRadioButton : return "RadioButton";
-    case QStyle::PE_IndicatorSpinDown : return "Indicator";
-    case QStyle::PE_IndicatorSpinMinus : return "Indicator";
-    case QStyle::PE_IndicatorSpinPlus : return "Indicator";
-    case QStyle::PE_IndicatorSpinUp : return "Indicator";
+    case QStyle::PE_IndicatorSpinDown : return "SpinBox";
+    case QStyle::PE_IndicatorSpinMinus : return "SpinBox";
+    case QStyle::PE_IndicatorSpinPlus : return "SpinBox";
+    case QStyle::PE_IndicatorSpinUp : return "SpinBox";
     case QStyle::PE_IndicatorToolBarHandle : return "ToolBar";
     case QStyle::PE_IndicatorToolBarSeparator : return "ToolBar";
-    case QStyle::PE_IndicatorTabTearLeft : return "TabWidget";
-    case QStyle::PE_IndicatorTabTearRight : return "TabWidget";
-    case QStyle::PE_IndicatorColumnViewArrow : return "Indicator";
-    case QStyle::PE_IndicatorItemViewItemDrop : return "Indicator";
-    case QStyle::PE_IndicatorTabClose : return "TabWidget";
+    case QStyle::PE_IndicatorTabTearLeft : return "TabBar";
+    case QStyle::PE_IndicatorTabTearRight : return "TabBar";
+    case QStyle::PE_IndicatorColumnViewArrow : return "MenuItem";
+    case QStyle::PE_IndicatorItemViewItemDrop : return "ViewItem";
+    case QStyle::PE_IndicatorTabClose : return "TabBar";
 
     default : return QString();
   }
@@ -112,7 +112,7 @@ QString CE_group(QStyle::ControlElement element)
     case QStyle::CE_HeaderSection : return "Header";
     case QStyle::CE_HeaderLabel : return "Header";
     case QStyle::CE_ToolBoxTab : return "ToolBox";
-    case QStyle::CE_SizeGrip : return "Indicator";
+    case QStyle::CE_SizeGrip : return "Window";
     case QStyle::CE_Splitter : return "Splitter";
     case QStyle::CE_RubberBand : return "RubberBand";
     case QStyle::CE_DockWidgetTitle : return "DockWidget";
@@ -155,11 +155,11 @@ QString CT_group(QStyle::ContentsType type)
     case QStyle::CT_ScrollBar : return "ScrollBar";
     case QStyle::CT_LineEdit : return "LineEdit";
     case QStyle::CT_SpinBox : return "SpinBox";
-    case QStyle::CT_TabWidget : return "TabWidget";
+    case QStyle::CT_TabWidget : return "TabBar";
     case QStyle::CT_HeaderSection : return "Header";
     case QStyle::CT_GroupBox : return "GroupBox";
     case QStyle::CT_ItemViewItem : return "ViewItem";
-    case QStyle::CT_SizeGrip : return "Indicator";
+    case QStyle::CT_SizeGrip : return "Window";
     default: return QString();
   }
 

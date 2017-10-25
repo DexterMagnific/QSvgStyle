@@ -3,14 +3,54 @@ QSvgStyle
 * Capsule drawing is still incorrect : use painter clipping instead of performing capsule related calculation (warning : eval impact on performance ?)
 * Capsule drawing : use specific hsep/vsep element that maintains interior consistency
 
-* implement frame for default buttons
-* implement default button indicator for auto default buttons
+-- Slider
 * slider full part in vertical mode: not centered
   (same for empty part when controls are inverted)
   (groove seems 1 pixel wider than expected)
-* view items: size does not take into account label margins
+* should ticks be drawn above or under cursor ?
+
+-- View item
+* reimplement CE_ItemViewItem so that text rendering will take into
+  account text margins
+* do not draw "normal" interior
+
+-- Tab
 * tab bar close button overlaps frame (thick frames)
+* implement PE_FrameTabBarBase
+* use different variants for tabs and contents
+
+-- Title bar
 * implement CC_TitleBar support
+* implement SP_TitleBar* pixmaps
+
+-- Toolbar
+* There is no spacing between toolbar handle and first button
+* rtl separators/handles
+
+-- Progressbar
+* overdraw in busy progress bar in vertical mode
+
+-- Dock
+* dock widget buttons overlap with frame
+  -> when docked, frame is for title
+  -> when floating, frame is for whole dock
+  -> set title margin to 0 and apply standard qsvgstyle rendering for labels
+  -> title rect should be reduced by the size of the visible buttons
+  -> buttons should be moved inside frame
+  -> PE_FrameDockWidget is never called
+
+-- Scroll
+* use different variants for buttons and groove and cursor
+* use own indicators instead of generic arrows that
+  have the pushbutton specs
+
+-- Group box
+* implement bottom titles for group box
+
+-- Scroll area
+* implement PE_PanelScrollAreaCorner
+
+-- Standard pixmaps
 
 Qt limitations
 --------------
@@ -19,11 +59,15 @@ Qt limitations
 * ToolBoxes: tool box tab is not repainted when underlying content widget
   changes enabled status
 * Frames of types HLine and VLine: height/width is hardcoded to 3
+* Progressbars cannot be made smaller than font height+2 even if they do
+  not display text. Cheat is to insert invisible elements to make
+  it look smaller
 
 
 QSvgThemeBuilder
 ----------------
-* cannot tune indicator size
+* fix tab order
+* implement QDial
 
 QSvgThemeManager
 ----------------

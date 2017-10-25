@@ -23,6 +23,7 @@
 #include <QDebug>
 #include <QGraphicsScene>
 #include <QGraphicsSceneMouseEvent>
+#include <QLinearGradient>
 
 /*
  * Converts a QPainterPath to an SVG d="..." attribute of a <path> element
@@ -31,7 +32,7 @@
  * into a series of cubicTo() calls because arcTo() has a direct mapping
  * into a 'd' attribute.
  */
-static QString painterPathToSvgD(const QPainterPath &p)
+static QString painterPathToSvg_d(const QPainterPath &p)
 {
   QString res;
 
@@ -61,8 +62,61 @@ static QString painterPathToSvgD(const QPainterPath &p)
   return res;
 }
 
+/*
+ * Merges attributes of src DOM element into tgt DOM element
+ * if the attribute exists both in src and tgt, the one of tgt
+ * keeps its value
+ */
+static void mergeDomElementAttrs(QDomElement &tgt, QDomElement &src)
+{
+  QDomNamedNodeMap src_map = src.attributes();
+  QDomNamedNodeMap tgt_map = tgt.attributes();
+
+  for (int i=0; i<src_map.count(); i++) {
+    QDomAttr a = src_map.item(i).toAttr();
+    if ( !tgt_map.contains(a.name()) ) {
+      tgt.setAttributeNS(a.namespaceURI(),
+                         a.name(),
+                         a.value());
+    }
+  }
+}
+
+/*
+ * Copy the DOM element src as a sibling of DOM element tgt
+ */
+static void copyDomElementAsSibling(QDomElement &tgt, QDomElement &src)
+{
+  QDomNode p = tgt.parentNode();
+  QDomDocument d = tgt.ownerDocument();
+
+  QDomElement e = d.createElementNS(src.namespaceURI(),src.localName());
+  QDomNamedNodeMap src_map = src.attributes();
+  for (int i=0; i<src_map.count(); i++) {
+    QDomAttr a = src_map.item(i).toAttr();
+    e.setAttributeNS(a.namespaceURI(),
+                     a.name(),
+                     a.value());
+  }
+
+  tgt.insertAfter(e,tgt);
+}
+
+/*
+ * Merges the children of src DOM element into tgt DOM elements
+ * with regards to SVG "id" attributes
+ * If child exists only under src, it is copied into tgt
+ */
+static void mergeSVGDomElements(QDomElement &tgt, QDomElement &src)
+{
+  for (QDomNode n=src.firstChild(); !n.isNull(); n=n.nextSibling()) {
+
+  }
+}
+
 SvgGenInterior::SvgGenInterior(QGraphicsItem* parent)
-  : QGraphicsPathItem(parent), roundness(10), roundInterior(false)
+  : QGraphicsPathItem(parent), roundness(10), roundInterior(false),
+    color1(Qt::gray), color2(Qt::black), fill(FillTypeFlat)
 {
   setSize(QSize(100,100));
 }
@@ -93,6 +147,59 @@ void SvgGenInterior::setSize(const QSizeF& sz)
   calcInterior();
 }
 
+void SvgGenInterior::setFillType(FillType type)
+{
+  fill = type;
+  calcFill();
+}
+
+void SvgGenInterior::setFirstColor(const QColor &c)
+{
+  color1 = c;
+  calcFill();
+}
+
+void SvgGenInterior::setSecondColor(const QColor &c)
+{
+  color2 = c;
+  calcFill();
+}
+
+void SvgGenInterior::calcFill()
+{
+  // set fill
+  switch (fill) {
+    case FillTypeFlat: {
+      setBrush(color1);
+      break;
+    }
+    case FillTypeGradient : {
+      QLinearGradient fill;
+      QRectF r = boundingRect();
+
+      fill.setColorAt(0, color1);
+      fill.setColorAt(1, color2);
+      fill.setStart(r.center().x(),r.top());
+      fill.setFinalStop(r.center().x(),r.bottom());
+
+      setBrush(QBrush(fill));
+      break;
+    }
+    case FillTypeInvertedGradient : {
+      QLinearGradient fill;
+      QRectF r = boundingRect();
+
+      fill.setColorAt(1, color1);
+      fill.setColorAt(0, color2);
+      fill.setStart(r.center().x(),r.top());
+      fill.setFinalStop(r.center().x(),r.bottom());
+
+      setBrush(QBrush(fill));
+      break;
+    }
+  }
+}
+
 void SvgGenInterior::calcInterior()
 {
   QPainterPath p;
@@ -103,6 +210,7 @@ void SvgGenInterior::calcInterior()
   }
 
   setPath(p);
+  calcFill();
 }
 
 QDomDocumentFragment SvgGenInterior::toSvg(QDomDocument &doc)
@@ -110,8 +218,10 @@ QDomDocumentFragment SvgGenInterior::toSvg(QDomDocument &doc)
   QDomDocumentFragment res = doc.createDocumentFragment();
   QDomElement p = doc.createElement("path");
 
-  p.setAttribute("d", painterPathToSvgD(path()));
-  p.setAttribute("style","stroke:none;fill:#ff0000");
+  p.setAttribute("d", painterPathToSvg_d(path()));
+  p.setAttribute("style",QString("stroke:none;fill:%1;fill-opacity:%3")
+                 .arg(color1.name(QColor::HexRgb))
+                 .arg(color1.alphaF()));
   p.setAttribute("transform", QString("translate(%1,%2)").arg(pos().x()).arg(pos().y()));
 
   res.appendChild(p);
@@ -120,24 +230,20 @@ QDomDocumentFragment SvgGenInterior::toSvg(QDomDocument &doc)
 }
 
 SvgGenSubFrame::SvgGenSubFrame(QGraphicsItem* parent)
-  : QObject(), QGraphicsPathItem(parent)
+  : QObject(), QGraphicsPathItem(parent), color1(Qt::gray),
+    color2(Qt::black), fill(FillTypeFlat)
 {
   width = height = 100;
   roundness = 0;
   sbwidth = 10;
   split = false;
 
-  setAcceptHoverEvents(true);
-
-  connect(&hoverTimer,SIGNAL(timeout()),
-          this,SLOT(hoverTimeout()));
-  hoverTimer.setInterval(100);
-
   calcSubFrame();
 }
 
 SvgGenSubFrame::SvgGenSubFrame(const SvgGenSubFrame* prev)
-  : QObject(), QGraphicsPathItem(NULL)
+  : QObject(), QGraphicsPathItem(NULL), color1(Qt::gray),
+    color2(Qt::black), fill(FillTypeFlat)
 {
   width = prev->outerSubFrameRect().width();
   height =  prev->outerSubFrameRect().height();
@@ -150,17 +256,12 @@ SvgGenSubFrame::SvgGenSubFrame(const SvgGenSubFrame* prev)
   setPos(p);
   //setZValue(prev->zValue()-1);
 
-  setAcceptHoverEvents(true);
-
-  connect(&hoverTimer,SIGNAL(timeout()),
-          this,SLOT(hoverTimeout()));
-  hoverTimer.setInterval(100);
-
   calcSubFrame();
 }
 
 SvgGenSubFrame::SvgGenSubFrame(const QSizeF &sz, qreal sbwidth, qreal roundness, bool round, bool split)
-  : QObject(), QGraphicsPathItem(NULL)
+  : QObject(), QGraphicsPathItem(NULL), color1(Qt::gray),
+    color2(Qt::black), fill(FillTypeFlat)
 {
   width = sz.width();
   height = sz.height();
@@ -169,79 +270,11 @@ SvgGenSubFrame::SvgGenSubFrame(const QSizeF &sz, qreal sbwidth, qreal roundness,
   roundCorners = round;
   this->split = split;
 
-  setAcceptHoverEvents(true);
-
-  connect(&hoverTimer,SIGNAL(timeout()),
-          this,SLOT(hoverTimeout()));
-  hoverTimer.setInterval(100);
-
   calcSubFrame();
 }
 
 SvgGenSubFrame::~SvgGenSubFrame()
 {
-}
-
-void SvgGenSubFrame::hoverTimeout()
-{
-//   static int turn = 0;
-//   static const int maxturn = 20; // number of color changes.
-//   static const int maxbright = 80; // % of brighthness to reach at maxturn
-
-  QBrush b = brush();
-  QPen p = pen();
-//   QColor c = Qt::darkMagenta;
-
-  QTransform m = b.transform();
-  m.translate(1,0);
-  b.setTransform(m);
-
-//   turn = (turn+1)%(maxturn*2);
-//   int val;
-//   if ( turn < maxturn )
-//     val = 100+(turn*maxbright/maxturn);
-//   else
-//     val = 100+((maxturn*2-turn)*maxbright/maxturn);
-//
-//   p.setColor(c.lighter(val));
-//   b.setColor(c.lighter(val));
-
-  setBrush(b);
-  setPen(p);
-}
-
-void SvgGenSubFrame::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
-{
-
-  QGraphicsPathItem::mouseMoveEvent(event);
-}
-
-void SvgGenSubFrame::hoverEnterEvent(QGraphicsSceneHoverEvent* event)
-{
-  QGraphicsPathItem::hoverEnterEvent(event);
-
-  setPen(QPen(Qt::darkGreen));
-  QBrush b(Qt::lightGray,Qt::BDiagPattern);
-  setBrush(b);
-
-  hoverTimer.start();
-}
-
-void SvgGenSubFrame::hoverMoveEvent(QGraphicsSceneHoverEvent* event)
-{
-  //qDebug() << event->pos() << contains(event->pos());
-
-  QGraphicsPathItem::hoverMoveEvent(event);
-}
-
-void SvgGenSubFrame::hoverLeaveEvent(QGraphicsSceneHoverEvent* event)
-{
-  QGraphicsPathItem::hoverLeaveEvent(event);
-
-  setPen(QPen(Qt::black));
-  setBrush(QBrush());
-
-  hoverTimer.stop();
 }
 
 void SvgGenSubFrame::setSize(const QSizeF& sz)
@@ -289,6 +322,24 @@ QRectF SvgGenSubFrame::outerSubFrameRect() const
     r.adjust(d,d,-d,-d);
   }
   return r;
+}
+
+void SvgGenSubFrame::setFirstColor(const QColor &c)
+{
+  color1 = c;
+  calcFill();
+}
+
+void SvgGenSubFrame::setSecondColor(const QColor &c)
+{
+  color2 = c;
+  calcFill();
+}
+
+void SvgGenSubFrame::setFillType(FillType type)
+{
+  fill = type;
+  calcFill();
 }
 
 void SvgGenSubFrame::calcSubFrame()
@@ -523,11 +574,47 @@ void SvgGenSubFrame::calcSubFrame()
     setPath(p);
   }
 
+  calcFill();
 //   qDebug() << osfRect.center()
 //            << osf.contains(osfRect.center())
 //            << contains(osfRect.center())
 //            << shape().contains(osfRect.center())
 //            << path().contains(osfRect.center());
+}
+
+void SvgGenSubFrame::calcFill()
+{
+  // set fill
+  switch (fill) {
+    case FillTypeFlat: {
+      setBrush(color1);
+      break;
+    }
+    case FillTypeGradient : {
+      QLinearGradient fill;
+      QRectF r = boundingRect();
+
+      fill.setColorAt(0, color1);
+      fill.setColorAt(1, color2);
+      fill.setStart(r.center().x(),r.top());
+      fill.setFinalStop(r.center().x(),r.bottom());
+
+      setBrush(QBrush(fill));
+      break;
+    }
+    case FillTypeInvertedGradient : {
+      QLinearGradient fill;
+      QRectF r = boundingRect();
+
+      fill.setColorAt(1, color1);
+      fill.setColorAt(0, color2);
+      fill.setStart(r.center().x(),r.top());
+      fill.setFinalStop(r.center().x(),r.bottom());
+
+      setBrush(QBrush(fill));
+      break;
+    }
+  }
 }
 
 bool SvgGenSubFrame::contains(const QPointF& point) const
@@ -541,7 +628,7 @@ QDomDocumentFragment SvgGenSubFrame::toSvg(QDomDocument doc, const QString &part
 {
   QDomDocumentFragment res = doc.createDocumentFragment();
 
-  QPainterPath &path = top;
+  QPainterPath path;
   if ( part == "top" )
     path = top;
   else if ( part == "bottom" )
@@ -561,8 +648,10 @@ QDomDocumentFragment SvgGenSubFrame::toSvg(QDomDocument doc, const QString &part
 
   QDomElement p = doc.createElement("path");
 
-  p.setAttribute("d", painterPathToSvgD(path));
-  p.setAttribute("style","stroke:none;fill:#ff0000");
+  p.setAttribute("d", painterPathToSvg_d(path));
+  p.setAttribute("style",QString("stroke:none;fill:%1;fill-opacity:%3")
+                 .arg(color1.name(QColor::HexRgb))
+                 .arg(color1.alphaF()));
   p.setAttribute("transform", QString("translate(%1,%2)").arg(pos().x()).arg(pos().y()));
 
   res.appendChild(p);
@@ -577,17 +666,18 @@ QDomDocumentFragment SvgGenSubFrame::toSvg(QDomDocument doc, const QString &part
 
 SvgGen::SvgGen(QGraphicsScene *scene, QObject *parent)
   : QObject(parent),
-  width(200),
+  width(100),
   height(100),
   shadowwidth(2),
   framewidth(1),
-  hasShadow(false),
-  hasInterior(true),
-  hasFrame(true),
-  roundMode(true),
-  basename("basename"),
-  variant("variant"),
-  status("status"),
+  m_hasShadow(false),
+  m_hasInterior(true),
+  m_hasFrame(true),
+  m_roundMode(true),
+  m_splitMode(true),
+  m_basename("basename"),
+  m_variant("variant"),
+  m_status("status"),
   center(QPointF(0,0)),
   scene(scene),
   interior(0),
@@ -595,8 +685,8 @@ SvgGen::SvgGen(QGraphicsScene *scene, QObject *parent)
 {
   scene->setParent(this);
 
-  setHasFrame(hasFrame);
-  setHasInterior(hasInterior);
+  setHasFrame(m_hasFrame);
+  setHasInterior(m_hasInterior);
 
   QPen crossPen(Qt::darkGreen);
 //   crossPen.setStyle(Qt::DashLine);
@@ -619,7 +709,7 @@ SvgGen::~SvgGen()
 
 void SvgGen::setHasInterior(bool hasIt)
 {
-  hasInterior = hasIt;
+  m_hasInterior = hasIt;
 
   if ( hasIt ) {
     if ( !interior ) {
@@ -629,8 +719,8 @@ void SvgGen::setHasInterior(bool hasIt)
       QPointF delta = center-oldCenter;
       interior->moveBy(delta.x(),delta.y());
 
-      if ( !hasFrame )
-        interior->setRoundInterior(roundMode);
+      if ( !m_hasFrame )
+        interior->setRoundInterior(m_roundMode);
       else
         interior->setRoundInterior(false);
 
@@ -647,7 +737,7 @@ void SvgGen::setHasInterior(bool hasIt)
 
 void SvgGen::setHasFrame(bool hasIt)
 {
-  hasFrame = hasIt;
+  m_hasFrame = hasIt;
 
   if ( !hasIt ) {
     for (int i=subFrames.count(); i>0; i--)
@@ -660,10 +750,10 @@ void SvgGen::setHasFrame(bool hasIt)
 
 void SvgGen::setRoundMode(bool hasIt)
 {
-  roundMode = hasIt;
+  m_roundMode = hasIt;
 
   if ( hasIt ) {
-    if ( hasFrame ) {
+    if ( m_hasFrame ) {
       Q_FOREACH(SvgGenSubFrame *sf, subFrames) {
         sf->setRoundCorners(true);
       }
@@ -682,7 +772,7 @@ void SvgGen::setRoundMode(bool hasIt)
   }
 }
 
-void SvgGen::setRoundness(qreal val)
+void SvgGen::setInteriorRoundness(qreal val)
 {
   if ( interior )
     interior->setInteriorRoundness(val);
@@ -690,7 +780,7 @@ void SvgGen::setRoundness(qreal val)
 
 void SvgGen::setSplitMode(bool hasIt)
 {
-  splitMode = hasIt;
+  m_splitMode = hasIt;
 
   Q_FOREACH(SvgGenSubFrame *sf, subFrames) {
     sf->setSplitMode(hasIt);
@@ -704,7 +794,7 @@ void SvgGen::pushSubFrame()
   if ( nb > 0 ) {
     sf = new SvgGenSubFrame(subFrames[nb-1]);
   } else {
-    sf = new SvgGenSubFrame(QSizeF(width,height),5,0,roundMode,splitMode);
+    sf = new SvgGenSubFrame(QSizeF(width,height),5,0,m_roundMode,m_splitMode);
   }
 
   //qDebug() << "push subframe" << nb << "shape" << sf->shape();
@@ -732,7 +822,7 @@ void SvgGen::popSubFrame()
 
   if ( !subFrames.count() ) {
     if ( interior )
-      interior->setRoundInterior(roundMode);
+      interior->setRoundInterior(m_roundMode);
   }
 }
 
@@ -740,7 +830,7 @@ void SvgGen::setFrameWidth(int width)
 {
   framewidth = width;
   int nb = subFrames.count();
-  if ( hasFrame ) {
+  if ( m_hasFrame ) {
     if ( width > nb ) {
       while (nb++ < width)
         pushSubFrame();
@@ -811,6 +901,48 @@ void SvgGen::setCenter(const QPointF &p)
   cross->moveBy(delta.x(),delta.y());
 }
 
+void SvgGen::setSubFrameFillType(int idx, SvgGenSubFrame::FillType type)
+{
+  if ( idx > subFrames.count()-1 )
+    return;
+
+  subFrames[idx]->setFillType(type);
+}
+
+void SvgGen::setSubFrameFirstColor(int idx, const QColor &c)
+{
+  if ( idx > subFrames.count()-1 )
+    return;
+
+  subFrames[idx]->setFirstColor(c);
+}
+
+void SvgGen::setSubFrameSecondColor(int idx, const QColor &c)
+{
+  if ( idx > subFrames.count()-1 )
+    return;
+
+  subFrames[idx]->setSecondColor(c);
+}
+
+void SvgGen::setInteriorFillType(SvgGenInterior::FillType type)
+{
+  if ( interior )
+    interior->setFillType(type);
+}
+
+void SvgGen::setInteriorFirstColor(const QColor &c)
+{
+  if ( interior )
+    interior->setFirstColor(c);
+}
+
+void SvgGen::setInteriorSecondColor(const QColor &c)
+{
+  if ( interior )
+    interior->setSecondColor(c);
+}
+
 QDomDocument SvgGen::toSvg()
 {
   QDomDocument doc;
@@ -825,32 +957,38 @@ QDomDocument SvgGen::toSvg()
   svg.setAttribute("version","1.1");
 
   QDomElement g = doc.createElement("g");
-  g.setAttribute("id",QString("qsvggen-%1-%2-%3").arg(basename).arg(variant).arg(status));
+  g.setAttribute("id",QString("qsvggen-%1-%2-%3").arg(m_basename).arg(m_variant).arg(m_status));
 
   QDomElement qsvg_global = doc.createElement("qsvgstyle");
   qsvg_global.setAttribute("type","gen");
-  qsvg_global.setAttribute("interior", hasInterior ? "true" : "false");
-  qsvg_global.setAttribute("frame", hasFrame ? "true" : "false");
-  qsvg_global.setAttribute("shadow", hasShadow ? "true" : "false");
-  qsvg_global.setAttribute("split", splitMode ? "true" : "false");
+  qsvg_global.setAttribute("interior", m_hasInterior ? "true" : "false");
+  qsvg_global.setAttribute("frame", m_hasFrame ? "true" : "false");
+  qsvg_global.setAttribute("shadow", m_hasShadow ? "true" : "false");
+  qsvg_global.setAttribute("split", m_splitMode ? "true" : "false");
   qsvg_global.setAttribute("square", (width == height) ? "true" : "false");
-  qsvg_global.setAttribute("round", roundMode ? "true" : "false");
-  qsvg_global.setAttribute("basename", basename);
-  qsvg_global.setAttribute("variant", variant);
-  qsvg_global.setAttribute("status", status);
+  qsvg_global.setAttribute("round", m_roundMode ? "true" : "false");
+  qsvg_global.setAttribute("basename", m_basename);
+  qsvg_global.setAttribute("variant", m_variant);
+  qsvg_global.setAttribute("status", m_status);
 
   QDomElement _interior = doc.createElement("g");
-  _interior.setAttribute("id", QString("%1-%2").arg(basename).arg(status));
+  if ( m_variant.isEmpty() )
+    _interior.setAttribute("id", QString("%1-%2").arg(m_basename).arg(m_status));
+  else
+    _interior.setAttribute("id", QString("%1-%2-%3").arg(m_basename).arg(m_variant).arg(m_status));
   QDomElement qsvg_interior = doc.createElement("qsvgstyle");
-  if ( hasInterior ) {
+  if ( m_hasInterior ) {
     qsvg_interior.setAttribute("type", "interior");
     qsvg_interior.setAttribute("roundness", interior->interiorRoundness());
   }
 
   QDomElement frame = doc.createElement("g");
-  frame.setAttribute("id", QString("%1-frame-%2").arg(basename).arg(status));
+  if ( m_variant.isEmpty() )
+    frame.setAttribute("id", QString("%1-frame-%2").arg(m_basename).arg(m_status));
+  else
+    frame.setAttribute("id", QString("%1-frame-%2-%3").arg(m_basename).arg(m_variant).arg(m_status));
   QDomElement qsvg_frame = doc.createElement("qsvgstyle");
-  if ( hasFrame ) {
+  if ( m_hasFrame ) {
     qsvg_frame.setAttribute("type", "frame");
     qsvg_frame.setAttribute("width", framewidth);
     QString subwidths;
@@ -863,18 +1001,18 @@ QDomDocument SvgGen::toSvg()
   doc.appendChild(xml);
   doc.appendChild(svg);
 
-  if ( hasInterior || hasFrame ) {
+  if ( m_hasInterior || m_hasFrame ) {
     svg.appendChild(g);
     g.appendChild(qsvg_global);
   }
 
-  if ( hasInterior ) {
+  if ( m_hasInterior ) {
     g.appendChild(_interior);
     _interior.appendChild(qsvg_interior);
     _interior.appendChild(interior->toSvg(doc));
   }
 
-  if ( hasFrame ) {
+  if ( m_hasFrame ) {
     g.appendChild(frame);
     frame.appendChild(qsvg_frame);
 
@@ -883,7 +1021,10 @@ QDomDocument SvgGen::toSvg()
           << "bottomleft" << "bottomright";
     Q_FOREACH(QString part, parts) {
       QDomElement gpart = doc.createElement("g");
-      gpart.setAttribute("id", QString("%1-%2-%3").arg(basename).arg(status).arg(part));
+      if ( m_variant.isEmpty() )
+        gpart.setAttribute("id", QString("%1-%2-%3").arg(m_basename).arg(m_status).arg(part));
+      else
+        gpart.setAttribute("id", QString("%1-%2-%3-%4").arg(m_basename).arg(m_variant).arg(m_status).arg(part));
       Q_FOREACH(SvgGenSubFrame *sf, subFrames) {
         gpart.appendChild(sf->toSvg(doc, part));
       }

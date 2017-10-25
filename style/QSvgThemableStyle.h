@@ -110,7 +110,7 @@ class QSvgThemableStyle : public QCommonStyle {
      * Theme is searched for in ~/.config/QSvgStyle/theme directory
      */
     Q_INVOKABLE void loadTheme(const QString &theme);
-    Q_INVOKABLE QString currentTheme() const { return curTheme; };
+    Q_INVOKABLE QString currentTheme() const { return curTheme; }
 
     /**
      * Wrapper method around @ref loadTheme that reads
@@ -124,7 +124,7 @@ class QSvgThemableStyle : public QCommonStyle {
      * Palette is searched for in ~/.config/QSvgStyle/palette.pal file
      */
     Q_INVOKABLE void loadPalette(const QString& palette);
-    Q_INVOKABLE QString currentPalette() const { return curPalette; };
+    Q_INVOKABLE QString currentPalette() const { return curPalette; }
 
     /**
      * Wrapper method around @ref loadPalette that reads
@@ -146,7 +146,7 @@ class QSvgThemableStyle : public QCommonStyle {
   signals:
     /**
      * These signals are emitted on various QSvgStyle painting events
-     * They are mainly used by the QSvgThemeViewer application to monitor
+     * They are mainly used by the QSvgThemeBuilder application to monitor
      * style actions
      */
     void sig_drawPrimitive_begin(const QString &) const;
@@ -461,6 +461,10 @@ class QSvgThemableStyle : public QCommonStyle {
      * Slot called on timer timeout to animate busy progress bars
      */
     void slot_animateProgressBars();
+    /**
+     * Slot called on timer timeout to animate current focused widget
+     */
+    void slot_animateFocus();
 
   private:
     QString cls;
@@ -473,6 +477,12 @@ class QSvgThemableStyle : public QCommonStyle {
 
     /* timer used for progress bars */
     QTimer *progresstimer;
+
+    /* timer used for focused widgets */
+    QTimer *focustimer;
+
+    /* is set to true when focus overlay should be drawn */
+    bool drawFocusOverlay;
 
     /* List of registered widgets for a animations */
     QList<QWidget *> animatedWidgets;

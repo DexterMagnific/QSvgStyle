@@ -25,6 +25,7 @@
 #include <QFile>
 #include <QDir>
 #include <QMimeData>
+#include <QClipboard>
 
 // UI
 #include <QListWidget>
@@ -47,6 +48,7 @@
 #include <QPen>
 #include <QPixmap>
 #include <QGraphicsScene>
+#include <QFontDatabase>
 
 // Includes for preview
 #include <QPushButton>
@@ -98,7 +100,8 @@ ThemeBuilderUI::ThemeBuilderUI(QWidget* parent)
   // populate widget tree views
   QListWidgetItem *i;
 
-  // Use xx_group() functions from QSvgStyle class to set group role
+  // TODO replace all this shit by an automatic generation like
+  // the one used by QSvgThemeManager
   QIcon icon1;
   icon1.addFile(QString::fromUtf8(":/icon/pixmaps/pushbutton.png"), QSize(), QIcon::Normal, QIcon::Off);
   i = new QListWidgetItem(buttonList);
@@ -197,6 +200,13 @@ ThemeBuilderUI::ThemeBuilderUI(QWidget* parent)
   i->setText("View item");
   i->setData(GroupRole,PE_group(QStyle::PE_PanelItemViewItem));
 
+  QIcon icon114;
+  //icon112.addFile(QString::fromUtf8(":/icon/pixmaps/edithlayout.png"), QSize(), QIcon::Normal, QIcon::Off);
+  i = new QListWidgetItem(displayList);
+  i->setIcon(icon113);
+  i->setText("RubberBand");
+  i->setData(GroupRole,CE_group(QStyle::CE_RubberBand));
+
   QIcon icon12;
   icon12.addFile(QString::fromUtf8(":/icon/pixmaps/groupbox.png"), QSize(), QIcon::Normal, QIcon::Off);
   i = new QListWidgetItem(containerList);
@@ -254,11 +264,11 @@ ThemeBuilderUI::ThemeBuilderUI(QWidget* parent)
   i->setData(GroupRole,CE_group(QStyle::CE_MenuItem));
 
   QIcon icon20;
-  icon20.addFile(QString::fromUtf8(":/icon/pixmaps/righttoleft.png"), QSize(), QIcon::Normal, QIcon::Off);
-  i = new QListWidgetItem(miscList);
-  i->setIcon(icon20);
-  i->setText("Indicators");
-  i->setData(GroupRole,PE_group(QStyle::PE_IndicatorArrowDown));
+  icon19.addFile(QString::fromUtf8(":/icon/pixmaps/toolbox.png"), QSize(), QIcon::Normal, QIcon::Off);
+  i = new QListWidgetItem(containerList);
+  //i->setIcon(icon19);
+  i->setText("Windows");
+  i->setData(GroupRole,PE_group(QStyle::PE_FrameWindow));
 
 //   QIcon icon22;
 //   icon22.addFile(QString::fromUtf8(":/icon/pixmaps/optimize.png"), QSize(), QIcon::Normal, QIcon::Off);
@@ -288,6 +298,8 @@ ThemeBuilderUI::ThemeBuilderUI(QWidget* parent)
 
   toolBox->setSizePolicy(QSizePolicy::Fixed,QSizePolicy::Expanding);
 
+  //previewArea->setBackgroundRole(QPalette::Mid);
+
   // Adjust gen tool box size
   // Shitty QToolBox in fact renders its pages inside a QScrollArea
   // whose sizeHint is clipped to 36*h,24*h, h=fontMetrics().height()
@@ -298,7 +310,7 @@ ThemeBuilderUI::ThemeBuilderUI(QWidget* parent)
   }
   maxW += 10;
 
-  //genToolbox->setFixedWidth(maxW);
+  genToolbox->setFixedWidth(maxW);
 
   // also populate inherit combo box
   foreach(QListWidgetItem *i, buttonList->findItems("*",Qt::MatchWildcard)) {
@@ -396,7 +408,7 @@ ThemeBuilderUI::ThemeBuilderUI(QWidget* parent)
   QGraphicsScene *scene = new QGraphicsScene();
   genSvgView->setScene(scene);
   //genSvgView->setRenderHints(QPainter::Antialiasing);
-//  genSvgView->scale(1.5,1.5);
+  //genSvgView->scale(2,2);
   svgGen = new SvgGen(scene, this);
 
   // connections
@@ -464,6 +476,10 @@ ThemeBuilderUI::ThemeBuilderUI(QWidget* parent)
           this,SLOT(slot_indicatorIdCbChanged(int)));
   connect(indicatorIdCombo,SIGNAL(editTextChanged(QString)),
           this,SLOT(slot_indicatorIdComboChanged(QString)));
+  connect(indicatorSizeCb,SIGNAL(stateChanged(int)),
+          this,SLOT(slot_indicatorSizeCbChanged(int)));
+  connect(indicatorSizeSpin,SIGNAL(valueChanged(int)),
+          this,SLOT(slot_indicatorSizeSpinChanged(int)));
 
   connect(labelSpacingCb,SIGNAL(stateChanged(int)),
           this,SLOT(slot_labelSpacingCbChanged(int)));
@@ -517,6 +533,12 @@ ThemeBuilderUI::ThemeBuilderUI(QWidget* parent)
           this,SLOT(slot_genVariantChanged(QString)));
   connect(genStatusCombo,SIGNAL(editTextChanged(QString)),
           this,SLOT(slot_genStatusChanged(QString)));
+  connect(interiorFillTypeBtn,SIGNAL(clicked(bool)),
+          this,SLOT(slot_genInteriorFillTypeBtnClicked(bool)));
+  connect(interiorColor1Btn,SIGNAL(clicked(bool)),
+          this,SLOT(slot_genInteriorColor1BtnClicked(bool)));
+  connect(interiorColor2Btn,SIGNAL(clicked(bool)),
+          this,SLOT(slot_genInteriorColor2BtnClicked(bool)));
 
   // style callbacks
   if ( style ) {
@@ -622,8 +644,6 @@ ThemeBuilderUI::ThemeBuilderUI(QWidget* parent)
   Keys.parseOptions(options);
 
   // TESTING remove me in release
-  connect(qApp->clipboard(), SIGNAL(changed(QClipboard::Mode)),
-          this,SLOT(slot_clipboardChanged(QClipboard::Mode)));
   // TESTING end
 
   // set minimal and sufficient window size
@@ -797,6 +817,9 @@ void ThemeBuilderUI::resetUi()
   previewWidget = 0;
   currentWidget = 0;
   previewUpdateEnabled = false;
+
+  // Reset SVG Gen stuff
+  setupSvgGenUI();
 
   // Reset state
   if ( config ) {
@@ -1415,6 +1438,12 @@ void ThemeBuilderUI::setupUiForWidget(const QListWidgetItem* current)
       indicatorIdCb->setCheckState(Qt::PartiallyChecked);
     }
 
+    if ( raw_es.indicator.size.present ) {
+      indicatorSizeCb->setCheckState(Qt::Checked);
+    } else {
+      indicatorSizeCb->setCheckState(Qt::PartiallyChecked);
+    }
+
     // These are needed to force associated widget value updates even
     // if the check state has not changed when switching widgets
     slot_inheritCbChanged(inheritCb->checkState());
@@ -1427,6 +1456,7 @@ void ThemeBuilderUI::setupUiForWidget(const QListWidgetItem* current)
     slot_labelSpacingCbChanged(labelSpacingCb->checkState());
     slot_labelMarginCbChanged(labelMarginCb->checkState());
     slot_indicatorIdCbChanged(indicatorIdCb->checkState());
+    slot_indicatorSizeCbChanged(indicatorSizeCb->checkState());
   } else {
     tabWidget->setEnabled(false);
   }
@@ -1755,6 +1785,7 @@ void ThemeBuilderUI::setupPreviewForWidget(const QListWidgetItem *current)
     variants = 2;
 
     QScrollBar *widget = new QScrollBar();
+    widget->setFocusPolicy(Qt::StrongFocus);
 
     switch (currentPreviewVariant % variants) {
       case 0:
@@ -2017,6 +2048,7 @@ void ThemeBuilderUI::setupPreviewForWidget(const QListWidgetItem *current)
     widget->model()->setHeaderData(2,Qt::Horizontal,"Section 3",Qt::DisplayRole);
     widget->setSortIndicator(0,Qt::AscendingOrder);
     widget->setSortIndicator(1,Qt::DescendingOrder);
+    widget->setSortIndicatorShown(true);
 
     // FIXME size !
     previewWidget = widget;
@@ -2153,6 +2185,10 @@ void ThemeBuilderUI::saveSettingsFromUi(const QListWidgetItem *current)
     _es.indicator.element = indicatorIdCombo->currentText();
   if ( indicatorIdCb->checkState() == Qt::Unchecked )
     _es.indicator.element = QString();
+  if ( indicatorSizeCb->checkState() == Qt::Checked )
+    _es.indicator.size = indicatorSizeSpin->value();
+  if ( indicatorSizeCb->checkState() == Qt::Unchecked )
+    _es.indicator.size = 7;
 
   if ( labelSpacingCb->checkState() == Qt::Checked )
     _es.label.tispace = labelSpacingSpin->value();
@@ -2320,10 +2356,10 @@ void ThemeBuilderUI::slot_genFrameBtnClicked(bool checked)
   svgGen->setHasFrame(checked);
   genFramePage->setEnabled(checked);
   genToolbox->repaint();
+  genInteriorRoundnessSpin->setEnabled(!checked);
 
-  for (int i=0; i<sbFrameWidthsSpins.count(); i++) {
-    sbFrameWidthsSpins[i]->setValue(svgGen->subFrameWidth(i));
-  }
+  Q_FOREACH(GenSubFramePropUI *w, genSubFrameProps)
+    setupSubFramePropsUI(w);
 }
 
 void ThemeBuilderUI::slot_genInteriorBtnClicked(bool checked)
@@ -2347,9 +2383,7 @@ void ThemeBuilderUI::slot_genFrameWidthChanged(int val)
 {
   svgGen->setFrameWidth(val);
 
-  int n = sbFrameWidthsSpins.count();
-  if ( n == val )
-    return;
+  int n = genSubFrameProps.count();
 
   if ( val > n ) {
     QGridLayout *l = qobject_cast<QGridLayout *> (genSubFrameWidthsScrollContents->layout());
@@ -2357,28 +2391,66 @@ void ThemeBuilderUI::slot_genFrameWidthChanged(int val)
       return;
 
     while ( n++ < val ) {
-      QDoubleSpinBox *w = new QDoubleSpinBox(genSubFrameWidthsScrollContents);
+      GenSubFramePropUI *w = new GenSubFramePropUI(genSubFrameWidthsScrollContents);
       l->addWidget(w,n-1,0);
-      w->setValue(svgGen->subFrameWidth(n-1));
-      w->setMinimum(0.1f);
-      sbFrameWidthsSpins.append(w);
+
+      // add
+      genSubFrameProps.append(w);
+
+      // setup
+      setupSubFramePropsUI(w);
+
       w->show();
 
-      connect(w,SIGNAL(valueChanged(qreal)),
+      genFrameWidthSpin->setFixedWidth(w->subFrameWidthSpin->width());
+
+      connect(w->subFrameWidthSpin,SIGNAL(valueChanged(qreal)),
               this,SLOT(slot_genSubFrameWidthChanged(qreal)));
+      connect(w->subFrameFillTypeBtn,SIGNAL(clicked(bool)),
+              this,SLOT(slot_genSubFrameFillTypeBtnClicked(bool)));
+      connect(w->subFrameColor1Btn,SIGNAL(clicked(bool)),
+              this,SLOT(slot_genSubFrameColor1BtnClicked(bool)));
+      connect(w->subFrameColor2Btn,SIGNAL(clicked(bool)),
+              this,SLOT(slot_genSubFrameColor2BtnClicked(bool)));
     }
   } else {
     while ( n-- > val ) {
-      QDoubleSpinBox *w = sbFrameWidthsSpins.takeLast();
+      GenSubFramePropUI *w = genSubFrameProps.takeLast();
       delete w;
     }
   }
+
+  // determine max width for subframe prop UIs
+  int maxW = 0;
+  Q_FOREACH (QObject *o, genSubFrameWidthsScrollContents->children()) {
+    QWidget *w = qobject_cast<QWidget *>(o);
+    if (w) {
+      maxW = qMax(maxW,w->sizeHint().width());
+    }
+  }
+
+  // add always visible V scroll ber
+  maxW += genToolbox->style()->pixelMetric(QStyle::PM_ScrollBarExtent,0,0);
+
+  genSubFrameWidthsScroll->setFixedWidth(maxW); // OK
+  // align for beauty
+  genFrameSpacer->changeSize(
+        genToolbox->style()->pixelMetric(QStyle::PM_ScrollBarExtent,0,0),
+        0,
+        QSizePolicy::Fixed);
+
+  // set size of toolbox
+  genToolbox->setFixedWidth(maxW+genFramePage->layout()->contentsMargins().left()
+                            +genFramePage->layout()->contentsMargins().right()
+                            +genToolbox->contentsMargins().left()
+                            +genToolbox->contentsMargins().right()); // OK
 }
 
 void ThemeBuilderUI::slot_genSubFrameWidthChanged(qreal val)
 {
-  QDoubleSpinBox *w = qobject_cast<QDoubleSpinBox *>(sender());
-  int n = sbFrameWidthsSpins.indexOf(w);
+  QDoubleSpinBox *s = qobject_cast<QDoubleSpinBox *>(sender());
+  GenSubFramePropUI *w = qobject_cast<GenSubFramePropUI *>(s->parentWidget());
+  int n = genSubFrameProps.indexOf(w);
   if ( n < 0 )
     return;
   svgGen->setSubFrameWidth(n, val);
@@ -2413,7 +2485,7 @@ void ThemeBuilderUI::slot_genStatusChanged(const QString &text)
 
 void ThemeBuilderUI::slot_genInteriorRoundnessChanged(qreal val)
 {
-  svgGen->setRoundness(val);
+  svgGen->setInteriorRoundness(val);
 }
 
 void ThemeBuilderUI::slot_genSquareBtnClicked(bool checked)
@@ -2424,19 +2496,253 @@ void ThemeBuilderUI::slot_genSquareBtnClicked(bool checked)
     svgGen->setSize(QSizeF(200,100));
 }
 
-void ThemeBuilderUI::slot_clipboardChanged(QClipboard::Mode mode)
+void ThemeBuilderUI::slot_genSubFrameFillTypeBtnClicked(bool checked)
 {
-//  qDebug() << "Clipboard changed" << mode;
+  Q_UNUSED(checked);
 
-//  QClipboard *c = qApp->clipboard();
+  QToolButton *b = qobject_cast<QToolButton *>(sender());
+  GenSubFramePropUI *w = qobject_cast<GenSubFramePropUI *>(b->parentWidget());
+  int n = genSubFrameProps.indexOf(w);
+  if ( n < 0 )
+    return;
 
-//  const QMimeData *m = c->mimeData(mode);
+  SvgGenSubFrame::FillType type = svgGen->subFrameFillType(n);
 
-//  qDebug() << "Formats" << m->formats();
-//  Q_FOREACH(QString fmt, m->formats()) {
-//    qDebug() << "dumping format" << fmt;
-//    qDebug() << m->data(fmt);
-//  }
+  type = static_cast<SvgGenSubFrame::FillType> (static_cast<int>(type)+1);
+  if ( type > SvgGenSubFrame::FillTypeMax )
+    type = SvgGenSubFrame::FillTypeFirst;
+
+  svgGen->setSubFrameFillType(n, type);
+
+  switch (type) {
+    case SvgGenSubFrame::FillTypeFlat:
+      b->setText("F");
+      break;
+    case SvgGenSubFrame::FillTypeGradient:
+      b->setText("G");
+      break;
+    case SvgGenSubFrame::FillTypeInvertedGradient:
+      b->setText("IG");
+      break;
+  }
+
+  w->subFrameColor2Btn->setEnabled(type != SvgGenSubFrame::FillTypeFlat);
+}
+
+void ThemeBuilderUI::slot_genSubFrameColor1BtnClicked(bool checked)
+{
+  Q_UNUSED(checked);
+
+  QToolButton *b = qobject_cast<QToolButton *>(sender());
+  GenSubFramePropUI *w = qobject_cast<GenSubFramePropUI *>(b->parentWidget());
+  int n = genSubFrameProps.indexOf(w);
+  if ( n < 0 )
+    return;
+
+  QColor c = QColorDialog::getColor(svgGen->subFrameFirstColor(n),
+                                    NULL,
+                                    QString("Select color"),
+                                    QColorDialog::ShowAlphaChannel);
+
+  if ( !c.isValid() )
+    c = svgGen->subFrameFirstColor(n);
+  svgGen->setSubFrameFirstColor(n, c);
+  QPalette p = b->palette();
+  QPalette::ColorRole role = b->backgroundRole();
+  p.setColor(role, c);
+  b->setPalette(p);
+  b->setToolTip(QString("Color1: %1").arg(c.name(QColor::HexArgb)));
+}
+
+void ThemeBuilderUI::slot_genSubFrameColor2BtnClicked(bool checked)
+{
+  Q_UNUSED(checked);
+
+  QToolButton *b = qobject_cast<QToolButton *>(sender());
+  GenSubFramePropUI *w = qobject_cast<GenSubFramePropUI *>(b->parentWidget());
+  int n = genSubFrameProps.indexOf(w);
+  if ( n < 0 )
+    return;
+
+  QColor c = QColorDialog::getColor(svgGen->subFrameSecondColor(n),
+                                    NULL,
+                                    QString("Select color"),
+                                    QColorDialog::ShowAlphaChannel);
+
+  if ( !c.isValid() )
+    c = svgGen->subFrameSecondColor(n);
+  svgGen->setSubFrameSecondColor(n, c);
+  QPalette p = b->palette();
+  QPalette::ColorRole role = b->backgroundRole();
+  p.setColor(role, c);
+  b->setPalette(p);
+  b->setToolTip(QString("Color1: %1").arg(c.name(QColor::HexArgb)));
+}
+
+void ThemeBuilderUI::slot_genInteriorFillTypeBtnClicked(bool checked)
+{
+  Q_UNUSED(checked);
+
+  QToolButton *b = qobject_cast<QToolButton *>(sender());
+
+  SvgGenInterior::FillType type = svgGen->interiorFillType();
+
+  type = static_cast<SvgGenInterior::FillType> (static_cast<int>(type)+1);
+  if ( type > SvgGenInterior::FillTypeMax )
+    type = SvgGenInterior::FillTypeFirst;
+
+  svgGen->setInteriorFillType(type);
+
+  switch (type) {
+    case SvgGenInterior::FillTypeFlat:
+      b->setText("F");
+      break;
+    case SvgGenInterior::FillTypeGradient:
+      b->setText("G");
+      break;
+    case SvgGenInterior::FillTypeInvertedGradient:
+      b->setText("IG");
+      break;
+  }
+
+  interiorColor2Btn->setEnabled(type != SvgGenInterior::FillTypeFlat);
+}
+
+void ThemeBuilderUI::slot_genInteriorColor1BtnClicked(bool checked)
+{
+  Q_UNUSED(checked);
+
+  QToolButton *b = qobject_cast<QToolButton *>(sender());
+
+  QColor c = QColorDialog::getColor(svgGen->interiorFirstColor(),
+                                    NULL,
+                                    QString("Select color"),
+                                    QColorDialog::ShowAlphaChannel);
+
+  if ( !c.isValid() )
+    c = svgGen->interiorFirstColor();
+  svgGen->setInteriorFirstColor(c);
+  QPalette p = b->palette();
+  QPalette::ColorRole role = b->backgroundRole();
+  p.setColor(role, c);
+  b->setPalette(p);
+  b->setToolTip(QString("Color1: %1").arg(c.name(QColor::HexArgb)));
+}
+
+void ThemeBuilderUI::slot_genInteriorColor2BtnClicked(bool checked)
+{
+  Q_UNUSED(checked);
+
+  QToolButton *b = qobject_cast<QToolButton *>(sender());
+
+  QColor c = QColorDialog::getColor(svgGen->interiorSecondColor(),
+                                    NULL,
+                                    QString("Select color"),
+                                    QColorDialog::ShowAlphaChannel);
+
+  if ( !c.isValid() )
+    c = svgGen->interiorSecondColor();
+  svgGen->setInteriorSecondColor(c);
+  QPalette p = b->palette();
+  QPalette::ColorRole role = b->backgroundRole();
+  p.setColor(role, c);
+  b->setPalette(p);
+  b->setToolTip(QString("Color1: %1").arg(c.name(QColor::HexArgb)));
+}
+
+void ThemeBuilderUI::setupSvgGenUI()
+{
+  genFrameBtn->setChecked(svgGen->hasFrame());
+  genInteriorBtn->setChecked(svgGen->hasInterior());
+  genInteriorRoundnessSpin->setEnabled(!svgGen->hasFrame());
+  genShadowBtn->setChecked(svgGen->hasShadow());
+
+  genSquareBtn->setChecked(svgGen->isSquare());
+  genRoundBtn->setChecked(svgGen->roundMode());
+  genSplitBtn->setChecked(svgGen->splitMode());
+
+  genBasenameEdit->setText(svgGen->basename());
+  genVariantEdit->setText(svgGen->variant());
+  genStatusCombo->setCurrentText(svgGen->status());
+
+  genFrameWidthSpin->setValue(svgGen->frameWidth());
+  slot_genFrameWidthChanged(svgGen->frameWidth());
+
+  setupInteriorPropsUI();
+}
+
+void ThemeBuilderUI::setupSubFramePropsUI(GenSubFramePropUI *w)
+{
+  int idx = genSubFrameProps.indexOf(w);
+  if ( idx < 0 )
+    return;
+
+  w->subFrameNoLbl->setText(QString("%1").arg(idx+1));
+  w->subFrameWidthSpin->setValue(svgGen->subFrameWidth(idx));
+  w->subFrameNoLbl->setText(QString("%1").arg(idx));
+  w->subFrameNoLbl->setFont(QFontDatabase::systemFont(QFontDatabase::FixedFont));
+  QPalette p = w->subFrameColor1Btn->palette();
+  QPalette::ColorRole role = w->subFrameColor1Btn->backgroundRole();
+  QColor c = svgGen->subFrameFirstColor(idx);
+  p.setColor(role, c);
+  w->subFrameColor1Btn->setPalette(p);
+  w->subFrameColor1Btn->setToolTip(QString("Color1: %1")
+                                   .arg(c.name(QColor::HexArgb)));
+  p = w->subFrameColor2Btn->palette();
+  role = w->subFrameColor2Btn->backgroundRole();
+  c = svgGen->subFrameSecondColor(idx);
+  p.setColor(role, c);
+  w->subFrameColor2Btn->setToolTip(QString("Color2: %1")
+                                   .arg(c.name(QColor::HexArgb)));
+  w->subFrameColor2Btn->setPalette(p);
+  SvgGenSubFrame::FillType ft = svgGen->subFrameFillType(idx);
+  switch (ft) {
+    case SvgGenSubFrame::FillTypeFlat:
+      w->subFrameFillTypeBtn->setText("F");
+      break;
+    case SvgGenSubFrame::FillTypeGradient:
+      w->subFrameFillTypeBtn->setText("G");
+      break;
+    case SvgGenSubFrame::FillTypeInvertedGradient:
+      w->subFrameFillTypeBtn->setText("IG");
+      break;
+  }
+
+  w->subFrameColor2Btn->setEnabled(
+        svgGen->subFrameFillType(idx) != SvgGenSubFrame::FillTypeFlat);
+}
+
+void ThemeBuilderUI::setupInteriorPropsUI()
+{
+  QPalette p = interiorColor1Btn->palette();
+  QPalette::ColorRole role = interiorColor1Btn->backgroundRole();
+  QColor c = svgGen->interiorFirstColor();
+  p.setColor(role, c);
+  interiorColor1Btn->setPalette(p);
+  interiorColor1Btn->setToolTip(QString("Color1: %1")
+                                   .arg(c.name(QColor::HexArgb)));
+  p = interiorColor2Btn->palette();
+  role = interiorColor2Btn->backgroundRole();
+  c = svgGen->interiorSecondColor();
+  p.setColor(role, c);
+  interiorColor2Btn->setToolTip(QString("Color2: %1")
+                                   .arg(c.name(QColor::HexArgb)));
+  interiorColor2Btn->setPalette(p);
+  SvgGenInterior::FillType ft = svgGen->interiorFillType();
+  switch (ft) {
+    case SvgGenInterior::FillTypeFlat:
+      interiorFillTypeBtn->setText("F");
+      break;
+    case SvgGenInterior::FillTypeGradient:
+      interiorFillTypeBtn->setText("G");
+      break;
+    case SvgGenInterior::FillTypeInvertedGradient:
+      interiorFillTypeBtn->setText("IG");
+      break;
+  }
+
+  interiorColor2Btn->setEnabled(
+        svgGen->interiorFillType() != SvgGenInterior::FillTypeFlat);
 }
 
 void ThemeBuilderUI::slot_inheritCbChanged(int state)
@@ -2782,6 +3088,34 @@ void ThemeBuilderUI::slot_indicatorIdComboChanged(const QString& text)
   schedulePreviewUpdate();
 }
 
+void ThemeBuilderUI::slot_indicatorSizeCbChanged(int state)
+{
+  if ( state == Qt::Checked ) {
+    indicatorSizeSpin->setEnabled(indicatorSizeCb->isChecked());
+    indicatorSizeSpin->setSpecialValueText(QString());
+    indicatorSizeSpin->setMinimum(1);
+    indicatorSizeSpin->setValue(raw_es.indicator.size);
+  } else {
+    indicatorSizeSpin->setEnabled(false);
+    indicatorSizeSpin->setMinimum(-1);
+    indicatorSizeSpin->setValue(indicatorSizeSpin->minimum());
+  }
+  if ( state == Qt::PartiallyChecked ) {
+    indicatorSizeSpin->setSpecialValueText("<inherit>");
+  }
+  if ( state == Qt::Unchecked ) {
+    indicatorSizeSpin->setSpecialValueText("<none>");
+  }
+
+  schedulePreviewUpdate();
+}
+
+void ThemeBuilderUI::slot_indicatorSizeSpinChanged(int val)
+{
+  Q_UNUSED(val);
+
+  schedulePreviewUpdate();
+}
 
 void ThemeBuilderUI::slot_toolboxTabChanged(int index)
 {

@@ -314,7 +314,7 @@
            </sizepolicy>
           </property>
           <property name="text">
-           <string>&amp;Active</string>
+           <string>Acti&amp;ve</string>
           </property>
           <property name="checked">
            <bool>true</bool>
@@ -860,6 +860,27 @@
           </property>
           <property name="text">
            <string>specific.dropdown.size</string>
+          </property>
+         </item>
+        </item>
+        <item>
+         <property name="text">
+          <string>Docks</string>
+         </property>
+         <item>
+          <property name="text">
+           <string>Separator width</string>
+          </property>
+          <property name="text">
+           <string>specific.dock.separator.size</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Handle width</string>
+          </property>
+          <property name="text">
+           <string>specific.dock.handle.width</string>
           </property>
          </item>
         </item>

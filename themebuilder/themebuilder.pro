@@ -24,16 +24,19 @@ HEADERS += \
   SvgGen.h \
   ThemeBuilderUI.h \
   NewThemeUI.h \
+    GenSubFramePropUI.h
 
 SOURCES += \
   main.cpp \
   SvgGen.cpp \
   ThemeBuilderUI.cpp \
-  NewThemeUI.cpp
+  NewThemeUI.cpp \
+    GenSubFramePropUI.cpp
 
 FORMS += \
   ThemeBuilderUIBase.ui \
-  NewThemeUIBase.ui
+  NewThemeUIBase.ui \
+  GenSubFramePropUIBase.ui
 
 RESOURCES += \
   ThemeBuilderUIBase.qrc

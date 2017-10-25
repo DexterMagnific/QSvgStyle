@@ -22,6 +22,10 @@ ui_*
 # KDevelop files
 *kdev*
 
+# Qt Creator files
+.qmake.stash
+*.pro.user
+
 # Misc
 *~
 *.backup

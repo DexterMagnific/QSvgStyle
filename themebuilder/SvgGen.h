@@ -29,28 +29,49 @@
 #include <QDomElement>
 #include <QString>
 #include <QTimer>
+#include <QColor>
+#include <QBrush>
+#include <QPen>
 
 class QGraphicsScene;
-class QGraphicsSceneMouseEvent;
 
 class SvgGenInterior : public QGraphicsPathItem {
   public:
+    enum FillType {
+      FillTypeFirst,
+
+      FillTypeFlat = FillTypeFirst,
+      FillTypeGradient,
+      FillTypeInvertedGradient,
+
+      FillTypeMax = FillTypeInvertedGradient,
+    };
+
     SvgGenInterior(QGraphicsItem *parent = Q_NULLPTR);
     ~SvgGenInterior();
 
     void setRoundInterior(bool hasIt);
     void setInteriorRoundness(qreal val);
+    void setFillType(FillType type);
+    void setFirstColor(const QColor &c);
+    void setSecondColor(const QColor &c);
     void setSize(const QSizeF &sz);
 
     qreal interiorRoundness() const { return roundness; }
+    FillType fillType() const { return fill; }
+    QColor firstColor() const { return color1; }
+    QColor secondColor() const { return color2; }
 
     QDomDocumentFragment toSvg(QDomDocument &doc);
 
   private:
     void calcInterior();
+    void calcFill();
 
     qreal width, height, roundness;
     bool roundInterior;
+    QColor color1, color2;
+    FillType fill;
 };
 
 /**
@@ -74,6 +95,16 @@ class SvgGenSubFrame : public QObject, public QGraphicsPathItem {
   Q_OBJECT
 
   public:
+    enum FillType {
+      FillTypeFirst,
+
+      FillTypeFlat = FillTypeFirst,
+      FillTypeGradient,
+      FillTypeInvertedGradient,
+
+      FillTypeMax = FillTypeInvertedGradient,
+    };
+
     SvgGenSubFrame(QGraphicsItem *parent = Q_NULLPTR);
     SvgGenSubFrame(const SvgGenSubFrame *prev);
     SvgGenSubFrame(const QSizeF &sz, qreal sbwidth, qreal roundness = 0, bool round = true, bool split = true);
@@ -83,8 +114,10 @@ class SvgGenSubFrame : public QObject, public QGraphicsPathItem {
     void setCornerRoundness(qreal val);
     void setRoundCorners(bool val);
     void setSplitMode(bool val);
-    /* The size given to this method is the inner subframe size */
     void setSize(const QSizeF &sz);
+    void setFillType(FillType type);
+    void setFirstColor(const QColor &c);
+    void setSecondColor(const QColor &c);
 
     /* corner roundness is for the inner subframe */
     qreal cornerRoundess() const { return roundness; }
@@ -95,6 +128,9 @@ class SvgGenSubFrame : public QObject, public QGraphicsPathItem {
      * taken as if the subframe was in non split mode */
     QRectF outerSubFrameRect() const;
     qreal outerCornerRoundness() const { return roundness+sbwidth; }
+    QColor firstColor() const { return color1; }
+    QColor secondColor() const { return color2; }
+    FillType fillType() const { return fill; }
 
     /* We have to reimplement this as the default implementation calls
      * shape()->contains().
@@ -107,21 +143,14 @@ class SvgGenSubFrame : public QObject, public QGraphicsPathItem {
 
     QDomDocumentFragment toSvg(QDomDocument doc, const QString &part);
 
-  protected:
-    virtual void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
-    virtual void hoverEnterEvent(QGraphicsSceneHoverEvent *event);
-    virtual void hoverLeaveEvent(QGraphicsSceneHoverEvent *event);
-    virtual void hoverMoveEvent(QGraphicsSceneHoverEvent *event);
-
-  private slots:
-    void hoverTimeout();
-
   private:
     void calcSubFrame();
+    void calcFill();
 
     qreal width, height, roundness, sbwidth, roundCorners, split;
     QPainterPath top,bottom,left,right,topleft,topright,bottomleft,bottomright;
-    QTimer hoverTimer;
+    QColor color1, color2;
+    FillType fill;
 };
 
 class SvgGen : public QObject {
@@ -138,6 +167,13 @@ class SvgGen : public QObject {
     void setRoundMode(bool hasIt);
     void setSplitMode(bool hasIt);
 
+    bool hasFrame() const { return m_hasFrame; }
+    bool hasInterior() const { return m_hasInterior; }
+    bool hasShadow() const { return m_hasShadow; }
+    bool roundMode() const { return m_roundMode; }
+    bool splitMode() const { return m_splitMode; }
+    bool isSquare() const { return width == height; }
+
     void setCenter(const QPointF &p);
 
     /* The size given to this method is the interior size */
@@ -147,11 +183,28 @@ class SvgGen : public QObject {
     void setSubFrameWidth(int idx, qreal width);
     void setShadowWidth(qreal val);
     /* roundness of iterior when object does not have a frame */
-    void setRoundness(qreal val);
+    void setInteriorRoundness(qreal val);
+    void setSubFrameFillType(int idx, SvgGenSubFrame::FillType type);
+    void setSubFrameFirstColor(int idx, const QColor &c);
+    void setSubFrameSecondColor(int idx, const QColor &c);
+    void setInteriorFillType(SvgGenInterior::FillType type);
+    void setInteriorFirstColor(const QColor &c);
+    void setInteriorSecondColor(const QColor &c);
 
-    void setBaseName(const QString &val) { basename = val; }
-    void setVariant(const QString &val) { variant = val; }
-    void setStatus(const QString &val) { status = val; }
+    void setBaseName(const QString &val) { m_basename = val; }
+    void setVariant(const QString &val) { m_variant = val; }
+    void setStatus(const QString &val) { m_status = val; }
+
+    QString basename() const { return m_basename; }
+    QString variant() const { return m_variant; }
+    QString status() const { return m_status; }
+
+    qreal interiorRoundness() const {
+      if ( interior )
+        return interior->interiorRoundness();
+      else
+        return 0.0;
+    }
 
     qreal subFrameWidth(int n) const {
       if ( subFrames.count()-1 >= n )
@@ -160,6 +213,42 @@ class SvgGen : public QObject {
         return -1;
     }
     int frameWidth() const { return framewidth; }
+    QColor subFrameFirstColor(int n) const {
+      if ( subFrames.count()-1 >= n )
+        return subFrames[n]->firstColor();
+      else
+        return QColor();
+    }
+    QColor subFrameSecondColor(int n) const {
+      if ( subFrames.count()-1 >= n )
+        return subFrames[n]->secondColor();
+      else
+        return QColor();
+    }
+    SvgGenSubFrame::FillType subFrameFillType(int n) const {
+      if ( subFrames.count()-1 >= n )
+        return subFrames[n]->fillType();
+      else
+        return SvgGenSubFrame::FillTypeFirst;
+    }
+    SvgGenInterior::FillType interiorFillType() const {
+      if ( interior )
+        return interior->fillType();
+      else
+        return SvgGenInterior::FillTypeFirst;
+    }
+    QColor interiorFirstColor() const {
+      if ( interior )
+        return interior->firstColor();
+      else
+        return QColor();
+    }
+    QColor interiorSecondColor() const {
+      if ( interior )
+        return interior->secondColor();
+      else
+        return QColor();
+    }
 
     QDomDocument toSvg();
 
@@ -170,15 +259,13 @@ class SvgGen : public QObject {
 
     qreal width,height,shadowwidth;
     int framewidth;
-    bool hasShadow, hasInterior, hasFrame, roundMode, splitMode;
-    QString basename, variant, status;
+    bool m_hasShadow, m_hasInterior, m_hasFrame, m_roundMode, m_splitMode;
+    QString m_basename, m_variant, m_status;
     QPointF center;
     QGraphicsScene *scene;
     QVector<SvgGenSubFrame *> subFrames;
     SvgGenInterior *interior;
     QGraphicsPathItem *cross;
-
-    QWidget *frameUI;
 };
 
 #endif

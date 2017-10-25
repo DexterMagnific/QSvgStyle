@@ -25,9 +25,9 @@
 #include <QFileSystemWatcher>
 #include <QElapsedTimer>
 #include <QColor>
-#include <QClipboard>
 
 #include "ui_ThemeBuilderUIBase.h"
+#include "GenSubFramePropUI.h"
 #include <specs.h>
 #include "SvgGen.h"
 
@@ -96,6 +96,8 @@ class ThemeBuilderUI : public QMainWindow, private Ui::ThemeBuilderUIBase {
 
     void slot_indicatorIdCbChanged(int state);
     void slot_indicatorIdComboChanged(const QString &text);
+    void slot_indicatorSizeCbChanged(int state);
+    void slot_indicatorSizeSpinChanged(int);
 
     void slot_labelSpacingCbChanged(int state);
     void slot_labelSpacingSpinChanged(int val);
@@ -126,6 +128,13 @@ class ThemeBuilderUI : public QMainWindow, private Ui::ThemeBuilderUIBase {
     void slot_genBasenameChanged(const QString &text);
     void slot_genVariantChanged(const QString &text);
     void slot_genStatusChanged(const QString &text);
+    void slot_genSubFrameFillTypeBtnClicked(bool checked);
+    void slot_genSubFrameColor1BtnClicked(bool checked);
+    void slot_genSubFrameColor2BtnClicked(bool checked);
+    void slot_genInteriorFillTypeBtnClicked(bool checked);
+    void slot_genInteriorColor1BtnClicked(bool checked);
+    void slot_genInteriorColor2BtnClicked(bool checked);
+
 
     // Callbacks from QSvgStyle that are triggered when it renders widgets
     void slot_drawPrimitive_begin(const QString &s);
@@ -148,9 +157,8 @@ class ThemeBuilderUI : public QMainWindow, private Ui::ThemeBuilderUIBase {
     void slot_sizeFromContents_end(const QString &s);
 
     // TESTING
-    void slot_clipboardChanged(QClipboard::Mode mode);
-
     // END TESTING
+
   protected:
     virtual bool eventFilter(QObject *o, QEvent *e);
     virtual void closeEvent(QCloseEvent *e);
@@ -199,6 +207,12 @@ class ThemeBuilderUI : public QMainWindow, private Ui::ThemeBuilderUIBase {
     void clearDrawStackTree();
     // Sets the given style for the given widget and all its children
     void setStyleForWidgetAndChildren(QStyle* style, QWidget* w);
+    // Setup the Quick SVG Tab according to the svgGen object
+    void setupSvgGenUI();
+    // Setup Quick SVG SubFrame UI according to svgGen object
+    void setupSubFramePropsUI(GenSubFramePropUI *w);
+    // Setup Quick SVG Interior UI according to svgGen object
+    void setupInteriorPropsUI();
 
     // Optimizes SVG
     void optimizeSvg(const QString& inPath, const QString& outPath);
@@ -258,7 +272,7 @@ class ThemeBuilderUI : public QMainWindow, private Ui::ThemeBuilderUIBase {
     QFileSystemWatcher svgWatcher;
     // SVG quick generator
     SvgGen *svgGen;
-    QVector<QDoubleSpinBox *> sbFrameWidthsSpins;
+    QVector<GenSubFramePropUI *> genSubFrameProps;
 };
 
 #endif // THEMEBUILDERUI_H

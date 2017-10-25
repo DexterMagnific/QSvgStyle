@@ -7,14 +7,18 @@ QSvgStyle
 * lineedit : minimum width should be sufficient to show placeholder text
 * add ability to animate non busy progress bars
 * add ability for widgets to alter qsvgstyle theme config by using
-  dynamic widget properties. e.g. qsvgstyle_frame_width=3
+  dynamic widget properties. e.g. qsvgstyle.frame.width=3
+* replace dir,orn pair by a rot/flip variable
+* renderElement: should take into account dir,orn
+* use QPixmapCache for SP_* pixmaps
 
 QSvgThemeBuilder
 ----------------
 * add magnifier tool
 * add measure tool/tracer
-* add quick svg frame/interior generator+ability to copy/paste from Inkscape
+* replace manual populated list of elements by an automatic method
+  like the one used by stylemanager
 
 QSvgThemeManager
 ----------------
-* switch to QtPropertyBrowser
+* switch to QtPropertyBrowser from Qt Solutions
