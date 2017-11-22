@@ -9,23 +9,17 @@ QSvgStyle
   (groove seems 1 pixel wider than expected)
 * should ticks be drawn above or under cursor ?
 
--- View item
-* reimplement CE_ItemViewItem so that text rendering will take into
-  account text margins
-* do not draw "normal" interior
-
 -- Tab
 * tab bar close button overlaps frame (thick frames)
 * implement PE_FrameTabBarBase
-* use different variants for tabs and contents
+* implement PE_IndicatorTabTear*
 
 -- Title bar
-* implement CC_TitleBar support
-* implement SP_TitleBar* pixmaps
+* implement icon states
 
 -- Toolbar
-* There is no spacing between toolbar handle and first button
 * rtl separators/handles
+* disabled separators/handles
 
 -- Progressbar
 * overdraw in busy progress bar in vertical mode
@@ -44,14 +38,6 @@ QSvgStyle
 * use own indicators instead of generic arrows that
   have the pushbutton specs
 
--- Group box
-* implement bottom titles for group box
-
--- Scroll area
-* implement PE_PanelScrollAreaCorner
-
--- Standard pixmaps
-
 Qt limitations
 --------------
 * Toolboxes: QToolBox does not ask the style for a size (sizeFromContents()),
@@ -62,6 +48,10 @@ Qt limitations
 * Progressbars cannot be made smaller than font height+2 even if they do
   not display text. Cheat is to insert invisible elements to make
   it look smaller
+* There is no spacing between toolbar handle and first button
+* Despite SH_TitleBar_NoBorder set to true, QMdiSubWindow class will show a
+resize handle on the title bar of the size of PM_MdiSubWindowFrameWidth and it
+will overlap the title
 
 
 QSvgThemeBuilder
@@ -71,7 +61,3 @@ QSvgThemeBuilder
 
 QSvgThemeManager
 ----------------
-
-QSvgPaletteBuilder
-------------------
-

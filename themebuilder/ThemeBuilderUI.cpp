@@ -68,6 +68,9 @@
 #include <QListView>
 #include <QSpinBox>
 #include <QDial>
+#include <QStatusBar>
+#include <QMdiArea>
+#include <QMdiSubWindow>
 
 #include "NewThemeUI.h"
 #include "ThemeConfig.h"
@@ -270,6 +273,13 @@ ThemeBuilderUI::ThemeBuilderUI(QWidget* parent)
   i->setText("Windows");
   i->setData(GroupRole,PE_group(QStyle::PE_FrameWindow));
 
+  QIcon icon21;
+  icon19.addFile(QString::fromUtf8(":/icon/pixmaps/toolbox.png"), QSize(), QIcon::Normal, QIcon::Off);
+  i = new QListWidgetItem(containerList);
+  //i->setIcon(icon19);
+  i->setText("Status bar");
+  i->setData(GroupRole,PE_group(QStyle::PE_PanelStatusBar));
+
 //   QIcon icon22;
 //   icon22.addFile(QString::fromUtf8(":/icon/pixmaps/optimize.png"), QSize(), QIcon::Normal, QIcon::Off);
 //   i = new QListWidgetItem(miscList);
@@ -341,11 +351,7 @@ ThemeBuilderUI::ThemeBuilderUI(QWidget* parent)
 //   resolvedValuesTree->headerItem()->setText(2,"Resolved value");
 //   previewLayout->addWidget(resolvedValuesTree, 5, 0, 1, 1);
 
-#if QT_VERSION < 0x050000
-  drawStackTree->header()->setResizeMode(0,QHeaderView::ResizeToContents);
-#else
   drawStackTree->header()->setSectionResizeMode(0,QHeaderView::ResizeToContents);
-#endif
 //   resolvedValuesTree->header()->setResizeMode(QHeaderView::ResizeToContents);
 
   // insert appropriate widget into status bar
@@ -835,6 +841,8 @@ void ThemeBuilderUI::resetUi()
     QFile::remove(tempCfgFile);
   tempCfgFile.clear();
   svgFile.clear();
+
+  setWindowModified(false);
 }
 
 bool ThemeBuilderUI::ensureSettingsSaved()
@@ -1189,8 +1197,8 @@ void ThemeBuilderUI::slot_optimizeSvg()
 
   svgWatcher.addPath(svgFile);
 
-  statusbar->showMessage(QString("Optimized svg file: %1 -> %2 bytes").arg(oldsize).arg(newsize),
-                         10000);
+  //statusbar->showMessage(QString("Optimized svg file: %1 -> %2 bytes").arg(oldsize).arg(newsize),
+  //                       10000);
 
   qDebug() << "[QSvgThemeBuilder]" << "Optimized" << svgFile
     << QString("(%1 -> %2 bytes)").arg(oldsize).arg(newsize);
@@ -2073,6 +2081,58 @@ void ThemeBuilderUI::setupPreviewForWidget(const QListWidgetItem *current)
     widget->item(3)->setIcon(icon);
 
     widget->setAlternatingRowColors(true);
+
+    previewWidget = widget;
+  }
+
+  if ( group == PE_group(QStyle::PE_PanelStatusBar) ) {
+    variants = 1;
+
+    QStatusBar *widget = new QStatusBar();
+    QLabel *label1 = new QLabel("label1", widget);
+    QLabel *label2 = new QLabel("label2", widget);
+    QLabel *label3 = new QLabel("label3", widget);
+
+    widget->addWidget(label1);
+    widget->addWidget(label2);
+    widget->addWidget(label3);
+
+    setStatusBar(widget);
+    previewWidget = widget;
+  }
+
+  if ( group == PE_group(QStyle::PE_FrameWindow) ) {
+    variants = 1;
+
+    QMdiArea *widget = new QMdiArea();
+
+    QFrame *f1 = new QFrame();
+    f1->setMinimumHeight(100);
+    f1->setWindowIcon(QIcon(":/icon/pixmaps/hint.png"));
+    f1->setWindowTitle("Window 1");
+
+    QFrame *f2 = new QFrame();
+    f2->setMinimumHeight(100);
+    f2->setWindowIcon(QIcon(":/icon/pixmaps/hint.png"));
+    f2->setWindowTitle("Window 2");
+
+    widget->addSubWindow(f1,
+                         Qt::WindowCloseButtonHint |
+                         Qt::WindowShadeButtonHint |
+                         Qt::WindowContextHelpButtonHint |
+                         Qt::WindowMinMaxButtonsHint |
+                         Qt::WindowSystemMenuHint);
+
+    widget->addSubWindow(f2,
+                         Qt::WindowCloseButtonHint |
+                         Qt::WindowShadeButtonHint |
+                         Qt::WindowContextHelpButtonHint |
+                         Qt::WindowMinMaxButtonsHint |
+                         Qt::WindowSystemMenuHint);
+
+    //QList<QMdiSubWindow *> l = widget->subWindowList();
+
+
 
     previewWidget = widget;
   }

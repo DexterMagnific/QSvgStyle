@@ -63,7 +63,7 @@ QString PE_group(QStyle::PrimitiveElement element)
     case QStyle::PE_IndicatorCheckBox : return "CheckBox";
     case QStyle::PE_IndicatorDockWidgetResizeHandle : return "DockWidget";
     case QStyle::PE_IndicatorHeaderArrow : return "Header";
-    case QStyle::PE_IndicatorMenuCheckMark : return "CheckBox";
+    case QStyle::PE_IndicatorMenuCheckMark : return "MenuItem";
     case QStyle::PE_IndicatorProgressChunk : return "ProgressBar";
     case QStyle::PE_IndicatorRadioButton : return "RadioButton";
     case QStyle::PE_IndicatorSpinDown : return "SpinBox";
@@ -129,7 +129,7 @@ QString CE_group(QStyle::ControlElement element)
     case QStyle::CE_ToolBoxTabShape : return "ToolBox";
     case QStyle::CE_ToolBoxTabLabel : return "ToolBox";
     case QStyle::CE_HeaderEmptyArea : return "Header";
-    case QStyle::CE_ItemViewItem : return "ItemView";
+    case QStyle::CE_ItemViewItem : return "ViewItem";
     case QStyle::CE_ShapedFrame : return "Frame";
     default : return QString();
   }
@@ -192,7 +192,7 @@ QString SE_group(QStyle::SubElement element)
     case QStyle::SE_TabWidgetTabContents : return "TabWidget";
     case QStyle::SE_TabWidgetLeftCorner : return "TabWidget";
     case QStyle::SE_TabWidgetRightCorner : return "TabWidget";
-    case QStyle::SE_ItemViewItemCheckIndicator : return "ItemView";
+    case QStyle::SE_ItemViewItemCheckIndicator : return "ViewItem";
     case QStyle::SE_TabBarTearIndicator : return "TabBar";
     case QStyle::SE_LineEditContents : return "LineEdit";
     case QStyle::SE_FrameContents : return "Frame";
@@ -200,8 +200,8 @@ QString SE_group(QStyle::SubElement element)
     case QStyle::SE_DockWidgetFloatButton : return "DockWidget";
     case QStyle::SE_DockWidgetTitleBarText : return "DockWidget";
     case QStyle::SE_DockWidgetIcon : return "DockWidget";
-    case QStyle::SE_ItemViewItemDecoration : return "ItemView";
-    case QStyle::SE_ItemViewItemText : return "ItemView";
+    case QStyle::SE_ItemViewItemDecoration : return "ViewItem";
+    case QStyle::SE_ItemViewItemText : return "ViewItem";
     case QStyle::SE_ItemViewItemFocusRect : return "Frame";
     case QStyle::SE_TabBarTabLeftButton : return "TabBar";
     case QStyle::SE_TabBarTabRightButton : return "TabBar";
@@ -222,7 +222,7 @@ QString CC_group(QStyle::ComplexControl element)
     case QStyle::CC_ScrollBar : return "ScrollBar";
     case QStyle::CC_Slider : return "Slider";
     case QStyle::CC_ToolButton : return "ToolButton";
-    case QStyle::CC_TitleBar : return "TitleBar";
+    case QStyle::CC_TitleBar : return "Window";
     case QStyle::CC_Dial : return "Dial";
     case QStyle::CC_GroupBox : return "GroupBox";
     default : return QString();

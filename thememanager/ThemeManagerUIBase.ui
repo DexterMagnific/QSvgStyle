@@ -703,6 +703,14 @@
            <set>ItemIsSelectable|ItemIsEditable|ItemIsUserCheckable|ItemIsEnabled</set>
           </property>
          </item>
+         <item>
+          <property name="text">
+           <string>Menu separator height</string>
+          </property>
+          <property name="text">
+           <string>specific.menu.separator.height</string>
+          </property>
+         </item>
         </item>
         <item>
          <property name="text">

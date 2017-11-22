@@ -747,7 +747,7 @@
                <x>0</x>
                <y>0</y>
                <width>222</width>
-               <height>335</height>
+               <height>358</height>
               </rect>
              </property>
              <attribute name="label">
@@ -942,7 +942,7 @@
                    <x>0</x>
                    <y>0</y>
                    <width>205</width>
-                   <height>297</height>
+                   <height>320</height>
                   </rect>
                  </property>
                  <layout class="QGridLayout" name="gridLayout_27">
@@ -1593,7 +1593,7 @@
          <x>0</x>
          <y>0</y>
          <width>256</width>
-         <height>505</height>
+         <height>528</height>
         </rect>
        </property>
        <property name="palette">
@@ -1667,7 +1667,7 @@
          <x>0</x>
          <y>0</y>
          <width>256</width>
-         <height>505</height>
+         <height>528</height>
         </rect>
        </property>
        <property name="palette">
@@ -1741,7 +1741,7 @@
          <x>0</x>
          <y>0</y>
          <width>256</width>
-         <height>505</height>
+         <height>528</height>
         </rect>
        </property>
        <property name="palette">
@@ -1815,7 +1815,7 @@
          <x>0</x>
          <y>0</y>
          <width>256</width>
-         <height>505</height>
+         <height>528</height>
         </rect>
        </property>
        <property name="palette">
@@ -1889,7 +1889,7 @@
          <x>0</x>
          <y>0</y>
          <width>256</width>
-         <height>505</height>
+         <height>528</height>
         </rect>
        </property>
        <property name="palette">
@@ -2601,7 +2601,6 @@ spacing</string>
     </item>
    </layout>
   </widget>
-  <widget class="QStatusBar" name="statusbar"/>
  </widget>
  <resources>
   <include location="ThemeBuilderUIBase.qrc"/>

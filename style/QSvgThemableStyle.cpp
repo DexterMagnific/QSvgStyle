@@ -43,6 +43,8 @@
 #include <QtAlgorithms>
 #include <QtMath>
 #include <QStyleHints>
+#include <QMetaObject>
+#include <QMetaEnum>
 
 #include <QSpinBox>
 #include <QToolButton>
@@ -335,6 +337,7 @@ bool QSvgThemableStyle::isContainerWidget(const QWidget * widget) const
     widget->inherits("QDialog") ||
     widget->inherits("QDesktopWidget") ||
     widget->inherits("QToolBar") ||
+    widget->inherits("QStatusBar") ||
     // Ok this one is not a container widget but we want to treat it as such
     // because it has its own groove
     widget->inherits("QProgressBar") ||
@@ -478,14 +481,14 @@ void QSvgThemableStyle::drawPrimitive(PrimitiveElement e, const QStyleOption * o
   QRect r = option->rect;
   r.getRect(&x,&y,&w,&h);
   QString st = state_str(option->state, widget);
-  Qt::LayoutDirection dir = option->direction;
-  bool focus = option->state & State_HasFocus;
+  const Qt::LayoutDirection dir = option->direction;
+  const bool focus = option->state & State_HasFocus;
   Orientation orn = option->state & State_Horizontal ? Horizontal : Vertical;
-  bool en = option->state & State_Enabled;
+  const bool en = option->state & State_Enabled;
   QPalette pal = option->palette;
-  QPalette::ColorGroup cg = en ? QPalette::Normal : QPalette::Disabled;
+  const QPalette::ColorGroup cg = en ? QPalette::Normal : QPalette::Disabled;
   pal.setCurrentColorGroup(cg);
-  QPalette::ColorRole brole = widget ? widget->backgroundRole() : QPalette::NoRole;
+  const QPalette::ColorRole brole = widget ? widget->backgroundRole() : QPalette::NoRole;
 
   // Get QSvgStyle configuration group used to render this element
   QString g = PE_group(e);
@@ -499,7 +502,7 @@ void QSvgThemableStyle::drawPrimitive(PrimitiveElement e, const QStyleOption * o
 
   if ( g.isEmpty() ) {
     // element not currently supported by QSvgStyle
-    qDebug() << "No QSvgStyle group for" << e;
+    qWarning() << "No QSvgStyle group for" << e;
     QCommonStyle::drawPrimitive(e,option,p,widget);
     goto end;
   }
@@ -609,7 +612,6 @@ void QSvgThemableStyle::drawPrimitive(PrimitiveElement e, const QStyleOption * o
       break;
     }
     case PE_IndicatorRadioButton : {
-      ds.size = pixelMetric(PM_ExclusiveIndicatorHeight);
       // a radio button (exclusive choice)
       // QSvgStyle: no pressed or toggled status for radio buttons
       st = (option->state & State_Enabled) ?
@@ -624,7 +626,6 @@ void QSvgThemableStyle::drawPrimitive(PrimitiveElement e, const QStyleOption * o
     case PE_IndicatorViewItemCheck :
       // a check box inside view items
     case PE_IndicatorCheckBox : {
-      ds.size = pixelMetric(PM_IndicatorHeight);
       // a check box (multiple choices)
       // QSvgStyle: no pressed or toggled status for check boxes
       st = (option->state & State_Enabled) ?
@@ -645,13 +646,18 @@ void QSvgThemableStyle::drawPrimitive(PrimitiveElement e, const QStyleOption * o
 
         QStyleOptionMenuItem o(*opt);
 
-        if ( opt->checked )
-          o.state |= State_On;
+        st = (option->state & State_Enabled) ?
+              (option->state & State_Selected) ? "toggled" : "normal"
+                                               : "disabled";
 
+        if ( opt->checked )
+          st = "checked-"+st;
+
+        fs.hasFrame = false;
         if ( opt->checkType == QStyleOptionMenuItem::Exclusive )
-          drawPrimitive(PE_IndicatorRadioButton,&o,p,widget);
+          renderIndicator(p,r,fs,is,ds,ds.element+"-radio-"+st,dir);
         else if ( opt->checkType == QStyleOptionMenuItem::NonExclusive )
-          drawPrimitive(PE_IndicatorCheckBox,&o,p,widget);
+          renderIndicator(p,r,fs,is,ds,ds.element+"-checkbox-"+st,dir);
       }
       break;
     }
@@ -710,14 +716,13 @@ void QSvgThemableStyle::drawPrimitive(PrimitiveElement e, const QStyleOption * o
     }
     case PE_IndicatorTabClose : {
       // tab close buttons. used when icon theme does not supply one
-      ds.size = pixelMetric(PM_SmallIconSize);
+      ds.size = pixelMetric(PM_TabCloseIndicatorWidth);
       renderIndicator(p,r,fs,is,ds,ds.element+"-tabclose-"+st, dir);
       break;
     }
     case PE_PanelScrollAreaCorner : {
       // scroll area corner
-      qDebug() << r;
-      renderIndicator(p,r,fs,is,ds,ds.element+"-corner-"+st, dir);
+      // nothing
       break;
     }
     case PE_FrameMenu :  {
@@ -733,14 +738,13 @@ void QSvgThemableStyle::drawPrimitive(PrimitiveElement e, const QStyleOption * o
     }
     case PE_FrameWindow : {
       // Frame for windows
-      qDebug() << e;
       renderFrame(p,cs2b(cs.bg,pal.brush(brole)),r,fs,fs.element+"-"+st,dir);
       break;
     }
     case PE_FrameTabBarBase : {
       // FIXME
       qDebug() << r;
-      renderFrame(p,cs2b(cs.bg,pal.brush(brole)),r,fs,fs.element+"-toto"+st,dir);
+      renderFrame(p,cs2b(cs.bg,pal.brush(brole)),r,fs,fs.element+"-"+st,dir);
       break;
     }
     case PE_Frame : {
@@ -776,7 +780,7 @@ void QSvgThemableStyle::drawPrimitive(PrimitiveElement e, const QStyleOption * o
           orn = Horizontal;
         renderFrame(p,cs2b(cs.bg,pal.brush(brole)),r,fs,fs.element+"-"+st,dir,orn);
         renderInterior(p,cs2b(cs.bg,pal.brush(brole)),r,fs,is,is.element+"-"+st,dir,orn);
-        qDebug() << "render frame dock widget";
+        qWarning() << "render frame dock widget";
       }
       break;
     }
@@ -787,6 +791,7 @@ void QSvgThemableStyle::drawPrimitive(PrimitiveElement e, const QStyleOption * o
     }
     case PE_FrameGroupBox : {
       // Frame and interior for group boxes
+      // NOTE not used for group box titles
       renderFrame(p,cs2b(cs.bg,pal.brush(brole)),r,fs,fs.element+"-"+st,dir);
       renderInterior(p,cs2b(cs.bg,pal.brush(brole)),r,fs,is,is.element+"-"+st,dir);
       break;
@@ -989,11 +994,11 @@ void QSvgThemableStyle::drawPrimitive(PrimitiveElement e, const QStyleOption * o
       break;
     }
     case PE_PanelStatusBar : {
-      // nothing
+      renderInterior(p,cs2b(cs.bg,pal.brush(brole)),r,fs,is,is.element+"-"+st,dir);
       break;
     }
     default :
-      qDebug() << "[QSvgStyle]" << __func__ << ": Unhandled primitive " << e;
+      qWarning() << "[QSvgStyle] Unhandled primitive" << e;
       QCommonStyle::drawPrimitive(e,option,p,widget);
       break;
   }
@@ -1012,11 +1017,11 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
   r.getRect(&x,&y,&w,&h);
   QString st = state_str(option->state, widget);
   Qt::LayoutDirection dir = option->direction;
-  bool focus = option->state & State_HasFocus;
-  QIcon::Mode icm = state_iconmode(option->state);
-  QIcon::State ics = state_iconstate(option->state);
+  const bool focus = option->state & State_HasFocus;
+  const QIcon::Mode icm = state_iconmode(option->state);
+  const QIcon::State ics = state_iconstate(option->state);
   Orientation orn = option->state & State_Horizontal ? Horizontal : Vertical;
-  bool en = option->state & State_Enabled;
+  const bool en = option->state & State_Enabled;
   QPalette pal = option->palette;
   QPalette::ColorGroup cg = en ? QPalette::Normal : QPalette::Disabled;
   pal.setCurrentColorGroup(cg);
@@ -1034,7 +1039,7 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
 
   if ( g.isEmpty() ) {
     // element not currently supported by QSvgStyle
-    qDebug() << "No QSvgSTyle group for" << e;
+    qWarning() << "[QSvgStyle] No group for" << e;
     QCommonStyle::drawControl(e,option,p,widget);
     goto end;
   }
@@ -1119,7 +1124,7 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
           renderInterior(p,cs2b(cs.bg,pal.brush(brole)),r,fs,is,is.element+"-"+st,dir);
 
           QRect rtext = r; // text rect (menu item label+shortcut)
-          QRect rcheckmark, rarrow;
+          QRect rcheckmark, rchild;
 
           // determine positions
           const QStringList l = opt->text.split('\t');
@@ -1129,15 +1134,15 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
 
           if ( opt->checkType != QStyleOptionMenuItem::NotCheckable )
             // remove room for check mark
-            rtext = rtext.adjusted(0,0,-pixelMetric(PM_IndicatorWidth)-pixelMetric(PM_CheckBoxLabelSpacing),0);
+            rtext = rtext.adjusted(0,0,-ds.size-pixelMetric(PM_CheckBoxLabelSpacing),0);
           if ( opt->menuItemType == QStyleOptionMenuItem::SubMenu )
             // remove room for sub menu arrow
             rtext = rtext.adjusted(0,0,-ls.tispace-ds.size,0);
 
-          rarrow = QRect(r.topRight(),QSize(ds.size,h))
+          rchild = QRect(r.topRight(),QSize(ds.size,h))
                     .translated(-ds.size-fs.right-ls.hmargin,0);
-          rcheckmark = QRect(r.topRight(),QSize(pixelMetric(PM_IndicatorWidth),h))
-                    .translated(-pixelMetric(PM_IndicatorWidth)-fs.right-ls.hmargin,0);
+          rcheckmark = QRect(r.topRight(),QSize(ds.size,h))
+                    .translated(-ds.size-fs.right-ls.hmargin,0);
 
           if (opt->menuItemType == QStyleOptionMenuItem::SubMenu)
             rcheckmark.translate(-ds.size-ls.tispace,0);
@@ -1145,7 +1150,7 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
           // translate to visual rects inside r
           rtext = visualRect(dir,r,rtext);
           rcheckmark = visualRect(dir,r,rcheckmark);
-          rarrow = visualRect(dir,r,rarrow);
+          rchild = visualRect(dir,r,rchild);
 
           // draw menu text (label+shortcut)
           if (l.size() > 0) {
@@ -1175,7 +1180,7 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
 
           // submenu arrow
           if (opt->menuItemType == QStyleOptionMenuItem::SubMenu) {
-            o.rect = rarrow;
+            o.rect = rchild;
             drawPrimitive(PE_IndicatorColumnViewArrow,&o,p);
           }
         }
@@ -1519,6 +1524,13 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
     case CE_TabBarTab : {
       drawControl(CE_TabBarTabShape,option,p,widget);
       drawControl(CE_TabBarTabLabel,option,p,widget);
+
+      break;
+    }
+
+    case CE_ToolBoxTab : {
+      drawControl(CE_ToolBoxTabShape,option,p,widget);
+      drawControl(CE_ToolBoxTabLabel,option,p,widget);
 
       break;
     }
@@ -1879,6 +1891,7 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
       break;
     }
 
+    case CE_HeaderEmptyArea :
     case CE_HeaderSection : {
       renderFrame(p,cs2b(cs.bg,pal.brush(brole)),r,fs,fs.element+"-"+st,dir);
       renderInterior(p,cs2b(cs.bg,pal.brush(brole)),r,fs,is,is.element+"-"+st,dir);
@@ -1892,6 +1905,7 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
         QStyleOptionHeader o(*opt);
 
         o.rect = subElementRect(SE_HeaderLabel,opt,widget);
+        // FIXME does not honor icon alignment
         renderLabel(p,cs2b(cs.fg,pal.text()),
                     dir,o.rect,fs,is,ls,
                     opt->textAlignment,
@@ -2055,12 +2069,12 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
 
         if ( opt && (opt->frameShape == QFrame::HLine) ) {
           renderElement(p,
-                        fs.element+"-"+"hsep",
+                        fs.element+"-hsep-"+st,
                         option->rect,
                         0,0);
         } else if (opt && (opt->frameShape == QFrame::VLine) ) {
           renderElement(p,
-                        fs.element+"-"+"vsep",
+                        fs.element+"-vsep-"+st,
                         option->rect,
                         0,0);
         } else if (opt && (opt->frameShape != QFrame::NoFrame) ) {
@@ -2071,8 +2085,40 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
       break;
     }
 
+    case CE_ItemViewItem : {
+      // FIXME rtl
+      // FIXME use SE_ItemViewItem* rects
+      if ( const QStyleOptionViewItem *opt =
+           qstyleoption_cast<const QStyleOptionViewItem *>(option) ) {
+
+        QStyleOptionViewItem o(*opt);
+
+        drawPrimitive(PE_PanelItemViewItem,opt,p,widget);
+
+        QRect rlabel = subElementRect(SE_ItemViewItemText,opt,widget);
+        QRect rcheckmark = subElementRect(SE_ItemViewItemCheckIndicator,opt,widget);
+
+        if ( opt->features & QStyleOptionViewItem::HasCheckIndicator ) {
+          o.rect = rcheckmark;
+          if ( opt->checkState == Qt::PartiallyChecked )
+            o.state |= State_NoChange;
+          if ( opt->checkState == Qt::Checked )
+            o.state |= State_On;
+          drawPrimitive(PE_IndicatorViewItemCheck,&o,p,widget);
+        }
+
+        renderLabel(p,cs2b(cs.fg,pal.text()),
+                    dir,rlabel,fs,is,ls,
+                    Qt::AlignLeft,
+                    opt->text,
+                    opt->icon.pixmap(pixelMetric(PM_ListViewIconSize)));
+      }
+
+      break;
+    }
+
     default :
-      qDebug() << "[QSvgStyle] " << __func__ << ": Unhandled control " << e;
+      qWarning() << "[QSvgStyle] Unhandled control" << e;
       QCommonStyle::drawControl(e,option,p,widget);
   }
 
@@ -2089,21 +2135,14 @@ void QSvgThemableStyle::drawComplexControl(ComplexControl control, const QStyleO
   QRect r = option->rect;
   r.getRect(&x,&y,&w,&h);
   QString st = state_str(option->state, widget);
-  Qt::LayoutDirection dir = option->direction;
-  bool focus = option->state & State_HasFocus;
-  QIcon::Mode icm = state_iconmode(option->state);
-  QIcon::State ics = state_iconstate(option->state);
-  QFontMetrics fm = option->fontMetrics;
+  const Qt::LayoutDirection dir = option->direction;
+  const bool focus = option->state & State_HasFocus;
   Orientation orn = option->state & State_Horizontal ? Horizontal : Vertical;
-  bool en = option->state & State_Enabled;
+  const bool en = option->state & State_Enabled;
   QPalette pal = option->palette;
-  QPalette::ColorGroup cg = en ? QPalette::Normal : QPalette::Disabled;
+  const QPalette::ColorGroup cg = en ? QPalette::Normal : QPalette::Disabled;
   pal.setCurrentColorGroup(cg);
-  QPalette::ColorRole brole = widget ? widget->backgroundRole() : QPalette::NoRole;
-
-  Q_UNUSED(focus);
-  Q_UNUSED(icm);
-  Q_UNUSED(ics);
+  const QPalette::ColorRole brole = widget ? widget->backgroundRole() : QPalette::NoRole;
 
   // Get QSvgStyle configuration group used to render this element
   QString g = CC_group(control);
@@ -2135,8 +2174,10 @@ void QSvgThemableStyle::drawComplexControl(ComplexControl control, const QStyleO
 
         QStyleOptionToolButton o(*opt);
 
-        QRect dropRect = subControlRect(CC_ToolButton,opt,SC_ToolButtonMenu,widget);
-        QRect buttonRect = subControlRect(CC_ToolButton,opt,SC_ToolButton,widget);
+        QRect dropRect = subControlRect(CC_ToolButton,opt,SC_ToolButtonMenu,widget)
+            .marginsAdded(QMargins(fs.left,fs.top,fs.right,fs.bottom));
+        QRect buttonRect = subControlRect(CC_ToolButton,opt,SC_ToolButton,widget)
+            .marginsAdded(QMargins(fs.left,fs.top,fs.right,fs.bottom));
 
         QStyle::State buttonState = opt->state;
         QStyle::State dropState = opt->state;
@@ -2574,13 +2615,26 @@ void QSvgThemableStyle::drawComplexControl(ComplexControl control, const QStyleO
         r2 = subControlRect(CC_GroupBox,&o,SC_GroupBoxLabel,widget);
 
         // Draw frame and interior around contents
-        renderFrame(p,cs2b(cs.bg,pal.brush(brole)),r1,fs,fs.element+"-"+st,dir);
-        renderInterior(p,cs2b(cs.bg,pal.brush(brole)),r1,fs,is,is.element+"-"+st,dir);
+        // Cannot use PE_FrameGroupBox because of capsule
+        if ( !(opt->features && QStyleOptionFrame::Flat) ) {
+          if ( (opt->subControls & SC_GroupBoxCheckBox) && !(opt->state & State_On) ) {
+            // not checked -> draw contents frame with disabled state
+            //st = "disabled";
+            o.state &= ~State_Enabled;
+          }
+          o.rect = r1;
+          drawPrimitive(PE_FrameGroupBox,&o,p,widget);
+          o = *opt;
+          //renderFrame(p,cs2b(cs.bg,pal.brush(brole)),r1,fs,fs.element+"-"+st,dir);
+          //renderInterior(p,cs2b(cs.bg,pal.brush(brole)),r1,fs,is,is.element+"-"+st,dir);
+          //st = state_str(opt->state, widget);
+        }
 
         // Draw frame and interior around title
         fs.hasCapsule = true;
         fs.capsuleH = 2;
-        fs.capsuleV = -1; // FIXME bottom titles
+        fs.capsuleV = -1;
+
         renderFrame(p,cs2b(cs.bg,pal.brush(brole)),r2,fs,fs.element+"-"+st,dir);
         renderInterior(p,cs2b(cs.bg,pal.brush(brole)),r2,fs,is,is.element+"-"+st,dir);
 
@@ -2616,8 +2670,129 @@ void QSvgThemableStyle::drawComplexControl(ComplexControl control, const QStyleO
       break;
     }
 
+    case CC_TitleBar : {
+      if ( const QStyleOptionTitleBar *opt =
+           qstyleoption_cast<const QStyleOptionTitleBar *>(option) ) {
+
+        if ( styleHint(SH_TitleBar_NoBorder) )
+          fs.hasFrame = false;
+        else if ( !(opt->titleBarState & Qt::WindowMinimized) )
+          fs.bottom = 0;
+
+        if (opt->titleBarState & Qt::WindowActive)
+          st = "hovered";
+        else
+          st = "normal";
+
+        const int btnsz = pixelMetric(PM_TitleBarButtonSize,opt,widget);
+        const int iconsz = pixelMetric(PM_TitleBarButtonIconSize,opt,widget);
+        const QIcon::Mode icm = state_iconmode(option->state);
+        const QIcon::State ics = state_iconstate(option->state);
+
+        // interior
+        renderInterior(p,cs2b(cs.bg,pal.button()),r,fs,is,is.element+"-"+st,dir);
+
+        // title
+        ls.hmargin = 0; // this has been taken into account in SC_TitleBarLabel
+        QRect rtext = subControlRect(CC_TitleBar, opt, SC_TitleBarLabel, widget);
+        renderLabel(p,cs2b(cs.fg,pal.text()),
+                    dir,rtext,fs,is,ls,
+                    Qt::AlignCenter | Qt::TextSingleLine,
+                    opt->text);
+
+        QPixmap pm;
+
+        // close button
+        if ( (opt->subControls & SC_TitleBarCloseButton) &&
+             opt->titleBarFlags & Qt::WindowSystemMenuHint ) {
+          const QRect rbtn = subControlRect(CC_TitleBar, opt, SC_TitleBarCloseButton, widget);
+          if ( (opt->titleBarFlags & Qt::WindowType_Mask) == Qt::Tool
+              || qobject_cast<const QDockWidget *>(widget)
+              )
+            pm = standardIcon(SP_DockWidgetCloseButton, opt, widget).pixmap(btnsz,btnsz,icm,ics);
+          else
+            pm = standardIcon(SP_TitleBarCloseButton, opt, widget).pixmap(btnsz,btnsz,icm,ics);
+
+          drawItemPixmap(p, rbtn, Qt::AlignCenter, pm);
+        }
+
+        // max button
+        if ( (opt->subControls & SC_TitleBarMaxButton) &&
+             opt->titleBarFlags & Qt::WindowMaximizeButtonHint &&
+             !(opt->titleBarState & Qt::WindowMaximized) ) {
+          const QRect rbtn = subControlRect(CC_TitleBar, opt, SC_TitleBarMaxButton, widget);
+          pm = standardIcon(SP_TitleBarMaxButton, opt, widget).pixmap(btnsz,btnsz,icm,ics);
+
+          drawItemPixmap(p, rbtn, Qt::AlignCenter, pm);
+        }
+
+        // min button
+        if ( (opt->subControls & SC_TitleBarMinButton) &&
+             opt->titleBarFlags & Qt::WindowMinimizeButtonHint &&
+             !(opt->titleBarState & Qt::WindowMinimized) ) {
+          const QRect rbtn = subControlRect(CC_TitleBar, opt, SC_TitleBarMinButton, widget);
+          pm = standardIcon(SP_TitleBarMinButton, opt, widget).pixmap(btnsz,btnsz,icm,ics);
+
+          drawItemPixmap(p, rbtn, Qt::AlignCenter, pm);
+        }
+
+        // normal (restore) button
+        if ( (opt->subControls & SC_TitleBarNormalButton) &&
+             (((opt->titleBarFlags & Qt::WindowMinimizeButtonHint) &&
+               (opt->titleBarState & Qt::WindowMinimized)) ||
+              ((opt->titleBarFlags & Qt::WindowMaximizeButtonHint) &&
+               (opt->titleBarState & Qt::WindowMaximized))) ) {
+          const QRect rbtn = subControlRect(CC_TitleBar, opt, SC_TitleBarNormalButton, widget);
+          pm = standardIcon(SP_TitleBarNormalButton, opt, widget).pixmap(btnsz,btnsz,icm,ics);
+
+          drawItemPixmap(p, rbtn, Qt::AlignCenter, pm);
+        }
+
+        // shade button
+        if ( (opt->subControls & SC_TitleBarShadeButton) &&
+             opt->titleBarFlags & Qt::WindowShadeButtonHint &&
+             !(opt->titleBarState & Qt::WindowMinimized) ) {
+          const QRect rbtn = subControlRect(CC_TitleBar, opt, SC_TitleBarShadeButton, widget);
+          pm = standardIcon(SP_TitleBarShadeButton, opt, widget).pixmap(btnsz,btnsz,icm,ics);
+
+          drawItemPixmap(p, rbtn, Qt::AlignCenter, pm);
+        }
+
+        // unshade button
+        if ( (opt->subControls & SC_TitleBarUnshadeButton) &&
+             opt->titleBarFlags & Qt::WindowShadeButtonHint &&
+             opt->titleBarState & Qt::WindowMinimized ) {
+          const QRect rbtn = subControlRect(CC_TitleBar, opt, SC_TitleBarUnshadeButton, widget);
+          pm = standardIcon(SP_TitleBarUnshadeButton, opt, widget).pixmap(btnsz,btnsz,icm,ics);
+
+          drawItemPixmap(p, rbtn, Qt::AlignCenter, pm);
+        }
+
+        // help button
+        if ( (opt->subControls & SC_TitleBarContextHelpButton) &&
+             opt->titleBarFlags & Qt::WindowContextHelpButtonHint &&
+             opt->titleBarState & Qt::WindowMinimized ) {
+          const QRect rbtn = subControlRect(CC_TitleBar, opt, SC_TitleBarContextHelpButton, widget);
+          pm = standardIcon(SP_TitleBarContextHelpButton, opt, widget).pixmap(btnsz,btnsz,icm,ics);
+
+          drawItemPixmap(p, rbtn, Qt::AlignCenter, pm);
+        }
+
+        // system menu button
+        if ( (opt->subControls & SC_TitleBarSysMenu) &&
+             opt->titleBarFlags & Qt::WindowSystemMenuHint ) {
+          const QRect rbtn = subControlRect(CC_TitleBar, opt, SC_TitleBarSysMenu, widget);
+          //pm = standardIcon(SP_TitleBarMenuButton, opt, widget).pixmap(pmsz,pmsz,icm,ics);
+          pm = opt->icon.pixmap(iconsz,iconsz,icm,ics);
+
+          drawItemPixmap(p, rbtn, Qt::AlignCenter, pm);
+        }
+      }
+      break;
+    }
+
     default :
-      //qDebug() << "[QSvgStyle] " << __func__ << ": Unhandled complex control " << control;
+      qWarning() << "[QSvgStyle] Unhandled complex control" << control;
       QCommonStyle::drawComplexControl(control,option,p,widget);
   }
 
@@ -2627,15 +2802,20 @@ end:
 
 int QSvgThemableStyle::pixelMetric(PixelMetric metric, const QStyleOption * option, const QWidget * widget) const
 {
+  const QFontMetrics fm = widget ? widget->fontMetrics() :
+                             option ? option->fontMetrics :
+                                      qApp->fontMetrics();
+
   switch (metric) {
-    // Indicator width (checkboxes, radios, arrows, ...)
+    // Indicator width (checkboxes, radios, ...)
     case PM_IndicatorWidth :
     case PM_IndicatorHeight :
+      return getIndicatorSpec(PE_group(PE_IndicatorCheckBox)).size;
     case PM_ExclusiveIndicatorWidth :
     case PM_ExclusiveIndicatorHeight :
-      return getSpecificValue("specific.radiocheckbox.indicator.size").toInt();
+      return getIndicatorSpec(PE_group(PE_IndicatorRadioButton)).size;
 
-    // drop down menu + spin box up/down/plus/minus
+    // drop down menu + spin box up/down/plus/minus button size (not indicator)
     case PM_MenuButtonIndicator :
       return getSpecificValue("specific.dropdown.size").toInt();
 
@@ -2696,12 +2876,27 @@ int QSvgThemableStyle::pixelMetric(PixelMetric metric, const QStyleOption * opti
     case PM_TabBarTabShiftHorizontal : return 0;
     case PM_TabBarTabShiftVertical : return 0;
     case PM_TabBarIconSize : return 16;
+    case PM_TabBar_ScrollButtonOverlap: return 0;
+    case PM_TabCloseIndicatorHeight :
+    case PM_TabCloseIndicatorWidth : return 16;
 
+    // Icon sizes
     case PM_SmallIconSize : return 16;
     case PM_LargeIconSize : return 32;
+    case PM_ButtonIconSize : return 16;
+    case PM_ListViewIconSize : return 16;
+    case PM_IconViewIconSize : return 64;
+    case PM_MessageBoxIconSize : return 64;
+    case PM_TitleBarButtonIconSize : return 32;
+    case PM_TitleBarButtonSize :
+      return getIndicatorSpec(PE_group(PE_FrameWindow)).size;
 
+    // Button related
+    case PM_ButtonMargin :
     case PM_FocusFrameHMargin :
-    case PM_FocusFrameVMargin : return 0;
+    case PM_FocusFrameVMargin :
+    case PM_ButtonShiftHorizontal :
+    case PM_ButtonShiftVertical : return 0;
 
     case PM_CheckBoxLabelSpacing :
     case PM_RadioButtonLabelSpacing :
@@ -2745,8 +2940,15 @@ int QSvgThemableStyle::pixelMetric(PixelMetric metric, const QStyleOption * opti
       else
         return getFrameSpec(PE_group(PE_Frame)).width;
 
+    case PM_SpinBoxFrameWidth:
+      return getFrameSpec(CC_group(CC_SpinBox)).width;
+
     case PM_MenuPanelWidth :
+    case PM_MenuDesktopFrameWidth :
       return getFrameSpec(PE_group(PE_FrameMenu)).width;
+    case PM_MenuHMargin :
+    case PM_MenuVMargin : return 0;
+    case PM_SubMenuOverlap : return 0;
 
     case PM_ToolTipLabelFrameWidth :
       return getFrameSpec(PE_group(PE_PanelTipLabel)).width;
@@ -2786,10 +2988,56 @@ int QSvgThemableStyle::pixelMetric(PixelMetric metric, const QStyleOption * opti
       return getSpecificValue("specific.dock.handle.width").toInt();
 
     case PM_TextCursorWidth : return 1;
+
     case PM_SizeGripSize :
       return getIndicatorSpec(CE_group(CE_SizeGrip)).size;
 
-    default : return QCommonStyle::pixelMetric(metric,option,widget);
+    // Header sort indicator size
+    case PM_HeaderMarkSize :
+      return getIndicatorSpec(CE_group(CE_Header)).size;
+    case PM_HeaderGripMargin :
+      return getFrameSpec(CE_group(CE_Header)).width*2;
+    case PM_HeaderMargin : return 0;
+
+    // Mdi Windows
+    case PM_MdiSubWindowFrameWidth :
+      return getFrameSpec(PE_group(PE_FrameWindow)).width;
+    case PM_TitleBarHeight : {
+      if ( const QStyleOptionTitleBar *opt =
+           qstyleoption_cast<const QStyleOptionTitleBar *>(option) ) {
+        const QString group = PE_group(PE_FrameWindow);
+        frame_spec_t fs = getFrameSpec(group);
+        interior_spec_t is = getInteriorSpec(group);
+        label_spec_t ls = getLabelSpec(group);
+
+        if ( styleHint(SH_TitleBar_NoBorder) )
+          fs.hasFrame = false;
+        else if ( !(opt->titleBarState & Qt::WindowMinimized) )
+          // non minimized ?
+          fs.bottom = 0;
+
+        QSize sz = sizeFromContents(fm,fs,is,ls,
+                                  opt->text.isEmpty() ? "W" : opt->text,
+                                  QPixmap(pixelMetric(PM_TitleBarButtonIconSize),pixelMetric(PM_TitleBarButtonIconSize)));
+
+        return sz.height();
+      } else {
+        return fm.height();
+      }
+    }
+
+    // We're happy with the values returned by QCommonStyle
+    case PM_MaximumDragDistance :
+    case PM_TreeViewIndentation :
+    case PM_ScrollView_ScrollBarOverlap :
+    case PM_HeaderDefaultSectionSizeHorizontal :
+    case PM_HeaderDefaultSectionSizeVertical :
+    case PM_MdiSubWindowMinimizedWidth :
+      return QCommonStyle::pixelMetric(metric,option,widget);
+
+    default :
+      qWarning() << "Unhandled pixelmetric" << metric;
+      return QCommonStyle::pixelMetric(metric,option,widget);
   }
 }
 
@@ -2800,9 +3048,11 @@ int QSvgThemableStyle::styleHint(StyleHint hint, const QStyleOption * option, co
     case SH_Menu_MouseTracking :
     case SH_MenuBar_MouseTracking : return true;
 
-    case SH_DockWidget_ButtonsHaveFrame : return true;
+    case SH_DockWidget_ButtonsHaveFrame : return false;
 
     case SH_TabBar_Alignment : return Qt::AlignCenter;
+
+    case SH_TitleBar_NoBorder : return true;
 
     default : return QCommonStyle::styleHint(hint,option,widget,returnData);
   }
@@ -2910,7 +3160,7 @@ QSize QSvgThemableStyle::sizeFromContents ( ContentsType type, const QStyleOptio
 
         s = sizeFromContents(fm,fs,is,ls,
                              "W",
-                             QPixmap(QSize(pixelMetric(PM_SmallIconSize),pixelMetric(PM_SmallIconSize))));
+                             QPixmap(opt->iconSize));
 
         s = s.expandedTo(QSize(csz.width(),0));
 
@@ -2982,7 +3232,7 @@ QSize QSvgThemableStyle::sizeFromContents ( ContentsType type, const QStyleOptio
         fs.top = fs.bottom = fs.left = fs.right = 0;
 
         if (opt->menuItemType == QStyleOptionMenuItem::Separator)
-          s = QSize(csw,2); /* there is no PM_MenuSeparatorHeight pixel metric */
+          s = QSize(csw,getSpecificValue("specific.menu.separator.height").toInt());
         else {
           s = sizeFromContents(fm,fs,is,ls,opt->text,opt->icon.pixmap(opt->maxIconWidth));
         }
@@ -2995,7 +3245,7 @@ QSize QSvgThemableStyle::sizeFromContents ( ContentsType type, const QStyleOptio
         if ( (opt->checkType == QStyleOptionMenuItem::Exclusive) ||
              (opt->checkType == QStyleOptionMenuItem::NonExclusive)
             ) {
-          s.rwidth() += pixelMetric(PM_CheckBoxLabelSpacing)+pixelMetric(PM_IndicatorWidth);
+          s.rwidth() += pixelMetric(PM_CheckBoxLabelSpacing)+ds.size;
         }
 
         // add width for sub menu arrow
@@ -3091,7 +3341,7 @@ QSize QSvgThemableStyle::sizeFromContents ( ContentsType type, const QStyleOptio
           s.rwidth() += pixelMetric(PM_MenuButtonIndicator);
         } else if (opt->features & QStyleOptionToolButton::HasMenu) {
           // Tool button with down arrow
-          s.rwidth() += 2*ls.tispace+ds.size;
+          s.rwidth() += ls.tispace+ds.size;
         }
       }
       break;
@@ -3123,11 +3373,10 @@ QSize QSvgThemableStyle::sizeFromContents ( ContentsType type, const QStyleOptio
     case CT_HeaderSection : {
       if ( const QStyleOptionHeader *opt =
            qstyleoption_cast<const QStyleOptionHeader *>(option) ) {
-
         s = sizeFromContents(fm,fs,is,ls,
                              opt->text,opt->icon.pixmap(pixelMetric(PM_SmallIconSize)));
         if ( opt->sortIndicator != QStyleOptionHeader::None )
-          s += QSize(ls.tispace+ds.size,0);
+          s += QSize(2*ls.tispace+ds.size,0);
       }
 
       break;
@@ -3165,17 +3414,19 @@ QSize QSvgThemableStyle::sizeFromContents ( ContentsType type, const QStyleOptio
 
         s = sizeFromContents(fm,fs,is,ls,
                              opt->text,
-                             opt->icon.pixmap(pixelMetric(PM_SmallIconSize)));
+                             opt->icon.pixmap(pixelMetric(PM_ListViewIconSize)));
 
         if ( opt->features & QStyleOptionViewItem::HasCheckIndicator ) {
           s += QSize(pixelMetric(PM_CheckBoxLabelSpacing)+pixelMetric(PM_IndicatorWidth),0);
         }
         s = s.expandedTo(QSize(pixelMetric(PM_IndicatorWidth),pixelMetric(PM_IndicatorHeight))); // minimal checkbox size is size of indicator
+        s = s.expandedTo(QSize(ds.size,ds.size)); // tree branch
       }
       break;
     }
 
-    default : s = QCommonStyle::sizeFromContents(type,option,csz,widget);
+    default :
+      s = QCommonStyle::sizeFromContents(type,option,csz,widget);
   }
 
 #ifdef __DEBUG__
@@ -3201,25 +3452,22 @@ QSize QSvgThemableStyle::sizeFromContents(const QFontMetrics &fm,
   Q_UNUSED(is);
 
   QSize s(0,0);
-  if ( fs.hasFrame ) {
-    s.rwidth() += fs.left+fs.right;
-    s.rheight() += fs.top+fs.bottom;
-  }
 
+  // compute size of interior elements first
   int th = 0, tw = 0;
-  if ( !text.isNull() || !icon.isNull() ) {
+  if ( !text.isEmpty() || !icon.isNull() ) {
     s.rwidth() += 2*ls.hmargin;
     s.rheight() += 2*ls.vmargin;
   }
 
-  if ( !text.isNull() ) {
+  if ( !text.isEmpty() ) {
     if (ls.hasShadow) {
       s.rwidth() += ls.xshift+ls.depth;
       s.rheight() += ls.yshift+ls.depth;
     }
 
     // compute width and height of text
-    QSize ts = text.isNull() ? QSize(0,0) : fm.size(Qt::TextShowMnemonic,text);
+    QSize ts = text.isEmpty() ? QSize(0,0) : fm.size(Qt::TextShowMnemonic,text);
     tw = ts.width();
     th = ts.height();
   }
@@ -3238,9 +3486,15 @@ QSize QSvgThemableStyle::sizeFromContents(const QFontMetrics &fm,
     s.rheight() += icon.height() + (icon.isNull() ? 0 : ls.tispace) + th;
   }
 
+  // then add frame
+  if ( fs.hasFrame ) {
+    s.rwidth() += fs.left+fs.right;
+    s.rheight() += fs.top+fs.bottom;
+  }
+
   // minimum size : frame + 2 pixels of interior
   if ( fs.hasFrame )
-    s = s.expandedTo(QSize(fs.top+fs.bottom+2,fs.left+fs.right+2));
+    s = s.expandedTo(QSize(fs.left+fs.right+2,fs.top+fs.bottom+2));
   else
     s = s.expandedTo(QSize(2,2));
 
@@ -3284,6 +3538,8 @@ QRect QSvgThemableStyle::subElementRect(SubElement e, const QStyleOption * optio
   ls = getLabelSpec(g);
   ds = getIndicatorSpec(g);
 
+  ret = r;
+
   switch (e) {
     case SE_PushButtonFocusRect : {
       ret = r;
@@ -3314,8 +3570,6 @@ QRect QSvgThemableStyle::subElementRect(SubElement e, const QStyleOption * optio
 
         if ( opt->sortIndicator != QStyleOptionHeader::None )
           ret = r.adjusted(0,0,-ls.tispace-ds.size,0);
-        else
-          ret = r;
       }
       break;
     }
@@ -3336,6 +3590,28 @@ QRect QSvgThemableStyle::subElementRect(SubElement e, const QStyleOption * optio
 
     case SE_TabBarTabText : {
       ret = labelRect(r,fs,is,ls);
+      break;
+    }
+
+    case SE_ItemViewItemCheckIndicator : {
+      ret = r.adjusted(ls.hmargin,0,0,0);
+      ret.setWidth(ds.size);
+      break;
+    }
+
+    case SE_ItemViewItemDecoration :
+    case SE_ItemViewItemText :
+    case SE_ItemViewItemFocusRect : {
+      r = interiorRect(r,fs,is);
+      // QSvgStyle does not make a distinction between icon and text,
+      // all these are label and there is a single function
+      // to draw both: renderLabel()
+      if ( const QStyleOptionViewItem *opt =
+           qstyleoption_cast<const QStyleOptionViewItem *>(option) ) {
+        //ret = r.adjusted(ls.hmargin,0,0,0);
+        if ( opt->features & QStyleOptionViewItem::HasCheckIndicator )
+          ret = ret.adjusted(pixelMetric(PM_CheckBoxLabelSpacing)+ds.size,0,0,0);
+      }
       break;
     }
 
@@ -3366,6 +3642,7 @@ QRect QSvgThemableStyle::subControlRect(ComplexControl control, const QStyleOpti
   Q_UNUSED(focus);
   Q_UNUSED(icm);
   Q_UNUSED(ics);
+  Q_UNUSED(st);
 
   // Get QSvgStyle configuration group used to render this element
   QString g = CC_group(control);
@@ -3643,11 +3920,16 @@ QRect QSvgThemableStyle::subControlRect(ComplexControl control, const QStyleOpti
           if ( const QStyleOptionToolButton *opt =
                qstyleoption_cast<const QStyleOptionToolButton *>(option) ) {
 
+            r = interiorRect(r,fs,is);
+            r.getRect(&x,&y,&w,&h);
+
             // remove room for drop down buttons or down arrows
             if (opt->features & QStyleOptionToolButton::Menu)
               ret = r.adjusted(0,0,-pixelMetric(PM_MenuButtonIndicator),0);
             else if (opt->features & QStyleOptionToolButton::HasMenu)
               ret = r.adjusted(0,0,-ds.size-2*ls.tispace,0);
+            else
+              ret = r;
           }
           break;
         }
@@ -3655,10 +3937,15 @@ QRect QSvgThemableStyle::subControlRect(ComplexControl control, const QStyleOpti
           if ( const QStyleOptionToolButton *opt =
                qstyleoption_cast<const QStyleOptionToolButton *>(option) ) {
 
+            r = interiorRect(r,fs,is);
+            r.getRect(&x,&y,&w,&h);
             if (opt->features & QStyleOptionToolButton::Menu)
-              ret = r.adjusted(x+w-pixelMetric(PM_MenuButtonIndicator),0,0,0);
+              ret = QRect(x+w-pixelMetric(PM_MenuButtonIndicator),y,
+                         pixelMetric(PM_MenuButtonIndicator),h);
             else if (opt->features & QStyleOptionToolButton::HasMenu)
-              ret = QRect(x+w-ls.tispace-ds.size-fs.right,y+h-ls.tispace-ds.size-fs.bottom,ds.size,ds.size);
+              ret = QRect(x+w-ls.tispace-ds.size,y+h-ls.tispace-ds.size,ds.size,ds.size);
+            else
+              ret = r;
           }
           break;
         }
@@ -3692,7 +3979,6 @@ QRect QSvgThemableStyle::subControlRect(ComplexControl control, const QStyleOpti
       }
 
       switch (subControl) {
-      // FIXME take into account label V alignment
         case SC_GroupBoxCheckBox : {
           // align checkbox inside label rect
           ret = alignedRect(Qt::LeftToRight,Qt::AlignLeft | Qt::AlignVCenter,
@@ -3733,6 +4019,162 @@ QRect QSvgThemableStyle::subControlRect(ComplexControl control, const QStyleOpti
       break;
     }
 
+    case CC_TitleBar: {
+      if ( const QStyleOptionTitleBar *opt =
+           qstyleoption_cast<const QStyleOptionTitleBar *>(option) ) {
+
+        if ( styleHint(SH_TitleBar_NoBorder) )
+          fs.hasFrame = false;
+        else if ( !(opt->titleBarState & Qt::WindowMinimized) )
+          fs.bottom = 0;
+
+        QRect ir = interiorRect(r,fs,is);
+        ir.getRect(&x,&y,&w,&h);
+
+        // button layout
+        // Sy-Sh|USh---Title---H-m-M|R-C
+        // Sy: System Menu
+        // Sh : Shade or Unshade
+        // H : Context Help
+        // m : Minimize
+        // M|R : Maximize or Restore
+        // C : Close
+
+        const int bw = pixelMetric(PM_TitleBarButtonSize); // button width
+
+        // union rect for buttons located left
+        QRect leftBtns = alignedRect(Qt::LeftToRight,Qt::AlignLeft | Qt::AlignVCenter,
+                                     QSize(0,h),
+                                     ir).translated(ls.hmargin-ls.tispace,0);
+        // union rect for buttons located right
+        QRect rightBtns = alignedRect(Qt::LeftToRight,Qt::AlignRight | Qt::AlignVCenter,
+                                      QSize(0,h),
+                                      ir).translated(-ls.hmargin+ls.tispace,0);
+
+        // left buttons
+        QRect sysBtn, shadeBtn;
+        sysBtn = shadeBtn = leftBtns;
+
+        // right buttons
+        QRect helpBtn, minBtn, maxBtn, normalBtn, closeBtn;
+        closeBtn = maxBtn = minBtn = normalBtn = helpBtn = rightBtns;
+
+        // keep ordered as is layout, label last
+        // --- left buttons
+        // system menu button
+        if ( (opt->subControls & SC_TitleBarSysMenu) &&
+             opt->titleBarFlags & Qt::WindowSystemMenuHint ) {
+          sysBtn.translate(leftBtns.width()+ls.tispace,0);
+          sysBtn.setWidth(pixelMetric(PM_TitleBarButtonIconSize));
+          leftBtns.setRight(sysBtn.right());
+        }
+
+        // shade button
+        if ( (opt->subControls & SC_TitleBarShadeButton) &&
+             opt->titleBarFlags & Qt::WindowShadeButtonHint &&
+             !(opt->titleBarState & Qt::WindowMinimized) ) {
+          shadeBtn.translate(leftBtns.width()+ls.tispace,0);
+          shadeBtn.setWidth(pixelMetric(PM_TitleBarButtonSize));
+          leftBtns.setRight(shadeBtn.right());
+        }
+
+        // unshade button
+        if ( (opt->subControls & SC_TitleBarUnshadeButton) &&
+             opt->titleBarFlags & Qt::WindowShadeButtonHint &&
+             opt->titleBarState & Qt::WindowMinimized ) {
+          shadeBtn.translate(leftBtns.width()+ls.tispace,0);
+          shadeBtn.setWidth(pixelMetric(PM_TitleBarButtonSize));
+          leftBtns.setRight(shadeBtn.right());
+        }
+
+        // --- right buttons (reverse order)
+        // close button
+        if ( (opt->subControls & SC_TitleBarCloseButton) &&
+             opt->titleBarFlags & Qt::WindowSystemMenuHint ) {
+          closeBtn.translate(-rightBtns.width()-bw-ls.tispace,0);
+          closeBtn.setWidth(pixelMetric(PM_TitleBarButtonSize));
+          rightBtns.setLeft(closeBtn.left());
+        }
+
+        // max button
+        if ( (opt->subControls & SC_TitleBarMaxButton) &&
+             opt->titleBarFlags & Qt::WindowMaximizeButtonHint &&
+             !(opt->titleBarState & Qt::WindowMaximized) ) {
+          maxBtn.translate(-rightBtns.width()-bw-ls.tispace,0);
+          maxBtn.setWidth(pixelMetric(PM_TitleBarButtonSize));
+          rightBtns.setLeft(maxBtn.left());
+        }
+
+        // normal (restore) button
+        if ( (opt->subControls & SC_TitleBarNormalButton) &&
+             (
+               ((opt->titleBarFlags & Qt::WindowMinimizeButtonHint) &&
+                (opt->titleBarState & Qt::WindowMinimized)) ||
+               ((opt->titleBarFlags & Qt::WindowMaximizeButtonHint) &&
+                (opt->titleBarState & Qt::WindowMaximized))
+             )
+           ) {
+          normalBtn.translate(-rightBtns.width()-bw-ls.tispace,0);
+          normalBtn.setWidth(pixelMetric(PM_TitleBarButtonSize));
+          rightBtns.setLeft(normalBtn.left());
+        }
+
+        // min button
+        if ( (opt->subControls & SC_TitleBarMinButton) &&
+             opt->titleBarFlags & Qt::WindowMinimizeButtonHint &&
+             !(opt->titleBarState & Qt::WindowMinimized) ) {
+          minBtn.translate(-rightBtns.width()-bw-ls.tispace,0);
+          minBtn.setWidth(pixelMetric(PM_TitleBarButtonSize));
+          rightBtns.setLeft(minBtn.left());
+        }
+
+        // help button
+        if ( (opt->subControls & SC_TitleBarContextHelpButton) &&
+             opt->titleBarFlags & Qt::WindowContextHelpButtonHint &&
+             opt->titleBarState & Qt::WindowMinimized ) {
+          helpBtn.translate(-rightBtns.width()-bw-ls.tispace,0);
+          helpBtn.setWidth(pixelMetric(PM_TitleBarButtonSize));
+          rightBtns.setLeft(helpBtn.left());
+        }
+
+        // --- now the label
+        QRect lr = r.adjusted(leftBtns.width()+ls.tispace+ls.hmargin,0,
+                              -rightBtns.width()-ls.tispace-ls.hmargin,0);
+
+        switch (subControl) {
+          case SC_TitleBarSysMenu :
+            ret = sysBtn;
+            break;
+          case SC_TitleBarCloseButton :
+            ret = closeBtn;
+            break;
+          case SC_TitleBarContextHelpButton :
+            ret = helpBtn;
+            break;
+          case SC_TitleBarMaxButton :
+            ret = maxBtn;
+            break;
+          case SC_TitleBarNormalButton :
+            ret = normalBtn;
+            break;
+          case SC_TitleBarMinButton :
+            ret = minBtn;
+            break;
+          case SC_TitleBarShadeButton :
+          case SC_TitleBarUnshadeButton :
+            ret = shadeBtn;
+            break;
+          case SC_TitleBarLabel :
+            ret = lr;
+            break;
+
+          default : ret = QCommonStyle::subControlRect(control,option,subControl,widget);
+        }
+      }
+
+      break;
+    }
+
     default :
       // subControlRect() already returns visual rects
       return QCommonStyle::subControlRect(control,option,subControl,widget);
@@ -3741,160 +4183,123 @@ QRect QSvgThemableStyle::subControlRect(ComplexControl control, const QStyleOpti
   return visualRect(dir,r,ret);
 }
 
-#if QT_VERSION >= 0x050000
 QIcon QSvgThemableStyle::standardIcon(StandardPixmap standardIcon, const QStyleOption * option, const QWidget * widget) const
-#else
-QIcon QSvgThemableStyle::standardIconImplementation ( QStyle::StandardPixmap standardIcon, const QStyleOption* option, const QWidget* widget ) const
-#endif
 {
+  int sz;
+  QString base;
+  QIcon icon;
+
   switch (standardIcon) {
-    case SP_ToolBarHorizontalExtensionButton : {
-      int s = pixelMetric(PM_ToolBarExtensionExtent);
-      QPixmap pm(QSize(s,s));
-      pm.fill(Qt::transparent);
+    case SP_ToolBarHorizontalExtensionButton :
+    case SP_ToolBarVerticalExtensionButton  :
+      sz = pixelMetric(PM_ToolBarExtensionExtent);
+      base = getIndicatorSpec(PE_group(PE_PanelToolBar)).element + "-ext";
+      break;
 
-      QPainter painter(&pm);
+    case SP_TitleBarMinButton :
+      sz = pixelMetric(PM_TitleBarButtonSize);
+      base = getIndicatorSpec(PE_group(PE_FrameWindow)).element;
+      base += "-min";
+      break;
 
-      QStyleOption opt;
-      opt.rect = QRect(0,0,s,s);
-      opt.state |= State_Enabled;
+    case SP_TitleBarMaxButton :
+      sz = pixelMetric(PM_TitleBarButtonSize);
+      base = getIndicatorSpec(PE_group(PE_FrameWindow)).element;
+      base += "-max";
+      break;
 
-      // FIXME use own indicators
-      if ( option ) {
-        if ( option->direction == Qt::LeftToRight )
-          drawPrimitive(PE_IndicatorArrowRight,&opt,&painter,0);
-        else
-          drawPrimitive(PE_IndicatorArrowLeft,&opt,&painter,0);
-      } else {
-        drawPrimitive(PE_IndicatorArrowRight,&opt,&painter,0);
-      }
-
-      return QIcon(pm);
-    }
-    case SP_ToolBarVerticalExtensionButton : {
-      int s = pixelMetric(PM_ToolBarExtensionExtent);
-      QPixmap pm(QSize(s,s));
-      pm.fill(Qt::transparent);
-
-      QPainter painter(&pm);
-
-      QStyleOption opt;
-      opt.rect = QRect(0,0,s,s);
-      opt.state |= State_Enabled;
-
-      // FIXME use own indicators
-      drawPrimitive(PE_IndicatorArrowDown,&opt,&painter,0);
-
-      return QIcon(pm);
-    }
-    case SP_TitleBarMinButton : {
-      int s = 12;
-      QPixmap pm(QSize(s,s));
-      pm.fill(Qt::transparent);
-
-      QPainter painter(&pm);
-
-      QStyleOption opt;
-      opt.rect = QRect(0,0,s,s);
-      opt.state |= State_Enabled;
-
-      renderElement(&painter,"mdi-minimize-normal",opt.rect);
-
-      return QIcon(pm);
-    }
-    case SP_TitleBarMaxButton : {
-      int s = 12;
-      QPixmap pm(QSize(s,s));
-      pm.fill(Qt::transparent);
-
-      QPainter painter(&pm);
-
-      QStyleOption opt;
-      opt.rect = QRect(0,0,s,s);
-      opt.state |= State_Enabled;
-
-      renderElement(&painter,"mdi-maximize-normal",opt.rect);
-
-      return QIcon(pm);
-    }
     case SP_DockWidgetCloseButton :
-    case SP_TitleBarCloseButton : {
-      int s = 12;
-      QPixmap pm(QSize(s,s));
-      pm.fill(Qt::transparent);
+    case SP_TitleBarCloseButton :
+      sz = pixelMetric(PM_TitleBarButtonSize);
+      base = getIndicatorSpec(PE_group(PE_FrameWindow)).element;
+      base += "-close";
+      break;
 
-      QPainter painter(&pm);
+    case SP_TitleBarMenuButton :
+      sz = pixelMetric(PM_TitleBarButtonSize);
+      base = getIndicatorSpec(PE_group(PE_FrameWindow)).element;
+      base += "-menu";
+      break;
 
-      QStyleOption opt;
-      opt.rect = QRect(0,0,s,s);
-      opt.state |= State_Enabled;
+    case SP_TitleBarNormalButton :
+      sz = pixelMetric(PM_TitleBarButtonSize);
+      base = getIndicatorSpec(PE_group(PE_FrameWindow)).element;
+      base += "-restore";
+      break;
 
-      renderElement(&painter,"mdi-close-normal",opt.rect);
+    case SP_TitleBarShadeButton :
+      sz = pixelMetric(PM_TitleBarButtonSize);
+      base = getIndicatorSpec(PE_group(PE_FrameWindow)).element;
+      base += "-shade";
+      break;
 
-      return QIcon(pm);
-    }
-    case SP_TitleBarMenuButton : {
-      int s = 12;
-      QPixmap pm(QSize(s,s));
-      pm.fill(Qt::transparent);
+    case SP_TitleBarUnshadeButton :
+      sz = pixelMetric(PM_TitleBarButtonSize);
+      base = getIndicatorSpec(PE_group(PE_FrameWindow)).element;
+      base += "-unshade";
+      break;
 
-      QPainter painter(&pm);
+    case SP_TitleBarContextHelpButton :
+      sz = pixelMetric(PM_TitleBarButtonSize);
+      base = getIndicatorSpec(PE_group(PE_FrameWindow)).element;
+      base += "-help";
+      break;
 
-      QStyleOption opt;
-      opt.rect = QRect(0,0,s,s);
-      opt.state |= State_Enabled;
-
-      renderElement(&painter,"mdi-menu-normal",opt.rect);
-
-      return QIcon(pm);
-    }
-    case SP_TitleBarNormalButton : {
-      int s = 12;
-      QPixmap pm(QSize(s,s));
-      pm.fill(Qt::transparent);
-
-      QPainter painter(&pm);
-
-      QStyleOption opt;
-      opt.rect = QRect(0,0,s,s);
-      opt.state |= State_Enabled;
-
-      renderElement(&painter,"mdi-restore-normal",opt.rect);
-
-      return QIcon(pm);
-    }
-    case SP_LineEditClearButton : {
-      QString group = PE_group(PE_FrameLineEdit);
-      indicator_spec_t ds = getIndicatorSpec(group);
-
-      int s = pixelMetric(PM_SmallIconSize);
-      QPixmap pm(QSize(s,s));
-      pm.fill(Qt::transparent);
-
-      QPainter painter(&pm);
-
-      QStyleOption opt;
-      opt.rect = QRect(0,0,s,s);
-      opt.state |= State_Enabled;
-
-      renderElement(&painter,ds.element+"-clear",opt.rect);
-
-      return QIcon(pm);
-    }
+    case SP_LineEditClearButton :
+      sz = pixelMetric(PM_SmallIconSize);
+      base = getIndicatorSpec(PE_group(PE_FrameLineEdit)).element;
+      base += "-clear";
+      break;
 
     default :
-#if QT_VERSION >= 0x050000
-      return QCommonStyle::standardIcon(standardIcon,option,widget);
-#else
-      return QCommonStyle::standardIconImplementation(standardIcon,option,widget);
-#endif
+      icon = QCommonStyle::standardIcon(standardIcon,option,widget);
   }
 
-#if QT_VERSION >= 0x050000
-  return QCommonStyle::standardIcon(standardIcon,option,widget);
-#else
-  return QCommonStyle::standardIconImplementation(standardIcon,option,widget);
-#endif
+  if( !icon.isNull() )
+    // default QCommonStyle icon
+    return icon;
+
+  // build icon
+  QRect r(0,0,sz,sz);
+  QPainter p;
+
+  QPixmap pm_off(sz,sz);
+  pm_off.fill(Qt::transparent);
+  p.begin(&pm_off);
+  renderElement(&p,base+"-disabled",r);
+  p.end();
+  icon.addPixmap(pm_off,QIcon::Disabled);
+
+  QPixmap pm_normal(sz,sz);
+  pm_normal.fill(Qt::transparent);
+  p.begin(&pm_normal);
+  renderElement(&p,base+"-normal",r);
+  p.end();
+  icon.addPixmap(pm_normal,QIcon::Normal);
+
+  // FIXME hovered does not seem to work
+  QPixmap pm_hovered(sz,sz);
+  pm_hovered.fill(Qt::transparent);
+  p.begin(&pm_hovered);
+  renderElement(&p,base+"-hovered",r);
+  p.end();
+  icon.addPixmap(pm_hovered,QIcon::Active);
+
+  QPixmap pm_pressed(sz,sz);
+  pm_pressed.fill(Qt::transparent);
+  p.begin(&pm_pressed);
+  renderElement(&p,base+"-pressed",r);
+  p.end();
+  icon.addPixmap(pm_pressed,QIcon::Selected);
+
+  QPixmap pm_toggled(sz,sz);
+  pm_toggled.fill(Qt::transparent);
+  p.begin(&pm_toggled);
+  renderElement(&p,base+"-toggled",r);
+  p.end();
+  icon.addPixmap(pm_toggled,QIcon::Selected,QIcon::On);
+
+  return icon;
 }
 
 QRect QSvgThemableStyle::squaredRect(const QRect& r) const {
@@ -3920,7 +4325,7 @@ void QSvgThemableStyle::renderElement(QPainter* p, const QString& element, const
     p->drawLine(x,y,x+w-1,y+h-1);
     p->drawLine(x+w-1,y,x,y+h-1);
     p->restore();
-    qDebug() << "element" << element << "not found in SVG file";
+    qWarning() << "element" << element << "not found in SVG file";
     return;
   }
 
@@ -4518,7 +4923,7 @@ void QSvgThemableStyle::renderLabel(QPainter* p,
     ricon = alignedRect(Qt::LeftToRight,Qt::AlignCenter, QSize(icon.width(),icon.height()),r);
   }
 
-  if ( text.isNull() || text.isEmpty() ) {
+  if ( text.isEmpty() ) {
     // When we have no text, center icon
     ricon = alignedRect(Qt::LeftToRight,Qt::AlignCenter, QSize(icon.width(),icon.height()),r);
   }
@@ -4527,7 +4932,7 @@ void QSvgThemableStyle::renderLabel(QPainter* p,
   ricon = visualRect(dir,bounds,ricon);
 
   if (tialign != Qt::ToolButtonIconOnly) {
-    if ( !text.isNull() && !text.isEmpty() ) {
+    if ( !text.isEmpty() ) {
 //       if (ls.hasShadow) {
 //         p->save();
 //         p->setPen(QPen(QColor(ls.r,ls.g,ls.b,ls.a)));
@@ -4842,323 +5247,53 @@ QIcon::State QSvgThemableStyle::state_iconstate(State st) const
   return (st & State_On) ? QIcon::On : QIcon::Off;
 }
 
-/* Auto generated */
 QString QSvgThemableStyle::PE_str(PrimitiveElement element) const
 {
-  switch (element) {
-    case PE_Frame : return "PE_Frame";
-    case PE_FrameDefaultButton : return "PE_FrameDefaultButton";
-    case PE_FrameDockWidget : return "PE_FrameDockWidget";
-    case PE_FrameFocusRect : return "PE_FrameFocusRect";
-    case PE_FrameGroupBox : return "PE_FrameGroupBox";
-    case PE_FrameLineEdit : return "PE_FrameLineEdit";
-    case PE_FrameMenu : return "PE_FrameMenu";
-    case PE_FrameStatusBarItem : return "PE_FrameStatusBarItem (= PE_FrameStatusBar)";
-    case PE_FrameTabWidget : return "PE_FrameTabWidget";
-    case PE_FrameWindow : return "PE_FrameWindow";
-    case PE_FrameButtonBevel : return "PE_FrameButtonBevel";
-    case PE_FrameButtonTool : return "PE_FrameButtonTool";
-    case PE_FrameTabBarBase : return "PE_FrameTabBarBase";
-    case PE_PanelButtonCommand : return "PE_PanelButtonCommand";
-    case PE_PanelButtonBevel : return "PE_PanelButtonBevel";
-    case PE_PanelButtonTool : return "PE_PanelButtonTool";
-    case PE_PanelMenuBar : return "PE_PanelMenuBar";
-    case PE_PanelToolBar : return "PE_PanelToolBar";
-    case PE_PanelLineEdit : return "PE_PanelLineEdit";
-    case PE_IndicatorArrowDown : return "PE_IndicatorArrowDown";
-    case PE_IndicatorArrowLeft : return "PE_IndicatorArrowLeft";
-    case PE_IndicatorArrowRight : return "PE_IndicatorArrowRight";
-    case PE_IndicatorArrowUp : return "PE_IndicatorArrowUp";
-    case PE_IndicatorBranch : return "PE_IndicatorBranch";
-    case PE_IndicatorButtonDropDown : return "PE_IndicatorButtonDropDown";
-    case PE_IndicatorItemViewItemCheck : return "PE_IndicatorItemViewItemCheck (= PE_IndicatorViewItemCheck)";
-    case PE_IndicatorCheckBox : return "PE_IndicatorCheckBox";
-    case PE_IndicatorDockWidgetResizeHandle : return "PE_IndicatorDockWidgetResizeHandle";
-    case PE_IndicatorHeaderArrow : return "PE_IndicatorHeaderArrow";
-    case PE_IndicatorMenuCheckMark : return "PE_IndicatorMenuCheckMark";
-    case PE_IndicatorProgressChunk : return "PE_IndicatorProgressChunk";
-    case PE_IndicatorRadioButton : return "PE_IndicatorRadioButton";
-    case PE_IndicatorSpinDown : return "PE_IndicatorSpinDown";
-    case PE_IndicatorSpinMinus : return "PE_IndicatorSpinMinus";
-    case PE_IndicatorSpinPlus : return "PE_IndicatorSpinPlus";
-    case PE_IndicatorSpinUp : return "PE_IndicatorSpinUp";
-    case PE_IndicatorToolBarHandle : return "PE_IndicatorToolBarHandle";
-    case PE_IndicatorToolBarSeparator : return "PE_IndicatorToolBarSeparator";
-    case PE_PanelTipLabel : return "PE_PanelTipLabel";
-    case PE_IndicatorTabTearLeft : return "PE_IndicatorTabTearLeft";
-    case PE_IndicatorTabTearRight : return "PE_IndicatorTabTearRight";
-    case PE_PanelScrollAreaCorner : return "PE_PanelScrollAreaCorner";
-    case PE_Widget : return "PE_Widget";
-    case PE_IndicatorColumnViewArrow : return "PE_IndicatorColumnViewArrow";
-    case PE_IndicatorItemViewItemDrop : return "PE_IndicatorItemViewItemDrop";
-    case PE_PanelItemViewItem : return "PE_PanelItemViewItem";
-    case PE_PanelItemViewRow : return "PE_PanelItemViewRow";
-    case PE_PanelStatusBar : return "PE_PanelStatusBar";
-    case PE_IndicatorTabClose : return "PE_IndicatorTabClose";
-    case PE_PanelMenu : return "PE_PanelMenu";
-    case PE_CustomBase : return "PE_CustomBase";
-  }
+  const QMetaObject *m = qt_getEnumMetaObject(QStyle::PrimitiveElement());
+  const QMetaEnum me = m->enumerator(m->indexOfEnumerator(qt_getEnumName(QStyle::PrimitiveElement())));
 
-  return "PE_Unknown";
+  return me.valueToKey(element);
 }
 
 QString QSvgThemableStyle::CE_str(QStyle::ControlElement element) const
 {
-  switch(element) {
-    case CE_PushButton : return "CE_PushButton";
-    case CE_PushButtonBevel : return "CE_PushButtonBevel";
-    case CE_PushButtonLabel : return "CE_PushButtonLabel";
-    case CE_CheckBox : return "CE_CheckBox";
-    case CE_CheckBoxLabel : return "CE_CheckBoxLabel";
-    case CE_RadioButton : return "CE_RadioButton";
-    case CE_RadioButtonLabel : return "CE_RadioButtonLabel";
-    case CE_TabBarTab : return "CE_TabBarTab";
-    case CE_TabBarTabShape : return "CE_TabBarTabShape";
-    case CE_TabBarTabLabel : return "CE_TabBarTabLabel";
-    case CE_ProgressBar : return "CE_ProgressBar";
-    case CE_ProgressBarGroove : return "CE_ProgressBarGroove";
-    case CE_ProgressBarContents : return "CE_ProgressBarContents";
-    case CE_ProgressBarLabel : return "CE_ProgressBarLabel";
-    case CE_MenuItem : return "CE_MenuItem";
-    case CE_MenuScroller : return "CE_MenuScroller";
-    case CE_MenuVMargin : return "CE_MenuVMargin";
-    case CE_MenuHMargin : return "CE_MenuHMargin";
-    case CE_MenuTearoff : return "CE_MenuTearoff";
-    case CE_MenuEmptyArea : return "CE_MenuEmptyArea";
-    case CE_MenuBarItem : return "CE_MenuBarItem";
-    case CE_MenuBarEmptyArea : return "CE_MenuBarEmptyArea";
-    case CE_ToolButtonLabel : return "CE_ToolButtonLabel";
-    case CE_Header : return "CE_Header";
-    case CE_HeaderSection : return "CE_HeaderSection";
-    case CE_HeaderLabel : return "CE_HeaderLabel";
-    case CE_ToolBoxTab : return "CE_ToolBoxTab";
-    case CE_SizeGrip : return "CE_SizeGrip";
-    case CE_Splitter : return "CE_Splitter";
-    case CE_RubberBand : return "CE_RubberBand";
-    case CE_DockWidgetTitle : return "CE_DockWidgetTitle";
-    case CE_ScrollBarAddLine : return "CE_ScrollBarAddLine";
-    case CE_ScrollBarSubLine : return "CE_ScrollBarSubLine";
-    case CE_ScrollBarAddPage : return "CE_ScrollBarAddPage";
-    case CE_ScrollBarSubPage : return "CE_ScrollBarSubPage";
-    case CE_ScrollBarSlider : return "CE_ScrollBarSlider";
-    case CE_ScrollBarFirst : return "CE_ScrollBarFirst";
-    case CE_ScrollBarLast : return "CE_ScrollBarLast";
-    case CE_FocusFrame : return "CE_FocusFrame";
-    case CE_ComboBoxLabel : return "CE_ComboBoxLabel";
-    case CE_ToolBar : return "CE_ToolBar";
-    case CE_ToolBoxTabShape : return "CE_ToolBoxTabShape";
-    case CE_ToolBoxTabLabel : return "CE_ToolBoxTabLabel";
-    case CE_HeaderEmptyArea : return "CE_HeaderEmptyArea";
-    case CE_ColumnViewGrip : return "CE_ColumnViewGrip";
-    case CE_ItemViewItem : return "CE_ItemViewItem";
-    case CE_ShapedFrame : return "CE_ShapedFrame";
-    case CE_CustomBase : return "CE_CustomBase";
-  }
+  const QMetaObject *m = qt_getEnumMetaObject(QStyle::ControlElement());
+  const QMetaEnum me = m->enumerator(m->indexOfEnumerator(qt_getEnumName(QStyle::ControlElement())));
 
-  return "CE_Unknown";
+  return me.valueToKey(element);
 }
 
 QString QSvgThemableStyle::SE_str(QStyle::SubElement element) const
 {
-  switch(element) {
-    case SE_PushButtonContents : return "SE_PushButtonContents";
-    case SE_PushButtonFocusRect : return "SE_PushButtonFocusRect";
-    case SE_CheckBoxIndicator : return "SE_CheckBoxIndicator";
-    case SE_CheckBoxContents : return "SE_CheckBoxContents";
-    case SE_CheckBoxFocusRect : return "SE_CheckBoxFocusRect";
-    case SE_CheckBoxClickRect : return "SE_CheckBoxClickRect";
-    case SE_RadioButtonIndicator : return "SE_RadioButtonIndicator";
-    case SE_RadioButtonContents : return "SE_RadioButtonContents";
-    case SE_RadioButtonFocusRect : return "SE_RadioButtonFocusRect";
-    case SE_RadioButtonClickRect : return "SE_RadioButtonClickRect";
-    case SE_ComboBoxFocusRect : return "SE_ComboBoxFocusRect";
-    case SE_SliderFocusRect : return "SE_SliderFocusRect";
-    case SE_ProgressBarGroove : return "SE_ProgressBarGroove";
-    case SE_ProgressBarContents : return "SE_ProgressBarContents";
-    case SE_ProgressBarLabel : return "SE_ProgressBarLabel";
-    case SE_ToolBoxTabContents : return "SE_ToolBoxTabContents";
-    case SE_HeaderLabel : return "SE_HeaderLabel";
-    case SE_HeaderArrow : return "SE_HeaderArrow";
-    case SE_TabWidgetTabBar : return "SE_TabWidgetTabBar";
-    case SE_TabWidgetTabPane : return "SE_TabWidgetTabPane";
-    case SE_TabWidgetTabContents : return "SE_TabWidgetTabContents";
-    case SE_TabWidgetLeftCorner : return "SE_TabWidgetLeftCorner";
-    case SE_TabWidgetRightCorner : return "SE_TabWidgetRightCorner";
-    case SE_ItemViewItemCheckIndicator : return "SE_ItemViewItemCheckIndicator (= SE_ViewItemCheckIndicator)";
-    case SE_TabBarTearIndicatorLeft : return "SE_TabBarTearIndicatorLeft";
-    case SE_TabBarTearIndicatorRight : return "SE_TabBarTearIndicatorRight";
-    case SE_TreeViewDisclosureItem : return "SE_TreeViewDisclosureItem";
-    case SE_LineEditContents : return "SE_LineEditContents";
-    case SE_FrameContents : return "SE_FrameContents";
-    case SE_DockWidgetCloseButton : return "SE_DockWidgetCloseButton";
-    case SE_DockWidgetFloatButton : return "SE_DockWidgetFloatButton";
-    case SE_DockWidgetTitleBarText : return "SE_DockWidgetTitleBarText";
-    case SE_DockWidgetIcon : return "SE_DockWidgetIcon";
-    case SE_CheckBoxLayoutItem : return "SE_CheckBoxLayoutItem";
-    case SE_ComboBoxLayoutItem : return "SE_ComboBoxLayoutItem";
-    case SE_DateTimeEditLayoutItem : return "SE_DateTimeEditLayoutItem";
-    case SE_DialogButtonBoxLayoutItem : return "SE_DialogButtonBoxLayoutItem";
-    case SE_LabelLayoutItem : return "SE_LabelLayoutItem";
-    case SE_ProgressBarLayoutItem : return "SE_ProgressBarLayoutItem";
-    case SE_PushButtonLayoutItem : return "SE_PushButtonLayoutItem";
-    case SE_RadioButtonLayoutItem : return "SE_RadioButtonLayoutItem";
-    case SE_SliderLayoutItem : return "SE_SliderLayoutItem";
-    case SE_SpinBoxLayoutItem : return "SE_SpinBoxLayoutItem";
-    case SE_ToolButtonLayoutItem : return "SE_ToolButtonLayoutItem";
-    case SE_FrameLayoutItem : return "SE_FrameLayoutItem";
-    case SE_GroupBoxLayoutItem : return "SE_GroupBoxLayoutItem";
-    case SE_TabWidgetLayoutItem : return "SE_TabWidgetLayoutItem";
-    case SE_TabBarScrollLeftButton : return "SE_TabBarScrollLeftButton";
-    case SE_TabBarScrollRightButton : return "SE_TabBarScrollRightButton";
-    case SE_ItemViewItemDecoration : return "SE_ItemViewItemDecoration";
-    case SE_ItemViewItemText : return "SE_ItemViewItemText";
-    case SE_ItemViewItemFocusRect : return "SE_ItemViewItemFocusRect";
-    case SE_TabBarTabLeftButton : return "SE_TabBarTabLeftButton";
-    case SE_TabBarTabRightButton : return "SE_TabBarTabRightButton";
-    case SE_TabBarTabText : return "SE_TabBarTabText";
-    case SE_ShapedFrameContents : return "SE_ShapedFrameContents";
-    case SE_ToolBarHandle : return "SE_ToolBarHandle";
-    case SE_CustomBase : return "SE_CustomBase";
-  }
+  const QMetaObject *m = qt_getEnumMetaObject(QStyle::SubElement());
+  const QMetaEnum me = m->enumerator(m->indexOfEnumerator(qt_getEnumName(QStyle::SubElement())));
 
-  return "SE_Unknown";
+  return me.valueToKey(element);
 }
 
 QString QSvgThemableStyle::CC_str(QStyle::ComplexControl element) const
 {
-  switch (element) {
-    case CC_SpinBox : return "CC_SpinBox";
-    case CC_ComboBox : return "CC_ComboBox";
-    case CC_ScrollBar : return "CC_ScrollBar";
-    case CC_Slider : return "CC_Slider";
-    case CC_ToolButton : return "CC_ToolButton";
-    case CC_TitleBar : return "CC_TitleBar";
-    case CC_Dial : return "CC_Dial";
-    case CC_GroupBox : return "CC_GroupBox";
-    case CC_MdiControls : return "CC_MdiControls";
-    case CC_CustomBase : return "CC_CustomBase";
-  }
+  const QMetaObject *m = qt_getEnumMetaObject(QStyle::ComplexControl());
+  const QMetaEnum me = m->enumerator(m->indexOfEnumerator(qt_getEnumName(QStyle::ComplexControl())));
 
-  return "CC_Unknown";
+  return me.valueToKey(element);
 }
 
 QString QSvgThemableStyle::SC_str(QStyle::ComplexControl control, QStyle::SubControl subControl) const
 {
-  switch (control) {
-    case CC_SpinBox : switch (subControl) {
-      case SC_SpinBoxUp : return "SC_SpinBoxUp";
-      case SC_SpinBoxDown : return "SC_SpinBoxDown";
-      case SC_SpinBoxFrame : return "SC_SpinBoxFrame";
-      case SC_SpinBoxEditField : return "SC_SpinBoxEditField";
-      case SC_None : return "SC_None";
-      default : return "SC_Unknown";
-    }
-    case CC_ComboBox : switch (subControl) {
-      case SC_ComboBoxFrame : return "SC_ComboBoxFrame";
-      case SC_ComboBoxEditField : return "SC_ComboBoxEditField";
-      case SC_ComboBoxArrow : return "SC_ComboBoxArrow";
-      case SC_ComboBoxListBoxPopup : return "SC_ComboBoxListBoxPopup";
-      case SC_None : return "SC_None";
-      default : return "SC_Unknown";
-    }
-    case CC_ScrollBar : switch (subControl) {
-      case SC_ScrollBarAddLine : return "SC_ScrollBarAddLine";
-      case SC_ScrollBarSubLine : return "SC_ScrollBarSubLine";
-      case SC_ScrollBarAddPage : return "SC_ScrollBarAddPage";
-      case SC_ScrollBarSubPage : return "SC_ScrollBarSubPage";
-      case SC_ScrollBarFirst : return "SC_ScrollBarFirst";
-      case SC_ScrollBarLast : return "SC_ScrollBarLast";
-      case SC_ScrollBarSlider : return "SC_ScrollBarSlider";
-      case SC_ScrollBarGroove : return "SC_ScrollBarGroove";
-      case SC_None : return "SC_None";
-      default : return "SC_Unknown";
-    }
-    case CC_Slider : switch (subControl) {
-      case SC_SliderGroove : return "SC_SliderGroove";
-      case SC_SliderHandle : return "SC_SliderHandle";
-      case SC_SliderTickmarks : return "SC_SliderTickmarks";
-      case SC_None : return "SC_None";
-      default : return "SC_Unknown";
-    }
-    case CC_ToolButton : switch (subControl) {
-      case SC_ToolButton : return "SC_ToolButton";
-      case SC_ToolButtonMenu : return "SC_ToolButtonMenu";
-      case SC_None : return "SC_None";
-      default : return "SC_Unknown";
-    }
-    case CC_TitleBar : switch (subControl) {
-      case SC_TitleBarSysMenu : return "SC_TitleBarSysMenu";
-      case SC_TitleBarMinButton : return "SC_TitleBarMinButton";
-      case SC_TitleBarMaxButton : return "SC_TitleBarMaxButton";
-      case SC_TitleBarCloseButton : return "SC_TitleBarCloseButton";
-      case SC_TitleBarNormalButton : return "SC_TitleBarNormalButton";
-      case SC_TitleBarShadeButton : return "SC_TitleBarShadeButton";
-      case SC_TitleBarUnshadeButton : return "SC_TitleBarUnshadeButton";
-      case SC_TitleBarContextHelpButton : return "SC_TitleBarContextHelpButton";
-      case SC_TitleBarLabel : return "SC_TitleBarLabel";
-      case SC_None : return "SC_None";
-      default : return "SC_Unknown";
-    }
-    case CC_Dial : switch (subControl) {
-      case SC_DialGroove : return "SC_DialGroove";
-      case SC_DialHandle : return "SC_DialHandle";
-      case SC_DialTickmarks : return "SC_DialTickmarks";
-      case SC_None : return "SC_None";
-      default : return "SC_Unknown";
-    }
-    case CC_GroupBox : switch (subControl) {
-      case SC_GroupBoxCheckBox : return "SC_GroupBoxCheckBox";
-      case SC_GroupBoxLabel : return "SC_GroupBoxLabel";
-      case SC_GroupBoxContents : return "SC_GroupBoxContents";
-      case SC_GroupBoxFrame : return "SC_GroupBoxFrame";
-      case SC_None : return "SC_None";
-      default : return "SC_Unknown";
-    }
-    case CC_MdiControls : switch (subControl) {
-      case SC_MdiMinButton : return "SC_MdiMinButton";
-      case SC_MdiNormalButton : return "SC_MdiNormalButton";
-      case SC_MdiCloseButton : return "SC_MdiCloseButton";
-      case SC_None : return "SC_None";
-      default : return "SC_Unknown";
-    };
-    case CC_CustomBase : switch (subControl) {
-      default : return "SC_Unknown";
-    }
-  }
+  Q_UNUSED(control);
 
-  return "SC_Unknown";
+  const QMetaObject *m = qt_getEnumMetaObject(QStyle::SubControl());
+  const QMetaEnum me = m->enumerator(m->indexOfEnumerator(qt_getEnumName(QStyle::SubControl())));
+
+  return me.valueToKey(subControl);
 }
 
 QString QSvgThemableStyle::CT_str(QStyle::ContentsType type) const
 {
-  switch (type) {
-    case CT_PushButton : return "CT_PushButton";
-    case CT_CheckBox : return "CT_CheckBox";
-    case CT_RadioButton : return "CT_RadioButton";
-    case CT_ToolButton : return "CT_ToolButton";
-    case CT_ComboBox : return "CT_ComboBox";
-    case CT_Splitter : return "CT_Splitter";
-    case CT_ProgressBar : return "CT_ProgressBar";
-    case CT_MenuItem : return "CT_MenuItem";
-    case CT_MenuBarItem : return "CT_MenuBarItem";
-    case CT_MenuBar : return "CT_MenuBar";
-    case CT_Menu : return "CT_Menu";
-    case CT_TabBarTab : return "CT_TabBarTab";
-    case CT_Slider : return "CT_Slider";
-    case CT_ScrollBar : return "CT_ScrollBar";
-    case CT_LineEdit : return "CT_LineEdit";
-    case CT_SpinBox : return "CT_SpinBox";
-    case CT_SizeGrip : return "CT_SizeGrip";
-    case CT_TabWidget : return "CT_TabWidget";
-    case CT_DialogButtons : return "CT_DialogButtons";
-    case CT_HeaderSection : return "CT_HeaderSection";
-    case CT_GroupBox : return "CT_GroupBox";
-    case CT_MdiControls : return "CT_MdiControls";
-    case CT_ItemViewItem : return "CT_ItemViewItem";
-    case CT_CustomBase : return "CT_CustomBase";
-  }
+  const QMetaObject *m = qt_getEnumMetaObject(QStyle::ContentsType());
+  const QMetaEnum me = m->enumerator(m->indexOfEnumerator(qt_getEnumName(QStyle::ContentsType())));
 
-  return "CT_Unknown";
+  return me.valueToKey(type);
 }
-
 /* !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! */
