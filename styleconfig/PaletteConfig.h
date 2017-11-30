@@ -21,6 +21,7 @@
 #define PALETTECONFIG_H
 
 #include "specs.h"
+#include "QSvgCachedSettings.h"
 
 class QString;
 class QVariant;
@@ -30,21 +31,11 @@ class QStringList;
 /**
  * Class that loads, saves palette settings
  */
-class PaletteConfig {
+class PaletteConfig : public QSvgCachedSettings {
   public:
     PaletteConfig();
     PaletteConfig(const QString &palette);
-    ~PaletteConfig();
-
-    /**
-     * Loads a configuration from the given palette filename
-     */
-    void load(const QString &palette);
-
-    /**
-     * Forces an immediate disk write of the current settings
-     */
-    void sync();
+    virtual ~PaletteConfig();
 
     /* Get post-processed color spec after 'inherits' resolution */
     color_spec_t getColorSpec(const QString &group) const;
@@ -53,36 +44,9 @@ class PaletteConfig {
     /* Get frame spec exactly as read from the configuration file */
     color_spec_t getRawColorSpec(const QString &group) const;
 
-    void setColorSpec(const QString &group, const color_spec_t &cs) const;
+    void setColorSpec(const QString &group, const color_spec_t &cs);
 
   private:
-    //friend class PaletteBuilderUIBase;
-
-    /**
-     * Returns the value of the @ref key key in the group @ref group
-     * If the value is not found, a null QVariant is returned
-     * (i.e QVariant::isNull() is true)
-     */
-    QVariant getRawValue(const QString &group,
-                         const QString& key) const;
-
-    /**
-     * Returns the value of the @ref key key in the group @ref group
-     * If the key is not found in the group, it is searched in the group
-     * set by the entry "inherits" if present.
-     */
-    QVariant getValue(const QString &group,
-                      const QString& key,
-                      int depth = 0) const;
-
-    /**
-     * sets the value of the given key from the given group in the palette config file
-     * If the key has a null value (i.e. QVariant::isNull() is true),
-     * the key is removed from the configuration file
-     */
-    void setValue(const QString &group, const QString &key,const QVariant &v) const;
-
-    QSettings *settings;
 };
 
-#endif // THEMECONFIG_H
+#endif // PALETTECONFIG_H

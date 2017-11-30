@@ -29,106 +29,32 @@
 #include <QFile>
 #include <QStringList>
 
-ThemeConfig::ThemeConfig() :
-  settings(NULL)
+ThemeConfig::ThemeConfig()
+  : QSvgCachedSettings()
 {
 }
 
-ThemeConfig::ThemeConfig(const QString& theme) :
-  settings(NULL)
+ThemeConfig::ThemeConfig(const QString& theme)
+  : QSvgCachedSettings(theme)
 {
-  load(theme);
 }
 
-ThemeConfig::~ThemeConfig()
-{
-  if (settings) {
-    settings->sync();
-    delete settings;
-  }
-}
-
-void ThemeConfig::load(const QString& theme)
-{
-  if (settings) {
-    settings->sync();
-    delete settings;
-  }
-
-  settings = NULL;
-
-  if (!QFile::exists(theme))
-    return;
-
-  settings = new QSettings(theme,QSettings::NativeFormat);
-}
-
-void ThemeConfig::sync()
-{
-  if ( settings )
-    settings->sync();
-}
-
-QVariant ThemeConfig::getRawValue(const QString& group, const QString& key) const
-{
-  return settings ? settings->value(group+"/"+key) : QVariant();
-}
-
-QVariant ThemeConfig::getValue(const QString& group, const QString& key, int depth) const
-{
-  QVariant r;
-  QVariant inherit;
-
-  inherit = getRawValue(group,"element.inherits");
-  r = getRawValue(group, key);
-
-  if ( r.isNull() && !inherit.isNull() && (depth <= 2) ) {
-    r = getValue(inherit.toString(),key,depth+1);
-  }
-
-  return r;
-}
-
-void ThemeConfig::setValue(const QString& group, const QString& key, const QVariant& v) const
-{
-  if (settings) {
-    if ( v.isNull() )
-      settings->remove(group+"/"+key);
-    else
-      settings->setValue(group+"/"+key,v);
-  }
-}
-
-void ThemeConfig::setFrameSpec(const QString& group, const frame_spec_t& fs) const
+void ThemeConfig::setFrameSpec(const QString& group, const frame_spec_t& fs)
 {
   // In order to get a clean config file, remove all entries starting with
   // "frame" then write the frame config
-  if ( settings ) {
-    settings->beginGroup(group);
-    foreach(QString s, settings->childKeys()) {
-      if ( s.startsWith("frame") )
-        settings->remove(s);
-    }
-    settings->endGroup();
-  }
+  removeAllWithPrefix(group, "frame");
 
   setValue(group, "frame", fs.hasFrame);
   setValue(group, "frame.element", fs.element);
   setValue(group, "frame.width", fs.width);
 }
 
-void ThemeConfig::setInteriorSpec(const QString& group, const interior_spec_t& is) const
+void ThemeConfig::setInteriorSpec(const QString& group, const interior_spec_t& is)
 {
   // In order to get a clean config file, remove all entries starting with
   // "interior" then write the frame config
-  if ( settings ) {
-    settings->beginGroup(group);
-    foreach(QString s, settings->childKeys()) {
-      if ( s.startsWith("interior") )
-        settings->remove(s);
-    }
-    settings->endGroup();
-  }
+  removeAllWithPrefix(group, "interior");
 
   setValue(group, "interior", is.hasInterior);
   setValue(group, "interior.element", is.element);
@@ -136,42 +62,28 @@ void ThemeConfig::setInteriorSpec(const QString& group, const interior_spec_t& i
   setValue(group, "interior.yrepeat", is.py);
 }
 
-void ThemeConfig::setIndicatorSpec(const QString& group, const indicator_spec_t& ds) const
+void ThemeConfig::setIndicatorSpec(const QString& group, const indicator_spec_t& ds)
 {
   // In order to get a clean config file, remove all entries starting with
   // "indicator" then write the frame config
-  if ( settings ) {
-    settings->beginGroup(group);
-    foreach(QString s, settings->childKeys()) {
-      if ( s.startsWith("indicator") )
-        settings->remove(s);
-    }
-    settings->endGroup();
-  }
+  removeAllWithPrefix(group, "indicator");
 
   setValue(group, "indicator.element", ds.element);
   setValue(group, "indicator.size", ds.size);
 }
 
-void ThemeConfig::setLabelSpec(const QString& group, const label_spec_t & ls) const
+void ThemeConfig::setLabelSpec(const QString& group, const label_spec_t & ls)
 {
   // In order to get a clean config file, remove all entries starting with
   // "indicator" then write the frame config
-  if ( settings ) {
-    settings->beginGroup(group);
-    foreach(QString s, settings->childKeys()) {
-      if ( s.startsWith("label") )
-        settings->remove(s);
-    }
-    settings->endGroup();
-  }
+  removeAllWithPrefix(group, "label");
 
   setValue(group, "label.hmargin", ls.hmargin);
   setValue(group, "label.vmargin", ls.vmargin);
   setValue(group, "label.iconspacing", ls.tispace);
 }
 
-void ThemeConfig::setElementSpec(const QString& group, const element_spec_t& es) const
+void ThemeConfig::setElementSpec(const QString& group, const element_spec_t& es)
 {
   setValue(group, "element.inherits", es.inherits);
   setFrameSpec(group,es.frame);
@@ -180,13 +92,9 @@ void ThemeConfig::setElementSpec(const QString& group, const element_spec_t& es)
   setLabelSpec(group,es.label);
 }
 
-void ThemeConfig::setThemeSpec(const theme_spec_t& ts) const
+void ThemeConfig::setThemeSpec(const theme_spec_t& ts)
 {
-  if ( settings ) {
-    settings->beginGroup("General");
-    settings->remove("");
-    settings->endGroup();
-  }
+  removeAllWithPrefix("General", "");
 
   setValue("General","name", ts.name);
   setValue("General","author", ts.author);
@@ -263,7 +171,7 @@ theme_spec_t ThemeConfig::getThemeSpec() const
   r.name = getRawValue("General","name");
   r.author = getRawValue("General","author");
   r.descr = getRawValue("General","comment");
-  r.path = settings->fileName();
+  r.path = filename();
 
   return r;
 }
@@ -378,4 +286,3 @@ element_spec_t ThemeConfig::getElementSpec(const QString& group) const
 
   return r;
 }
-

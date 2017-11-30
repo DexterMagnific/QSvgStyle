@@ -62,6 +62,7 @@
 #include <QToolBox>
 #include <QRubberBand>
 
+#include "QSvgCachedRenderer.h"
 #include "ThemeConfig.h"
 #include "PaletteConfig.h"
 #include "StyleConfig.h"
@@ -74,6 +75,8 @@ QSvgThemableStyle::QSvgThemableStyle()
     themeSettings(NULL),
     paletteSettings(NULL),
     styleSettings(NULL),
+    useConfigCache(true),
+    useShapeCache(true),
     progresstimer(NULL),
     focustimer(NULL),
     drawFocusOverlay(true),
@@ -122,6 +125,7 @@ void QSvgThemableStyle::loadUserConfig()
   }
 
   styleSettings = new StyleConfig(filename);
+  styleSettings->setUseCache(useConfigCache);
 
   loadUserTheme();
   loadUserPalette();
@@ -136,6 +140,7 @@ void QSvgThemableStyle::loadCustomStyleConfig(const QString& filename)
   styleSettings = NULL;
 
   styleSettings = new StyleConfig(filename);
+  styleSettings->setUseCache(useConfigCache);
 
   qDebug() << "[QSvgStyle]" << "Loaded custom config file" << filename;
 
@@ -155,7 +160,7 @@ void QSvgThemableStyle::loadBuiltinTheme()
   themeSettings = NULL;
 
   themeSettings = new ThemeConfig(":/default.cfg");
-  themeRndr = new QSvgRenderer();
+  themeRndr = new QSvgCachedRenderer();
   themeRndr->load(QString(":/default.svg"));
 
   curTheme = "<builtin>";
@@ -179,11 +184,12 @@ void QSvgThemableStyle::loadTheme(const QString& theme)
       themeSettings = NULL;
 
       themeSettings = new ThemeConfig(t.path);
+      themeSettings->setUseCache(useConfigCache);
 
       delete themeRndr;
       themeRndr = NULL;
 
-      themeRndr = new QSvgRenderer();
+      themeRndr = new QSvgCachedRenderer();
       themeRndr->load(
         QFileInfo(t.path).absolutePath().append("/").append(
         QFileInfo(t.path).completeBaseName().append(".svg")));
@@ -223,7 +229,7 @@ void QSvgThemableStyle::loadCustomSVG(const QString& filename)
   delete themeRndr;
   themeRndr = NULL;
 
-  themeRndr = new QSvgRenderer();
+  themeRndr = new QSvgCachedRenderer();
   themeRndr->load(filename);
 
   qDebug() << "[QSvgStyle] loaded custom SVG file" << filename;
@@ -238,6 +244,7 @@ void QSvgThemableStyle::loadCustomThemeConfig(const QString& filename)
   themeSettings = NULL;
 
   themeSettings = new ThemeConfig(filename);
+  themeSettings->setUseCache(useConfigCache);
 
   curTheme = QString("custom:%1").arg(filename);
   qDebug() << "[QSvgStyle] loaded custom theme file" << filename;
@@ -262,6 +269,7 @@ void QSvgThemableStyle::loadPalette(const QString& palette)
       paletteSettings = NULL;
 
       paletteSettings = new PaletteConfig(p.path);
+      paletteSettings->setUseCache(useConfigCache);
 
       curPalette = palette;
       qDebug() << "[QSvgStyle]" << "Loaded palette " << palette;
@@ -314,10 +322,29 @@ void QSvgThemableStyle::loadCustomPaletteConfig(const QString& filename)
 
   if ( QFile::exists(filename) ) {
     paletteSettings = new PaletteConfig(filename);
+    paletteSettings->setUseCache(useConfigCache);
 
     curPalette = QString("custom:%1").arg(filename);
     qDebug() << "[QSvgStyle] loaded custom palette file" << filename;
   }
+}
+
+void QSvgThemableStyle::setUseConfigCache(bool val)
+{
+  useConfigCache = val;
+
+  if ( themeSettings )
+    themeSettings->setUseCache(val);
+  if ( paletteSettings )
+    paletteSettings->setUseCache(val);
+  if ( styleSettings )
+    styleSettings->setUseCache(val);
+}
+
+void QSvgThemableStyle::setUseShapeCache(bool val)
+{
+  useShapeCache = val;
+  // TODO
 }
 
 bool QSvgThemableStyle::isContainerWidget(const QWidget * widget) const
@@ -4315,8 +4342,6 @@ void QSvgThemableStyle::renderElement(QPainter* p, const QString& element, const
   if ( !bounds.isValid() )
     return;
 
-  QSvgRenderer *renderer = 0;
-
   if ( !themeRndr->elementExists(element) ) {
     // Missing element
     p->save();
@@ -4329,8 +4354,7 @@ void QSvgThemableStyle::renderElement(QPainter* p, const QString& element, const
     return;
   }
 
-  renderer = themeRndr;
-  if (renderer) {
+  if (themeRndr) {
     if ( (hsize > 0) || (vsize > 0) ) {
 
       if ( (hsize > 0) && (vsize <= 0) ) {
@@ -4339,7 +4363,7 @@ void QSvgThemableStyle::renderElement(QPainter* p, const QString& element, const
         p->save();
         p->setClipRect(QRect(x,y,w,h));
         for (int i=0; i<hpatterns; i++)
-          renderer->render(p,element,QRect(x+i*hsize,y,hsize,h));
+          themeRndr->render(p,element,QRect(x+i*hsize,y,hsize,h));
         p->restore();
       }
 
@@ -4349,7 +4373,7 @@ void QSvgThemableStyle::renderElement(QPainter* p, const QString& element, const
         p->save();
         p->setClipRect(QRect(x,y,w,h));
         for (int i=0; i<vpatterns; i++)
-          renderer->render(p,element,QRect(x,y+i*vsize,w,vsize));
+          themeRndr->render(p,element,QRect(x,y+i*vsize,w,vsize));
         p->restore();
       }
 
@@ -4361,11 +4385,11 @@ void QSvgThemableStyle::renderElement(QPainter* p, const QString& element, const
         p->setClipRect(bounds);
         for (int i=0; i<hpatterns; i++)
           for (int j=0; j<vpatterns; j++)
-            renderer->render(p,element,QRect(x+i*hsize,y+j*vsize,hsize,vsize));
+            themeRndr->render(p,element,QRect(x+i*hsize,y+j*vsize,hsize,vsize));
         p->restore();
       }
     } else {
-      renderer->render(p,element,QRect(x,y,w,h));
+      themeRndr->render(p,element,QRect(x,y,w,h));
     }
   }
 }

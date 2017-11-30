@@ -29,89 +29,26 @@
 #include <QFile>
 #include <QStringList>
 
-PaletteConfig::PaletteConfig() :
-  settings(NULL)
+PaletteConfig::PaletteConfig()
+  : QSvgCachedSettings()
 {
 }
 
-PaletteConfig::PaletteConfig(const QString& palette) :
-  settings(NULL)
+PaletteConfig::PaletteConfig(const QString& palette)
+  : QSvgCachedSettings(palette)
 {
-  load(palette);
 }
 
 PaletteConfig::~PaletteConfig()
 {
-  if (settings) {
-    settings->sync();
-    delete settings;
-  }
 }
 
-void PaletteConfig::load(const QString& palette)
-{
-  if (settings) {
-    settings->sync();
-    delete settings;
-  }
 
-  settings = NULL;
-
-  if (!QFile::exists(palette))
-    return;
-
-
-  settings = new QSettings(palette,QSettings::NativeFormat);
-}
-
-void PaletteConfig::sync()
-{
-  if ( settings )
-    settings->sync();
-}
-
-QVariant PaletteConfig::getRawValue(const QString& group, const QString& key) const
-{
-  return settings ? settings->value(group+"/"+key) : QVariant();
-}
-
-QVariant PaletteConfig::getValue(const QString& group, const QString& key, int depth) const
-{
-  QVariant r;
-  QVariant inherit;
-
-  inherit = getRawValue(group,"element.inherits");
-  r = getRawValue(group, key);
-
-  if ( r.isNull() && !inherit.isNull() && (depth <= 2) ) {
-    r = getValue(inherit.toString(),key,depth+1);
-  }
-
-  return r;
-}
-
-void PaletteConfig::setValue(const QString& group, const QString& key, const QVariant& v) const
-{
-  if (settings) {
-    if ( v.isNull() )
-      settings->remove(group+"/"+key);
-    else
-      settings->setValue(group+"/"+key,v);
-  }
-}
-
-void PaletteConfig::setColorSpec(const QString& group, const color_spec_t& cs) const
+void PaletteConfig::setColorSpec(const QString& group, const color_spec_t& cs)
 {
   // In order to get a clean config file, remove all entries starting with
   // "color" then write the color config
-  if ( settings ) {
-    settings->beginGroup(group);
-    foreach(QString s, settings->childKeys()) {
-      if ( s.startsWith("color") )
-        settings->remove(s);
-    }
-    settings->endGroup();
-  }
+  removeAllWithPrefix(group, "color");
 
   setValue(group, "color.foreground", cs.fg);
   setValue(group, "color.background", cs.bg);
@@ -154,7 +91,7 @@ palette_spec_t PaletteConfig::getPaletteSpec() const
   r.name = getRawValue("General","name");
   r.author = getRawValue("General","author");
   r.descr = getRawValue("General","comment");
-  r.path = settings->fileName();
+  r.path = filename();
 
   return r;
 }

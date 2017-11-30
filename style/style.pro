@@ -22,11 +22,13 @@ LIBS += \
 
 HEADERS += \
   QSvgThemableStyle.h \
-  QSvgStylePlugin.h
+  QSvgStylePlugin.h \
+  QSvgCachedRenderer.h
 
 SOURCES += \
   QSvgThemableStyle.cpp \
-  QSvgStylePlugin.cpp
+  QSvgStylePlugin.cpp \
+  QSvgCachedRenderer.cpp
 
 RESOURCES += \
   defaulttheme.qrc

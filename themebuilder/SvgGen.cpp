@@ -62,58 +62,6 @@ static QString painterPathToSvg_d(const QPainterPath &p)
   return res;
 }
 
-/*
- * Merges attributes of src DOM element into tgt DOM element
- * if the attribute exists both in src and tgt, the one of tgt
- * keeps its value
- */
-static void mergeDomElementAttrs(QDomElement &tgt, QDomElement &src)
-{
-  QDomNamedNodeMap src_map = src.attributes();
-  QDomNamedNodeMap tgt_map = tgt.attributes();
-
-  for (int i=0; i<src_map.count(); i++) {
-    QDomAttr a = src_map.item(i).toAttr();
-    if ( !tgt_map.contains(a.name()) ) {
-      tgt.setAttributeNS(a.namespaceURI(),
-                         a.name(),
-                         a.value());
-    }
-  }
-}
-
-/*
- * Copy the DOM element src as a sibling of DOM element tgt
- */
-static void copyDomElementAsSibling(QDomElement &tgt, QDomElement &src)
-{
-  QDomNode p = tgt.parentNode();
-  QDomDocument d = tgt.ownerDocument();
-
-  QDomElement e = d.createElementNS(src.namespaceURI(),src.localName());
-  QDomNamedNodeMap src_map = src.attributes();
-  for (int i=0; i<src_map.count(); i++) {
-    QDomAttr a = src_map.item(i).toAttr();
-    e.setAttributeNS(a.namespaceURI(),
-                     a.name(),
-                     a.value());
-  }
-
-  tgt.insertAfter(e,tgt);
-}
-
-/*
- * Merges the children of src DOM element into tgt DOM elements
- * with regards to SVG "id" attributes
- * If child exists only under src, it is copied into tgt
- */
-static void mergeSVGDomElements(QDomElement &tgt, QDomElement &src)
-{
-  for (QDomNode n=src.firstChild(); !n.isNull(); n=n.nextSibling()) {
-
-  }
-}
-
 SvgGenInterior::SvgGenInterior(QGraphicsItem* parent)
   : QGraphicsPathItem(parent), roundness(10), roundInterior(false),
     color1(Qt::gray), color2(Qt::black), fill(FillTypeFlat)

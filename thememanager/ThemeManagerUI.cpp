@@ -130,7 +130,7 @@ ThemeManagerUI::ThemeManagerUI(QWidget* parent)
 
   // Get an instance of QSvgStyle
   if ( !style ) {
-    style = (QSvgThemableStyle *) QStyleFactory::create("QSvgStyle");
+    style = static_cast<QSvgThemableStyle *>(QStyleFactory::create("QSvgStyle"));
     if ( !style ) {
       qWarning() << "[QSvgThemeManager]" << "Could not load QSvgStyle style, preview will not be available !";
       QMessageBox::warning(this,"QSvgStyle style not found",
@@ -151,6 +151,11 @@ ThemeManagerUI::ThemeManagerUI(QWidget* parent)
                            " You may experience crashes when previewing.\n");
     }
   }
+
+  // Disable config caching, we want to see live changes
+  QStyle::staticMetaObject.invokeMethod(style,"setUseConfigCache",
+                                        Qt::DirectConnection,
+                                        Q_ARG(bool, false));
 
   setStyleForWidgetAndChildren(style, previewWidget);
 
@@ -491,6 +496,7 @@ void ThemeManagerUI::setupUiFromCfg()
   config = NULL;
 
   config = new StyleConfig(tempCfgFile);
+  config->setUseCache(false);
 
   // get theme at startup
   QString startupTheme = config->getStyleSpec().theme;

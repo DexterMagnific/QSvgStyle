@@ -21,6 +21,7 @@
 #define THEMECONFIG_H
 
 #include "specs.h"
+#include "QSvgCachedSettings.h"
 
 class QString;
 class QVariant;
@@ -30,21 +31,10 @@ class QStringList;
 /**
  * Class that loads, saves (and in the future caches) theme settings
  */
-class ThemeConfig {
+class ThemeConfig : public QSvgCachedSettings {
   public:
     ThemeConfig();
     ThemeConfig(const QString &theme);
-    ~ThemeConfig();
-
-    /**
-     * Loads a configuration from the given theme filename
-     */
-    void load(const QString &theme);
-
-    /**
-     * Forces an immediate disk write of the current settings
-     */
-    void sync();
 
     /* Get post-processed frame spec after 'inherits' resolution */
     frame_spec_t getFrameSpec(const QString &group) const;
@@ -67,42 +57,14 @@ class ThemeConfig {
      * At the end, if some values remain unset, they are filled with default
      * values so they can be safely read, but are left with the unset status
      */
-    void setFrameSpec(const QString &group, const frame_spec_t &fs) const;
-    void setInteriorSpec(const QString& group, const interior_spec_t& is) const;
-    void setIndicatorSpec(const QString &group, const indicator_spec_t &ds) const;
-    void setLabelSpec(const QString &group, const label_spec_t &ls) const;
-    void setElementSpec(const QString &group, const element_spec_t &es) const;
-    void setThemeSpec(const theme_spec_t &ts) const;
+    void setFrameSpec(const QString &group, const frame_spec_t &fs);
+    void setInteriorSpec(const QString& group, const interior_spec_t& is);
+    void setIndicatorSpec(const QString &group, const indicator_spec_t &ds);
+    void setLabelSpec(const QString &group, const label_spec_t &ls);
+    void setElementSpec(const QString &group, const element_spec_t &es);
+    void setThemeSpec(const theme_spec_t &ts);
 
-
-  private:
     friend class ThemeBuilderUIBase;
-
-    /**
-     * Returns the value of the @ref key key in the group @ref group
-     * If the value is not found, a null QVariant is returned
-     * (i.e QVariant::isNull() is true)
-     */
-    QVariant getRawValue(const QString &group,
-                         const QString& key) const;
-
-    /**
-     * Returns the value of the @ref key key in the group @ref group
-     * If the key is not found in the group, it is searched in the group
-     * set by the entry "inherits" if present.
-     */
-    QVariant getValue(const QString &group,
-                      const QString& key,
-                      int depth = 0) const;
-
-    /**
-     * sets the value of the given key from the given group in the theme config file
-     * If the key has a null value (i.e. QVariant::isNull() is true),
-     * the key is removed from the configuration file
-     */
-    void setValue(const QString &group, const QString &key,const QVariant &v) const;
-
-    QSettings *settings;
 };
 
 #endif // THEMECONFIG_H

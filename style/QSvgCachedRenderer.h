@@ -17,67 +17,69 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef STYLEONFIG_H
-#define STYLECONFIG_H
 
-#include "specs.h"
-#include "QSvgCachedSettings.h"
-#include "ThemeConfig.h"
-#include "PaletteConfig.h"
+#ifndef QSVGCACHEDRENDERER_H
+#define QSVGCACHEDRENDERER_H
 
-class QVariant;
-class QSettings;
-class QDir;
-template<typename T> class QList;
+#include <QHash>
+#include <QPixmap>
+#include <QSvgRenderer>
+
+class QPainter;
+class QRectF;
+class QString;
 
 /**
- * Class that loads, saves style settings
+ * @brief Wrapper around QSvgRenderer class with rendering caching capabilities
  */
-class StyleConfig : public QSvgCachedSettings {
+class QSvgCachedRenderer
+{
   public:
-    StyleConfig();
-    StyleConfig(const QString &style);
-    ~StyleConfig();
+    QSvgCachedRenderer();
+    QSvgCachedRenderer(const QString &file);
+    virtual ~QSvgCachedRenderer();
 
+    /**
+     * Loads the given SVG file
+     */
+    bool load(const QString &file);
 
-    style_spec_t getStyleSpec() const;
+    /**
+      * Returns if the loaded file is valid
+      */
+    bool isValid() const { return renderer ? renderer->isValid() : false; }
 
-    void setStyleSpec(const style_spec_t &cs);
+    /**
+      * Renders the given element id inside the given rect using the given painter
+      */
+    void render(QPainter *painter, const QString &elementId, const QRect &bounds = QRect());
 
-    QVariant getSpecificValue(const QString &key) const {
-        return getRawValue("Tweaks",key);
+    /**
+      * Returns whether the given element id exists in SVG file and is renderable
+      */
+    bool elementExists(const QString &id) const {
+      return renderer ? renderer->elementExists(id) : false;
     }
-
-    void setSpecificValue(const QString &key, const QVariant &v) {
-        setValue("Tweaks",key,v);
-    }
-
-    /**
-     * Returns the list of themes. List contains user themes first
-     */
-    static QList<theme_spec_t> getThemeList();
-
-    /**
-     * Returns the list of palettes. List contains user palettes first
-     */
-    static QList<palette_spec_t> getPaletteList();
-
-    /**
-     * Returns the system config dir
-     */
-    static QDir getSystemConfigDir();
-
-    /**
-     * Returns the user config dir
-     */
-    static QDir getUserConfigDir();
-
-    /**
-     * Returns the user config file
-     */
-    static QString getUserConfigFile();
 
   private:
+    typedef struct svgCacheEntry {
+        quint32 hits;
+        qreal svgRenderTime;
+        quint64 cachedRenderTime;
+
+        QPixmap pixmap;
+    } svgCacheEntry;
+
+    void dumpStats();
+
+    // the SVG renderer
+    QSvgRenderer *renderer;
+
+    // the in-memory SVG cache
+    QHash<QString,svgCacheEntry> svgCache;
+
+    quint32 totalCacheHits, totalCacheMisses;
+    quint64 totalSvgRenderTime, totalCachedRenderTime;
 };
 
-#endif // STYLECONFIG_H
+#endif // QSVGCACHEDRENDERER_H

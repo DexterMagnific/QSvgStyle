@@ -1,7 +1,6 @@
 QSvgStyle
 ---------
 * Rework animation framework
-* enable caching of config values
 
 * scrollbars: add pgup/pgdown buttons option
 * lineedit : minimum width should be sufficient to show placeholder text
@@ -10,7 +9,6 @@ QSvgStyle
   dynamic widget properties. e.g. qsvgstyle.frame.width=3
 * replace dir,orn pair by a rot/flip variable
 * renderElement: should take into account dir,orn
-* use QPixmapCache for SP_* pixmaps
 
 QSvgThemeBuilder
 ----------------

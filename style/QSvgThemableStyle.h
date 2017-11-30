@@ -38,6 +38,7 @@ template<typename T1, typename T2> class QMap;
 class ThemeConfig;
 class PaletteConfig;
 class StyleConfig;
+class QSvgCachedRenderer;
 
 class QSvgThemableStyle : public QCommonStyle {
   Q_OBJECT
@@ -81,14 +82,10 @@ class QSvgThemableStyle : public QCommonStyle {
     virtual void drawControl(ControlElement element, const QStyleOption * option, QPainter * painter, const QWidget * widget = 0 ) const;
     virtual void drawComplexControl(ComplexControl control, const QStyleOptionComplex * option, QPainter * painter, const QWidget * widget = 0 ) const;
     virtual int styleHint(StyleHint hint, const QStyleOption * option = 0, const QWidget * widget = 0, QStyleHintReturn * returnData = 0 ) const;
-#if QT_VERSION >= 0x050000
     virtual QIcon standardIcon(StandardPixmap standardIcon, const QStyleOption * option = 0, const QWidget * widget = 0) const;
-#else
-  protected slots:
-    QIcon standardIconImplementation ( StandardPixmap standardIcon, const QStyleOption * option = 0, const QWidget * widget = 0 ) const;
-#endif
 
   private:
+    /* API */
     /* Used internally by QSvgThemeBuilder */
     Q_INVOKABLE void loadCustomThemeConfig(const QString &filename);
     Q_INVOKABLE void loadCustomSVG(const QString &filename);
@@ -96,6 +93,10 @@ class QSvgThemableStyle : public QCommonStyle {
     Q_INVOKABLE void loadCustomPaletteConfig(const QString &filename);
     /* User internally by QSvgThemeManager */
     Q_INVOKABLE void loadCustomStyleConfig(const QString &filename);
+    /* Use config caches ? */
+    Q_INVOKABLE void setUseConfigCache(bool val);
+    /* Use SVG cache ? */
+    Q_INVOKABLE void setUseShapeCache(bool val);
 
     /* Loads user config in ~/.config/QSvgStyle/qsvgstyle.cfg */
     void loadUserConfig();
@@ -278,7 +279,7 @@ class QSvgThemableStyle : public QCommonStyle {
      * Helper function that computes the 9 rects of a frame
      * NOTE: if @ref orn is @ref Vertical, returned results
      * are for the transposed @ref bounds. Drawing routines like @ref renderFrame
-     * will manage to apply appriopriate rotations when drawing
+     * will manage to apply appropriate rotations when drawing
      * NOTE: This function considers a Left to Right layout.
      * Appropriate transformations will be done in @ref renderFrame function
      * when drawing
@@ -468,11 +469,18 @@ class QSvgThemableStyle : public QCommonStyle {
 
   private:
     QString cls;
-    QSvgRenderer *themeRndr;
+    QSvgCachedRenderer *themeRndr;
     ThemeConfig *themeSettings;
     PaletteConfig *paletteSettings;
     StyleConfig *styleSettings;
 
+    /* config cache */
+    bool useConfigCache;
+
+    /* shape cache */
+    bool useShapeCache;
+
+    /* current theme and palette */
     QString curTheme, curPalette;
 
     /* timer used for progress bars */

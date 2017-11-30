@@ -35,75 +35,18 @@
 #include <QDir>
 
 
-StyleConfig::StyleConfig() :
-  settings(NULL)
+StyleConfig::StyleConfig()
+  : QSvgCachedSettings()
 {
 }
 
-StyleConfig::StyleConfig(const QString& style) :
-  settings(NULL)
+StyleConfig::StyleConfig(const QString& style)
+  : QSvgCachedSettings(style)
 {
-  load(style);
 }
 
 StyleConfig::~StyleConfig()
 {
-  if (settings) {
-    settings->sync();
-    delete settings;
-  }
-}
-
-void StyleConfig::load(const QString& style)
-{
-  if (settings) {
-    settings->sync();
-    delete settings;
-  }
-
-  settings = NULL;
-
-  if (!QFile::exists(style))
-    return;
-
-
-  settings = new QSettings(style,QSettings::NativeFormat);
-}
-
-void StyleConfig::sync()
-{
-  if ( settings )
-    settings->sync();
-}
-
-QVariant StyleConfig::getRawValue(const QString& group, const QString& key) const
-{
-  return settings ? settings->value(group+"/"+key) : QVariant();
-}
-
-QVariant StyleConfig::getValue(const QString& group, const QString& key, int depth) const
-{
-  QVariant r;
-  QVariant inherit;
-
-  inherit = getRawValue(group,"element.inherits");
-  r = getRawValue(group, key);
-
-  if ( r.isNull() && !inherit.isNull() && (depth <= 2) ) {
-    r = getValue(inherit.toString(),key,depth+1);
-  }
-
-  return r;
-}
-
-void StyleConfig::setValue(const QString& group, const QString& key, const QVariant& v) const
-{
-  if (settings) {
-    if ( v.isNull() )
-      settings->remove(group+"/"+key);
-    else
-      settings->setValue(group+"/"+key,v);
-  }
 }
 
 style_spec_t StyleConfig::getStyleSpec() const
@@ -116,13 +59,9 @@ style_spec_t StyleConfig::getStyleSpec() const
   return r;
 }
 
-void StyleConfig::setStyleSpec(const style_spec_t& ss) const
+void StyleConfig::setStyleSpec(const style_spec_t& ss)
 {
-  if ( settings ) {
-    settings->beginGroup("General");
-    settings->remove("");
-    settings->endGroup();
-  }
+  removeAllWithPrefix("Ganaral","");
 
   setValue("General","theme", ss.theme);
   setValue("General","palette", ss.palette);
@@ -136,13 +75,7 @@ QDir StyleConfig::getSystemConfigDir()
 QDir StyleConfig::getUserConfigDir()
 {
   // get cfg dir
-  QDir cfgDir;
-
-#if QT_VERSION >= 0x050000
-  cfgDir = QDir(QStandardPaths::locate(QStandardPaths::ConfigLocation,"",QStandardPaths::LocateDirectory).append("QSvgStyle"));
-#else
-  cfgDir = QDir(QDir::homePath().append("/.config/QSvgStyle"));
-#endif
+  QDir cfgDir = QDir(QStandardPaths::locate(QStandardPaths::ConfigLocation,"",QStandardPaths::LocateDirectory).append("QSvgStyle"));
 
   return cfgDir;
 }

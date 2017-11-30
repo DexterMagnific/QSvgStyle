@@ -537,17 +537,6 @@
          </property>
          <item>
           <property name="text">
-           <string>Indicator size</string>
-          </property>
-          <property name="text">
-           <string>specific.radiocheckbox.indicator.size</string>
-          </property>
-          <property name="flags">
-           <set>ItemIsSelectable|ItemIsEditable|ItemIsUserCheckable|ItemIsEnabled</set>
-          </property>
-         </item>
-         <item>
-          <property name="text">
            <string>Button--Label space</string>
           </property>
           <property name="text">
