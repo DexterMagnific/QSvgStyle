@@ -650,8 +650,19 @@ void QSvgThemableStyle::drawPrimitive(PrimitiveElement e, const QStyleOption * o
       renderIndicator(p,r,fs,is,ds,ds.element+"-"+st,dir);
       break;
     }
-    case PE_IndicatorViewItemCheck :
+    case PE_IndicatorViewItemCheck : {
       // a check box inside view items
+      st = (option->state & State_Enabled) ?
+          (option->state & State_MouseOver) ? "hovered" : "normal"
+        : "disabled";
+      if ( option->state & State_On )
+        st = "checked-"+st;
+      else if ( option->state & State_NoChange )
+        st = "tristate-"+st;
+      fs.hasFrame = false;
+      renderIndicator(p,r,fs,is,ds,ds.element+"-checkbox-"+st,dir);
+      break;
+    }
     case PE_IndicatorCheckBox : {
       // a check box (multiple choices)
       // QSvgStyle: no pressed or toggled status for check boxes
@@ -2113,8 +2124,6 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
     }
 
     case CE_ItemViewItem : {
-      // FIXME rtl
-      // FIXME use SE_ItemViewItem* rects
       if ( const QStyleOptionViewItem *opt =
            qstyleoption_cast<const QStyleOptionViewItem *>(option) ) {
 
@@ -2201,6 +2210,7 @@ void QSvgThemableStyle::drawComplexControl(ComplexControl control, const QStyleO
 
         QStyleOptionToolButton o(*opt);
 
+        // FIXME if button has no frame, no margins to add
         QRect dropRect = subControlRect(CC_ToolButton,opt,SC_ToolButtonMenu,widget)
             .marginsAdded(QMargins(fs.left,fs.top,fs.right,fs.bottom));
         QRect buttonRect = subControlRect(CC_ToolButton,opt,SC_ToolButton,widget)
@@ -3045,7 +3055,7 @@ int QSvgThemableStyle::pixelMetric(PixelMetric metric, const QStyleOption * opti
 
         QSize sz = sizeFromContents(fm,fs,is,ls,
                                   opt->text.isEmpty() ? "W" : opt->text,
-                                  QPixmap(pixelMetric(PM_TitleBarButtonIconSize),pixelMetric(PM_TitleBarButtonIconSize)));
+                                  pixelMetric(PM_TitleBarButtonIconSize));
 
         return sz.height();
       } else {
@@ -3136,7 +3146,7 @@ QSize QSvgThemableStyle::sizeFromContents ( ContentsType type, const QStyleOptio
 
         s = sizeFromContents(fm,fs,is,ls,
                              "W",
-                             QPixmap(QSize(pixelMetric(PM_SmallIconSize),pixelMetric(PM_SmallIconSize))));
+                             pixelMetric(PM_SmallIconSize));
 
         s = s.expandedTo(QSize(csz.width(),0));
 
@@ -3158,8 +3168,7 @@ QSize QSvgThemableStyle::sizeFromContents ( ContentsType type, const QStyleOptio
           fs.hasFrame = false;
 
         s = sizeFromContents(fm,fs,is,ls,
-                             QString("%1%2%3").arg(w ? w->prefix(): "").arg(w ? w->maximum() : 99).arg(w? w->suffix() : ""),
-                             QPixmap());
+                             QString("%1%2%3").arg(w ? w->prefix(): "").arg(w ? w->maximum() : 99).arg(w? w->suffix() : ""));
 
         s = s.expandedTo(csz);
 
@@ -3187,7 +3196,7 @@ QSize QSvgThemableStyle::sizeFromContents ( ContentsType type, const QStyleOptio
 
         s = sizeFromContents(fm,fs,is,ls,
                              "W",
-                             QPixmap(opt->iconSize));
+                             opt->iconSize.width());
 
         s = s.expandedTo(QSize(csz.width(),0));
 
@@ -3214,12 +3223,13 @@ QSize QSvgThemableStyle::sizeFromContents ( ContentsType type, const QStyleOptio
         s = sizeFromContents(fm,fs,is,ls,
                              (opt->text.isEmpty() && opt->icon.isNull()) ? "W"
                                : opt->text,
-                             opt->icon.pixmap(opt->iconSize));
+                             opt->icon.isNull() ? 0 : opt->iconSize.width());
 
         if ( opt->features & QStyleOptionButton::HasMenu ) {
           s.rwidth() += 2*ls.tispace+ds.size;
         }
       }
+
       break;
     }
 
@@ -3229,7 +3239,7 @@ QSize QSvgThemableStyle::sizeFromContents ( ContentsType type, const QStyleOptio
 
         s = sizeFromContents(fm,fs,is,ls,
                              opt->text,
-                             opt->icon.pixmap(opt->iconSize));
+                             opt->iconSize.width());
         s += QSize(pixelMetric(PM_CheckBoxLabelSpacing)+pixelMetric(PM_IndicatorWidth),0);
         s = s.expandedTo(QSize(pixelMetric(PM_IndicatorWidth),pixelMetric(PM_IndicatorHeight))); // minimal checkbox size is size of indicator
       }
@@ -3242,7 +3252,7 @@ QSize QSvgThemableStyle::sizeFromContents ( ContentsType type, const QStyleOptio
 
         s = sizeFromContents(fm,fs,is,ls,
                              opt->text,
-                             opt->icon.pixmap(opt->iconSize));
+                             opt->iconSize.width());
         s += QSize(pixelMetric(PM_CheckBoxLabelSpacing)+pixelMetric(PM_ExclusiveIndicatorWidth),0);
         s = s.expandedTo(QSize(pixelMetric(PM_ExclusiveIndicatorWidth),pixelMetric(PM_ExclusiveIndicatorHeight))); // minimal checkbox size is size of indicator
       }
@@ -3261,7 +3271,7 @@ QSize QSvgThemableStyle::sizeFromContents ( ContentsType type, const QStyleOptio
         if (opt->menuItemType == QStyleOptionMenuItem::Separator)
           s = QSize(csw,getSpecificValue("specific.menu.separator.height").toInt());
         else {
-          s = sizeFromContents(fm,fs,is,ls,opt->text,opt->icon.pixmap(opt->maxIconWidth));
+          s = sizeFromContents(fm,fs,is,ls,opt->text,opt->maxIconWidth);
         }
 
         // No icon ? add icon width nevertheless
@@ -3295,7 +3305,7 @@ QSize QSvgThemableStyle::sizeFromContents ( ContentsType type, const QStyleOptio
 
         s = sizeFromContents(fm,fs,is,ls,
                              opt->text,
-                             opt->icon.pixmap(opt->maxIconWidth));
+                             opt->maxIconWidth);
       }
 
       break;
@@ -3308,8 +3318,7 @@ QSize QSvgThemableStyle::sizeFromContents ( ContentsType type, const QStyleOptio
         s = sizeFromContents(fm,fs,is,ls,
                              opt->textVisible ?
                                opt->text.isEmpty() ? "W" : opt->text
-                               : QString::null,
-                             QPixmap());
+                               : QString::null);
 
         if ( opt->orientation == Qt::Vertical )
           s.transpose();
@@ -3325,29 +3334,27 @@ QSize QSvgThemableStyle::sizeFromContents ( ContentsType type, const QStyleOptio
         // fix indicator size
         ds = getIndicatorSpec(PE_group(PE_IndicatorArrowDown));
 
-        QStyleOptionToolButton o(*opt);
-
         // minimum size
         QSize ms;
         if ( opt->text.isEmpty() && (opt->toolButtonStyle == Qt::ToolButtonTextOnly) )
           ms = sizeFromContents(fm,fs,is,ls,
                                 "W",
-                                opt->icon.pixmap(opt->iconSize),
+                                opt->iconSize.width(),
                                 Qt::ToolButtonTextOnly);
         if ( opt->icon.isNull() && (opt->toolButtonStyle == Qt::ToolButtonIconOnly) )
           ms = sizeFromContents(fm,fs,is,ls,
                                 "W",
-                                opt->icon.pixmap(opt->iconSize),
+                                opt->iconSize.width(),
                                 Qt::ToolButtonTextOnly);
         if ( opt->text.isEmpty() && opt->icon.isNull() )
           ms = sizeFromContents(fm,fs,is,ls,
                                 "W",
-                                opt->icon.pixmap(opt->iconSize),
+                                opt->iconSize.width(),
                                 Qt::ToolButtonTextOnly);
 
         s = sizeFromContents(fm,fs,is,ls,
                              opt->text,
-                             opt->icon.pixmap(opt->iconSize),
+                             opt->iconSize.width(),
                              opt->toolButtonStyle).expandedTo(ms);
 
         if (opt->arrowType != Qt::NoArrow) {
@@ -3380,10 +3387,10 @@ QSize QSvgThemableStyle::sizeFromContents ( ContentsType type, const QStyleOptio
 
         s = sizeFromContents(fm,fs,is,ls,
                              opt->text,
-                             opt->icon.pixmap(opt->iconSize));
+                             opt->iconSize.width());
 
         if ( qobject_cast< const QTabBar* >(widget)->tabsClosable() ) {
-            s.rwidth() += ls.tispace+opt->iconSize.width();
+            s.rwidth() += ls.tispace+pixelMetric(PM_TabCloseIndicatorWidth);
         }
 
         if ( opt->shape == QTabBar::TriangularEast ||
@@ -3401,7 +3408,7 @@ QSize QSvgThemableStyle::sizeFromContents ( ContentsType type, const QStyleOptio
       if ( const QStyleOptionHeader *opt =
            qstyleoption_cast<const QStyleOptionHeader *>(option) ) {
         s = sizeFromContents(fm,fs,is,ls,
-                             opt->text,opt->icon.pixmap(pixelMetric(PM_SmallIconSize)));
+                             opt->text,pixelMetric(PM_SmallIconSize));
         if ( opt->sortIndicator != QStyleOptionHeader::None )
           s += QSize(2*ls.tispace+ds.size,0);
       }
@@ -3423,9 +3430,9 @@ QSize QSvgThemableStyle::sizeFromContents ( ContentsType type, const QStyleOptio
            qstyleoption_cast<const QStyleOptionGroupBox *>(option) ) {
 
         if ( opt->subControls & SC_GroupBoxCheckBox )
-          s = sizeFromContents(fm,fs,is,ls,opt->text,QPixmap())+QSize(pixelMetric(PM_CheckBoxLabelSpacing)+pixelMetric(PM_IndicatorWidth),0);
+          s = sizeFromContents(fm,fs,is,ls,opt->text)+QSize(pixelMetric(PM_CheckBoxLabelSpacing)+pixelMetric(PM_IndicatorWidth),0);
         else
-          s = sizeFromContents(fm,fs,is,ls,opt->text,QPixmap());
+          s = sizeFromContents(fm,fs,is,ls,opt->text);
 
         // add contents to st, 30 is title shift (left and right)
         s = QSize(qMax(s.width()+30+30,csz.width()+fs.left+fs.right),
@@ -3441,13 +3448,11 @@ QSize QSvgThemableStyle::sizeFromContents ( ContentsType type, const QStyleOptio
 
         s = sizeFromContents(fm,fs,is,ls,
                              opt->text,
-                             opt->icon.pixmap(pixelMetric(PM_ListViewIconSize)));
+                             pixelMetric(PM_ListViewIconSize));
 
         if ( opt->features & QStyleOptionViewItem::HasCheckIndicator ) {
-          s += QSize(pixelMetric(PM_CheckBoxLabelSpacing)+pixelMetric(PM_IndicatorWidth),0);
+          s.rwidth() += pixelMetric(PM_CheckBoxLabelSpacing)+qMin(s.height(),(int)ds.size);
         }
-        s = s.expandedTo(QSize(pixelMetric(PM_IndicatorWidth),pixelMetric(PM_IndicatorHeight))); // minimal checkbox size is size of indicator
-        s = s.expandedTo(QSize(ds.size,ds.size)); // tree branch
       }
       break;
     }
@@ -3473,7 +3478,7 @@ QSize QSvgThemableStyle::sizeFromContents(const QFontMetrics &fm,
                      /* interior spec */ const interior_spec_t &is,
                      /* label spec */ const label_spec_t &ls,
                      /* text */ const QString &text,
-                     /* icon */ const QPixmap &icon,
+                     /* icon */ int iconsz,
                      /* text-icon alignment */ const Qt::ToolButtonStyle tialign) const
 {
   Q_UNUSED(is);
@@ -3482,7 +3487,7 @@ QSize QSvgThemableStyle::sizeFromContents(const QFontMetrics &fm,
 
   // compute size of interior elements first
   int th = 0, tw = 0;
-  if ( !text.isEmpty() || !icon.isNull() ) {
+  if ( !text.isEmpty() || iconsz ) {
     s.rwidth() += 2*ls.hmargin;
     s.rheight() += 2*ls.vmargin;
   }
@@ -3500,17 +3505,17 @@ QSize QSvgThemableStyle::sizeFromContents(const QFontMetrics &fm,
   }
 
   if (tialign == Qt::ToolButtonIconOnly) {
-    s.rwidth() += icon.width();
-    s.rheight() += icon.height();
+    s.rwidth() += iconsz;
+    s.rheight() += iconsz;
   } else if (tialign == Qt::ToolButtonTextOnly) {
     s.rwidth() += tw;
     s.rheight() += th;
   } else if (tialign == Qt::ToolButtonTextBesideIcon) {
-    s.rwidth() += (icon.isNull() ? 0 : icon.width()) + (icon.isNull() ? 0 : (text.isEmpty() ? 0 : ls.tispace)) + tw;
-    s.rheight() += qMax(icon.height(),th);
+    s.rwidth() += iconsz + (!iconsz ? 0 : (text.isEmpty() ? 0 : ls.tispace)) + tw;
+    s.rheight() += qMax(iconsz,th);
   } else if (tialign == Qt::ToolButtonTextUnderIcon) {
-    s.rwidth() += qMax(icon.width(),tw);
-    s.rheight() += icon.height() + (icon.isNull() ? 0 : ls.tispace) + th;
+    s.rwidth() += qMax(iconsz,tw);
+    s.rheight() += iconsz + (!iconsz ? 0 : ls.tispace) + th;
   }
 
   // then add frame
@@ -3622,7 +3627,7 @@ QRect QSvgThemableStyle::subElementRect(SubElement e, const QStyleOption * optio
 
     case SE_ItemViewItemCheckIndicator : {
       ret = r.adjusted(ls.hmargin,0,0,0);
-      ret.setWidth(ds.size);
+      ret.setWidth(qMin(ret.height(),(int)ds.size));
       break;
     }
 
@@ -3637,7 +3642,7 @@ QRect QSvgThemableStyle::subElementRect(SubElement e, const QStyleOption * optio
            qstyleoption_cast<const QStyleOptionViewItem *>(option) ) {
         //ret = r.adjusted(ls.hmargin,0,0,0);
         if ( opt->features & QStyleOptionViewItem::HasCheckIndicator )
-          ret = ret.adjusted(pixelMetric(PM_CheckBoxLabelSpacing)+ds.size,0,0,0);
+          ret = ret.adjusted(pixelMetric(PM_CheckBoxLabelSpacing)+qMin(ret.height(),(int)ds.size),0,0,0);
       }
       break;
     }
@@ -3954,7 +3959,7 @@ QRect QSvgThemableStyle::subControlRect(ComplexControl control, const QStyleOpti
             if (opt->features & QStyleOptionToolButton::Menu)
               ret = r.adjusted(0,0,-pixelMetric(PM_MenuButtonIndicator),0);
             else if (opt->features & QStyleOptionToolButton::HasMenu)
-              ret = r.adjusted(0,0,-ds.size-2*ls.tispace,0);
+              ret = r.adjusted(0,0,-ds.size-ls.tispace,0);
             else
               ret = r;
           }
@@ -3970,7 +3975,7 @@ QRect QSvgThemableStyle::subControlRect(ComplexControl control, const QStyleOpti
               ret = QRect(x+w-pixelMetric(PM_MenuButtonIndicator),y,
                          pixelMetric(PM_MenuButtonIndicator),h);
             else if (opt->features & QStyleOptionToolButton::HasMenu)
-              ret = QRect(x+w-ls.tispace-ds.size,y+h-ls.tispace-ds.size,ds.size,ds.size);
+              ret = QRect(x+w-ls.tispace-ds.size,y+h-ds.size-2,ds.size,ds.size);
             else
               ret = r;
           }
@@ -3992,7 +3997,7 @@ QRect QSvgThemableStyle::subControlRect(ComplexControl control, const QStyleOpti
 
         // title size
         stitle = sizeFromContents(fm,fs,is,ls,
-                                  opt->text,QPixmap());
+                                  opt->text);
         if ( opt->subControls & SC_GroupBoxCheckBox ) {
           // ensure checkbox indicator fits within title interior
           stitle += QSize(pixelMetric(PM_IndicatorWidth)+pixelMetric(PM_CheckBoxLabelSpacing),0);
@@ -4219,7 +4224,7 @@ QIcon QSvgThemableStyle::standardIcon(StandardPixmap standardIcon, const QStyleO
   switch (standardIcon) {
     case SP_ToolBarHorizontalExtensionButton :
     case SP_ToolBarVerticalExtensionButton  :
-      sz = pixelMetric(PM_ToolBarExtensionExtent);
+      sz = getIndicatorSpec(CE_group(CE_ToolBar)).size;
       base = getIndicatorSpec(PE_group(PE_PanelToolBar)).element + "-ext";
       break;
 
@@ -4304,7 +4309,6 @@ QIcon QSvgThemableStyle::standardIcon(StandardPixmap standardIcon, const QStyleO
   p.end();
   icon.addPixmap(pm_normal,QIcon::Normal);
 
-  // FIXME hovered does not seem to work
   QPixmap pm_hovered(sz,sz);
   pm_hovered.fill(Qt::transparent);
   p.begin(&pm_hovered);

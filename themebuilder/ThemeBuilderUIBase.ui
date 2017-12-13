@@ -246,8 +246,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>685</width>
-             <height>58</height>
+             <width>669</width>
+             <height>81</height>
             </rect>
            </property>
           </widget>
@@ -739,15 +739,15 @@
              <enum>QFrame::Raised</enum>
             </property>
             <property name="currentIndex">
-             <number>0</number>
+             <number>2</number>
             </property>
             <widget class="QWidget" name="genFramePage">
              <property name="geometry">
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>222</width>
-               <height>358</height>
+               <width>195</width>
+               <height>256</height>
               </rect>
              </property>
              <attribute name="label">
@@ -941,8 +941,8 @@
                   <rect>
                    <x>0</x>
                    <y>0</y>
-                   <width>205</width>
-                   <height>320</height>
+                   <width>163</width>
+                   <height>206</height>
                   </rect>
                  </property>
                  <layout class="QGridLayout" name="gridLayout_27">
@@ -969,8 +969,8 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>192</width>
-               <height>40</height>
+               <width>219</width>
+               <height>54</height>
               </rect>
              </property>
              <attribute name="label">
@@ -1137,6 +1137,9 @@
                   <property name="toolTip">
                    <string>Frameless interior roundness</string>
                   </property>
+                  <property name="value">
+                   <double>10.000000000000000</double>
+                  </property>
                  </widget>
                 </item>
                </layout>
@@ -1161,15 +1164,182 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>117</width>
-               <height>28</height>
+               <width>222</width>
+               <height>236</height>
               </rect>
              </property>
              <attribute name="label">
               <string>Shadow</string>
              </attribute>
-             <layout class="QGridLayout" name="gridLayout_24">
-              <item row="2" column="0" colspan="2">
+             <layout class="QGridLayout" name="gridLayout_30">
+              <item row="0" column="0">
+               <layout class="QGridLayout" name="gridLayout_24">
+                <item row="0" column="0">
+                 <widget class="QLabel" name="interiorLbl_2">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="palette">
+                   <palette>
+                    <active>
+                     <colorrole role="WindowText">
+                      <brush brushstyle="SolidPattern">
+                       <color alpha="255">
+                        <red>255</red>
+                        <green>255</green>
+                        <blue>255</blue>
+                       </color>
+                      </brush>
+                     </colorrole>
+                     <colorrole role="Base">
+                      <brush brushstyle="SolidPattern">
+                       <color alpha="255">
+                        <red>252</red>
+                        <green>252</green>
+                        <blue>252</blue>
+                       </color>
+                      </brush>
+                     </colorrole>
+                     <colorrole role="Window">
+                      <brush brushstyle="SolidPattern">
+                       <color alpha="255">
+                        <red>85</red>
+                        <green>85</green>
+                        <blue>127</blue>
+                       </color>
+                      </brush>
+                     </colorrole>
+                    </active>
+                    <inactive>
+                     <colorrole role="WindowText">
+                      <brush brushstyle="SolidPattern">
+                       <color alpha="255">
+                        <red>255</red>
+                        <green>255</green>
+                        <blue>255</blue>
+                       </color>
+                      </brush>
+                     </colorrole>
+                     <colorrole role="Base">
+                      <brush brushstyle="SolidPattern">
+                       <color alpha="255">
+                        <red>252</red>
+                        <green>252</green>
+                        <blue>252</blue>
+                       </color>
+                      </brush>
+                     </colorrole>
+                     <colorrole role="Window">
+                      <brush brushstyle="SolidPattern">
+                       <color alpha="255">
+                        <red>85</red>
+                        <green>85</green>
+                        <blue>127</blue>
+                       </color>
+                      </brush>
+                     </colorrole>
+                    </inactive>
+                    <disabled>
+                     <colorrole role="WindowText">
+                      <brush brushstyle="SolidPattern">
+                       <color alpha="255">
+                        <red>165</red>
+                        <green>167</green>
+                        <blue>169</blue>
+                       </color>
+                      </brush>
+                     </colorrole>
+                     <colorrole role="Base">
+                      <brush brushstyle="SolidPattern">
+                       <color alpha="255">
+                        <red>85</red>
+                        <green>85</green>
+                        <blue>127</blue>
+                       </color>
+                      </brush>
+                     </colorrole>
+                     <colorrole role="Window">
+                      <brush brushstyle="SolidPattern">
+                       <color alpha="255">
+                        <red>85</red>
+                        <green>85</green>
+                        <blue>127</blue>
+                       </color>
+                      </brush>
+                     </colorrole>
+                    </disabled>
+                   </palette>
+                  </property>
+                  <property name="autoFillBackground">
+                   <bool>true</bool>
+                  </property>
+                  <property name="text">
+                   <string>S</string>
+                  </property>
+                  <property name="margin">
+                   <number>5</number>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="2">
+                 <widget class="QToolButton" name="shadowColor1Btn">
+                  <property name="toolTip">
+                   <string>Primary color</string>
+                  </property>
+                  <property name="text">
+                   <string>1</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="1">
+                 <widget class="QToolButton" name="shadowFillTypeBtn">
+                  <property name="toolTip">
+                   <string>Color: (F)lat, (I)nverted (G)radient</string>
+                  </property>
+                  <property name="text">
+                   <string>F</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="3">
+                 <widget class="QToolButton" name="shadowColor2Btn">
+                  <property name="toolTip">
+                   <string>Secondary color</string>
+                  </property>
+                  <property name="text">
+                   <string>2</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="4">
+                 <spacer name="horizontalSpacer_9">
+                  <property name="orientation">
+                   <enum>Qt::Horizontal</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>0</width>
+                    <height>20</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+                <item row="0" column="5">
+                 <widget class="QDoubleSpinBox" name="genShadowWidthSpin">
+                  <property name="toolTip">
+                   <string>Shadow width</string>
+                  </property>
+                  <property name="value">
+                   <double>10.000000000000000</double>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+              <item row="1" column="0">
                <spacer name="verticalSpacer_3">
                 <property name="orientation">
                  <enum>Qt::Vertical</enum>
@@ -1181,13 +1351,6 @@
                  </size>
                 </property>
                </spacer>
-              </item>
-              <item row="0" column="0" colspan="2">
-               <widget class="QLabel" name="label_23">
-                <property name="text">
-                 <string>Not Implemented</string>
-                </property>
-               </widget>
               </item>
              </layout>
             </widget>
@@ -1593,7 +1756,7 @@
          <x>0</x>
          <y>0</y>
          <width>256</width>
-         <height>528</height>
+         <height>491</height>
         </rect>
        </property>
        <property name="palette">
@@ -1667,7 +1830,7 @@
          <x>0</x>
          <y>0</y>
          <width>256</width>
-         <height>528</height>
+         <height>491</height>
         </rect>
        </property>
        <property name="palette">
@@ -1741,7 +1904,7 @@
          <x>0</x>
          <y>0</y>
          <width>256</width>
-         <height>528</height>
+         <height>491</height>
         </rect>
        </property>
        <property name="palette">
@@ -1815,7 +1978,7 @@
          <x>0</x>
          <y>0</y>
          <width>256</width>
-         <height>528</height>
+         <height>491</height>
         </rect>
        </property>
        <property name="palette">
@@ -1889,7 +2052,7 @@
          <x>0</x>
          <y>0</y>
          <width>256</width>
-         <height>528</height>
+         <height>491</height>
         </rect>
        </property>
        <property name="palette">

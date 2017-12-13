@@ -526,6 +526,8 @@ ThemeBuilderUI::ThemeBuilderUI(QWidget* parent)
           this,SLOT(slot_genFrameBtnClicked(bool)));
   connect(genInteriorBtn,SIGNAL(clicked(bool)),
           this,SLOT(slot_genInteriorBtnClicked(bool)));
+  connect(genShadowBtn,SIGNAL(clicked(bool)),
+          this,SLOT(slot_genShadowBtnClicked(bool)));
   connect(genRoundBtn,SIGNAL(clicked(bool)),
           this,SLOT(slot_genRoundBtnClicked(bool)));
   connect(genSplitBtn,SIGNAL(clicked(bool)),
@@ -550,6 +552,14 @@ ThemeBuilderUI::ThemeBuilderUI(QWidget* parent)
           this,SLOT(slot_genInteriorColor1BtnClicked(bool)));
   connect(interiorColor2Btn,SIGNAL(clicked(bool)),
           this,SLOT(slot_genInteriorColor2BtnClicked(bool)));
+  connect(shadowFillTypeBtn,SIGNAL(clicked(bool)),
+          this,SLOT(slot_genShadowFillTypeBtnClicked(bool)));
+  connect(shadowColor1Btn,SIGNAL(clicked(bool)),
+          this,SLOT(slot_genShadowColor1BtnClicked(bool)));
+  connect(shadowColor2Btn,SIGNAL(clicked(bool)),
+          this,SLOT(slot_genShadowColor2BtnClicked(bool)));
+  connect(genShadowWidthSpin,SIGNAL(valueChanged(qreal)),
+          this,SLOT(slot_genShadowWidthChanged(qreal)));
 
   // style callbacks
   if ( style ) {
@@ -801,6 +811,7 @@ void ThemeBuilderUI::resetUi()
   optimizeSvgBtn->setEnabled(false);
   editSvgBtn->setEnabled(false);
 
+  blockUISignals(true);
   // clear theme file name
   themeNameLbl->clear();
   themeNameLbl->setToolTip(QString());
@@ -816,6 +827,7 @@ void ThemeBuilderUI::resetUi()
   interiorRepeatCb->setCheckState(Qt::PartiallyChecked);
   labelSpacingCb->setCheckState(Qt::PartiallyChecked);
   labelMarginCb->setCheckState(Qt::PartiallyChecked);
+  blockUISignals(false);
 
   currentToolboxTab = toolBox->currentIndex();
 
@@ -879,6 +891,36 @@ void ThemeBuilderUI::schedulePreviewUpdate(bool modified)
   cfgModified = modified;
 
   timer->start(500);
+}
+
+void ThemeBuilderUI::blockUISignals(bool blocked)
+{
+  inheritCb->blockSignals(blocked);
+  inheritCombo->blockSignals(blocked);
+
+  frameCb->blockSignals(blocked);
+  frameIdCb->blockSignals(blocked);
+  frameIdCombo->blockSignals(blocked);
+  frameWidthCb->blockSignals(blocked);
+  frameWidthSpin->blockSignals(blocked);
+
+  interiorCb->blockSignals(blocked);
+  interiorIdCb->blockSignals(blocked);
+  interiorIdCombo->blockSignals(blocked);
+  interiorRepeatCb->blockSignals(blocked);
+  interiorRepeatXSpin->blockSignals(blocked);
+  interiorRepeatYSpin->blockSignals(blocked);
+
+  indicatorIdCb->blockSignals(blocked);
+  indicatorIdCombo->blockSignals(blocked);
+  indicatorSizeCb->blockSignals(blocked);
+  indicatorSizeSpin->blockSignals(blocked);
+
+  labelMarginCb->blockSignals(blocked);
+  labelMarginHSpin->blockSignals(blocked);
+  labelMarginVSpin->blockSignals(blocked);
+  labelSpacingCb->blockSignals(blocked);
+  labelSpacingSpin->blockSignals(blocked);
 }
 
 bool ThemeBuilderUI::openTheme(const QString& filename)
@@ -1353,14 +1395,16 @@ void ThemeBuilderUI::setupUiForWidget(const QListWidgetItem* current)
   previewUpdateEnabled = false;
 
   if ( current ) {
+    blockUISignals(true);
+
     QString group = current->data(GroupRole).toString();
 
     tabWidget->setEnabled(true);
 
     // get spec as exactly set in the config file, without inheritance resolution
     raw_es = config->getRawElementSpec(group);
-    // now get the resolved spec
-    es = config->getElementSpec(group);
+    // now get the inherited spec
+    inherit_es = config->getElementSpec(raw_es.inherits);
 
     // common tab
     // inherit cb and combo
@@ -1450,15 +1494,17 @@ void ThemeBuilderUI::setupUiForWidget(const QListWidgetItem* current)
       indicatorSizeCb->setCheckState(Qt::PartiallyChecked);
     }
 
+    blockUISignals(false);
+
     // These are needed to force associated widget value updates even
     // if the check state has not changed when switching widgets
     slot_inheritCbChanged(inheritCb->checkState());
     slot_frameCbChanged(frameCb->checkState());
-    slot_frameIdCbChanged(frameIdCb->checkState());
-    slot_frameWidthCbChanged(frameWidthCb->checkState());
+    //slot_frameIdCbChanged(frameIdCb->checkState());
+    //slot_frameWidthCbChanged(frameWidthCb->checkState());
     slot_interiorCbChanged(interiorCb->checkState());
-    slot_interiorIdCbChanged(interiorIdCb->checkState());
-    slot_interiorRepeatCbChanged(interiorRepeatCb->checkState());
+    //slot_interiorIdCbChanged(interiorIdCb->checkState());
+    //slot_interiorRepeatCbChanged(interiorRepeatCb->checkState());
     slot_labelSpacingCbChanged(labelSpacingCb->checkState());
     slot_labelMarginCbChanged(labelMarginCb->checkState());
     slot_indicatorIdCbChanged(indicatorIdCb->checkState());
@@ -2065,20 +2111,30 @@ void ThemeBuilderUI::setupPreviewForWidget(const QListWidgetItem *current)
   if ( group == PE_group(QStyle::PE_PanelItemViewItem) ) {
     variants = 1;
 
-    QListWidget *widget = new QListWidget();
-    widget->addItem("item 1");
-    widget->addItem("item 2");
-    widget->addItem("item 3");
-    widget->addItem("item 4");
-    widget->addItem("item 5");
-    widget->addItem("item 6");
+    QTreeWidget *widget = new QTreeWidget();
 
-    widget->item(0)->setCheckState(Qt::Checked);
-    widget->item(1)->setIcon(icon);
-    widget->item(3)->setCheckState(Qt::Unchecked);
-    widget->item(3)->setIcon(icon);
+    QTreeWidgetItem *item1 = new QTreeWidgetItem(widget);
+    item1->setText(0,"item1");
+    item1->setCheckState(0,Qt::Checked);
+    item1->setIcon(0,icon);
+
+    QTreeWidgetItem *subitem1 = new QTreeWidgetItem(item1);
+    subitem1->setText(0,"subitem 1");
+    QTreeWidgetItem *subitem2 = new QTreeWidgetItem(item1);
+    subitem2->setText(0,"subitem 2");
+    QTreeWidgetItem *subitem3 = new QTreeWidgetItem(item1);
+    subitem3->setText(0,"subitem 3");
+
+    QTreeWidgetItem *item2 = new QTreeWidgetItem(widget);
+    item2->setText(0,"item2");
+    item2->setIcon(0,icon);
+
+    QTreeWidgetItem *item3 = new QTreeWidgetItem(widget);
+    item3->setText(0,"item3");
+    item3->setCheckState(0,Qt::Unchecked);
 
     widget->setAlternatingRowColors(true);
+    widget->setHeaderHidden(true);
 
     previewWidget = widget;
   }
@@ -2179,6 +2235,8 @@ end:
 
     previewWidget->setSizePolicy(qsz);
     previewArea->setWidget(previewWidget);
+    timeLbl->setText("Time: -");
+    sizeLbl->setText("Size: -");
   }
 }
 
@@ -2263,6 +2321,11 @@ void ThemeBuilderUI::saveSettingsFromUi(const QListWidgetItem *current)
   }
 
   config->setElementSpec(group, _es);
+
+  // re-read specs and setup UI again when inheritCombo changes
+  if ( _es.inherits != raw_es.inherits ) {
+    setupUiForWidget(current);
+  }
 }
 
 void ThemeBuilderUI::slot_uiSettingsChanged()
@@ -2423,7 +2486,15 @@ void ThemeBuilderUI::slot_genFrameBtnClicked(bool checked)
 void ThemeBuilderUI::slot_genInteriorBtnClicked(bool checked)
 {
   svgGen->setHasInterior(checked);
+  svgGen->setInteriorRoundness(genInteriorRoundnessSpin->value());
   genInteriorPage->setEnabled(checked);
+  genToolbox->repaint();
+}
+
+void ThemeBuilderUI::slot_genShadowBtnClicked(bool checked)
+{
+  svgGen->setHasShadow(checked);
+  genShadowPage->setEnabled(checked);
   genToolbox->repaint();
 }
 
@@ -2708,12 +2779,92 @@ void ThemeBuilderUI::slot_genInteriorColor2BtnClicked(bool checked)
   b->setToolTip(QString("Color1: %1").arg(c.name(QColor::HexArgb)));
 }
 
+void ThemeBuilderUI::slot_genShadowFillTypeBtnClicked(bool checked)
+{
+  Q_UNUSED(checked);
+
+  QToolButton *b = qobject_cast<QToolButton *>(sender());
+
+  SvgGenSubFrame::FillType type = svgGen->shadowFillType();
+
+  type = static_cast<SvgGenSubFrame::FillType> (static_cast<int>(type)+1);
+  if ( type > SvgGenSubFrame::FillTypeMax )
+    type = SvgGenSubFrame::FillTypeFirst;
+
+  svgGen->setShadowFillType(type);
+
+  switch (type) {
+    case SvgGenSubFrame::FillTypeFlat:
+      b->setText("F");
+      break;
+    case SvgGenSubFrame::FillTypeGradient:
+      b->setText("G");
+      break;
+    case SvgGenSubFrame::FillTypeInvertedGradient:
+      b->setText("IG");
+      break;
+  }
+
+  shadowColor2Btn->setEnabled(type != SvgGenSubFrame::FillTypeFlat);
+}
+
+void ThemeBuilderUI::slot_genShadowColor1BtnClicked(bool checked)
+{
+  Q_UNUSED(checked);
+
+  QToolButton *b = qobject_cast<QToolButton *>(sender());
+
+  QColor c = QColorDialog::getColor(svgGen->shadowFirstColor(),
+                                    NULL,
+                                    QString("Select color"),
+                                    QColorDialog::ShowAlphaChannel);
+
+  if ( !c.isValid() )
+    c = svgGen->shadowFirstColor();
+  svgGen->setShadowFirstColor(c);
+  QPalette p = b->palette();
+  QPalette::ColorRole role = b->backgroundRole();
+  p.setColor(role, c);
+  b->setPalette(p);
+  b->setToolTip(QString("Color1: %1").arg(c.name(QColor::HexArgb)));
+}
+
+void ThemeBuilderUI::slot_genShadowColor2BtnClicked(bool checked)
+{
+  Q_UNUSED(checked);
+
+  QToolButton *b = qobject_cast<QToolButton *>(sender());
+
+  QColor c = QColorDialog::getColor(svgGen->shadowSecondColor(),
+                                    NULL,
+                                    QString("Select color"),
+                                    QColorDialog::ShowAlphaChannel);
+
+  if ( !c.isValid() )
+    c = svgGen->shadowSecondColor();
+  svgGen->setShadowSecondColor(c);
+  QPalette p = b->palette();
+  QPalette::ColorRole role = b->backgroundRole();
+  p.setColor(role, c);
+  b->setPalette(p);
+  b->setToolTip(QString("Color1: %1").arg(c.name(QColor::HexArgb)));
+}
+
+void ThemeBuilderUI::slot_genShadowWidthChanged(qreal val)
+{
+  svgGen->setShadowWidth(val);
+}
+
 void ThemeBuilderUI::setupSvgGenUI()
 {
   genFrameBtn->setChecked(svgGen->hasFrame());
   genInteriorBtn->setChecked(svgGen->hasInterior());
   genInteriorRoundnessSpin->setEnabled(!svgGen->hasFrame());
   genShadowBtn->setChecked(svgGen->hasShadow());
+
+  slot_genFrameBtnClicked(svgGen->hasFrame());
+  slot_genInteriorBtnClicked(svgGen->hasInterior());
+  slot_genShadowBtnClicked(svgGen->hasShadow());
 
   genSquareBtn->setChecked(svgGen->isSquare());
   genRoundBtn->setChecked(svgGen->roundMode());
@@ -2727,6 +2878,7 @@ void ThemeBuilderUI::setupSvgGenUI()
   slot_genFrameWidthChanged(svgGen->frameWidth());
 
   setupInteriorPropsUI();
+  setupShadowPropsUI();
 }
 
 void ThemeBuilderUI::setupSubFramePropsUI(GenSubFramePropUI *w)
@@ -2801,10 +2953,49 @@ void ThemeBuilderUI::setupInteriorPropsUI()
 
   interiorColor2Btn->setEnabled(
         svgGen->interiorFillType() != SvgGenInterior::FillTypeFlat);
+
+  genInteriorRoundnessSpin->setValue(svgGen->interiorRoundness());
+}
+
+void ThemeBuilderUI::setupShadowPropsUI()
+{
+  QPalette p = shadowColor1Btn->palette();
+  QPalette::ColorRole role = shadowColor1Btn->backgroundRole();
+  QColor c = svgGen->shadowFirstColor();
+  p.setColor(role, c);
+  shadowColor1Btn->setPalette(p);
+  shadowColor1Btn->setToolTip(QString("Color1: %1")
+                                   .arg(c.name(QColor::HexArgb)));
+  p = shadowColor2Btn->palette();
+  role = shadowColor2Btn->backgroundRole();
+  c = svgGen->shadowSecondColor();
+  p.setColor(role, c);
+  shadowColor2Btn->setToolTip(QString("Color2: %1")
+                                   .arg(c.name(QColor::HexArgb)));
+  shadowColor2Btn->setPalette(p);
+  SvgGenSubFrame::FillType ft = svgGen->shadowFillType();
+  switch (ft) {
+    case SvgGenSubFrame::FillTypeFlat:
+      shadowFillTypeBtn->setText("F");
+      break;
+    case SvgGenSubFrame::FillTypeGradient:
+      shadowFillTypeBtn->setText("G");
+      break;
+    case SvgGenSubFrame::FillTypeInvertedGradient:
+      shadowFillTypeBtn->setText("IG");
+      break;
+  }
+
+  shadowColor2Btn->setEnabled(
+        svgGen->shadowFillType() != SvgGenSubFrame::FillTypeFlat);
+
+  genShadowWidthSpin->setValue(svgGen->shadowWidth());
 }
 
 void ThemeBuilderUI::slot_inheritCbChanged(int state)
 {
+  blockUISignals(true);
+
   inheritCombo->removeItem(inheritCombo->findText("<invalid>"));
 
   if ( state == Qt::Checked ) {
@@ -2823,6 +3014,7 @@ void ThemeBuilderUI::slot_inheritCbChanged(int state)
     inheritCombo->setCurrentIndex(-1);
   }
 
+  blockUISignals(false);
   schedulePreviewUpdate();
 }
 
@@ -2835,6 +3027,8 @@ void ThemeBuilderUI::slot_inheritComboChanged(int idx)
 
 void ThemeBuilderUI::slot_frameCbChanged(int state)
 {
+  blockSignals(true);
+
   if ( (state == Qt::Checked) || (state == Qt::PartiallyChecked) ) {
     frameIdCb->setEnabled(true);
     frameWidthCb->setEnabled(true);
@@ -2849,13 +3043,14 @@ void ThemeBuilderUI::slot_frameCbChanged(int state)
   }
   if ( state == Qt::PartiallyChecked ) {
     frameEdit->setEnabled(false);
-    frameEdit->setText("<inherit>");
-    //frameEdit->setText(QString("inherit=<%1>").arg(es.frame.hasFrame ? "yes" : "no"));
+    frameEdit->setText(QString("=%1").arg(inherit_es.frame.hasFrame ? "yes" : "no"));
   }
   if ( state == Qt::Unchecked ) {
     frameEdit->setEnabled(false);
     frameEdit->setText("<no>");
   }
+
+  blockSignals(false);
 
   slot_frameIdCbChanged(frameIdCb->checkState());
   slot_frameWidthCbChanged(frameWidthCb->checkState());
@@ -2865,6 +3060,8 @@ void ThemeBuilderUI::slot_frameCbChanged(int state)
 
 void ThemeBuilderUI::slot_frameIdCbChanged(int state)
 {
+  blockSignals(true);
+
   if ( state == Qt::Checked ) {
     frameIdCombo->setEnabled(frameCb->isChecked());
   } else {
@@ -2881,12 +3078,13 @@ void ThemeBuilderUI::slot_frameIdCbChanged(int state)
     }
   }
   if ( state == Qt::PartiallyChecked ) {
-    frameIdCombo->setEditText("<inherit>");
+    frameIdCombo->setEditText(QString("=%1").arg(inherit_es.frame.element));
   }
   if ( state == Qt::Unchecked ) {
     frameIdCombo->setEditText("<none>");
   }
 
+  blockSignals(false);
   schedulePreviewUpdate();
 }
 
@@ -2899,6 +3097,8 @@ void ThemeBuilderUI::slot_frameIdComboChanged(const QString& text)
 
 void ThemeBuilderUI::slot_frameWidthCbChanged(int state)
 {
+  blockUISignals(true);
+
   if ( state == Qt::Checked ) {
     frameWidthSpin->setEnabled(frameCb->isChecked());
     frameWidthSpin->setSpecialValueText(QString());
@@ -2910,12 +3110,13 @@ void ThemeBuilderUI::slot_frameWidthCbChanged(int state)
     frameWidthSpin->setValue(frameWidthSpin->minimum());
   }
   if ( state == Qt::PartiallyChecked ) {
-    frameWidthSpin->setSpecialValueText("<inherit>");
+    frameWidthSpin->setSpecialValueText(QString("=%1").arg(inherit_es.frame.width));
   }
   if ( state == Qt::Unchecked ) {
     frameWidthSpin->setSpecialValueText("<none>");
   }
 
+  blockUISignals(false);
   schedulePreviewUpdate();
 }
 
@@ -2928,6 +3129,8 @@ void ThemeBuilderUI::slot_frameWidthSpinChanged(int val)
 
 void ThemeBuilderUI::slot_interiorCbChanged(int state)
 {
+  blockUISignals(true);
+
   if ( (state == Qt::Checked) || (state == Qt::PartiallyChecked) ) {
     interiorIdCb->setEnabled(true);
     interiorRepeatCb->setEnabled(true);
@@ -2942,12 +3145,14 @@ void ThemeBuilderUI::slot_interiorCbChanged(int state)
   }
   if ( state == Qt::PartiallyChecked ) {
     interiorEdit->setEnabled(false);
-    interiorEdit->setText("<inherit>");
+    interiorEdit->setText(QString("=%1").arg(inherit_es.interior.hasInterior ? "yes" : "no"));
   }
   if ( state == Qt::Unchecked ) {
     interiorEdit->setEnabled(false);
     interiorEdit->setText("<no>");
   }
+
+  blockUISignals(false);
 
   slot_interiorIdCbChanged(interiorIdCb->checkState());
   slot_interiorRepeatCbChanged(interiorRepeatCb->checkState());
@@ -2957,6 +3162,8 @@ void ThemeBuilderUI::slot_interiorCbChanged(int state)
 
 void ThemeBuilderUI::slot_interiorIdCbChanged(int state)
 {
+  blockSignals(true);
+
   if ( state == Qt::Checked ) {
     interiorIdCombo->setEnabled(interiorIdCb->isChecked());
   } else {
@@ -2973,12 +3180,13 @@ void ThemeBuilderUI::slot_interiorIdCbChanged(int state)
     }
   }
   if ( state == Qt::PartiallyChecked ) {
-    interiorIdCombo->setEditText("<inherit>");
+    interiorIdCombo->setEditText(QString("=%1").arg(inherit_es.frame.element));
   }
   if ( state == Qt::Unchecked ) {
     interiorIdCombo->setEditText("<none>");
   }
 
+  blockUISignals(false);
   schedulePreviewUpdate();
 }
 
@@ -2991,6 +3199,8 @@ void ThemeBuilderUI::slot_interiorIdComboChanged(const QString &text)
 
 void ThemeBuilderUI::slot_interiorRepeatCbChanged(int state)
 {
+  blockUISignals(true);
+
   if ( state == Qt::Checked ) {
     interiorRepeatXSpin->setEnabled(interiorRepeatCb->isChecked());
     interiorRepeatXSpin->setSpecialValueText(QString());
@@ -3011,14 +3221,22 @@ void ThemeBuilderUI::slot_interiorRepeatCbChanged(int state)
     interiorRepeatYSpin->setValue(interiorRepeatXSpin->minimum());
   }
   if ( state == Qt::PartiallyChecked ) {
-    interiorRepeatXSpin->setSpecialValueText("<inherit>");
-    interiorRepeatYSpin->setSpecialValueText("<inherit>");
+    if ( inherit_es.interior.px > 0 )
+      interiorRepeatXSpin->setSpecialValueText(QString("=%1").arg(inherit_es.interior.px));
+    else
+      interiorRepeatXSpin->setSpecialValueText("=none");
+
+    if ( inherit_es.interior.py > 0 )
+      interiorRepeatYSpin->setSpecialValueText(QString("=%1").arg(inherit_es.interior.py));
+    else
+      interiorRepeatYSpin->setSpecialValueText("=none");
   }
   if ( state == Qt::Unchecked ) {
     interiorRepeatXSpin->setSpecialValueText("<none>");
     interiorRepeatYSpin->setSpecialValueText("<none>");
   }
 
+  blockUISignals(false);
   schedulePreviewUpdate();
 }
 
@@ -3038,6 +3256,8 @@ void ThemeBuilderUI::slot_interiorRepeatYSpinChanged(int val)
 
 void ThemeBuilderUI::slot_labelSpacingCbChanged(int state)
 {
+  blockUISignals(true);
+
   if ( state == Qt::Checked ) {
     labelSpacingSpin->setEnabled(true);
     labelSpacingSpin->setSpecialValueText(QString());
@@ -3049,12 +3269,13 @@ void ThemeBuilderUI::slot_labelSpacingCbChanged(int state)
     labelSpacingSpin->setValue(labelSpacingSpin->minimum());
   }
   if ( state == Qt::PartiallyChecked ) {
-    labelSpacingSpin->setSpecialValueText("<inherit>");
+    labelSpacingSpin->setSpecialValueText(QString("=%1").arg(inherit_es.label.tispace));
   }
   if ( state == Qt::Unchecked ) {
     labelSpacingSpin->setSpecialValueText("<none>");
   }
 
+  blockUISignals(false);
   schedulePreviewUpdate();
 }
 
@@ -3067,6 +3288,8 @@ void ThemeBuilderUI::slot_labelSpacingSpinChanged(int val)
 
 void ThemeBuilderUI::slot_labelMarginCbChanged(int state)
 {
+  blockUISignals(true);
+
   if ( state == Qt::Checked ) {
     labelMarginHSpin->setEnabled(labelMarginCb->isChecked());
     labelMarginHSpin->setSpecialValueText(QString());
@@ -3087,14 +3310,15 @@ void ThemeBuilderUI::slot_labelMarginCbChanged(int state)
     labelMarginVSpin->setValue(labelMarginHSpin->minimum());
   }
   if ( state == Qt::PartiallyChecked ) {
-    labelMarginHSpin->setSpecialValueText("<inherit>");
-    labelMarginVSpin->setSpecialValueText("<inherit>");
+    labelMarginHSpin->setSpecialValueText(QString("=%1").arg(inherit_es.label.hmargin));
+    labelMarginVSpin->setSpecialValueText(QString("=%1").arg(inherit_es.label.vmargin));
   }
   if ( state == Qt::Unchecked ) {
     labelMarginHSpin->setSpecialValueText("<none>");
     labelMarginVSpin->setSpecialValueText("<none>");
   }
 
+  blockUISignals(false);
   schedulePreviewUpdate();
 }
 
@@ -3114,6 +3338,8 @@ void ThemeBuilderUI::slot_labelMarginVSpinChanged(int val)
 
 void ThemeBuilderUI::slot_indicatorIdCbChanged(int state)
 {
+  blockUISignals(true);
+
   if ( state == Qt::Checked ) {
     indicatorIdCombo->setEnabled(indicatorIdCb->isChecked());
   } else {
@@ -3130,12 +3356,13 @@ void ThemeBuilderUI::slot_indicatorIdCbChanged(int state)
     }
   }
   if ( state == Qt::PartiallyChecked ) {
-    indicatorIdCombo->setEditText("<inherit>");
+    indicatorIdCombo->setEditText(QString("=%1").arg(inherit_es.indicator.element));
   }
   if ( state == Qt::Unchecked ) {
     indicatorIdCombo->setEditText("<none>");
   }
 
+  blockUISignals(false);
   schedulePreviewUpdate();
 }
 
@@ -3148,6 +3375,8 @@ void ThemeBuilderUI::slot_indicatorIdComboChanged(const QString& text)
 
 void ThemeBuilderUI::slot_indicatorSizeCbChanged(int state)
 {
+  blockUISignals(true);
+
   if ( state == Qt::Checked ) {
     indicatorSizeSpin->setEnabled(indicatorSizeCb->isChecked());
     indicatorSizeSpin->setSpecialValueText(QString());
@@ -3159,12 +3388,13 @@ void ThemeBuilderUI::slot_indicatorSizeCbChanged(int state)
     indicatorSizeSpin->setValue(indicatorSizeSpin->minimum());
   }
   if ( state == Qt::PartiallyChecked ) {
-    indicatorSizeSpin->setSpecialValueText("<inherit>");
+    indicatorSizeSpin->setSpecialValueText(QString("=%1").arg(inherit_es.indicator.size));
   }
   if ( state == Qt::Unchecked ) {
     indicatorSizeSpin->setSpecialValueText("<none>");
   }
 
+  blockUISignals(false);
   schedulePreviewUpdate();
 }
 

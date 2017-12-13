@@ -339,7 +339,7 @@ class QSvgThemableStyle : public QCommonStyle {
                        /* indicator spec */ const indicator_spec_t &ds,
                        /* indicator SVG element */ const QString &e,
                        /* direction */ Qt::LayoutDirection dir = Qt::LeftToRight,
-                       Qt::Alignment alignment = Qt::AlignVCenter | Qt::AlignCenter) const;
+                       Qt::Alignment alignment = Qt::AlignCenter) const;
     /**
      * Generic method that draws a label (text and/or icon)
      */
@@ -374,8 +374,9 @@ class QSvgThemableStyle : public QCommonStyle {
                      /* interior spec */ const interior_spec_t &ispec,
                      /* label spec */ const label_spec_t &lspec,
                      /* text */ const QString &text,
-                     /* icon */ const QPixmap &icon,
+                     /* icon size */ int iconsz = 0,
                      /* text-icon alignment */ const Qt::ToolButtonStyle tialign = Qt::ToolButtonTextBesideIcon) const;
+
     /**
      * Returns the squared rect that can fit inside the given rect
      * The topleft of the result is the same as the topleft of @ref r

@@ -40,11 +40,11 @@ private:
 public:
   bool present;
 
-  value_t () : present(false) { };
+  value_t () : present(false) { }
   value_t (const QVariant &v) {
     present = !v.isNull();
     value = v.value<T>();
-  };
+  }
 
   value_t<T> & operator = (const T &v) {
     present = true;
@@ -57,6 +57,10 @@ public:
   operator T & () {
     return value;
   }
+  bool operator == (const value_t<T> &v) {
+    return ( (present == v.present) && (value == v.value) );
+  }
+
   operator QVariant() const {
     if ( present )
       return QVariant(value);

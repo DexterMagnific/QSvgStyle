@@ -118,6 +118,7 @@ class ThemeBuilderUI : public QMainWindow, private Ui::ThemeBuilderUIBase {
     // called on SVG Gen tab changes
     void slot_genFrameBtnClicked(bool checked);
     void slot_genInteriorBtnClicked(bool checked);
+    void slot_genShadowBtnClicked(bool checked);
     void slot_genRoundBtnClicked(bool checked);
     void slot_genSplitBtnClicked(bool checked);
     void slot_genFrameWidthChanged(int val);
@@ -134,7 +135,10 @@ class ThemeBuilderUI : public QMainWindow, private Ui::ThemeBuilderUIBase {
     void slot_genInteriorFillTypeBtnClicked(bool checked);
     void slot_genInteriorColor1BtnClicked(bool checked);
     void slot_genInteriorColor2BtnClicked(bool checked);
-
+    void slot_genShadowFillTypeBtnClicked(bool checked);
+    void slot_genShadowColor1BtnClicked(bool checked);
+    void slot_genShadowColor2BtnClicked(bool checked);
+    void slot_genShadowWidthChanged(qreal val);
 
     // Callbacks from QSvgStyle that are triggered when it renders widgets
     void slot_drawPrimitive_begin(const QString &s);
@@ -192,7 +196,13 @@ class ThemeBuilderUI : public QMainWindow, private Ui::ThemeBuilderUIBase {
 
     // When called, starts a timer that will trigger
     // settings of current group to be saved and then preview update
+    // The flow is as follows:
+    // schedulePreviewpdate() -> timer -> slot_uiSettingsChanged() -> saveSettingsFromUi()
+    // -> repaint of widget
     void schedulePreviewUpdate(bool modified = true);
+
+    // Block signals from various UI widgets while we are changing them
+    void blockUISignals(bool blocked);
 
     // Setup the UI to reflect the settings for the given item
     void setupUiForWidget(const QListWidgetItem *current);
@@ -213,12 +223,13 @@ class ThemeBuilderUI : public QMainWindow, private Ui::ThemeBuilderUIBase {
     void setupSubFramePropsUI(GenSubFramePropUI *w);
     // Setup Quick SVG Interior UI according to svgGen object
     void setupInteriorPropsUI();
+    // Setup Quick SVG Shadow UI according to svgGen object
+    void setupShadowPropsUI();
 
     // Optimizes SVG
     void optimizeSvg(const QString& inPath, const QString& outPath);
 
     QTreeWidget *drawStackTree;
-//     QTreeWidget *resolvedValuesTree;
 
     // Menu for recent files
     QMenu *recentFiles;
@@ -230,8 +241,8 @@ class ThemeBuilderUI : public QMainWindow, private Ui::ThemeBuilderUIBase {
     ThemeConfig *config;
     // current element spec, as read from the config file
     element_spec_t raw_es;
-    // current element spec, with inheritance resolved
-    element_spec_t es;
+    // element spec of inherited
+    element_spec_t inherit_es;
 
     // an instance of QSvgStyle
     QSvgThemableStyle *style;

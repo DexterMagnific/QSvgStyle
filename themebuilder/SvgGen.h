@@ -181,7 +181,6 @@ class SvgGen : public QObject {
 
     void setFrameWidth(int width);
     void setSubFrameWidth(int idx, qreal width);
-    void setShadowWidth(qreal val);
     /* roundness of iterior when object does not have a frame */
     void setInteriorRoundness(qreal val);
     void setSubFrameFillType(int idx, SvgGenSubFrame::FillType type);
@@ -190,6 +189,10 @@ class SvgGen : public QObject {
     void setInteriorFillType(SvgGenInterior::FillType type);
     void setInteriorFirstColor(const QColor &c);
     void setInteriorSecondColor(const QColor &c);
+    void setShadowWidth(qreal val);
+    void setShadowFirstColor(const QColor &c);
+    void setShadowSecondColor(const QColor &c);
+    void setShadowFillType(SvgGenSubFrame::FillType type);
 
     void setBaseName(const QString &val) { m_basename = val; }
     void setVariant(const QString &val) { m_variant = val; }
@@ -249,13 +252,32 @@ class SvgGen : public QObject {
       else
         return QColor();
     }
+    qreal shadowWidth() const { return shadowwidth; }
+    QColor shadowFirstColor() const {
+      if ( shadow )
+        return shadow->firstColor();
+      else
+        return QColor();
+    }
+    QColor shadowSecondColor() const {
+      if ( shadow )
+        return shadow->secondColor();
+      else
+        return QColor();
+    }
+    SvgGenSubFrame::FillType shadowFillType() const {
+      if ( shadow )
+        return shadow->fillType();
+      else
+        return SvgGenSubFrame::FillTypeFirst;
+    }
 
     QDomDocument toSvg();
 
   private:
     void pushSubFrame();
     void popSubFrame();
-    void calc();
+    void rebuildShadow();
 
     qreal width,height,shadowwidth;
     int framewidth;
@@ -265,6 +287,8 @@ class SvgGen : public QObject {
     QGraphicsScene *scene;
     QVector<SvgGenSubFrame *> subFrames;
     SvgGenInterior *interior;
+    // shadows are like subframes, but with special treatment for colors
+    SvgGenSubFrame *shadow;
     QGraphicsPathItem *cross;
 };
 
