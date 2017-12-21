@@ -14,12 +14,8 @@ QSvgStyle
 * implement PE_FrameTabBarBase
 * implement PE_IndicatorTabTear*
 
--- Title bar
-* implement icon states
-
 -- Toolbar
 * rtl separators/handles
-* disabled separators/handles
 
 -- Progressbar
 * overdraw in busy progress bar in vertical mode
@@ -57,7 +53,6 @@ will overlap the title
 QSvgThemeBuilder
 ----------------
 * fix tab order
-* implement QDial
 
 QSvgThemeManager
 ----------------

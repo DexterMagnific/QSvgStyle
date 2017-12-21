@@ -534,6 +534,14 @@ ThemeBuilderUI::ThemeBuilderUI(QWidget* parent)
           this,SLOT(slot_genSplitBtnClicked(bool)));
   connect(genFrameWidthSpin,SIGNAL(valueChanged(int)),
           this,SLOT(slot_genFrameWidthChanged(int)));
+  connect(genFrameTopBtn,SIGNAL(clicked(bool)),
+          this,SLOT(slot_genFrameTopBtnClicked(bool)));
+  connect(genFrameBottomBtn,SIGNAL(clicked(bool)),
+          this,SLOT(slot_genFrameBottomBtnClicked(bool)));
+  connect(genFrameLeftBtn,SIGNAL(clicked(bool)),
+          this,SLOT(slot_genFrameLeftBtnClicked(bool)));
+  connect(genFrameRightBtn,SIGNAL(clicked(bool)),
+          this,SLOT(slot_genFrameRightBtnClicked(bool)));
   connect(genInteriorRoundnessSpin,SIGNAL(valueChanged(qreal)),
           this,SLOT(slot_genInteriorRoundnessChanged(qreal)));
   connect(genSquareBtn,SIGNAL(clicked(bool)),
@@ -560,6 +568,15 @@ ThemeBuilderUI::ThemeBuilderUI(QWidget* parent)
           this,SLOT(slot_genShadowColor2BtnClicked(bool)));
   connect(genShadowWidthSpin,SIGNAL(valueChanged(qreal)),
           this,SLOT(slot_genShadowWidthChanged(qreal)));
+  connect(genShadowTopBtn,SIGNAL(clicked(bool)),
+          this,SLOT(slot_genShadowTopBtnClicked(bool)));
+  connect(genShadowBottomBtn,SIGNAL(clicked(bool)),
+          this,SLOT(slot_genShadowBottomBtnClicked(bool)));
+  connect(genShadowLeftBtn,SIGNAL(clicked(bool)),
+          this,SLOT(slot_genShadowLeftBtnClicked(bool)));
+  connect(genShadowRightBtn,SIGNAL(clicked(bool)),
+          this,SLOT(slot_genShadowRightBtnClicked(bool)));
+
 
   // style callbacks
   if ( style ) {
@@ -1237,8 +1254,8 @@ void ThemeBuilderUI::slot_optimizeSvg()
 
   svgWatcher.addPath(svgFile);
 
-  //statusbar->showMessage(QString("Optimized svg file: %1 -> %2 bytes").arg(oldsize).arg(newsize),
-  //                       10000);
+  statusbar->showMessage(QString("Optimized svg file: %1 -> %2 bytes").arg(oldsize).arg(newsize),
+                         10000);
 
   qDebug() << "[QSvgThemeBuilder]" << "Optimized" << svgFile
     << QString("(%1 -> %2 bytes)").arg(oldsize).arg(newsize);
@@ -2508,6 +2525,30 @@ void ThemeBuilderUI::slot_genSplitBtnClicked(bool checked)
   svgGen->setSplitMode(checked);
 }
 
+void ThemeBuilderUI::slot_genFrameTopBtnClicked(bool checked)
+{
+  svgGen->setHasTopFrame(checked);
+  genShadowTopBtn->setEnabled(checked);
+}
+
+void ThemeBuilderUI::slot_genFrameBottomBtnClicked(bool checked)
+{
+  svgGen->setHasBottomFrame(checked);
+  genShadowBottomBtn->setEnabled(checked);
+}
+
+void ThemeBuilderUI::slot_genFrameLeftBtnClicked(bool checked)
+{
+  svgGen->setHasLeftFrame(checked);
+  genShadowLeftBtn->setEnabled(checked);
+}
+
+void ThemeBuilderUI::slot_genFrameRightBtnClicked(bool checked)
+{
+  svgGen->setHasRightFrame(checked);
+  genShadowRightBtn->setEnabled(checked);
+}
+
 void ThemeBuilderUI::slot_genFrameWidthChanged(int val)
 {
   svgGen->setFrameWidth(val);
@@ -2595,6 +2636,8 @@ void ThemeBuilderUI::slot_genCopyBtnClicked(bool checked)
   m->setData("image/svg+xml", data);
 
   qApp->clipboard()->setMimeData(m, QClipboard::Clipboard);
+
+  statusbar->showMessage("SVG copied to clipboard !", 10000);
 }
 
 void ThemeBuilderUI::slot_genBasenameChanged(const QString &text)
@@ -2855,6 +2898,26 @@ void ThemeBuilderUI::slot_genShadowWidthChanged(qreal val)
   svgGen->setShadowWidth(val);
 }
 
+void ThemeBuilderUI::slot_genShadowTopBtnClicked(bool checked)
+{
+  svgGen->setHasTopShadow(checked);
+}
+
+void ThemeBuilderUI::slot_genShadowBottomBtnClicked(bool checked)
+{
+  svgGen->setHasBottomShadow(checked);
+}
+
+void ThemeBuilderUI::slot_genShadowLeftBtnClicked(bool checked)
+{
+  svgGen->setHasLeftShadow(checked);
+}
+
+void ThemeBuilderUI::slot_genShadowRightBtnClicked(bool checked)
+{
+  svgGen->setHasRightShadow(checked);
+}
+
 void ThemeBuilderUI::setupSvgGenUI()
 {
   genFrameBtn->setChecked(svgGen->hasFrame());
@@ -2876,6 +2939,11 @@ void ThemeBuilderUI::setupSvgGenUI()
 
   genFrameWidthSpin->setValue(svgGen->frameWidth());
   slot_genFrameWidthChanged(svgGen->frameWidth());
+
+  genFrameTopBtn->setChecked(svgGen->hasTopFrame());
+  genFrameBottomBtn->setChecked(svgGen->hasBottomFrame());
+  genFrameLeftBtn->setChecked(svgGen->hasLeftFrame());
+  genFrameRightBtn->setChecked(svgGen->hasRightFrame());
 
   setupInteriorPropsUI();
   setupShadowPropsUI();
@@ -2959,6 +3027,15 @@ void ThemeBuilderUI::setupInteriorPropsUI()
 
 void ThemeBuilderUI::setupShadowPropsUI()
 {
+  genShadowTopBtn->setEnabled(svgGen->hasTopFrame());
+  genShadowTopBtn->setChecked(svgGen->hasTopShadow());
+  genShadowBottomBtn->setEnabled(svgGen->hasBottomFrame());
+  genShadowBottomBtn->setChecked(svgGen->hasBottomShadow());
+  genShadowLeftBtn->setEnabled(svgGen->hasLeftFrame());
+  genShadowLeftBtn->setChecked(svgGen->hasLeftShadow());
+  genShadowRightBtn->setEnabled(svgGen->hasRightFrame());
+  genShadowRightBtn->setChecked(svgGen->hasRightShadow());
+
   QPalette p = shadowColor1Btn->palette();
   QPalette::ColorRole role = shadowColor1Btn->backgroundRole();
   QColor c = svgGen->shadowFirstColor();

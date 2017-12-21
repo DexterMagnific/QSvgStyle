@@ -121,6 +121,10 @@ class ThemeBuilderUI : public QMainWindow, private Ui::ThemeBuilderUIBase {
     void slot_genShadowBtnClicked(bool checked);
     void slot_genRoundBtnClicked(bool checked);
     void slot_genSplitBtnClicked(bool checked);
+    void slot_genFrameTopBtnClicked(bool checked);
+    void slot_genFrameBottomBtnClicked(bool checked);
+    void slot_genFrameLeftBtnClicked(bool checked);
+    void slot_genFrameRightBtnClicked(bool checked);
     void slot_genFrameWidthChanged(int val);
     void slot_genInteriorRoundnessChanged(qreal val);
     void slot_genSquareBtnClicked(bool checked);
@@ -139,6 +143,10 @@ class ThemeBuilderUI : public QMainWindow, private Ui::ThemeBuilderUIBase {
     void slot_genShadowColor1BtnClicked(bool checked);
     void slot_genShadowColor2BtnClicked(bool checked);
     void slot_genShadowWidthChanged(qreal val);
+    void slot_genShadowTopBtnClicked(bool checked);
+    void slot_genShadowBottomBtnClicked(bool checked);
+    void slot_genShadowLeftBtnClicked(bool checked);
+    void slot_genShadowRightBtnClicked(bool checked);
 
     // Callbacks from QSvgStyle that are triggered when it renders widgets
     void slot_drawPrimitive_begin(const QString &s);

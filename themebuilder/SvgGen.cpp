@@ -59,6 +59,9 @@ static QString painterPathToSvg_d(const QPainterPath &p)
     }
   }
 
+  // close path
+  res.append("Z");
+
   return res;
 }
 
@@ -171,39 +174,81 @@ QDomDocumentFragment SvgGenInterior::toSvg(QDomDocument &doc)
   p.setAttribute("style",QString("stroke:none;fill:%1;fill-opacity:%3")
                  .arg(color1.name(QColor::HexRgb))
                  .arg(color1.alphaF()));
-  p.setAttribute("transform", QString("translate(%1,%2)").arg(pos().x()).arg(pos().y()));
+  p.setAttribute("transform", QString("translate(%1,%2)")
+                 .arg(x())
+                 .arg(y()));
 
   res.appendChild(p);
 
   return res;
 }
 
-SvgGenSubFrame::SvgGenSubFrame(QGraphicsItem* parent)
-  : QObject(), QGraphicsPathItem(parent), color1(Qt::green),
+SvgGenSubFrame::SvgGenSubFrame()
+  : QObject(), QGraphicsItemGroup(NULL), color1(Qt::blue),
     color2(Qt::black), fill(FillTypeFlat)
 {
-  setPen(QPen(Qt::NoBrush,0));
-
-  width = height = 100;
+  m_width = m_height = 100;
   roundness = 0;
   sbwidth = 10;
   split = false;
+  round = true;
+  hastop = hasbottom = hasleft = hasright = true;
+
+  top = new QGraphicsPathItem();
+  bottom = new QGraphicsPathItem();
+  left = new QGraphicsPathItem();
+  right = new QGraphicsPathItem();
+  topleft = new QGraphicsPathItem();
+  topright = new QGraphicsPathItem();
+  bottomleft = new QGraphicsPathItem();
+  bottomright = new QGraphicsPathItem();
+
+  QPen p(Qt::NoPen);
+  QBrush b(color1);
+
+  top->setPen(p);
+  bottom->setPen(p);
+  left->setPen(p);
+  right->setPen(p);
+  topleft->setPen(p);
+  topright->setPen(p);
+  bottomleft->setPen(p);
+  bottomright->setPen(p);
+
+  top->setBrush(b);
+  bottom->setBrush(b);
+  left->setBrush(b);
+  right->setBrush(b);
+  topleft->setBrush(b);
+  topright->setBrush(b);
+  bottomleft->setBrush(b);
+  bottomright->setBrush(b);
+
+  addToGroup(top);
+  addToGroup(bottom);
+  addToGroup(left);
+  addToGroup(right);
+  addToGroup(topleft);
+  addToGroup(topright);
+  addToGroup(bottomleft);
+  addToGroup(bottomright);
 
   calcSubFrame();
 }
 
 SvgGenSubFrame::SvgGenSubFrame(const SvgGenSubFrame* prev)
-  : QObject(), QGraphicsPathItem(NULL), color1(Qt::green),
-    color2(Qt::black), fill(FillTypeFlat)
+  : SvgGenSubFrame()
 {
-  setPen(QPen(Qt::NoBrush,0));
-
-  width = prev->outerSubFrameRect().width();
-  height =  prev->outerSubFrameRect().height();
+  m_width = prev->width();
+  m_height =  prev->height();
   roundness = prev->outerCornerRoundness();
   sbwidth = prev->subFrameWidth();
-  roundCorners = prev->hasRoundCorners();
+  round = prev->hasRoundCorners();
   split = prev->isSplit();
+  hastop = prev->hasTop();
+  hasbottom = prev->hasBottom();
+  hasleft = prev->hasLeft();
+  hasright = prev->hasRight();
 
   QPointF p = prev->pos()-QPointF(sbwidth,sbwidth);
   setPos(p);
@@ -213,16 +258,15 @@ SvgGenSubFrame::SvgGenSubFrame(const SvgGenSubFrame* prev)
 }
 
 SvgGenSubFrame::SvgGenSubFrame(const QSizeF &sz, qreal sbwidth, qreal roundness, bool round, bool split)
-  : QObject(), QGraphicsPathItem(NULL), color1(Qt::green),
-    color2(Qt::black), fill(FillTypeFlat)
+  : SvgGenSubFrame()
 {
-  setPen(QPen(Qt::NoBrush,0));
-  width = sz.width();
-  height = sz.height();
+  m_width = sz.width();
+  m_height = sz.height();
   this->sbwidth = sbwidth;
   this->roundness = roundness;
-  roundCorners = round;
+  this->round = round;
   this->split = split;
+  hastop = hasbottom = hasleft = hasright = true;
 
   calcSubFrame();
 }
@@ -233,8 +277,8 @@ SvgGenSubFrame::~SvgGenSubFrame()
 
 void SvgGenSubFrame::setSize(const QSizeF& sz)
 {
-  width = sz.width();
-  height = sz.height();
+  m_width = sz.width();
+  m_height = sz.height();
 
   calcSubFrame();
 }
@@ -255,7 +299,7 @@ void SvgGenSubFrame::setSubFrameWidth(qreal val)
 
 void SvgGenSubFrame::setRoundCorners(bool hasIt)
 {
-  roundCorners = hasIt;
+  round = hasIt;
 
   calcSubFrame();
 }
@@ -265,17 +309,6 @@ void SvgGenSubFrame::setSplitMode(bool val)
   split = val;
 
   calcSubFrame();
-}
-
-QRectF SvgGenSubFrame::outerSubFrameRect() const
-{
-  qreal penw = pen().widthF();
-  QRectF r = boundingRect().adjusted(penw/2,penw/2,-penw/2,-penw/2);
-  if ( split ) {
-    const qreal d = 10.0;
-    r.adjust(d,d,-d,-d);
-  }
-  return r;
 }
 
 void SvgGenSubFrame::setFirstColor(const QColor &c)
@@ -290,250 +323,177 @@ void SvgGenSubFrame::setSecondColor(const QColor &c)
   calcFill();
 }
 
+void SvgGenSubFrame::setHasTop(bool hasIt)
+{
+  hastop = hasIt;
+
+  calcFill();
+}
+
+void SvgGenSubFrame::setHasBottom(bool hasIt)
+{
+  hasbottom = hasIt;
+
+  calcFill();
+}
+
+void SvgGenSubFrame::setHasLeft(bool hasIt)
+{
+  hasleft = hasIt;
+
+  calcFill();
+}
+
+void SvgGenSubFrame::setHasRight(bool hasIt)
+{
+  hasright = hasIt;
+
+  calcFill();
+}
+
 void SvgGenSubFrame::setFillType(FillType type)
 {
   fill = type;
   calcFill();
 }
 
+QRectF SvgGenSubFrame::boundingRect() const
+{
+  return top->mapRectToParent(top->boundingRect()).united(
+        bottom->mapRectToParent(bottom->boundingRect())).united(
+        left->mapRectToParent(left->boundingRect())).united(
+        right->mapRectToParent(right->boundingRect())).united(
+        topleft->mapRectToParent(topleft->boundingRect())).united(
+        topright->mapRectToParent(topright->boundingRect())).united(
+        bottomleft->mapRectToParent(bottomleft->boundingRect())).united(
+        bottomright->mapRectToParent(bottomright->boundingRect()));
+}
+
 void SvgGenSubFrame::calcSubFrame()
 {
-  // in this function, prefix i=inner, o=outer
-  QRectF isfRect = QRectF(0,0,width,height);
-  QRectF osfRect = isfRect.marginsAdded(QMargins(sbwidth,sbwidth,sbwidth,sbwidth));
+  // NOTE all parts will be built at 0,0 and then moved to their final location
+  QPainterPath tl,tr,bl,br;
+  QPainterPath t,b,l,r;
 
-  // Adapted from QPainterPath.cpp::addRoundedRect()
-  qreal w,h,x,y;
-  qreal xr, yr; // X Radius, Y Radius
-  qreal rxx2, ryy2;
+  // reminder: thickness of subframe is sbwidth
+  // width,height is the size the sides (without corners)
 
-  QPainterPath itop,ibottom,ileft,iright,itopleft,itopright,ibottomleft,ibottomright;
-  QPainterPath otop,obottom,oleft,oright,otopleft,otopright,obottomleft,obottomright;
+  // outer corner size
+  qreal oR = roundness+sbwidth;
+  // inner corner size
+  qreal iR = roundness;
 
-  // Inner subframe
-  isfRect.getRect(&x,&y,&w,&h);
+  // sides
+  t.addRect(0,0,m_width,sbwidth);
+  top->setPath(t);
+  top->setPos(0,-oR);
 
-  // first subframe has always zero roundness (it is always square)
-  // as it it not possible to add points to paths (only lines),
-  // cheat here
-  // FIXME causes graphic artifact
-  bool zeroRoundness = (roundness == 0);
-  if ( !roundness )
-    roundness = qreal(0.00000001);
+  b.addRect(0,0,m_width,sbwidth);
+  bottom->setPath(b);
+  bottom->setPos(0,m_height+iR);
 
-  if ( !roundCorners ) {
-    itopleft.moveTo(x,y+roundness);
-    itopleft.lineTo(x,y);
-    itopleft.lineTo(x+roundness,y);
+  l.addRect(0,0,sbwidth,m_height);
+  left->setPath(l);
+  left->setPos(-oR,0);
 
-    itopright.moveTo(x+w-roundness,y);
-    itopright.lineTo(x+w,y);
-    itopright.lineTo(x+w,y+roundness);
+  r.addRect(0,0,sbwidth,m_height);
+  right->setPath(r);
+  right->setPos(m_width+iR,0);
 
-    ibottomright.moveTo(x+w,y+h-roundness);
-    ibottomright.lineTo(x+w,y+h);
-    ibottomright.lineTo(x+w-roundness,y+h);
-
-    ibottomleft.moveTo(x+roundness,y+h);
-    ibottomleft.lineTo(x,y+h);
-    ibottomleft.lineTo(x,y+h-roundness);
+  // corners
+  if ( round ) {
+    tl.moveTo(0,oR);
+    tl.arcTo(0,0,2*oR,2*oR, 180/*start angle*/, -90/*length*/);
+    tl.lineTo(oR,sbwidth);
+    tl.arcTo(sbwidth,sbwidth,2*iR,2*iR, 90, 90);
   } else {
-    xr = yr = roundness;
-    // translate absolute roundness into relative one to w/2 or h/2
-    if (w == 0) {
-      xr = 0;
-    } else {
-      xr = 100 * qMin(xr, w/2) / (w/2);
-    }
-    if (h == 0) {
-      yr = 0;
-    } else {
-      yr = 100 * qMin(yr, h/2) / (h/2);
-    }
-
-    rxx2 = w*xr/100;
-    ryy2 = h*yr/100;
-
-    // draw corners
-    itopleft.arcMoveTo(x, y, rxx2, ryy2, 180);
-    itopleft.arcTo(x, y, rxx2, ryy2, 180, -90); // topleft
-
-    itopright.moveTo(x+w-rxx2/2,y);
-    itopright.arcTo(x+w-rxx2, y, rxx2, ryy2, 90, -90); // topright
-
-    ibottomright.moveTo(x+w,y+h-ryy2/2);
-    ibottomright.arcTo(x+w-rxx2, y+h-ryy2, rxx2, ryy2, 0, -90); // bottomright
-
-    ibottomleft.moveTo(x+rxx2/2,y+h);
-    ibottomleft.arcTo(x, y+h-ryy2, rxx2, ryy2, 270, -90); // bottomleft
-    // END
+    tl.moveTo(0,0);
+    tl.lineTo(oR,0);
+    tl.lineTo(oR,sbwidth);
+    tl.lineTo(sbwidth,sbwidth);
+    tl.lineTo(sbwidth,oR);
+    tl.lineTo(0,oR);
   }
+  topleft->setPath(tl);
+  topleft->setPos(-oR,-oR);
 
-  // join corners
-  itop.moveTo(itopleft.currentPosition()); // top
-  itop.lineTo(itopright.elementAt(0));
-
-  ileft.moveTo(itopleft.elementAt(0)); // left
-  ileft.lineTo(ibottomleft.currentPosition());
-
-  ibottom.moveTo(ibottomleft.elementAt(0)); // bottom
-  ibottom.lineTo(ibottomright.currentPosition());
-
-  iright.moveTo(itopright.currentPosition()); // right
-  iright.lineTo(ibottomright.elementAt(0));
-
-  // Outer subframe
-  osfRect.getRect(&x,&y,&w,&h);
-
-  if ( zeroRoundness )
-    roundness = 0;
-
-  if ( !roundCorners ) {
-    otopleft.moveTo(x,y+roundness+sbwidth);
-    otopleft.lineTo(x,y);
-    otopleft.lineTo(x+roundness+sbwidth,y);
-
-    otopright.moveTo(x+w-roundness-sbwidth,y);
-    otopright.lineTo(x+w,y);
-    otopright.lineTo(x+w,y+roundness+sbwidth);
-
-    obottomright.moveTo(x+w,y+h-roundness-sbwidth);
-    obottomright.lineTo(x+w,y+h);
-    obottomright.lineTo(x+w-roundness-sbwidth,y+h);
-
-    obottomleft.moveTo(x+roundness+sbwidth,y+h);
-    obottomleft.lineTo(x,y+h);
-    obottomleft.lineTo(x,y+h-roundness-sbwidth);
+  if ( round ) {
+    // I cannot explain why this is not necessary
+    //tr.moveTo(0,0);
+    tr.arcTo(-oR,0,2*oR,2*oR, 90, -90);
+    tr.lineTo(iR,oR);
+    tr.arcTo(-iR,sbwidth,2*iR,2*iR, 0, 90);
   } else {
-    xr = yr = roundness+sbwidth;
-    // translate absolute roundness into relative one to w/2 or h/2
-    if (w == 0) {
-      xr = 0;
-    } else {
-      xr = 100 * qMin(xr, w/2) / (w/2);
-    }
-    if (h == 0) {
-      yr = 0;
-    } else {
-      yr = 100 * qMin(yr, h/2) / (h/2);
-    }
-
-    rxx2 = w*xr/100;
-    ryy2 = h*yr/100;
-
-    // draw corners first
-    otopleft.arcMoveTo(x, y, rxx2, ryy2, 180);
-    otopleft.arcTo(x, y, rxx2, ryy2, 180, -90); // topleft
-
-    otopright.moveTo(x+w-rxx2/2,y);
-    otopright.arcTo(x+w-rxx2, y, rxx2, ryy2, 90, -90); // topright
-
-    obottomright.moveTo(x+w,y+h-ryy2/2);
-    obottomright.arcTo(x+w-rxx2, y+h-ryy2, rxx2, ryy2, 0, -90); // bottomright
-
-    obottomleft.moveTo(x+rxx2/2,y+h);
-    obottomleft.arcTo(x, y+h-ryy2, rxx2, ryy2, 270, -90); // bottomleft
+    tr.moveTo(0,0);
+    tr.lineTo(oR,0);
+    tr.lineTo(oR,oR);
+    tr.lineTo(iR,oR);
+    tr.lineTo(iR,sbwidth);
+    tr.lineTo(0,sbwidth);
   }
+  topright->setPath(tr);
+  topright->setPos(m_width,-oR);
 
-  otop.moveTo(otopleft.currentPosition()); // top
-  otop.lineTo(otopright.elementAt(0));
-
-  oleft.moveTo(otopleft.elementAt(0)); // left
-  oleft.lineTo(obottomleft.currentPosition());
-
-  obottom.moveTo(obottomleft.elementAt(0)); // bottom
-  obottom.lineTo(obottomright.currentPosition());
-
-  oright.moveTo(otopright.currentPosition()); // right
-  oright.lineTo(obottomright.elementAt(0));
-
-  // Unite i* and o* elements
-  top = itop;
-  top.connectPath(otop.toReversed());
-  top.closeSubpath();
-
-  bottom = ibottom;
-  bottom.connectPath(obottom.toReversed());
-  bottom.closeSubpath();
-
-  left = ileft;
-  left.connectPath(oleft.toReversed());
-  left.closeSubpath();
-
-  right = iright;
-  right.connectPath(oright.toReversed());
-  right.closeSubpath();
-
-  topleft = itopleft;
-  topleft.connectPath(otopleft.toReversed());
-  topleft.closeSubpath();
-
-  bottomleft = ibottomleft;
-  bottomleft.connectPath(obottomleft.toReversed());
-  bottomleft.closeSubpath();
-
-  topright = itopright;
-  topright.connectPath(otopright.toReversed());
-  topright.closeSubpath();
-
-  bottomright = ibottomright;
-  bottomright.connectPath(obottomright.toReversed());
-  bottomright.closeSubpath();
-
-  if ( !split ) {
-    // Non split mode: unite corners into inner and outer subframes
-    QPainterPath isf, osf;
-
-    isf.addPath(itopleft);
-    isf.connectPath(itopright);
-    isf.connectPath(ibottomright);
-    isf.connectPath(ibottomleft);
-    isf.closeSubpath();
-
-    osf.addPath(otopleft);
-    osf.connectPath(otopright);
-    osf.connectPath(obottomright);
-    osf.connectPath(obottomleft);
-    osf.closeSubpath();
-
-    // Finally unite inner and outer subframes
-    osf.addPath(isf);
-    setPath(osf);
+  if ( round ) {
+    //bl.moveTo(0,0);
+    bl.arcTo(0,-oR,2*oR,2*oR, 180, 90);
+    bl.lineTo(oR,iR);
+    bl.arcTo(sbwidth,-iR,2*iR,2*iR, -90, -90);
   } else {
-    // split mode: add each part individually
+    bl.moveTo(0,0);
+    bl.lineTo(0,oR);
+    bl.lineTo(oR,oR);
+    bl.lineTo(oR,iR);
+    bl.lineTo(sbwidth,iR);
+    bl.lineTo(sbwidth,0);
+  }
+  bottomleft->setPath(bl);
+  bottomleft->setPos(-oR,m_height);
 
+  if ( round ) {
+    // I cannot explain why this gives wrong result. it should
+    // be necessary
+    //br.moveTo(0,oR);
+    // FIXME there is still an unecessary node at 0,0
+    br.arcTo(-oR,-oR,2*oR,2*oR, 0, -90);
+    br.lineTo(0,iR);
+    br.arcTo(-iR,-iR,2*iR,2*iR, -90, 90);
+  } else {
+    br.moveTo(oR,0);
+    br.lineTo(oR,oR);
+    br.lineTo(0,oR);
+    br.lineTo(0,iR);
+    br.lineTo(iR,iR);
+    br.lineTo(iR,0);
+  }
+  bottomright->setPath(br);
+  bottomright->setPos(m_width,m_height);
+
+  if ( split ) {
     const qreal d = 10.0;
-    top.translate(0,-d);
-    bottom.translate(0,d);
-
-    topleft.translate(-d,-d);
-    bottomleft.translate(-d,d);
-
-    topright.translate(d,-d);
-    bottomright.translate(d,d);
-
-    left.translate(-d,0);
-    right.translate(d,0);
-
-    QPainterPath p;
-    p.addPath(topleft);
-    p.addPath(top);
-    p.addPath(topright);
-    p.addPath(right);
-    p.addPath(bottomright);
-    p.addPath(bottom);
-    p.addPath(bottomleft);
-    p.addPath(left);
-
-    setPath(p);
+    topleft->moveBy(-d,-d);
+    topright->moveBy(d,-d);
+    bottomleft->moveBy(-d,d);
+    bottomright->moveBy(d,d);
+    left->moveBy(-d,0);
+    right->moveBy(d,0);
+    top->moveBy(0,-d);
+    bottom->moveBy(0,d);
   }
+
+//  qWarning() << "bounding rects\n"
+//             << "\ntop" << top->mapRectToParent(top->boundingRect())
+//             << "\nbottom" << bottom->boundingRect().translated(bottom->pos())
+//             << "\nleft" << left->boundingRect().translated(left->pos())
+//             << "\nright" << right->boundingRect().translated(right->pos())
+//             << "\ntopleft" << topleft->boundingRect().translated(topleft->pos())
+//             << "\nbottomleft" << bottomleft->boundingRect().translated(topright->pos())
+//             << "\ntopright" << topright->boundingRect().translated(bottomleft->pos())
+//             << "\nbottomright" << bottomright->boundingRect().translated(bottomright->pos())
+//             << "\n*****bounding" << boundingRect()
+//             << "\niR" << iR << "oR" << oR;
 
   calcFill();
-//   qDebug() << osfRect.center()
-//            << osf.contains(osfRect.center())
-//            << contains(osfRect.center())
-//            << shape().contains(osfRect.center())
-//            << path().contains(osfRect.center());
 }
 
 void SvgGenSubFrame::calcFill()
@@ -541,7 +501,14 @@ void SvgGenSubFrame::calcFill()
   // set fill
   switch (fill) {
     case FillTypeFlat: {
-      setBrush(color1);
+      top->setBrush(hastop ? color1 : Qt::transparent);
+      bottom->setBrush(hasbottom ? color1 : Qt::transparent);
+      left->setBrush(hasleft ? color1 : Qt::transparent);
+      right->setBrush(hasright ? color1 : Qt::transparent);
+      topleft->setBrush(hastop && hasleft ? color1 : Qt::transparent);
+      topright->setBrush(hastop && hasright ? color1 : Qt::transparent);
+      bottomleft->setBrush(hasbottom && hasleft ? color1 : Qt::transparent);
+      bottomright->setBrush(hasbottom && hasright ? color1 : Qt::transparent);
       break;
     }
     case FillTypeGradient : {
@@ -553,7 +520,16 @@ void SvgGenSubFrame::calcFill()
       fill.setStart(r.center().x(),r.top());
       fill.setFinalStop(r.center().x(),r.bottom());
 
-      setBrush(QBrush(fill));
+      QBrush b(fill);
+
+      top->setBrush(hastop ? b : Qt::NoBrush);
+      bottom->setBrush(hasbottom ? b : Qt::NoBrush);
+      left->setBrush(hasleft ? b : Qt::NoBrush);
+      right->setBrush(hasright ? b : Qt::NoBrush);
+      topleft->setBrush(hastop && hasleft ? b : Qt::NoBrush);
+      topright->setBrush(hastop && hasright ? b : Qt::NoBrush);
+      bottomleft->setBrush(hasbottom && hasleft ? b : Qt::NoBrush);
+      bottomright->setBrush(hasbottom && hasright ? b : Qt::NoBrush);
       break;
     }
     case FillTypeInvertedGradient : {
@@ -565,48 +541,63 @@ void SvgGenSubFrame::calcFill()
       fill.setStart(r.center().x(),r.top());
       fill.setFinalStop(r.center().x(),r.bottom());
 
-      setBrush(QBrush(fill));
+      QBrush b(fill);
+
+      top->setBrush(hastop ? b : Qt::NoBrush);
+      bottom->setBrush(hasbottom ? b : Qt::NoBrush);
+      left->setBrush(hasleft ? b : Qt::NoBrush);
+      right->setBrush(hasright ? b : Qt::NoBrush);
+      topleft->setBrush(hastop && hasleft ? b : Qt::NoBrush);
+      topright->setBrush(hastop && hasright ? b : Qt::NoBrush);
+      bottomleft->setBrush(hasbottom && hasleft ? b : Qt::NoBrush);
+      bottomright->setBrush(hasbottom && hasright ? b : Qt::NoBrush);
       break;
     }
   }
-}
-
-bool SvgGenSubFrame::contains(const QPointF& point) const
-{
-  //return QGraphicsPathItem::contains(point);
-  //qDebug() << "contains" << path().contains(point);
-  return path().contains(point);
 }
 
 QDomDocumentFragment SvgGenSubFrame::toSvg(QDomDocument doc, const QString &part)
 {
   QDomDocumentFragment res = doc.createDocumentFragment();
 
-  QPainterPath path;
-  if ( part == "top" )
-    path = top;
-  else if ( part == "bottom" )
-    path = bottom;
-  else if ( part == "left" )
-    path = left;
-  else if ( part == "right" )
-    path = right;
-  else if ( part == "topleft" )
-    path = topleft;
-  else if ( part == "topright" )
-    path = topright;
-  else if ( part == "bottomleft" )
-    path = bottomleft;
-  else if ( part == "bottomright" )
-    path = bottomright;
+  QGraphicsPathItem *item = 0;
+  bool hasIt = true;
+
+  if ( part == "top" ) {
+    item = top;
+    hasIt = hastop;
+  } else if ( part == "bottom" ) {
+    item = bottom;
+    hasIt = hasbottom;
+  } else if ( part == "left" ) {
+    item = left;
+    hasIt = hasleft;
+  } else if ( part == "right" ) {
+    item = right;
+    hasIt = hasright;
+  } else if ( part == "topleft" ) {
+    item = topleft;
+    hasIt = hastop && hasleft;
+  } else if ( part == "topright" ) {
+    item = topright;
+    hasIt = hastop && hasright;
+  } else if ( part == "bottomleft" ) {
+    item = bottomleft;
+    hasIt = hasbottom && hasleft;
+  } else if ( part == "bottomright" ) {
+    item = bottomright;
+    hasIt = hasbottom && hasright;
+  }
 
   QDomElement p = doc.createElement("path");
 
-  p.setAttribute("d", painterPathToSvg_d(path));
+  p.setAttribute("d", painterPathToSvg_d(item->path()));
   p.setAttribute("style",QString("stroke:none;fill:%1;fill-opacity:%3")
-                 .arg(color1.name(QColor::HexRgb))
-                 .arg(color1.alphaF()));
-  p.setAttribute("transform", QString("translate(%1,%2)").arg(pos().x()).arg(pos().y()));
+                 .arg(hasIt ? color1.name(QColor::HexRgb) : "none")
+                 .arg(hasIt ? color1.alphaF() : 0));
+  p.setAttribute("transform", QString("translate(%1,%2)")
+                 .arg(item->x()+x())
+                 .arg(item->y()+y()));
 
   res.appendChild(p);
 
@@ -629,6 +620,14 @@ SvgGen::SvgGen(QGraphicsScene *scene, QObject *parent)
   m_hasFrame(false),
   m_roundMode(true),
   m_splitMode(true),
+  m_hasTopFrame(true),
+  m_hasBottomFrame(true),
+  m_hasLeftFrame(true),
+  m_hasRightFrame(true),
+  m_hasTopShadow(true),
+  m_hasBottomShadow(true),
+  m_hasLeftShadow(true),
+  m_hasRightShadow(true),
   m_basename("basename"),
   m_variant("variant"),
   m_status("status"),
@@ -706,7 +705,7 @@ void SvgGen::setHasShadow(bool hasIt)
       delete shadow;
       shadow = NULL;
     }
-    if ( interior )
+    if ( interior && !m_hasFrame )
       interior->setRoundInterior(m_roundMode);
   } else {
     if ( !shadow ) {
@@ -718,8 +717,13 @@ void SvgGen::setHasShadow(bool hasIt)
       shadow->setFirstColor(Qt::lightGray);
       shadow->setSecondColor(Qt::gray);
       if ( m_roundMode && !m_hasFrame && m_hasInterior ) {
+        // shadow for interior
         shadow->setCornerRoundness(interior->interiorRoundness());
       }
+      shadow->setHasTop(m_hasTopFrame && m_hasTopShadow);
+      shadow->setHasBottom(m_hasBottomFrame && m_hasBottomShadow);
+      shadow->setHasLeft(m_hasLeftFrame && m_hasLeftShadow);
+      shadow->setHasRight(m_hasRightFrame && m_hasRightShadow);
     }
   }
 }
@@ -793,6 +797,86 @@ void SvgGen::setSplitMode(bool hasIt)
   rebuildShadow();
 }
 
+void SvgGen::setHasTopFrame(bool hasIt) {
+  m_hasTopFrame = hasIt;
+
+  Q_FOREACH(SvgGenSubFrame *sf, subFrames) {
+    sf->setHasTop(hasIt);
+  }
+
+  if ( shadow ) {
+    shadow->setHasTop(m_hasTopShadow && hasIt);
+  }
+}
+
+void SvgGen::setHasBottomFrame(bool hasIt) {
+  m_hasBottomFrame = hasIt;
+
+  Q_FOREACH(SvgGenSubFrame *sf, subFrames) {
+    sf->setHasBottom(hasIt);
+  }
+
+  if ( shadow ) {
+    shadow->setHasBottom(m_hasBottomShadow && hasIt);
+  }
+}
+
+void SvgGen::setHasLeftFrame(bool hasIt) {
+  m_hasLeftFrame = hasIt;
+
+  Q_FOREACH(SvgGenSubFrame *sf, subFrames) {
+    sf->setHasLeft(hasIt);
+  }
+
+  if ( shadow ) {
+    shadow->setHasLeft(m_hasLeftShadow && hasIt);
+  }
+}
+
+void SvgGen::setHasRightFrame(bool hasIt) {
+  m_hasRightFrame = hasIt;
+
+  Q_FOREACH(SvgGenSubFrame *sf, subFrames) {
+    sf->setHasRight(hasIt);
+  }
+
+  if ( shadow ) {
+    shadow->setHasRight(m_hasRightShadow && hasIt);
+  }
+}
+
+void SvgGen::setHasTopShadow(bool hasIt) {
+  m_hasTopShadow = hasIt;
+
+  if ( shadow ) {
+    shadow->setHasTop(m_hasTopFrame && hasIt);
+  }
+}
+
+void SvgGen::setHasBottomShadow(bool hasIt) {
+  m_hasBottomShadow = hasIt;
+
+  if ( shadow ) {
+    shadow->setHasBottom(m_hasBottomFrame && hasIt);
+  }
+}
+
+void SvgGen::setHasLeftShadow(bool hasIt) {
+  m_hasLeftShadow = hasIt;
+
+  if ( shadow ) {
+    shadow->setHasLeft(m_hasLeftFrame && hasIt);
+  }
+}
+
+void SvgGen::setHasRightShadow(bool hasIt) {
+  m_hasRightShadow = hasIt;
+
+  if ( shadow ) {
+    shadow->setHasRight(m_hasRightFrame && hasIt);
+  }
+}
+
 void SvgGen::pushSubFrame()
 {
   int nb = subFrames.count();
@@ -802,9 +886,18 @@ void SvgGen::pushSubFrame()
   } else {
     if ( m_hasFrame ) {
       sf = new SvgGenSubFrame(QSizeF(width,height),5,0,m_roundMode,m_splitMode);
+      sf->setHasTop(m_hasTopFrame);
+      sf->setHasBottom(m_hasBottomFrame);
+      sf->setHasLeft(m_hasLeftFrame);
+      sf->setHasRight(m_hasRightFrame);
     } else {
-      // no frame -> this is the shadow -> no split
-      sf = new SvgGenSubFrame(QSizeF(width,height),5,0,m_roundMode,false);
+      // no frame -> this is the shadow -> no split + adjust width/height
+      // width/height of subframe is for sides only, excluding corner size
+      QSizeF sz(width,height);
+      if ( m_roundMode )
+        sz = QSizeF(qMax(0.0,width-2*interior->interiorRoundness()),
+                    qMax(0.0,height-2*interior->interiorRoundness()));
+      sf = new SvgGenSubFrame(sz,5,0,m_roundMode,false);
     }
   }
 
@@ -876,10 +969,8 @@ void SvgGen::setSize(const QSizeF& sz)
   width = sz.width();
   height = sz.height();
 
-  QSizeF sz2 = sz;
   Q_FOREACH(SvgGenSubFrame *sf, subFrames) {
-    sf->setSize(sz2);
-    sz2 = sf->outerSubFrameRect().size();
+    sf->setSize(sz);
   }
 
   if ( interior )
@@ -898,13 +989,10 @@ void SvgGen::setSubFrameWidth(int idx, qreal width)
   subFrames[idx]->setSubFrameWidth(width);
 
   /* adjust all subframes outwards */
-  QSizeF sz = subFrames[idx]->outerSubFrameRect().size();
   qreal rnd = subFrames[idx]->outerCornerRoundness();
   for (int i=idx+1; i<subFrames.count(); i++) {
     subFrames[i]->setCornerRoundness(rnd);
-    subFrames[i]->setSize(sz);
 
-    sz = subFrames[i]->outerSubFrameRect().size();
     rnd = subFrames[i]->outerCornerRoundness();
   }
 

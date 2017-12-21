@@ -23,7 +23,9 @@
 
 #include <QSizeF>
 #include <QPainterPath>
+#include <QGraphicsItemGroup>
 #include <QGraphicsPathItem>
+#include <QGraphicsRectItem>
 #include <QSize>
 #include <QVector>
 #include <QDomElement>
@@ -77,10 +79,9 @@ class SvgGenInterior : public QGraphicsPathItem {
 /**
  * @brief QGraphicsPathItem that represents a rounded subframe
  *
- * This class draws a rounded subframe that has a specific width and corner
+ * This class draws a subframe that has a specific width/height and corner
  * roundness.
- * A subframe is a union of two subpaths: a inner subframe and an outer
- * subframe.
+ * A subframe is a union of its 8 elements
  * The size set with the @ref setSize() method, the position set by setX(), setY()
  * and the like functions, as well as the corner roundness set by @ref setCornerRoundness()
  * methods is applicable to the inner subframe. The outer subframe will
@@ -88,10 +89,8 @@ class SvgGenInterior : public QGraphicsPathItem {
  * When the corner roundness is set to 0, the inner subframe will be a rectangle
  * The outer subframe roundness is @ref outerCornerRoundess()
  * and can be used as an initial roundness for the subsequent (above) subframes.
- * The outer subframe bounding rect can be obtained using @ref outerSubFrameRect(),
- * which returns a QRectF in item ccordinates as usual.
  */
-class SvgGenSubFrame : public QObject, public QGraphicsPathItem {
+class SvgGenSubFrame : public QObject, public QGraphicsItemGroup {
   Q_OBJECT
 
   public:
@@ -105,7 +104,7 @@ class SvgGenSubFrame : public QObject, public QGraphicsPathItem {
       FillTypeMax = FillTypeInvertedGradient,
     };
 
-    SvgGenSubFrame(QGraphicsItem *parent = Q_NULLPTR);
+    SvgGenSubFrame();
     SvgGenSubFrame(const SvgGenSubFrame *prev);
     SvgGenSubFrame(const QSizeF &sz, qreal sbwidth, qreal roundness = 0, bool round = true, bool split = true);
     virtual ~SvgGenSubFrame();
@@ -118,37 +117,39 @@ class SvgGenSubFrame : public QObject, public QGraphicsPathItem {
     void setFillType(FillType type);
     void setFirstColor(const QColor &c);
     void setSecondColor(const QColor &c);
+    void setHasTop(bool hasIt);
+    void setHasBottom(bool hasIt);
+    void setHasLeft(bool hasIt);
+    void setHasRight(bool hasIt);
 
     /* corner roundness is for the inner subframe */
     qreal cornerRoundess() const { return roundness; }
-    bool hasRoundCorners() const { return roundCorners; }
+    bool hasRoundCorners() const { return round; }
     qreal subFrameWidth() const { return sbwidth; }
     bool isSplit() const { return split; }
-    /** Returns the outer subframe rect. The resulting rect is to be
-     * taken as if the subframe was in non split mode */
-    QRectF outerSubFrameRect() const;
     qreal outerCornerRoundness() const { return roundness+sbwidth; }
     QColor firstColor() const { return color1; }
     QColor secondColor() const { return color2; }
     FillType fillType() const { return fill; }
+    bool hasTop() const { return hastop; }
+    bool hasBottom() const { return hasbottom; }
+    bool hasLeft() const { return hasleft; }
+    bool hasRight() const { return hasright; }
+    qreal width() const { return m_width; }
+    qreal height() const { return m_height; }
 
-    /* We have to reimplement this as the default implementation calls
-     * shape()->contains().
-     * The problem is that shape() is a QPainterPathStroker of path(),
-     * which is roughly an outline of the whole shape.
-     * As SubFrames have a hole in the middle, this won't work
-     */
-    bool contains(const QPointF &point) const;
-    //QPainterPath shape() const;
-
+    virtual QRectF boundingRect() const;
     QDomDocumentFragment toSvg(QDomDocument doc, const QString &part);
 
   private:
     void calcSubFrame();
     void calcFill();
 
-    qreal width, height, roundness, sbwidth, roundCorners, split;
-    QPainterPath top,bottom,left,right,topleft,topright,bottomleft,bottomright;
+    qreal m_width, m_height, roundness, sbwidth;
+    bool round, split;
+    QGraphicsPathItem *top,*bottom,*left,*right;
+    QGraphicsPathItem *topleft,*topright,*bottomleft,*bottomright;
+    bool hastop,hasbottom,hasleft,hasright;
     QColor color1, color2;
     FillType fill;
 };
@@ -166,6 +167,14 @@ class SvgGen : public QObject {
     void setHasShadow(bool hasIt);
     void setRoundMode(bool hasIt);
     void setSplitMode(bool hasIt);
+    void setHasTopFrame(bool hasIt);
+    void setHasBottomFrame(bool hasIt);
+    void setHasLeftFrame(bool hasIt);
+    void setHasRightFrame(bool hasIt);
+    void setHasTopShadow(bool hasIt);
+    void setHasBottomShadow(bool hasIt);
+    void setHasLeftShadow(bool hasIt);
+    void setHasRightShadow(bool hasIt);
 
     bool hasFrame() const { return m_hasFrame; }
     bool hasInterior() const { return m_hasInterior; }
@@ -173,6 +182,14 @@ class SvgGen : public QObject {
     bool roundMode() const { return m_roundMode; }
     bool splitMode() const { return m_splitMode; }
     bool isSquare() const { return width == height; }
+    bool hasTopFrame() const { return m_hasTopFrame; }
+    bool hasBottomFrame() const { return m_hasBottomFrame; }
+    bool hasLeftFrame() const { return m_hasLeftFrame; }
+    bool hasRightFrame() const { return m_hasRightFrame; }
+    bool hasTopShadow() const { return m_hasTopShadow; }
+    bool hasBottomShadow() const { return m_hasBottomShadow; }
+    bool hasLeftShadow() const { return m_hasLeftShadow; }
+    bool hasRightShadow() const { return m_hasRightShadow; }
 
     void setCenter(const QPointF &p);
 
@@ -282,6 +299,8 @@ class SvgGen : public QObject {
     qreal width,height,shadowwidth;
     int framewidth;
     bool m_hasShadow, m_hasInterior, m_hasFrame, m_roundMode, m_splitMode;
+    bool m_hasTopFrame, m_hasBottomFrame, m_hasLeftFrame, m_hasRightFrame;
+    bool m_hasTopShadow, m_hasBottomShadow, m_hasLeftShadow, m_hasRightShadow;
     QString m_basename, m_variant, m_status;
     QPointF center;
     QGraphicsScene *scene;
