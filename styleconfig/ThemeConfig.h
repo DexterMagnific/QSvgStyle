@@ -43,6 +43,9 @@ class ThemeConfig : public QSvgCachedSettings {
     label_spec_t getLabelSpec(const QString &group) const;
     element_spec_t getElementSpec(const QString &group) const;
     theme_spec_t getThemeSpec() const;
+    QVariant getThemeTweak(const QString &key) const {
+      return getRawValue("Tweaks",key);
+    }
 
     /* Get frame spec exactly as read from the configuration file */
     frame_spec_t getRawFrameSpec(const QString &group) const;
@@ -63,6 +66,9 @@ class ThemeConfig : public QSvgCachedSettings {
     void setLabelSpec(const QString &group, const label_spec_t &ls);
     void setElementSpec(const QString &group, const element_spec_t &es);
     void setThemeSpec(const theme_spec_t &ts);
+    void setThemeTweak(const QString &key, const QVariant &v) {
+        setValue("Tweaks",key,v);
+    }
 
     friend class ThemeBuilderUIBase;
 };

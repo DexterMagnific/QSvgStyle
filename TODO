@@ -2,21 +2,39 @@ QSvgStyle
 ---------
 * Rework animation framework
 
-* scrollbars: add pgup/pgdown buttons option
 * lineedit : minimum width should be sufficient to show placeholder text
 * add ability to animate non busy progress bars
 * add ability for widgets to alter qsvgstyle theme config by using
   dynamic widget properties. e.g. qsvgstyle.frame.width=3
 * replace dir,orn pair by a rot/flip variable
 * renderElement: should take into account dir,orn
+* Palette: add fg/bg configuration ability for each state
+
+-- Scroll
+* add option to show/hide buttons
+
+-- Toolbar
+* use different settings for toolbuttons located on a toolbar
 
 QSvgThemeBuilder
 ----------------
 * add magnifier tool
 * add measure tool/tracer
-* replace manual populated list of elements by an automatic method
-  like the one used by stylemanager
+* add 'revert' button for each setting
+* add 'clear menu' action in recent files menu
+
+-- Extras
+* Add ability to capture menu bar items into a single toolbar button
+  -> button will be a drop down button that grabs all menu bar items
+  -> OR a special button that reacts to mouse wheel to change menu, and when
+     pressed opens corresponding menu bar item menu
+  -> TODO: how to proceed if there is no toolbar (dialog boxes) ?
+
+* Add ability to make frameless top level windows
+  -> In this case, the standard close|restore|minize will be put in a separate
+     toolbar
+  -> TODO: where to put window title ?
+  -> TODO: how to proceed if there is no toolbar (dialog boxes) ?
 
 QSvgThemeManager
 ----------------
-* switch to QtPropertyBrowser from Qt Solutions

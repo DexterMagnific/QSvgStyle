@@ -40,9 +40,8 @@ class ThemeManagerUI : public QMainWindow, private Ui::ThemeManagerUIBase {
 
   private slots:
     void slot_currentColorGroupChanged();
-    void slot_themeChanged(int idx);
+    void slot_themeChanged(QTreeWidgetItem *item, QTreeWidgetItem *prev);
     void slot_paletteChanged(int idx);
-    void slot_specificChanged(QTreeWidgetItem *item, int column);
     void slot_uiSettingsChanged();
     void slot_cancelBtnClicked();
     void slot_okBtnClicked();
@@ -56,9 +55,7 @@ class ThemeManagerUI : public QMainWindow, private Ui::ThemeManagerUIBase {
     // enum that allow us to attach arbitrary data to QTreeViewItem items
     // using @ref QTreeViewItem::setData()
     enum {
-      GroupRole = Qt::UserRole + 10, // the theme configuration group for the
-                                     // selected widget
-      SettingRole = Qt::UserRole + 11, // the specific setting name
+      ThemePathRole = Qt::UserRole + 10,
     };
 
     // Sets the given style for the given widget and all its children
@@ -90,28 +87,6 @@ class ThemeManagerUI : public QMainWindow, private Ui::ThemeManagerUIBase {
 
     // Timer for repainting the widget when settings change
     QTimer *timer;
-};
-
-// Spin Box item delegate
-class SpinBoxDelegate : public QStyledItemDelegate {
-  Q_OBJECT
-
-  public:
-    SpinBoxDelegate(QObject *parent = 0);
-
-    QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem &option,
-                          const QModelIndex &index) const;
-
-    void setEditorData(QWidget *editor, const QModelIndex &index) const;
-    void setModelData(QWidget *editor, QAbstractItemModel *model,
-                      const QModelIndex &index) const;
-
-    void updateEditorGeometry(QWidget *editor,
-                              const QStyleOptionViewItem &option,
-                              const QModelIndex &index) const;
-
-  private slots:
-    void slot_valueChanged(int);
 };
 
 #endif // THEMEMANAGERRUI_H

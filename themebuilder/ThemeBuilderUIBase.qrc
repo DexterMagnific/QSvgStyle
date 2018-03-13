@@ -1,5 +1,6 @@
 <RCC>
   <qresource prefix="icon">
+    <file>pixmaps/listview.png</file>
     <file>pixmaps/bringtofront.png</file>
     <file>pixmaps/inkscape.png</file>
     <file>pixmaps/round-corner.png</file>

@@ -72,6 +72,7 @@ public:
 /** Some defines about widget variants */
 #define VA_SPINBOX_BUTTONS_SIDEBYSIDE 0
 #define VA_SPINBOX_BUTTONS_OPPOSITE   1
+#define VA_SPINBOX_BUTTONS_STACKED    2
 
 #define VA_PROGRESSBAR_BUSY_WRAP 0
 #define VA_PROGRESSBAR_BUSY_BACKANDFORTH 1
@@ -82,10 +83,14 @@ public:
 /** Generic information about a theme */
 typedef struct {
   value_t<QString> name;
+  value_t<QString> variant;
   value_t<QString> author;
   value_t<QString> descr;
-  /* theme path, ThemeConfig::getThemeSpec() */
+  value_t<QString> keywords;
+  /* theme path, filled by ThemeConfig::getThemeSpec() */
   value_t<QString> path;
+  /* system theme, filled by ThemeConfig::getThemeSpec() */
+  bool system;
 } theme_spec_t;
 
 /** Generic information about a frame */
@@ -93,7 +98,12 @@ typedef struct frame_spec_t {
   frame_spec_t () {
     hasCapsule = false;
     capsuleH = capsuleV = 0;
-  };
+    top = bottom = left = right = 0;
+    hasFrame = false;
+    width = 0;
+    width.present = hasFrame.present = false;
+    pressed = false;
+  }
 
   /* Element name (SVG id) */
   value_t<QString> element;
@@ -113,7 +123,13 @@ typedef struct frame_spec_t {
 } frame_spec_t;
 
 /** Generic information about a frame interior */
-typedef struct {
+typedef struct interior_spec_t {
+  interior_spec_t () {
+    hasInterior = false;
+    px = py = 0;
+    hasInterior.present = px.present = py.present = false;
+  }
+
   /* Element name (SVG id) */
   value_t<QString> element;
   /* has interior */
@@ -123,7 +139,12 @@ typedef struct {
 } interior_spec_t;
 
 /** Generic information about widget indicators */
-typedef struct {
+typedef struct indicator_spec_t {
+  indicator_spec_t() {
+    size = 0;
+    size.present = false;
+  }
+
   /* Element name (SVG id) */
   value_t<QString> element;
   /* size */
@@ -131,7 +152,16 @@ typedef struct {
 } indicator_spec_t;
 
 /** Generic information about text and icons (labels) */
-typedef struct {
+typedef struct label_spec_t {
+  label_spec_t() {
+    hasShadow = false;
+    xshift = yshift = r = g = b = a = depth = hmargin = vmargin = tispace = 0;
+    hasShadow.present = xshift.present = yshift.present = r.present =
+        b.present = g.present = a.present = depth.present = hmargin.present =
+        vmargin.present = tispace.present = false;
+    margin = 0;
+  }
+
   /* has shadow */
   value_t<bool> hasShadow;
   /* shadow shift */

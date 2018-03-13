@@ -19,14 +19,10 @@
  ***************************************************************************/
 #include "QSvgThemableStyle.h"
 
-#include <stdlib.h>
-#include <limits.h>
-
 #include <QApplication>
 #include <QWidget>
 #include <QPainter>
 #include <QRect>
-#include <QSvgRenderer>
 #include <QStyleOption>
 #include <QSettings>
 #include <QFile>
@@ -44,7 +40,6 @@
 #include <QtMath>
 #include <QStyleHints>
 #include <QMetaObject>
-#include <QMetaEnum>
 
 #include <QSpinBox>
 #include <QToolButton>
@@ -78,24 +73,13 @@ QSvgThemableStyle::QSvgThemableStyle()
     useConfigCache(true),
     useShapeCache(true),
     progresstimer(NULL),
-    focustimer(NULL),
-    drawFocusOverlay(true),
     dbgWireframe(false),
     dbgOverdraw(false)
 {
   loadUserConfig();
 
   progresstimer = new QTimer(this);
-  focustimer = new QTimer(this);
-
   connect(progresstimer,SIGNAL(timeout()), this,SLOT(slot_animateProgressBars()));
-  connect(focustimer,SIGNAL(timeout()), this,SLOT(slot_animateFocus()));
-
-  // from qwidgetlinecontrol.cpp, QWidgetLineControl::updateCursorBlinking()
-  int flashTime = QGuiApplication::styleHints()->cursorFlashTime();
-  if ( flashTime >= 2 )
-    flashTime /= 2;
-  focustimer->start(flashTime);
 }
 
 QSvgThemableStyle::~QSvgThemableStyle()
@@ -164,12 +148,12 @@ void QSvgThemableStyle::loadBuiltinTheme()
   themeRndr->load(QString(":/default.svg"));
 
   curTheme = "<builtin>";
-  qDebug() << "[QSvgStyle]" << "Loaded built in theme";
+  qWarning() << "[QSvgStyle]" << "Loaded built in theme";
 }
 
 void QSvgThemableStyle::loadTheme(const QString& theme)
 {
-  if ( curTheme == theme )
+  if ( !curTheme.isEmpty() && (curTheme == theme) )
     return;
 
   if ( theme.isNull() || theme.isEmpty() || theme == "<builtin>" ) {
@@ -195,22 +179,20 @@ void QSvgThemableStyle::loadTheme(const QString& theme)
         QFileInfo(t.path).completeBaseName().append(".svg")));
 
       curTheme = theme;
-      qDebug() << "[QSvgStyle]" << "Loaded theme " << theme;
+      qWarning() << "[QSvgStyle]" << "Loaded theme " << theme;
 
       return;
     }
   }
 
   // not found
-  qDebug() << "[QSvgStyle]" << "Theme" << theme << "not found";
+  qWarning() << "[QSvgStyle]" << "Theme" << theme << "not found";
   loadBuiltinTheme();
   return;
 }
 
 void QSvgThemableStyle::loadUserTheme()
 {
-  QString theme;
-
   QString filename = StyleConfig::getUserConfigFile();
 
   // load global config file
@@ -415,7 +397,7 @@ void QSvgThemableStyle::polish(QWidget * widget)
   if ( QLineEdit *l = qobject_cast< QLineEdit * >(widget) ) {
     if ( QSpinBox *s = qobject_cast< QSpinBox * >(l->parent()) )
       if ( s->buttonSymbols() != QAbstractSpinBox::NoButtons )
-        if ( getSpecificValue("specific.spinbox.variant").toInt() ==
+        if ( getThemeTweak("specific.spinbox.variant").toInt() ==
             VA_SPINBOX_BUTTONS_OPPOSITE )
           l->setAlignment(Qt::AlignHCenter);
   }
@@ -453,16 +435,6 @@ void QSvgThemableStyle::slot_animateProgressBars()
       it.value() += 2;
       widget->update();
     }
-  }
-}
-
-void QSvgThemableStyle::slot_animateFocus()
-{
-  QWidget *focused = QApplication::focusWidget();
-
-  if ( focused ) {
-    drawFocusOverlay = !drawFocusOverlay;
-    focused->repaint();
   }
 }
 
@@ -529,7 +501,7 @@ void QSvgThemableStyle::drawPrimitive(PrimitiveElement e, const QStyleOption * o
 
   if ( g.isEmpty() ) {
     // element not currently supported by QSvgStyle
-    qWarning() << "No QSvgStyle group for" << e;
+    qWarning() << "[QSvgStyle] No group for" << e;
     QCommonStyle::drawPrimitive(e,option,p,widget);
     goto end;
   }
@@ -554,7 +526,7 @@ void QSvgThemableStyle::drawPrimitive(PrimitiveElement e, const QStyleOption * o
   }
 
   // Draw
-  switch(e) {
+  switch(static_cast<int>(e)) {
     case PE_Widget : {
       // nothing
       break;
@@ -576,7 +548,7 @@ void QSvgThemableStyle::drawPrimitive(PrimitiveElement e, const QStyleOption * o
 
       if ( isDefault ) {
         renderInterior(p,QBrush(),r,fs,is,is.element+"-default",dir);
-      } else if ( focus && drawFocusOverlay ) {
+      } else if ( focus ) {
         renderInterior(p,QBrush(),r,fs,is,is.element+"-focused",dir);
       }
       break;
@@ -605,7 +577,7 @@ void QSvgThemableStyle::drawPrimitive(PrimitiveElement e, const QStyleOption * o
 
       if ( isDefault ) {
         renderFrame(p,QBrush(),r,fs,fs.element+"-default",dir);
-      } else if ( focus && drawFocusOverlay ) {
+      } else if ( focus ) {
         renderFrame(p,QBrush(),r,fs,fs.element+"-focused",dir);
       }
       break;
@@ -616,7 +588,7 @@ void QSvgThemableStyle::drawPrimitive(PrimitiveElement e, const QStyleOption * o
       if ( !(option->state & State_AutoRaise) )
         capsulePosition(widget,fs.hasCapsule,fs.capsuleH,fs.capsuleV);
       renderInterior(p,cs2b(cs.bg,pal.button()),r,fs,is,is.element+"-"+st,dir);
-      if ( focus && drawFocusOverlay ) {
+      if ( focus ) {
         renderInterior(p,QBrush(),r,fs,is,is.element+"-focused",dir);
       }
       break;
@@ -627,7 +599,7 @@ void QSvgThemableStyle::drawPrimitive(PrimitiveElement e, const QStyleOption * o
       if ( !(option->state & State_AutoRaise) )
         capsulePosition(widget,fs.hasCapsule,fs.capsuleH,fs.capsuleV);
       renderFrame(p,cs2b(cs.bg,pal.button()),r,fs,fs.element+"-"+st,dir);
-      if ( focus && drawFocusOverlay ) {
+      if ( focus ) {
         renderFrame(p,QBrush(),r,fs,fs.element+"-focused",dir);
       }
       break;
@@ -642,7 +614,7 @@ void QSvgThemableStyle::drawPrimitive(PrimitiveElement e, const QStyleOption * o
       // a radio button (exclusive choice)
       // QSvgStyle: no pressed or toggled status for radio buttons
       st = (option->state & State_Enabled) ?
-          (option->state & State_MouseOver) ? "hovered" : "normal"
+          (option->state & State_Selected) ? "toggled" : "normal"
         : "disabled";
       if ( option->state & State_On )
         st = "checked-"+st;
@@ -653,7 +625,7 @@ void QSvgThemableStyle::drawPrimitive(PrimitiveElement e, const QStyleOption * o
     case PE_IndicatorViewItemCheck : {
       // a check box inside view items
       st = (option->state & State_Enabled) ?
-          (option->state & State_MouseOver) ? "hovered" : "normal"
+          (option->state & State_Selected) ? "toggled" : "normal"
         : "disabled";
       if ( option->state & State_On )
         st = "checked-"+st;
@@ -664,6 +636,20 @@ void QSvgThemableStyle::drawPrimitive(PrimitiveElement e, const QStyleOption * o
       break;
     }
     case PE_IndicatorCheckBox : {
+      // a check box (multiple choices)
+      // QSvgStyle: no pressed or toggled status for check boxes
+      st = (option->state & State_Enabled) ?
+          (option->state & State_MouseOver) ? "hovered" : "normal"
+        : "disabled";
+      if ( option->state & State_On )
+        st = "checked-"+st;
+      else if ( option->state & State_NoChange )
+        st = "tristate-"+st;
+      fs.hasFrame = false;
+      renderIndicator(p,r,fs,is,ds,ds.element+"-"+st,dir);
+      break;
+    }
+    case PE_IndicatorGroupBoxCheckMark : {
       // a check box (multiple choices)
       // QSvgStyle: no pressed or toggled status for check boxes
       st = (option->state & State_Enabled) ?
@@ -828,15 +814,15 @@ void QSvgThemableStyle::drawPrimitive(PrimitiveElement e, const QStyleOption * o
       break;
     }
     case PE_FrameGroupBox : {
-      // Frame and interior for group boxes
-      // NOTE not used for group box titles
+      // Frame and interior for group boxes contents
       renderFrame(p,cs2b(cs.bg,pal.brush(brole)),r,fs,fs.element+"-"+st,dir);
       renderInterior(p,cs2b(cs.bg,pal.brush(brole)),r,fs,is,is.element+"-"+st,dir);
       break;
     }
     case PE_FrameTabWidget : {
-      // Frame for tab widgets (contents)
-      renderFrame(p,cs2b(cs.bg,pal.brush(brole)),r,fs,fs.element+"-raised-"+st,dir);
+      // Frame and interior for tab widgets (contents)
+      renderFrame(p,cs2b(cs.bg,pal.brush(brole)),r,fs,fs.element+"-"+st,dir);
+      renderInterior(p,cs2b(cs.bg,pal.brush(brole)),r,fs,is,is.element+"-"+st,dir);
       break;
     }
     case PE_FrameLineEdit : {
@@ -848,7 +834,7 @@ void QSvgThemableStyle::drawPrimitive(PrimitiveElement e, const QStyleOption * o
       o.state &= ~(State_Sunken | State_On);
       st = state_str(o.state,widget);
       renderFrame(p,cs2b(cs.bg,pal.base()),r,fs,fs.element+"-"+st,dir);
-      if ( focus && drawFocusOverlay ) {
+      if ( focus ) {
         renderFrame(p,QBrush(),r,fs,fs.element+"-focused",dir);
       }
       break;
@@ -871,7 +857,7 @@ void QSvgThemableStyle::drawPrimitive(PrimitiveElement e, const QStyleOption * o
       o.state &=  ~ (State_Sunken | State_On);
       st = state_str(o.state,widget);
       renderInterior(p,cs2b(cs.bg,pal.base()),r,fs,is,is.element+"-"+st,dir);
-      if ( focus && drawFocusOverlay ) {
+      if ( focus ) {
         renderInterior(p,QBrush(),r,fs,is,is.element+"-focused",dir);
       }
       break;
@@ -912,7 +898,7 @@ void QSvgThemableStyle::drawPrimitive(PrimitiveElement e, const QStyleOption * o
     }
     case PE_IndicatorSpinUp : {
       // Up spin box indicator
-      if ( getSpecificValue("specific.spinbox.variant").toInt() ==
+      if ( getThemeTweak("specific.spinbox.variant").toInt() ==
          VA_SPINBOX_BUTTONS_OPPOSITE )
         renderIndicator(p,r,fs,is,ds,ds.element+"-right-"+st,dir);
       else
@@ -921,7 +907,7 @@ void QSvgThemableStyle::drawPrimitive(PrimitiveElement e, const QStyleOption * o
     }
     case PE_IndicatorSpinDown : {
       // down spin box indicator
-      if ( getSpecificValue("specific.spinbox.variant").toInt() ==
+      if ( getThemeTweak("specific.spinbox.variant").toInt() ==
          VA_SPINBOX_BUTTONS_OPPOSITE )
         renderIndicator(p,r,fs,is,ds,ds.element+"-left-"+st,dir);
       else
@@ -956,8 +942,7 @@ void QSvgThemableStyle::drawPrimitive(PrimitiveElement e, const QStyleOption * o
     }
     case PE_PanelMenu : {
       // Interior of a menu
-      // NOTE do nothing. Menu will be filled by its menu items
-      // which have their own interior
+      renderInterior(p,cs2b(cs.bg,pal.brush(brole)),r,fs,is,is.element+"-"+st,dir);
       break;
     }
     case PE_IndicatorTabTear : {
@@ -1020,12 +1005,15 @@ void QSvgThemableStyle::drawPrimitive(PrimitiveElement e, const QStyleOption * o
           if ( (o.features & QStyleOptionViewItem::Alternate) && (st == "normal") )
             st = "alt-"+st;
 
-          if ( st != "normal" )
+          if ( st != "normal" ) {
             // only paint when state in not normal, otherwise keep
             // container widget background
+            renderFrame(p,cs2b(cs.bg,pal.brush(brole)),r,fs,fs.element+"-"+st,dir);
             renderInterior(p,cs2b(cs.bg,pal.brush(brole)),r,fs,is,is.element+"-"+st,dir);
+          }
 
-          if ( focus && drawFocusOverlay ) {
+          if ( focus ) {
+            renderFrame(p,cs2b(cs.bg,pal.brush(brole)),r,fs,fs.element+"-focused",dir);
             renderInterior(p,QBrush(),r,fs,is,is.element+"-focused",dir);
           }
         }
@@ -1056,8 +1044,8 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
   QString st = state_str(option->state, widget);
   Qt::LayoutDirection dir = option->direction;
   const bool focus = option->state & State_HasFocus;
-  const QIcon::Mode icm = state_iconmode(option->state);
-  const QIcon::State ics = state_iconstate(option->state);
+  QIcon::Mode icm = state_iconmode(option->state);
+  QIcon::State ics = state_iconstate(option->state);
   Orientation orn = option->state & State_Horizontal ? Horizontal : Vertical;
   const bool en = option->state & State_Enabled;
   QPalette pal = option->palette;
@@ -1091,7 +1079,7 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
 
   fs.pressed = option->state & State_Sunken;
 
-  switch (e) {
+  switch (static_cast<int>(e)) {
     case CE_FocusFrame : {
       //qDebug() << "CE_FocusFrame" << (widget ? widget->objectName() : "???");
       break;
@@ -1143,11 +1131,6 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
 
         QStyleOptionMenuItem o(*opt);
 
-        // NOTE Cheat here: the frame is for the whole menu,
-        // not the individual menu items
-        fs.hasFrame = false;
-        fs.top = fs.bottom = fs.left = fs.right = 0;
-
         if (opt->menuItemType == QStyleOptionMenuItem::Separator)
           // Menu separator
           renderElement(p,ds.element+"-separator-normal",r);
@@ -1156,9 +1139,10 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
           drawControl(CE_MenuTearoff,opt,p,widget);
         else {
           // Standard menu item
-          // NOTE QSvgStyle ignore pressed state
+          // NOTE QSvgStyle ignores pressed state
           o.state &= ~State_Sunken;
           st = state_str(o.state,widget);
+          renderFrame(p,cs2b(cs.bg,pal.brush(brole)),r,fs,fs.element+"-"+st,dir);
           renderInterior(p,cs2b(cs.bg,pal.brush(brole)),r,fs,is,is.element+"-"+st,dir);
 
           QRect rtext = r; // text rect (menu item label+shortcut)
@@ -1175,7 +1159,7 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
             rtext = rtext.adjusted(0,0,-ds.size-pixelMetric(PM_CheckBoxLabelSpacing),0);
           if ( opt->menuItemType == QStyleOptionMenuItem::SubMenu )
             // remove room for sub menu arrow
-            rtext = rtext.adjusted(0,0,-ls.tispace-ds.size,0);
+            rtext = rtext.adjusted(0,0,-ds.size-pixelMetric(PM_CheckBoxLabelSpacing),0);
 
           rchild = QRect(r.topRight(),QSize(ds.size,h))
                     .translated(-ds.size-fs.right-ls.hmargin,0);
@@ -1183,7 +1167,7 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
                     .translated(-ds.size-fs.right-ls.hmargin,0);
 
           if (opt->menuItemType == QStyleOptionMenuItem::SubMenu)
-            rcheckmark.translate(-ds.size-ls.tispace,0);
+            rcheckmark.translate(-ds.size-pixelMetric(PM_CheckBoxLabelSpacing),0);
 
           // translate to visual rects inside r
           rtext = visualRect(dir,r,rtext);
@@ -1241,11 +1225,7 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
         o.state &= ~State_Sunken;
         st = state_str(o.state,widget);
 
-        // NOTE cheat here: frame is for whole menu bar, not individual
-        // menu bar items
-        fs.hasFrame = false;
-        fs.top = fs.bottom = fs.left = fs.right = 0;
-
+        renderFrame(p,cs2b(cs.bg,pal.brush(brole)),option->rect,fs,fs.element+"-"+st,dir);
         renderInterior(p,cs2b(cs.bg,pal.brush(brole)),option->rect,fs,is,is.element+"-"+st,dir);
         renderLabel(p,cs2b(cs.fg,pal.text()),
                     dir,r,fs,is,ls,
@@ -1291,8 +1271,9 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
         o.rect = subElementRect(SE_RadioButtonContents, opt, widget);
         drawControl(CE_RadioButtonLabel, &o, p, widget);
 
-        if ( focus && drawFocusOverlay ) {
+        if ( focus ) {
           o.rect = subElementRect(SE_RadioButtonFocusRect, opt, widget);
+          renderFrame(p,QBrush(),o.rect,fs,fs.element+"-focused",dir);
           renderInterior(p,QBrush(),o.rect,fs,is,is.element+"-focused",dir);
         }
       }
@@ -1328,8 +1309,9 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
         o.rect = subElementRect(SE_CheckBoxContents, opt, widget);
         drawControl(CE_CheckBoxLabel, &o, p, widget);
 
-        if ( focus && drawFocusOverlay ) {
+        if ( focus ) {
           o.rect = subElementRect(SE_CheckBoxFocusRect, opt, widget);
+          renderFrame(p,QBrush(),o.rect,fs,fs.element+"-focused",dir);
           renderInterior(p,QBrush(),o.rect,fs,is,is.element+"-focused",dir);
         }
       }
@@ -1386,7 +1368,7 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
         QStyleOptionTab o(*opt);
 
         if ( o.state & State_Sunken ) {
-          // Remove "pressed" state and replace it by "toggled" state
+          // Remove "selected" state and replace it by "toggled" state
           o.state &= ~State_Sunken;
           o.state |= State_On;
           st = state_str(o.state,widget);
@@ -1478,7 +1460,7 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
         renderInterior(p,cs2b(cs.bg,pal.button()),r,fs,is,is.element+"-"+st,dir,orn);
         renderFrame(p,cs2b(cs.bg,pal.button()),r,fs,fs.element+"-"+st,dir,orn);
 
-        if ( focus && drawFocusOverlay ) {
+        if ( focus ) {
           renderInterior(p,QBrush(),r,fs,is,is.element+"-focused",dir,orn);
           renderFrame(p,QBrush(),r,fs,fs.element+"-focused",dir,orn);
         }
@@ -1490,6 +1472,18 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
     case CE_TabBarTabLabel : {
       if ( const QStyleOptionTab *opt =
            qstyleoption_cast<const QStyleOptionTab *>(option) ) {
+
+        QStyleOptionTab o(*opt);
+
+        if ( opt->state & State_Sunken ) {
+          // Remove "pressed" state and replace it by "toggled" state
+          o.state &= ~State_Sunken;
+          o.state |= State_On;
+          st = state_str(o.state,widget);
+
+          icm = state_iconmode(o.state);
+          ics = state_iconstate(o.state);
+        }
 
         if ( opt->shape == QTabBar::TriangularEast ||
              opt->shape == QTabBar::RoundedEast ||
@@ -1726,11 +1720,32 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
 
           r = r.adjusted(0,0,-empty,0); // filled area
 
-          if ( orn == Horizontal )
-            r = visualRect(dir,orig,r);
+          // right part of frame: only show if progress is full
+          QRect cr = r; // Clip rect for r
+          if ( opt->progress < opt->maximum )
+                cr = cr.adjusted(0,0,-fs.right,0);
 
-          if ( opt->invertedAppearance )
+          if ( orn == Horizontal ) {
+            r = visualRect(dir,orig,r);
+            cr = visualRect(dir,orig,cr);
+          }
+
+          if ( opt->invertedAppearance ) {
             r = visualRect(Qt::RightToLeft,orig,r);
+            cr = visualRect(Qt::RightToLeft,orig,cr);
+          }
+
+          if ( orn != Horizontal )
+            cr = transposedRect(cr);
+
+          p->save();
+          p->setClipRect(cr);
+          renderFrame(p,cs2b(cs.bg,pal.brush(brole)),
+                         (orn != Horizontal) ? transposedRect(r) : r,
+                         fs,fs.element+"-elapsed-"+st,
+                         dir,
+                         orn);
+          p->restore();
 
           renderInterior(p,cs2b(cs.bg,pal.brush(brole)),
                          (orn != Horizontal) ? transposedRect(r) : r,
@@ -1739,11 +1754,13 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
                          dir,
                          orn);
         } else { // busy progressbar
-          int variant = getSpecificValue("specific.progressbar.busy.variant").toInt();
+          int variant = getThemeTweak("specific.progressbar.busy.variant").toInt();
 
           QWidget *wd = (QWidget *)widget;
           int animcount = progressbars[wd];
-          int pm = pixelMetric(PM_ProgressBarChunkWidth)+fs.left+fs.right;
+          int pm = w;
+          if ( is.px > 0 )
+            pm = fs.left+fs.right+is.px;
 
           switch (variant) {
             case VA_PROGRESSBAR_BUSY_WRAP : {
@@ -1823,7 +1840,7 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
             case VA_PROGRESSBAR_BUSY_FULLLENGTH :
             default: {
               int ni = animcount%pm;
-              if ( getSpecificValue("specific.progressbar.busy.full.variant").toInt() ==
+              if ( getThemeTweak("specific.progressbar.busy.full.variant").toInt() ==
                    VA_PROGRESSBAR_BUSY_FULLLENGTH_DIRECTION_FWD )
                 ni = pm-ni;
               r.adjust(-ni,0,w+ni,0);
@@ -1919,11 +1936,11 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
         if ( opt->activeSubControls & SC_ScrollBarSlider )
           o.state = opt->state;
         st = state_str(o.state,widget);
-        renderFrame(p,cs2b(cs.bg,pal.brush(brole)),option->rect,fs,fs.element+"-cursor-"+st,dir,orn);
-        renderInterior(p,cs2b(cs.bg,pal.brush(brole)),option->rect,fs,is,is.element+"-cursor-"+st,dir,orn);
-        if ( focus && drawFocusOverlay ) {
-          renderFrame(p,QBrush(),option->rect,fs,fs.element+"-cursor-focused",dir,orn);
-          renderInterior(p,QBrush(),option->rect,fs,is,is.element+"-cursor-focused",dir,orn);
+        renderFrame(p,cs2b(cs.bg,pal.brush(brole)),option->rect,fs,fs.element+"-"+st,dir,orn);
+        renderInterior(p,cs2b(cs.bg,pal.brush(brole)),option->rect,fs,is,is.element+"-"+st,dir,orn);
+        if ( focus ) {
+          renderFrame(p,QBrush(),option->rect,fs,fs.element+"-focused",dir,orn);
+          renderInterior(p,QBrush(),option->rect,fs,is,is.element+"-focused",dir,orn);
         }
       }
       break;
@@ -2153,6 +2170,55 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
       break;
     }
 
+    case CE_GroupBoxTitle : {
+      if ( const QStyleOptionGroupBox *opt =
+           qstyleoption_cast<const QStyleOptionGroupBox *>(option) ) {
+
+        QStyleOptionGroupBox o(*opt);
+
+        // Draw frame and interior around title
+        fs.hasCapsule = true;
+        fs.capsuleH = 2;
+        fs.capsuleV = -1;
+
+        QRect r1 = subControlRect(CC_GroupBox,opt,SC_GroupBoxLabel,widget);
+
+        renderFrame(p,cs2b(cs.bg,pal.brush(brole)),r1,fs,fs.element+"-"+st,dir);
+        renderInterior(p,cs2b(cs.bg,pal.brush(brole)),r1,fs,is,is.element+"-"+st,dir);
+
+        if ( focus ) {
+          renderFrame(p,QBrush(),r1,fs,fs.element+"-focused",dir);
+          renderInterior(p,QBrush(),r1,fs,is,is.element+"-focused",dir);
+        }
+
+        // Draw title
+        fs.hasCapsule = false;
+        if ( opt->subControls & SC_GroupBoxCheckBox ) {
+          if ( dir == Qt::LeftToRight )
+            renderLabel(p,cs2b(cs.fg,pal.text()),
+                        dir,
+                        r1.adjusted(ds.size+pixelMetric(PM_CheckBoxLabelSpacing),0,0,0),
+                        fs,is,ls,opt->textAlignment | Qt::TextShowMnemonic,
+                        opt->text);
+          else
+            renderLabel(p,cs2b(cs.fg,pal.text()),
+                        dir,
+                        r1.adjusted(0,0,-ds.size-pixelMetric(PM_CheckBoxLabelSpacing),0),
+                        fs,is,ls,opt->textAlignment | Qt::TextShowMnemonic,
+                        opt->text);
+          o.rect = subControlRect(CC_GroupBox,opt,SC_GroupBoxCheckBox,widget);
+          drawPrimitive(static_cast<PrimitiveElement>(PE_IndicatorGroupBoxCheckMark),
+                        &o,p,widget);
+        } else
+          renderLabel(p,cs2b(cs.fg,pal.text()),
+                      dir,r1,fs,is,ls,
+                      opt->textAlignment | Qt::TextShowMnemonic,
+                      opt->text);
+      }
+
+      break;
+    }
+
     default :
       qWarning() << "[QSvgStyle] Unhandled control" << e;
       QCommonStyle::drawControl(e,option,p,widget);
@@ -2192,6 +2258,7 @@ void QSvgThemableStyle::drawComplexControl(ComplexControl control, const QStyleO
 
   if ( g.isEmpty() ) {
     // element not currently supported by QSvgStyle
+    qWarning() << "[QSvgStyle] No group for" << control;
     QCommonStyle::drawComplexControl(control,option,p,widget);
     goto end;
   }
@@ -2563,7 +2630,7 @@ void QSvgThemableStyle::drawComplexControl(ComplexControl control, const QStyleO
         fs.hasCapsule = false;
         o.rect = subControlRect(CC_Slider,opt,SC_SliderHandle,widget);
         renderInterior(p,cs2b(cs.bg,pal.brush(brole)),o.rect,fs,is,is.element+"-cursor-"+st,dir,orn);
-        if ( focus && drawFocusOverlay ) {
+        if ( focus ) {
           renderInterior(p,QBrush(),o.rect,fs,is,is.element+"-cursor-focused",dir,orn);
         }
       }
@@ -2652,7 +2719,6 @@ void QSvgThemableStyle::drawComplexControl(ComplexControl control, const QStyleO
         r2 = subControlRect(CC_GroupBox,&o,SC_GroupBoxLabel,widget);
 
         // Draw frame and interior around contents
-        // Cannot use PE_FrameGroupBox because of capsule
         if ( !(opt->features && QStyleOptionFrame::Flat) ) {
           if ( (opt->subControls & SC_GroupBoxCheckBox) && !(opt->state & State_On) ) {
             // not checked -> draw contents frame with disabled state
@@ -2662,48 +2728,13 @@ void QSvgThemableStyle::drawComplexControl(ComplexControl control, const QStyleO
           o.rect = r1;
           drawPrimitive(PE_FrameGroupBox,&o,p,widget);
           o = *opt;
-          //renderFrame(p,cs2b(cs.bg,pal.brush(brole)),r1,fs,fs.element+"-"+st,dir);
-          //renderInterior(p,cs2b(cs.bg,pal.brush(brole)),r1,fs,is,is.element+"-"+st,dir);
-          //st = state_str(opt->state, widget);
-        }
-
-        // Draw frame and interior around title
-        fs.hasCapsule = true;
-        fs.capsuleH = 2;
-        fs.capsuleV = -1;
-
-        renderFrame(p,cs2b(cs.bg,pal.brush(brole)),r2,fs,fs.element+"-"+st,dir);
-        renderInterior(p,cs2b(cs.bg,pal.brush(brole)),r2,fs,is,is.element+"-"+st,dir);
-
-        if ( focus && drawFocusOverlay ) {
-          renderFrame(p,QBrush(),r2,fs,fs.element+"-focused",dir);
-          renderInterior(p,QBrush(),r2,fs,is,is.element+"-focused",dir);
         }
 
         // Draw title
-        fs.hasCapsule = false;
-        r2 = subControlRect(CC_GroupBox,&o,SC_GroupBoxLabel,widget);
-        if ( opt->subControls & SC_GroupBoxCheckBox ) {
-          if ( dir == Qt::LeftToRight )
-            renderLabel(p,cs2b(cs.fg,pal.text()),
-                        dir,
-                        r2.adjusted(pixelMetric(PM_IndicatorWidth)+pixelMetric(PM_CheckBoxLabelSpacing),0,0,0),
-                        fs,is,ls,opt->textAlignment | Qt::TextShowMnemonic,
-                        opt->text);
-          else
-            renderLabel(p,cs2b(cs.fg,pal.text()),
-                        dir,
-                        r2.adjusted(0,0,-pixelMetric(PM_IndicatorWidth)-pixelMetric(PM_CheckBoxLabelSpacing),0),
-                        fs,is,ls,opt->textAlignment | Qt::TextShowMnemonic,
-                        opt->text);
-          o.rect= subControlRect(CC_GroupBox,opt,SC_GroupBoxCheckBox,widget);
-          drawPrimitive(PE_IndicatorCheckBox,&o,p,NULL);
-        } else
-          renderLabel(p,cs2b(cs.fg,pal.text()),
-                      dir,r2,fs,is,ls,
-                      opt->textAlignment | Qt::TextShowMnemonic,
-                      opt->text);
+        //o.rect = r2;
+        drawControl(static_cast<ControlElement>(CE_GroupBoxTitle),&o,p,widget);
       }
+
       break;
     }
 
@@ -2844,7 +2875,7 @@ int QSvgThemableStyle::pixelMetric(PixelMetric metric, const QStyleOption * opti
                                       qApp->fontMetrics();
 
   switch (metric) {
-    // Indicator width (checkboxes, radios, ...)
+    // Indicator width (checkboxes, radios)
     case PM_IndicatorWidth :
     case PM_IndicatorHeight :
       return getIndicatorSpec(PE_group(PE_IndicatorCheckBox)).size;
@@ -2854,68 +2885,86 @@ int QSvgThemableStyle::pixelMetric(PixelMetric metric, const QStyleOption * opti
 
     // drop down menu + spin box up/down/plus/minus button size (not indicator)
     case PM_MenuButtonIndicator :
-      return getSpecificValue("specific.dropdown.size").toInt();
+      return getThemeTweak("specific.dropdown.size").toInt();
 
     // Custom layout margins
     case PM_LayoutLeftMargin :
-      return getSpecificValue("specific.layoutmargins.left").toInt();
+      return getThemeTweak("specific.layoutmargins.left").toInt();
     case PM_LayoutRightMargin :
-      return getSpecificValue("specific.layoutmargins.right").toInt();
+      return getThemeTweak("specific.layoutmargins.right").toInt();
     case PM_LayoutTopMargin :
-      return getSpecificValue("specific.layoutmargins.top").toInt();
+      return getThemeTweak("specific.layoutmargins.top").toInt();
     case PM_LayoutBottomMargin :
-      return getSpecificValue("specific.layoutmargins.bottom").toInt();
+      return getThemeTweak("specific.layoutmargins.bottom").toInt();
     case PM_LayoutHorizontalSpacing :
-      return getSpecificValue("specific.layoutmargins.hspace").toInt();
+      return getThemeTweak("specific.layoutmargins.hspace").toInt();
     case PM_LayoutVerticalSpacing :
-      return getSpecificValue("specific.layoutmargins.vspace").toInt();
+      return getThemeTweak("specific.layoutmargins.vspace").toInt();
+    // These two are obsolete but still used by many apps
+    case PM_DefaultLayoutSpacing :
+      return qMax(
+            getThemeTweak("specific.layoutmargins.hspace").toInt(),
+            getThemeTweak("specific.layoutmargins.vspace").toInt()
+            );
+    case PM_DefaultChildMargin :
+      return qMax(
+            qMax(getThemeTweak("specific.layoutmargins.left").toInt(),
+                 getThemeTweak("specific.layoutmargins.right").toInt()),
+            qMax(getThemeTweak("specific.layoutmargins.top").toInt(),
+                 getThemeTweak("specific.layoutmargins.bottom").toInt())
+            );
 
     case PM_MenuBarPanelWidth :
       return getFrameSpec(PE_group(PE_PanelMenuBar)).width;
 
+    case PM_ComboBoxFrameWidth :
+      return getFrameSpec(PE_group(PE_Frame)).width;
+
     // These are the 'interior' margins of the menu bar
     case PM_MenuBarVMargin : return 0;
     case PM_MenuBarHMargin :
-      return getSpecificValue("specific.menubar.hspace").toInt();
+      return getThemeTweak("specific.menubar.hspace").toInt();
     // Spacing between menu bar items
     case PM_MenuBarItemSpacing :
-      return getSpecificValue("specific.menubar.space").toInt();
+      return getThemeTweak("specific.menubar.space").toInt();
 
     // Popup menu tear off height
     case PM_MenuTearoffHeight :
-      return getSpecificValue("specific.menu.tearoff.height").toInt();
+      return getThemeTweak("specific.menu.tearoff.height").toInt();
 
     case PM_ToolBarFrameWidth :
       return getFrameSpec(PE_group(PE_PanelToolBar)).width;
     // Margin between toolbar frame and buttons
     case PM_ToolBarItemMargin :
-      return getSpecificValue("specific.toolbar.itemmargin").toInt();
+      return getThemeTweak("specific.toolbar.itemmargin").toInt();
     // The "move" handle of a toolbar
     case PM_ToolBarHandleExtent :
-      return getSpecificValue("specific.toolbar.handle.width").toInt();
+      return getThemeTweak("specific.toolbar.handle.width").toInt();
     // Item separator size
     case PM_ToolBarSeparatorExtent :
-      return getSpecificValue("specific.toolbar.separator.width").toInt();
+      return getThemeTweak("specific.toolbar.separator.width").toInt();
     // No spacing between items
     case PM_ToolBarItemSpacing :
-      return getSpecificValue("specific.toolbar.space").toInt();
+      return getThemeTweak("specific.toolbar.space").toInt();
     // The "extension" button size on partial toolbars
     case PM_ToolBarExtensionExtent :
-      return getSpecificValue("specific.toolbar.extension.width").toInt();
+      return getThemeTweak("specific.toolbar.extension.width").toInt();
     case PM_ToolBarIconSize :
-      return getSpecificValue("specific.toolbar.icon.size").toInt();
+      return getThemeTweak("specific.toolbar.icon.size").toInt();
 
     case PM_TabBarTabHSpace : return 0;
     case PM_TabBarTabVSpace : return 0;
     case PM_TabBarScrollButtonWidth : return 20;
     case PM_TabBarBaseHeight : return 0;
-    case PM_TabBarBaseOverlap : return 0;
+    case PM_TabBarBaseOverlap : return 00;
+    case PM_TabBarTabOverlap : return 0;
     case PM_TabBarTabShiftHorizontal : return 0;
     case PM_TabBarTabShiftVertical : return 0;
     case PM_TabBarIconSize : return 16;
     case PM_TabBar_ScrollButtonOverlap: return 0;
     case PM_TabCloseIndicatorHeight :
-    case PM_TabCloseIndicatorWidth : return 16;
+    case PM_TabCloseIndicatorWidth :
+      return getIndicatorSpec(PE_group(PE_IndicatorTabClose)).size;
 
     // Icon sizes
     case PM_SmallIconSize : return 16;
@@ -2937,22 +2986,22 @@ int QSvgThemableStyle::pixelMetric(PixelMetric metric, const QStyleOption * opti
 
     case PM_CheckBoxLabelSpacing :
     case PM_RadioButtonLabelSpacing :
-      return getSpecificValue("specific.radiocheckbox.label.tispace").toInt();
+      return getThemeTweak("specific.radiocheckbox.label.tispace").toInt();
 
     case PM_SplitterWidth : return 6;
 
     case PM_ScrollBarExtent :
-      return getSpecificValue("specific.scrollbar.thickness").toInt();
+      return getThemeTweak("specific.scrollbar.thickness").toInt();
     case PM_ScrollBarSliderMin :
-      return getSpecificValue("specific.scrollbar.slider.minsize").toInt();
+      return getThemeTweak("specific.scrollbar.slider.minsize").toInt();
 
     case PM_SliderThickness :
-      return getSpecificValue("specific.slider.thickness").toInt();
+      return getThemeTweak("specific.slider.thickness").toInt();
     case PM_SliderLength :
     case PM_SliderControlThickness :
-      return getSpecificValue("specific.slider.cursor.size").toInt();
+      return getThemeTweak("specific.slider.cursor.size").toInt();
     case PM_SliderTickmarkOffset :
-      return getSpecificValue("specific.slider.ticks.offset").toInt();
+      return getThemeTweak("specific.slider.ticks.offset").toInt();
     case PM_SliderSpaceAvailable:
       if (const QStyleOptionSlider *opt =
           qstyleoption_cast<const QStyleOptionSlider *>(option)) {
@@ -2966,7 +3015,7 @@ int QSvgThemableStyle::pixelMetric(PixelMetric metric, const QStyleOption * opti
       break;
 
     case PM_ProgressBarChunkWidth :
-      return getSpecificValue("specific.progressbar.chunk.width").toInt();
+      return getThemeTweak("specific.progressbar.chunk.width").toInt();
 
     case PM_DefaultFrameWidth :
       // NOTE used by QLineEdit, QTabWidget and QMdiArea
@@ -3020,9 +3069,9 @@ int QSvgThemableStyle::pixelMetric(PixelMetric metric, const QStyleOption * opti
     }
     break;
     case PM_DockWidgetSeparatorExtent:
-      return getSpecificValue("specific.dock.separator.size").toInt();
+      return getThemeTweak("specific.dock.separator.size").toInt();
     case PM_DockWidgetHandleExtent:
-      return getSpecificValue("specific.dock.handle.width").toInt();
+      return getThemeTweak("specific.dock.handle.width").toInt();
 
     case PM_TextCursorWidth : return 1;
 
@@ -3073,7 +3122,7 @@ int QSvgThemableStyle::pixelMetric(PixelMetric metric, const QStyleOption * opti
       return QCommonStyle::pixelMetric(metric,option,widget);
 
     default :
-      qWarning() << "Unhandled pixelmetric" << metric;
+      qWarning() << "[QSvgStyle] Unhandled pixelmetric" << metric;
       return QCommonStyle::pixelMetric(metric,option,widget);
   }
 }
@@ -3174,7 +3223,10 @@ QSize QSvgThemableStyle::sizeFromContents ( ContentsType type, const QStyleOptio
 
         s += QSize(4,0); // QLineEdit hard-coded margins
         if ( opt->buttonSymbols != QAbstractSpinBox::NoButtons ) {
-          s += QSize(2*pixelMetric(PM_MenuButtonIndicator),0); // buttons
+          if ( getThemeTweak("specific.spinbox.variant").toInt() == VA_SPINBOX_BUTTONS_STACKED )
+            s += QSize(pixelMetric(PM_MenuButtonIndicator),0); // buttons
+          else
+            s += QSize(2*pixelMetric(PM_MenuButtonIndicator),0); // buttons
         }
         if ( !opt->frame)
           s = s.expandedTo(QSize(0,pixelMetric(PM_MenuButtonIndicator))); // minimum height
@@ -3263,20 +3315,14 @@ QSize QSvgThemableStyle::sizeFromContents ( ContentsType type, const QStyleOptio
       if ( const QStyleOptionMenuItem *opt =
            qstyleoption_cast<const QStyleOptionMenuItem *>(option) ) {
 
-        // NOTE Cheat here: the frame is for the whole menu,
-        // not the individual menu items
-        fs.hasFrame = false;
-        fs.top = fs.bottom = fs.left = fs.right = 0;
-
         if (opt->menuItemType == QStyleOptionMenuItem::Separator)
-          s = QSize(csw,getSpecificValue("specific.menu.separator.height").toInt());
+          s = QSize(csw,getThemeTweak("specific.menu.separator.height").toInt());
         else {
           s = sizeFromContents(fm,fs,is,ls,opt->text,opt->maxIconWidth);
         }
 
-        // No icon ? add icon width nevertheless
-        if (opt->icon.pixmap(opt->maxIconWidth).isNull())
-          s.rwidth() += ls.tispace+opt->maxIconWidth;
+        // add icon width even if no icon
+        s.rwidth() += ls.tispace+opt->maxIconWidth;
 
         // add width for check mark
         if ( (opt->checkType == QStyleOptionMenuItem::Exclusive) ||
@@ -3287,7 +3333,7 @@ QSize QSvgThemableStyle::sizeFromContents ( ContentsType type, const QStyleOptio
 
         // add width for sub menu arrow
         if ( opt->menuItemType == QStyleOptionMenuItem::SubMenu ) {
-          s.rwidth() += ls.tispace+ds.size;
+          s.rwidth() += pixelMetric(PM_CheckBoxLabelSpacing)+ds.size;
         }
       }
 
@@ -3297,11 +3343,6 @@ QSize QSvgThemableStyle::sizeFromContents ( ContentsType type, const QStyleOptio
     case CT_MenuBarItem : {
       if ( const QStyleOptionMenuItem *opt =
            qstyleoption_cast<const QStyleOptionMenuItem *>(option) ) {
-
-        // NOTE Cheat here: frame is for whole menu bar, not
-        // individual menu bar items
-        fs.hasFrame = false;
-        fs.left = fs.right = fs.top = fs.bottom = 0;
 
         s = sizeFromContents(fm,fs,is,ls,
                              opt->text,
@@ -3389,7 +3430,7 @@ QSize QSvgThemableStyle::sizeFromContents ( ContentsType type, const QStyleOptio
                              opt->text,
                              opt->iconSize.width());
 
-        if ( qobject_cast< const QTabBar* >(widget)->tabsClosable() ) {
+        if ( (qobject_cast< const QTabBar* >(widget))->tabsClosable() ) {
             s.rwidth() += ls.tispace+pixelMetric(PM_TabCloseIndicatorWidth);
         }
 
@@ -3425,18 +3466,48 @@ QSize QSvgThemableStyle::sizeFromContents ( ContentsType type, const QStyleOptio
       break;
     }
 
-    case CT_GroupBox : {
+    case CT_GroupBox : { // whole group box (incl. title)
       if ( const QStyleOptionGroupBox *opt =
            qstyleoption_cast<const QStyleOptionGroupBox *>(option) ) {
 
-        if ( opt->subControls & SC_GroupBoxCheckBox )
-          s = sizeFromContents(fm,fs,is,ls,opt->text)+QSize(pixelMetric(PM_CheckBoxLabelSpacing)+pixelMetric(PM_IndicatorWidth),0);
-        else
-          s = sizeFromContents(fm,fs,is,ls,opt->text);
+        // Title
+        QSize stitle;
+        g = CE_group(static_cast<ControlElement>(CE_GroupBoxTitle));
+        fs = getFrameSpec(g);
+        is = getInteriorSpec(g);
+        ls = getLabelSpec(g);
 
-        // add contents to st, 30 is title shift (left and right)
-        s = QSize(qMax(s.width()+30+30,csz.width()+fs.left+fs.right),
-                  csz.height()+s.height()+fs.top+fs.bottom);
+        if ( opt->subControls & SC_GroupBoxCheckBox )
+          stitle = sizeFromContents(fm,fs,is,ls,opt->text)+QSize(pixelMetric(PM_CheckBoxLabelSpacing)+ds.size,0);
+        else
+          stitle = sizeFromContents(fm,fs,is,ls,opt->text);
+
+        // 30 is title margin (left and right)
+        stitle += QSize(30+30,0);
+
+        QSize scontents;
+        g = PE_group(PE_FrameGroupBox);
+        fs = getFrameSpec(g);
+        is = getInteriorSpec(g);
+        ls = getLabelSpec(g);
+
+        scontents = csz+QSize(fs.top+fs.bottom,fs.left+fs.right);
+
+        // unite
+        s = QSize(qMax(stitle.width(),scontents.width()),
+                  stitle.height()+scontents.height());
+      }
+
+      break;
+    }
+
+    case CT_TabWidget : { // tab widget contents only
+      if ( const QStyleOptionTabWidgetFrame *opt =
+           qstyleoption_cast<const QStyleOptionTabWidgetFrame *>(option) ) {
+
+        s = csz+QSize(fs.top+fs.bottom,fs.left+fs.right);
+        s = QSize(qMax(s.width(),opt->tabBarSize.width()),
+                  s.height());
       }
 
       break;
@@ -3625,6 +3696,12 @@ QRect QSvgThemableStyle::subElementRect(SubElement e, const QStyleOption * optio
       break;
     }
 
+    case SE_TabWidgetTabContents : {
+      ret = subElementRect(SE_TabWidgetTabPane,option,widget);
+      ret = interiorRect(ret,fs,is);
+      break;
+    }
+
     case SE_ItemViewItemCheckIndicator : {
       ret = r.adjusted(ls.hmargin,0,0,0);
       ret.setWidth(qMin(ret.height(),(int)ds.size));
@@ -3703,7 +3780,7 @@ QRect QSvgThemableStyle::subControlRect(ComplexControl control, const QStyleOpti
       const QStyleOptionSpinBox *opt =
         qstyleoption_cast<const QStyleOptionSpinBox *>(option);
 
-      int variant = getSpecificValue("specific.spinbox.variant").toInt();
+      int variant = getThemeTweak("specific.spinbox.variant").toInt();
 
       if ( !opt->frame )
         fs.hasFrame = false;
@@ -3727,6 +3804,9 @@ QRect QSvgThemableStyle::subControlRect(ComplexControl control, const QStyleOpti
                 ret = r.adjusted(pixelMetric(PM_MenuButtonIndicator),0,
                                  -pixelMetric(PM_MenuButtonIndicator),0);
                 break;
+              case VA_SPINBOX_BUTTONS_STACKED :
+                ret = r.adjusted(0,0,-pixelMetric(PM_MenuButtonIndicator),0);
+                break;
               default:
                 break;
             }
@@ -3744,6 +3824,10 @@ QRect QSvgThemableStyle::subControlRect(ComplexControl control, const QStyleOpti
                 ret = QRect(x+w-pixelMetric(PM_MenuButtonIndicator),
                         y,pixelMetric(PM_MenuButtonIndicator),h);
                 break;
+              case VA_SPINBOX_BUTTONS_STACKED :
+                ret = QRect(x+w-pixelMetric(PM_MenuButtonIndicator),
+                        y,pixelMetric(PM_MenuButtonIndicator),h/2);
+                break;
               default:
                 break;
             }
@@ -3758,6 +3842,10 @@ QRect QSvgThemableStyle::subControlRect(ComplexControl control, const QStyleOpti
                 break;
               case VA_SPINBOX_BUTTONS_OPPOSITE :
                 ret = QRect(x,y,pixelMetric(PM_MenuButtonIndicator),h);
+                break;
+              case VA_SPINBOX_BUTTONS_STACKED :
+                ret = QRect(x+w-pixelMetric(PM_MenuButtonIndicator),
+                        y+h/2,pixelMetric(PM_MenuButtonIndicator),h/2);
                 break;
               default:
                 break;
@@ -4000,8 +4088,8 @@ QRect QSvgThemableStyle::subControlRect(ComplexControl control, const QStyleOpti
                                   opt->text);
         if ( opt->subControls & SC_GroupBoxCheckBox ) {
           // ensure checkbox indicator fits within title interior
-          stitle += QSize(pixelMetric(PM_IndicatorWidth)+pixelMetric(PM_CheckBoxLabelSpacing),0);
-          stitle = stitle.expandedTo(QSize(0,fs.top+fs.bottom+pixelMetric(PM_IndicatorHeight)));
+          stitle += QSize(ds.size+pixelMetric(PM_CheckBoxLabelSpacing),0);
+          stitle = stitle.expandedTo(QSize(0,fs.top+fs.bottom+ds.size));
         }
 
         labelRect = alignedRect(Qt::LeftToRight,
@@ -4014,8 +4102,9 @@ QRect QSvgThemableStyle::subControlRect(ComplexControl control, const QStyleOpti
         case SC_GroupBoxCheckBox : {
           // align checkbox inside label rect
           ret = alignedRect(Qt::LeftToRight,Qt::AlignLeft | Qt::AlignVCenter,
-                            QSize(pixelMetric(PM_IndicatorWidth),pixelMetric(PM_IndicatorHeight)),
+                            QSize(ds.size,ds.size),
                             labelRect.adjusted(fs.left+ls.hmargin,fs.top,-fs.right-ls.hmargin,-fs.bottom));
+
           break;
         }
         case SC_GroupBoxLabel : {
@@ -4028,6 +4117,11 @@ QRect QSvgThemableStyle::subControlRect(ComplexControl control, const QStyleOpti
           break;
         }
         case SC_GroupBoxContents : {
+          g = PE_group(PE_FrameGroupBox);
+          fs = getFrameSpec(g);
+          is = getInteriorSpec(g);
+          ls = getLabelSpec(g);
+
           ret = interiorRect(r.adjusted(0,stitle.height(),0,0),fs,is);
           break;
         }
@@ -4278,7 +4372,7 @@ QIcon QSvgThemableStyle::standardIcon(StandardPixmap standardIcon, const QStyleO
       break;
 
     case SP_LineEditClearButton :
-      sz = pixelMetric(PM_SmallIconSize);
+      sz = getIndicatorSpec(PE_group(PE_FrameLineEdit)).size;
       base = getIndicatorSpec(PE_group(PE_FrameLineEdit)).element;
       base += "-clear";
       break;
@@ -4354,6 +4448,7 @@ void QSvgThemableStyle::renderElement(QPainter* p, const QString& element, const
     p->drawLine(x,y,x+w-1,y+h-1);
     p->drawLine(x+w-1,y,x,y+h-1);
     p->restore();
+    emit sig_missingElement(element);
     qWarning() << "element" << element << "not found in SVG file";
     return;
   }
@@ -4518,8 +4613,8 @@ void QSvgThemableStyle::renderFrame(QPainter *p,
   bool use3dFrame;
 
   bounds.getRect(&x0,&y0,&w,&h);
-  intensity = getSpecificValue("specific.palette.intensity").toInt();
-  use3dFrame = getSpecificValue("specific.palette.3dframes").toBool();
+  intensity = getThemeTweak("specific.palette.intensity").toInt();
+  use3dFrame = getThemeTweak("specific.palette.3dframes").toBool();
 
   // rects to draw frame parts
   QRect top, bottom, left, right, topleft, topright, bottomleft, bottomright;
@@ -4735,7 +4830,7 @@ void QSvgThemableStyle::renderInterior(QPainter *p,
   int intensity;
 
   bounds.getRect(&x0,&y0,&w,&h);
-  intensity = getSpecificValue("specific.palette.intensity").toInt();
+  intensity = getThemeTweak("specific.palette.intensity").toInt();
 
   // drawing rect
   QRect r;
@@ -4859,8 +4954,8 @@ void QSvgThemableStyle::colorizeIndicator(QPainter *p,
   int intensity;
   bool use3dFrame;
 
-  intensity = getSpecificValue("specific.palette.intensity").toInt();
-  use3dFrame = getSpecificValue("specific.palette.3dframes").toBool();
+  intensity = getThemeTweak("specific.palette.intensity").toInt();
+  use3dFrame = getThemeTweak("specific.palette.3dframes").toBool();
 
   // drawing rect
   QRect r = squaredRect(interiorRect(bounds,fs,is));
@@ -5032,9 +5127,14 @@ inline label_spec_t QSvgThemableStyle::getLabelSpec(const QString& group) const
   return themeSettings->getLabelSpec(group);
 }
 
-inline QVariant QSvgThemableStyle::getSpecificValue(const QString &key) const
+inline QVariant QSvgThemableStyle::getThemeTweak(const QString &key) const
 {
-  return styleSettings->getSpecificValue(key);
+  return themeSettings->getThemeTweak(key);
+}
+
+inline QVariant QSvgThemableStyle::getStyleTweak(const QString &key) const
+{
+  return styleSettings->getStyleTweak(key);
 }
 
 inline color_spec_t QSvgThemableStyle::getColorSpec(const QString& group) const
@@ -5238,23 +5338,26 @@ void QSvgThemableStyle::drawRealRect(QPainter* p, const QRect& r) const
   p->drawLine(x0,y1,x1,y1);
 }
 
-/* !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! */
 QString QSvgThemableStyle::state_str(State st, const QWidget* w) const
 {
   QString status;
 
   if ( !isContainerWidget(w) ) {
-    status = ( (st & State_Enabled) ) ?
+    // Keep the order
+    status = (st & State_Enabled) ?
       (st & State_Sunken) ? "pressed" :
       (st & State_On) ? "toggled" :
       (st & State_Selected) ? "toggled" :
       (st & State_MouseOver) ? "hovered" : "normal"
-    : (st & State_On) ? "disabled-toggled" : "disabled";
+    : (st & State_On) ? "disabled-toggled" :
+      (st & State_Selected) ? "disabled-toggled" : "disabled";
   } else {
-      // container widgets will have only normal, selected and disabled status
-    status = ( (st & State_Enabled) ) ?
-      (st & State_Selected) ? "toggled" : "normal"
-    : "disabled";
+      // no pressed/hovered state for containers
+    status = (st & State_Enabled) ?
+      (st & State_Selected) ? "toggled" :
+      (st & State_On) ? "toggled" : "normal"
+    : (st & State_On) ? "disabled-toggled" :
+      (st & State_Selected) ? "disabled-toggled" : "disabled";
   }
 
   return status;
@@ -5272,56 +5375,5 @@ QIcon::Mode QSvgThemableStyle::state_iconmode(State st) const
 
 QIcon::State QSvgThemableStyle::state_iconstate(State st) const
 {
-  return (st & State_On) ? QIcon::On : QIcon::Off;
+  return (st & State_Enabled) ? QIcon::On : QIcon::Off;
 }
-
-QString QSvgThemableStyle::PE_str(PrimitiveElement element) const
-{
-  const QMetaObject *m = qt_getEnumMetaObject(QStyle::PrimitiveElement());
-  const QMetaEnum me = m->enumerator(m->indexOfEnumerator(qt_getEnumName(QStyle::PrimitiveElement())));
-
-  return me.valueToKey(element);
-}
-
-QString QSvgThemableStyle::CE_str(QStyle::ControlElement element) const
-{
-  const QMetaObject *m = qt_getEnumMetaObject(QStyle::ControlElement());
-  const QMetaEnum me = m->enumerator(m->indexOfEnumerator(qt_getEnumName(QStyle::ControlElement())));
-
-  return me.valueToKey(element);
-}
-
-QString QSvgThemableStyle::SE_str(QStyle::SubElement element) const
-{
-  const QMetaObject *m = qt_getEnumMetaObject(QStyle::SubElement());
-  const QMetaEnum me = m->enumerator(m->indexOfEnumerator(qt_getEnumName(QStyle::SubElement())));
-
-  return me.valueToKey(element);
-}
-
-QString QSvgThemableStyle::CC_str(QStyle::ComplexControl element) const
-{
-  const QMetaObject *m = qt_getEnumMetaObject(QStyle::ComplexControl());
-  const QMetaEnum me = m->enumerator(m->indexOfEnumerator(qt_getEnumName(QStyle::ComplexControl())));
-
-  return me.valueToKey(element);
-}
-
-QString QSvgThemableStyle::SC_str(QStyle::ComplexControl control, QStyle::SubControl subControl) const
-{
-  Q_UNUSED(control);
-
-  const QMetaObject *m = qt_getEnumMetaObject(QStyle::SubControl());
-  const QMetaEnum me = m->enumerator(m->indexOfEnumerator(qt_getEnumName(QStyle::SubControl())));
-
-  return me.valueToKey(subControl);
-}
-
-QString QSvgThemableStyle::CT_str(QStyle::ContentsType type) const
-{
-  const QMetaObject *m = qt_getEnumMetaObject(QStyle::ContentsType());
-  const QMetaEnum me = m->enumerator(m->indexOfEnumerator(qt_getEnumName(QStyle::ContentsType())));
-
-  return me.valueToKey(type);
-}
-/* !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! */

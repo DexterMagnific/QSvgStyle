@@ -44,11 +44,11 @@ class StyleConfig : public QSvgCachedSettings {
 
     void setStyleSpec(const style_spec_t &cs);
 
-    QVariant getSpecificValue(const QString &key) const {
+    QVariant getStyleTweak(const QString &key) const {
         return getRawValue("Tweaks",key);
     }
 
-    void setSpecificValue(const QString &key, const QVariant &v) {
+    void setStyleTweak(const QString &key, const QVariant &v) {
         setValue("Tweaks",key,v);
     }
 

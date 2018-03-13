@@ -46,5 +46,9 @@ unix {
 
   #MAKE INSTALL
   target.path = $$BINDIR
-  INSTALLS += target
+
+  desktop.path = $$DATADIR/applications
+  desktop.files = ./desktop/qsvgthememanager.desktop
+
+  INSTALLS += target desktop
 }

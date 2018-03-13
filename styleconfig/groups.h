@@ -29,4 +29,17 @@ QString CC_group(QStyle::ComplexControl element);
  */
 QString CT_group(QStyle::ContentsType type);
 
+/* Stringyfy functions */
+QString PE_str(QStyle::PrimitiveElement element);
+
+QString CE_str(QStyle::ControlElement element);
+
+QString SE_str(QStyle::SubElement element);
+
+QString CC_str(QStyle::ComplexControl element);
+
+QString SC_str(QStyle::ComplexControl control, QStyle::SubControl subControl);
+
+QString CT_str(QStyle::ContentsType type);
+
 #endif

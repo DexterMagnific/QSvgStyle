@@ -25,6 +25,7 @@
 #include <QFileSystemWatcher>
 #include <QElapsedTimer>
 #include <QColor>
+#include <QStyledItemDelegate>
 
 #include "ui_ThemeBuilderUIBase.h"
 #include "GenSubFramePropUI.h"
@@ -64,7 +65,7 @@ class ThemeBuilderUI : public QMainWindow, private Ui::ThemeBuilderUIBase {
     void slot_openRecentTheme();
 
     // Called when the current widget in the same QTreeView has changed
-    void slot_widgetChanged(QListWidgetItem *current, QListWidgetItem *previous);
+    void slot_widgetChanged(QTreeWidgetItem *current, QTreeWidgetItem *previous);
     // Called when the current toolbox tab has changed
     void slot_toolboxTabChanged(int index);
 
@@ -74,8 +75,10 @@ class ThemeBuilderUI : public QMainWindow, private Ui::ThemeBuilderUIBase {
 
     // called on properties tab changes
     void slot_authorEditChanged(const QString &text);
+    void slot_variantEditChanged(const QString &text);
     void slot_descrEditChanged(const QString &text);
     void slot_themeNameEditChanged(const QString &text);
+    void slot_keywordsEditChanged(const QString &text);
 
     // called on common tab changes
     void slot_inheritCbChanged(int state);
@@ -148,6 +151,9 @@ class ThemeBuilderUI : public QMainWindow, private Ui::ThemeBuilderUIBase {
     void slot_genShadowLeftBtnClicked(bool checked);
     void slot_genShadowRightBtnClicked(bool checked);
 
+    // called on theme tweaks changes
+    void slot_specificChanged(QTreeWidgetItem *item, int column);
+
     // Callbacks from QSvgStyle that are triggered when it renders widgets
     void slot_drawPrimitive_begin(const QString &s);
     void slot_drawPrimitive_end(const QString &s);
@@ -167,6 +173,7 @@ class ThemeBuilderUI : public QMainWindow, private Ui::ThemeBuilderUIBase {
     void slot_renderElement_end(const QString &s);
     void slot_sizeFromContents_begin(const QString &s);
     void slot_sizeFromContents_end(const QString &s);
+    void slot_missingElement(const QString &s);
 
     // TESTING
     // END TESTING
@@ -176,14 +183,6 @@ class ThemeBuilderUI : public QMainWindow, private Ui::ThemeBuilderUIBase {
     virtual void closeEvent(QCloseEvent *e);
 
   private:
-    // enum that allow us to attach arbitrary data to QTreeViewItem items
-    // using @ref QTreeViewItem::setData()
-    enum {
-      GroupRole = Qt::UserRole + 10, // the theme configuration group for the
-                                     // selected widget
-      SettingRole = Qt::UserRole + 11, // the specific setting name
-    };
-
     // opens a theme
     bool openTheme(const QString &filename);
 
@@ -213,14 +212,16 @@ class ThemeBuilderUI : public QMainWindow, private Ui::ThemeBuilderUIBase {
     void blockUISignals(bool blocked);
 
     // Setup the UI to reflect the settings for the given item
-    void setupUiForWidget(const QListWidgetItem *current);
+    void setupUiForWidget(const QTreeWidgetItem *current);
     // Setup the preview widget to reflect the given item
-    void setupPreviewForWidget(const QListWidgetItem *current);
+    void setupPreviewForWidget(const QTreeWidgetItem *current);
     // Save current UI settings for widget
-    void saveSettingsFromUi(const QListWidgetItem *current);
+    void saveSettingsFromUi(const QTreeWidgetItem *current);
     // wrapper around slot_XXXX_begin
     void noteStyleOperation_begin(const QString &op, const QString &args);
     void noteStyleOperation_end(const QString &op, const QString &args);
+    // wrapper around missingElement signal
+    void noteStyleOperation_missingElement(const QString &s);
     // clear drawStackTree, delete all its items
     void clearDrawStackTree();
     // Sets the given style for the given widget and all its children
@@ -263,7 +264,7 @@ class ThemeBuilderUI : public QMainWindow, private Ui::ThemeBuilderUIBase {
     // state save
     int currentToolboxTab;
     // current selected item in toolbox
-    QListWidgetItem *currentWidget;
+    QTreeWidgetItem *currentWidget;
     // last inserted item inside drawStackTree
     QTreeWidgetItem *currentDrawStackItem;
     // preview mode
@@ -292,6 +293,46 @@ class ThemeBuilderUI : public QMainWindow, private Ui::ThemeBuilderUIBase {
     // SVG quick generator
     SvgGen *svgGen;
     QVector<GenSubFramePropUI *> genSubFrameProps;
+};
+
+// Custom item delegate for specificTree
+class SpecificTreeDelegate : public QStyledItemDelegate {
+  Q_OBJECT
+
+  public:
+    SpecificTreeDelegate(QObject *parent = 0);
+
+    QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem &option,
+                          const QModelIndex &index) const;
+
+    virtual void setEditorData(QWidget *editor, const QModelIndex &index) const;
+    virtual void setModelData(QWidget *editor, QAbstractItemModel *model,
+                              const QModelIndex &index) const;
+
+    virtual void updateEditorGeometry(QWidget *editor,
+                                      const QStyleOptionViewItem &option,
+                                      const QModelIndex &index) const;
+
+    virtual void paint(QPainter *painter,
+                       const QStyleOptionViewItem &option,
+                       const QModelIndex &index) const;
+
+  private slots:
+    //void slot_valueChanged(int);
+    void slot_currentIndexChanged(int idx);
+    void slot_valueChanged(int val);
+    void slot_boolChanged(bool checked);
+    void slot_editorDestroyed(QObject *o);
+};
+
+// enum that allow us to attach arbitrary data to QTreeViewItem items
+// using @ref QTreeViewItem::setData()
+enum {
+  ElementGroupRole = Qt::UserRole + 10, /* the theme configuration group for the
+                                           selected item */
+  SpecificSettingName,
+  SpecificSettingRange,
+  SpecificSettingType,
 };
 
 #endif // THEMEBUILDERUI_H

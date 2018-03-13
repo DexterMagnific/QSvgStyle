@@ -97,8 +97,10 @@ void ThemeConfig::setThemeSpec(const theme_spec_t& ts)
   removeAllWithPrefix("General", "");
 
   setValue("General","name", ts.name);
+  setValue("General","variant", ts.variant);
   setValue("General","author", ts.author);
   setValue("General","comment", ts.descr);
+  setValue("General","keywords", ts.keywords);
 }
 
 frame_spec_t ThemeConfig::getRawFrameSpec(const QString& group) const
@@ -170,7 +172,9 @@ theme_spec_t ThemeConfig::getThemeSpec() const
 
   r.name = getRawValue("General","name");
   r.author = getRawValue("General","author");
+  r.variant = getRawValue("General","variant");
   r.descr = getRawValue("General","comment");
+  r.keywords = getRawValue("General","keywords");
   r.path = filename();
 
   return r;
@@ -181,20 +185,11 @@ frame_spec_t ThemeConfig::getFrameSpec(const QString& group) const
   frame_spec_t r;
 
   r.hasFrame = getValue(group, "frame");
-  r.element = getValue(group, "frame.element");
-  r.width = getValue(group, "frame.width");
-
-  // fill unset values with default values but leave their status to unset
-  if ( !r.hasFrame.present ) {
-    r.hasFrame = false;
-    r.hasFrame.present = false;
+  if ( r.hasFrame.present && r.hasFrame ) {
+    r.element = getValue(group, "frame.element");
+    r.width = getValue(group, "frame.width");
+    r.top = r.bottom = r.left = r.right = r.width;
   }
-  if ( !r.width.present ) {
-    r.width = 0;
-    r.width.present = false;
-  }
-
-  r.top = r.bottom = r.left = r.right = r.width;
 
   return r;
 }
@@ -204,22 +199,10 @@ interior_spec_t ThemeConfig::getInteriorSpec(const QString& group) const
   interior_spec_t r;
 
   r.hasInterior = getValue(group, "interior");
-  r.element = getValue(group, "interior.element");
-  r.px = getValue(group, "interior.xrepeat");
-  r.py = getValue(group, "interior.yrepeat");
-
-  // fill unset values with default values but leave their status to unset
-  if ( !r.hasInterior.present ) {
-    r.hasInterior = false;
-    r.hasInterior.present = false;
-  }
-  if ( !r.px.present ) {
-    r.px = 0;
-    r.px.present = false;
-  }
-  if ( !r.py.present ) {
-    r.py = 0;
-    r.py.present = false;
+  if ( r.hasInterior.present && r.hasInterior ) {
+    r.element = getValue(group, "interior.element");
+    r.px = getValue(group, "interior.xrepeat");
+    r.py = getValue(group, "interior.yrepeat");
   }
 
   return r;
@@ -232,12 +215,6 @@ indicator_spec_t ThemeConfig::getIndicatorSpec(const QString& group) const
   r.element = getValue(group, "indicator.element");
   r.size = getValue(group, "indicator.size");
 
-  // fill unset values with default values but leave their status to unset
-  if ( !r.size.present ) {
-    r.size = 7;
-    r.size.present = false;
-  }
-
   return r;
 }
 
@@ -248,20 +225,6 @@ label_spec_t ThemeConfig::getLabelSpec(const QString& group) const
   r.hmargin = getValue(group, "label.hmargin");
   r.vmargin = getValue(group, "label.vmargin");
   r.tispace = getValue(group, "label.iconspacing");
-
-  // fill unset values with default values but leave their status to unset
-  if ( !r.hmargin.present ) {
-    r.hmargin = 0;
-    r.hmargin.present = false;
-  }
-  if ( !r.vmargin.present ) {
-    r.vmargin = 0;
-    r.vmargin.present = false;
-  }
-  if ( !r.tispace.present ) {
-    r.tispace = 0;
-    r.tispace.present = false;
-  }
 
   r.margin = qMax(r.hmargin,r.vmargin);
 

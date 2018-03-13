@@ -1,5 +1,16 @@
 <RCC>
   <qresource prefix="pixmaps">
+    <file>pixmaps/listview.png</file>
+    <file>pixmaps/hslider.png</file>
+    <file>pixmaps/widgetstack.png</file>
+    <file>pixmaps/pushbutton.png</file>
+    <file>pixmaps/down.png</file>
+    <file>pixmaps/cleartext.png</file>
+    <file>pixmaps/textanchor.png</file>
+    <file>pixmaps/insertimage.png</file>
+    <file>pixmaps/fileopen.png</file>
+    <file>pixmaps/hint.png</file>
+    <file>pixmaps/wizard.png</file>
     <file>pixmaps/adjustsize.png</file>
     <file>pixmaps/preview.png</file>
     <file>pixmaps/color.png</file>

@@ -41,61 +41,6 @@
 #include "StyleConfig.h"
 #include "../style/QSvgThemableStyle.h"
 
-SpinBoxDelegate::SpinBoxDelegate(QObject *parent)
-  : QStyledItemDelegate(parent)
-{
-}
-
-QWidget *SpinBoxDelegate::createEditor(QWidget *parent,
-                                       const QStyleOptionViewItem &/* option */,
-                                       const QModelIndex &index) const
-{
-  if (index.column() != 0) {
-    QSpinBox *editor = new QSpinBox(parent);
-    editor->setMinimum(0);
-    editor->setMaximum(99);
-
-    // update model without waiting the close of the editor
-    connect(editor,SIGNAL(valueChanged(int)),
-            this,SLOT(slot_valueChanged(int)));
-
-    return editor;
-  } else
-    return NULL;
-}
-
-void SpinBoxDelegate::setEditorData(QWidget *editor,
-                                    const QModelIndex &index) const
-{
-  int value = index.model()->data(index, Qt::EditRole).toInt();
-
-  QSpinBox *spinBox = static_cast<QSpinBox*>(editor);
-  spinBox->setValue(value);
-}
-
-void SpinBoxDelegate::setModelData(QWidget *editor, QAbstractItemModel *model,
-                                   const QModelIndex &index) const
-{
-  QSpinBox *spinBox = static_cast<QSpinBox*>(editor);
-  spinBox->interpretText();
-  int value = spinBox->value();
-
-  model->setData(index, value, Qt::EditRole);
-}
-
-void SpinBoxDelegate::updateEditorGeometry(QWidget *editor,
-                                           const QStyleOptionViewItem &option,
-                                           const QModelIndex &/* index */) const
-{
-  editor->setGeometry(option.rect);
-}
-
-void SpinBoxDelegate::slot_valueChanged(int val)
-{
-  Q_UNUSED(val);
-  emit commitData(static_cast<QSpinBox *>(sender()));
-}
-
 ThemeManagerUI::ThemeManagerUI(QWidget* parent)
   : QMainWindow(parent),
     style(NULL),
@@ -107,26 +52,8 @@ ThemeManagerUI::ThemeManagerUI(QWidget* parent)
   // Setup using auto-generated UIC code
   setupUi(this);
 
-  // Further setup for specific tree: move item text to item data
-  QTreeWidgetItemIterator it(specificTree);
-  while (*it) {
-    if ( !(*it)->childCount() ) { // leaf
-      (*it)->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEditable|Qt::ItemIsUserCheckable|Qt::ItemIsEnabled);
-      // move .ui text to item data
-      (*it)->setData(1, SettingRole, (*it)->text(1));
-    }
-    ++it;
-  }
-
-#if QT_VERSION < 0x050000
-  specificTree->header()->setResizeMode(0,QHeaderView::ResizeToContents);
-#else
-  specificTree->header()->setSectionResizeMode(0,QHeaderView::ResizeToContents);
-#endif
-
-  // Setup spin box item delegate for Specific tree
-  SpinBoxDelegate *spinDelegate = new SpinBoxDelegate(0);
-  specificTree->setItemDelegate(spinDelegate);
+  //qWarning() << "User theme dir" << StyleConfig::getUserConfigDir();
+  //qWarning() << "System theme dir" << StyleConfig::getSystemConfigDir();
 
   // Get an instance of QSvgStyle
   if ( !style ) {
@@ -163,15 +90,24 @@ ThemeManagerUI::ThemeManagerUI(QWidget* parent)
   QList<theme_spec_t> tlist = StyleConfig::getThemeList();
   QList<palette_spec_t> plist = StyleConfig::getPaletteList();
 
-  themeCombo->addItem("<builtin>");
+  // add builtin theme
+  QTreeWidgetItem *i = new QTreeWidgetItem(themeList);
+  i->setText(0, "<builtin>");
+  themeList->addTopLevelItem(i);
+
   // add them
   Q_FOREACH(theme_spec_t t, tlist) {
-    themeCombo->addItem(t.name, t.path);
+    QTreeWidgetItem *i = new QTreeWidgetItem(themeList);
+    i->setText(0, t.name);
+    i->setData(0, ThemePathRole, t.path);
+
+    themeList->addTopLevelItem(i);
+    //themeList->addItem(t.name, t.path);
   }
-  paletteCombo->addItem("<none>");
-  paletteCombo->addItem("<system>");
+  //paletteCombo->addItem("<none>");
+  //paletteCombo->addItem("<system>");
   Q_FOREACH(palette_spec_t p, plist) {
-    paletteCombo->addItem(p.name, p.path);
+    //paletteCombo->addItem(p.name, p.path);
   }
 
   // Create temp cfg file from current qsvgstyle.cfg
@@ -209,13 +145,10 @@ ThemeManagerUI::ThemeManagerUI(QWidget* parent)
   connect(disabledRadio,SIGNAL(toggled(bool)),
           this,SLOT(slot_currentColorGroupChanged()));
 
-  connect(themeCombo,SIGNAL(currentIndexChanged(int)),
-          this,SLOT(slot_themeChanged(int)));
-  connect(paletteCombo,SIGNAL(currentIndexChanged(int)),
-          this,SLOT(slot_paletteChanged(int)));
-
-  connect(specificTree,SIGNAL(itemChanged(QTreeWidgetItem *, int)),
-          this,SLOT(slot_specificChanged(QTreeWidgetItem *,int)));
+  connect(themeList,SIGNAL(currentItemChanged(QTreeWidgetItem *, QTreeWidgetItem *)),
+          this,SLOT(slot_themeChanged(QTreeWidgetItem *, QTreeWidgetItem *)));
+  //connect(paletteCombo,SIGNAL(currentIndexChanged(int)),
+  //        this,SLOT(slot_paletteChanged(int)));
 
   connect(okBtn,SIGNAL(clicked()),
           this,SLOT(slot_okBtnClicked()));
@@ -230,7 +163,7 @@ ThemeManagerUI::ThemeManagerUI(QWidget* parent)
   timer = new QTimer(this);
   connect(timer,SIGNAL(timeout()), this,SLOT(slot_uiSettingsChanged()));
 
-  resize(sizeHint());
+  resize(minimumSizeHint());
 }
 
 ThemeManagerUI::~ThemeManagerUI()
@@ -260,17 +193,19 @@ void ThemeManagerUI::slot_currentColorGroupChanged()
   previewWidget->setDisabled(disabledRadio->isChecked());
 }
 
-void ThemeManagerUI::slot_themeChanged(int idx)
+void ThemeManagerUI::slot_themeChanged(QTreeWidgetItem *item, QTreeWidgetItem *prev)
 {
-  QString theme = themeCombo->itemText(idx);
-  QString themePath = themeCombo->itemData(idx).toString();
+  Q_UNUSED(prev);
+
+  QString theme = item->text(0);
+  QString themePath = item->data(0, ThemePathRole).toString();
 
   if ( theme == "<builtin>" ) {
     /* Default theme */
     QStyle::staticMetaObject.invokeMethod(style,"loadBuiltinTheme",
                                           Qt::DirectConnection);
 
-    themeLbl->setText("Uses the QSvgStyle default theme");
+    //themeLbl->setText("Uses the QSvgStyle default theme");
   } else {
     ThemeConfig t(themePath);
     theme_spec_t ts = t.getThemeSpec();
@@ -279,12 +214,13 @@ void ThemeManagerUI::slot_themeChanged(int idx)
                                           Qt::DirectConnection,
                                           Q_ARG(QString,theme));
 
-    themeLbl->setText(QString("%1 by %2").arg(ts.descr).arg(ts.author));
+    //themeLbl->setText(QString("%1 by %2").arg(ts.descr).arg(ts.author));
   }
 
   schedulePreviewUpdate();
 }
 
+#if 0
 void ThemeManagerUI::slot_paletteChanged(int idx)
 {
   QString palette = paletteCombo->itemText(idx);
@@ -295,13 +231,13 @@ void ThemeManagerUI::slot_paletteChanged(int idx)
     QStyle::staticMetaObject.invokeMethod(style,"unloadPalette",
                                           Qt::DirectConnection);
 
-    paletteLbl->setText("No palette applied");
+    //paletteLbl->setText("No palette applied");
   } else if ( palette == "<system>" ) {
     /* System palette */
     QStyle::staticMetaObject.invokeMethod(style,"loadSystemPalette",
                                           Qt::DirectConnection);
 
-    paletteLbl->setText("Uses the desktop environment colors");
+    //paletteLbl->setText("Uses the desktop environment colors");
   } else {
     PaletteConfig p(palettePath);
     palette_spec_t ps = p.getPaletteSpec();
@@ -310,10 +246,16 @@ void ThemeManagerUI::slot_paletteChanged(int idx)
                                           Qt::DirectConnection,
                                           Q_ARG(QString,palette));
 
-    paletteLbl->setText(QString("%1 by %2").arg(ps.descr).arg(ps.author));
+    //paletteLbl->setText(QString("%1 by %2").arg(ps.descr).arg(ps.author));
   }
 
   schedulePreviewUpdate();
+}
+#endif
+
+void ThemeManagerUI::slot_paletteChanged(int idx)
+{
+  Q_UNUSED(idx);
 }
 
 void ThemeManagerUI::slot_uiSettingsChanged()
@@ -332,14 +274,6 @@ void ThemeManagerUI::slot_uiSettingsChanged()
   previewWidget->setFont(f);
   f.setPointSize(val);
   previewWidget->setFont(f);
-}
-
-void ThemeManagerUI::slot_specificChanged(QTreeWidgetItem* item, int column)
-{
-  Q_UNUSED(column);
-  Q_UNUSED(item);
-
-  schedulePreviewUpdate();
 }
 
 void ThemeManagerUI::slot_applyBtnClicked()
@@ -475,19 +409,11 @@ void ThemeManagerUI::setStyleForWidgetAndChildren(QStyle* style, QWidget* w)
 void ThemeManagerUI::saveSettingsFromUi()
 {
   style_spec_t ss;
-  ss.theme = themeCombo->currentText();
-  ss.palette = paletteCombo->currentText();
+  ss.theme = themeList->currentItem()->text(0);
+  //ss.palette = paletteCombo->currentText();
+  ss.palette = "<system>";
 
   config->setStyleSpec(ss);
-
-  QTreeWidgetItemIterator it(specificTree, QTreeWidgetItemIterator::Editable);
-  while (*it) {
-    QTreeWidgetItem *item = (*it);
-    if ( !item->data(1,SettingRole).isNull() ) {
-      config->setSpecificValue(item->data(1,SettingRole).toString(),item->text(1));
-    }
-    ++it;
-  }
 }
 
 void ThemeManagerUI::setupUiFromCfg()
@@ -501,32 +427,22 @@ void ThemeManagerUI::setupUiFromCfg()
   // get theme at startup
   QString startupTheme = config->getStyleSpec().theme;
 
-  int idx = themeCombo->findText(startupTheme);
-  if ( idx > -1 )
-    themeCombo->setCurrentIndex(idx);
+  const QList<QTreeWidgetItem*> l = themeList->findItems(startupTheme, 0);
+  if ( l.size() > 0 )
+    themeList->setCurrentItem(l.at(0));
   else
-    themeCombo->setCurrentIndex(0);
+    themeList->setCurrentItem(NULL);
 
   // get palette at startup
   QString startupPalette = config->getStyleSpec().palette;
 
+#if 0
   idx = paletteCombo->findText(startupPalette);
   if ( idx > -1 )
     paletteCombo->setCurrentIndex(idx);
   else
     paletteCombo->setCurrentIndex(0);
-
-  // Fill in tweaks tree values
-  QTreeWidgetItemIterator it(specificTree, QTreeWidgetItemIterator::Editable);
-  while (*it) {
-    if ( !(*it)->childCount() ) {
-      // set value from config file
-      value_t<int> v = config->getSpecificValue((*it)->data(1,SettingRole).toString());
-      (*it)->setText(1, QString("%1").arg(v));
-    }
-    ++it;
-  }
-
+#endif
   QStyle::staticMetaObject.invokeMethod(style,"loadCustomStyleConfig",
                                       Qt::DirectConnection,
                                       Q_ARG(QString,tempCfgFile));

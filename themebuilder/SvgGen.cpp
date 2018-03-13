@@ -718,7 +718,7 @@ void SvgGen::setHasShadow(bool hasIt)
       shadow->setSecondColor(Qt::gray);
       if ( m_roundMode && !m_hasFrame && m_hasInterior ) {
         // shadow for interior
-        shadow->setCornerRoundness(interior->interiorRoundness());
+        shadow->setCornerRoundness(interiorRoundness());
       }
       shadow->setHasTop(m_hasTopFrame && m_hasTopShadow);
       shadow->setHasBottom(m_hasBottomFrame && m_hasBottomShadow);
@@ -895,8 +895,8 @@ void SvgGen::pushSubFrame()
       // width/height of subframe is for sides only, excluding corner size
       QSizeF sz(width,height);
       if ( m_roundMode )
-        sz = QSizeF(qMax(0.0,width-2*interior->interiorRoundness()),
-                    qMax(0.0,height-2*interior->interiorRoundness()));
+        sz = QSizeF(qMax(0.0,width-2*interiorRoundness()),
+                    qMax(0.0,height-2*interiorRoundness()));
       sf = new SvgGenSubFrame(sz,5,0,m_roundMode,false);
     }
   }

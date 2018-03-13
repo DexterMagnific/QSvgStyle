@@ -19,244 +19,6 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout">
-    <item row="1" column="0" colspan="3">
-     <spacer name="verticalSpacer_7">
-      <property name="orientation">
-       <enum>Qt::Vertical</enum>
-      </property>
-      <property name="sizeType">
-       <enum>QSizePolicy::Fixed</enum>
-      </property>
-      <property name="sizeHint" stdset="0">
-       <size>
-        <width>20</width>
-        <height>20</height>
-       </size>
-      </property>
-     </spacer>
-    </item>
-    <item row="3" column="2">
-     <widget class="QTabWidget" name="tabWidget3">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="currentIndex">
-       <number>0</number>
-      </property>
-      <widget class="QWidget" name="previewTab">
-       <property name="palette">
-        <palette>
-         <active>
-          <colorrole role="Button">
-           <brush brushstyle="SolidPattern">
-            <color alpha="255">
-             <red>255</red>
-             <green>170</green>
-             <blue>255</blue>
-            </color>
-           </brush>
-          </colorrole>
-         </active>
-         <inactive>
-          <colorrole role="Button">
-           <brush brushstyle="SolidPattern">
-            <color alpha="255">
-             <red>255</red>
-             <green>170</green>
-             <blue>255</blue>
-            </color>
-           </brush>
-          </colorrole>
-         </inactive>
-         <disabled>
-          <colorrole role="Button">
-           <brush brushstyle="SolidPattern">
-            <color alpha="255">
-             <red>255</red>
-             <green>170</green>
-             <blue>255</blue>
-            </color>
-           </brush>
-          </colorrole>
-         </disabled>
-        </palette>
-       </property>
-       <attribute name="icon">
-        <iconset resource="ThemeBuilderUIBase.qrc">
-         <normaloff>:/icon/pixmaps/preview.png</normaloff>:/icon/pixmaps/preview.png</iconset>
-       </attribute>
-       <attribute name="title">
-        <string>Preview</string>
-       </attribute>
-       <layout class="QGridLayout" name="gridLayout_22">
-        <item row="0" column="0">
-         <layout class="QGridLayout" name="gridLayout_8">
-          <item row="0" column="0">
-           <widget class="QToolButton" name="repaintBtn">
-            <property name="toolTip">
-             <string>Repaint</string>
-            </property>
-            <property name="text">
-             <string/>
-            </property>
-            <property name="icon">
-             <iconset resource="ThemeBuilderUIBase.qrc">
-              <normaloff>:/icon/pixmaps/insertimage.png</normaloff>:/icon/pixmaps/insertimage.png</iconset>
-            </property>
-            <property name="toolButtonStyle">
-             <enum>Qt::ToolButtonTextBesideIcon</enum>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="1">
-           <widget class="QToolButton" name="rtlBtn">
-            <property name="toolTip">
-             <string>Right to left layout</string>
-            </property>
-            <property name="icon">
-             <iconset resource="ThemeBuilderUIBase.qrc">
-              <normaloff>:/icon/pixmaps/righttoleft.png</normaloff>:/icon/pixmaps/righttoleft.png</iconset>
-            </property>
-            <property name="checkable">
-             <bool>true</bool>
-            </property>
-            <property name="toolButtonStyle">
-             <enum>Qt::ToolButtonTextBesideIcon</enum>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="2">
-           <widget class="QToolButton" name="enableBtn">
-            <property name="toolTip">
-             <string>Enable/Disable</string>
-            </property>
-            <property name="icon">
-             <iconset resource="ThemeBuilderUIBase.qrc">
-              <normaloff>:/icon/pixmaps/checkbox.png</normaloff>:/icon/pixmaps/checkbox.png</iconset>
-            </property>
-            <property name="checkable">
-             <bool>true</bool>
-            </property>
-            <property name="checked">
-             <bool>true</bool>
-            </property>
-            <property name="toolButtonStyle">
-             <enum>Qt::ToolButtonTextBesideIcon</enum>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="3">
-           <widget class="QToolButton" name="previewVariantBtn">
-            <property name="toolTip">
-             <string>Preview variant</string>
-            </property>
-            <property name="text">
-             <string>1/1</string>
-            </property>
-            <property name="icon">
-             <iconset resource="ThemeBuilderUIBase.qrc">
-              <normaloff>:/icon/pixmaps/widgetstack.png</normaloff>:/icon/pixmaps/widgetstack.png</iconset>
-            </property>
-            <property name="toolButtonStyle">
-             <enum>Qt::ToolButtonTextBesideIcon</enum>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="4">
-           <widget class="QSpinBox" name="fontSizeSpin">
-            <property name="toolTip">
-             <string>Font size</string>
-            </property>
-            <property name="minimum">
-             <number>1</number>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="5">
-           <spacer name="horizontalSpacer_14">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeType">
-             <enum>QSizePolicy::Fixed</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>20</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-          <item row="0" column="6">
-           <widget class="QComboBox" name="paletteCombo">
-            <property name="toolTip">
-             <string>Choose a palette</string>
-            </property>
-            <property name="sizeAdjustPolicy">
-             <enum>QComboBox::AdjustToContents</enum>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="7">
-           <spacer name="horizontalSpacer_12">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>20</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-          <item row="0" column="8">
-           <widget class="QToolButton" name="detachBtn">
-            <property name="text">
-             <string>Detach</string>
-            </property>
-            <property name="icon">
-             <iconset resource="ThemeBuilderUIBase.qrc">
-              <normaloff>:/icon/pixmaps/widget.png</normaloff>:/icon/pixmaps/widget.png</iconset>
-            </property>
-            <property name="toolButtonStyle">
-             <enum>Qt::ToolButtonTextBesideIcon</enum>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </item>
-        <item row="1" column="0">
-         <widget class="QScrollArea" name="previewArea">
-          <property name="frameShape">
-           <enum>QFrame::NoFrame</enum>
-          </property>
-          <property name="widgetResizable">
-           <bool>true</bool>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-          <widget class="QWidget" name="previewAreaWidgetContents">
-           <property name="geometry">
-            <rect>
-             <x>0</x>
-             <y>0</y>
-             <width>669</width>
-             <height>81</height>
-            </rect>
-           </property>
-          </widget>
-         </widget>
-        </item>
-       </layout>
-      </widget>
-     </widget>
-    </item>
     <item row="0" column="0" colspan="3">
      <layout class="QGridLayout" name="gridLayout_4">
       <item row="0" column="6">
@@ -482,10 +244,42 @@
       </item>
      </layout>
     </item>
+    <item row="1" column="0" colspan="3">
+     <spacer name="verticalSpacer_7">
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
+      <property name="sizeType">
+       <enum>QSizePolicy::Fixed</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>20</width>
+        <height>20</height>
+       </size>
+      </property>
+     </spacer>
+    </item>
+    <item row="4" column="2">
+     <spacer name="verticalSpacer_13">
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
+      <property name="sizeType">
+       <enum>QSizePolicy::Fixed</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>482</width>
+        <height>20</height>
+       </size>
+      </property>
+     </spacer>
+    </item>
     <item row="5" column="2">
      <widget class="QTabWidget" name="tabWidget2">
       <property name="currentIndex">
-       <number>2</number>
+       <number>3</number>
       </property>
       <widget class="QWidget" name="propsTab">
        <property name="enabled">
@@ -498,38 +292,11 @@
        <attribute name="title">
         <string>Theme properties</string>
        </attribute>
-       <layout class="QGridLayout" name="gridLayout_12">
-        <item row="3" column="0">
+       <layout class="QGridLayout" name="gridLayout_6">
+        <item row="1" column="3">
          <widget class="QLineEdit" name="authorEdit">
           <property name="placeholderText">
            <string>Your name</string>
-          </property>
-         </widget>
-        </item>
-        <item row="5" column="0">
-         <widget class="QLineEdit" name="descrEdit">
-          <property name="placeholderText">
-           <string>Short description of the theme</string>
-          </property>
-         </widget>
-        </item>
-        <item row="6" column="0">
-         <spacer name="verticalSpacer_12">
-          <property name="orientation">
-           <enum>Qt::Vertical</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>482</width>
-            <height>20</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-        <item row="4" column="0">
-         <widget class="QLabel" name="label_21">
-          <property name="text">
-           <string>Description</string>
           </property>
          </widget>
         </item>
@@ -540,6 +307,869 @@
           </property>
          </widget>
         </item>
+        <item row="5" column="0" colspan="3">
+         <widget class="QLabel" name="label_23">
+          <property name="text">
+           <string>Tweaks</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="3">
+         <widget class="QLabel" name="label_25">
+          <property name="text">
+           <string>Keywords</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="0" colspan="3">
+         <widget class="QLabel" name="label_21">
+          <property name="text">
+           <string>Description</string>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="3">
+         <widget class="QLineEdit" name="keywordsEdit">
+          <property name="placeholderText">
+           <string>Short description of the theme</string>
+          </property>
+         </widget>
+        </item>
+        <item row="6" column="0" colspan="4">
+         <widget class="QTreeWidget" name="specificTree">
+          <property name="editTriggers">
+           <set>QAbstractItemView::CurrentChanged|QAbstractItemView::EditKeyPressed</set>
+          </property>
+          <property name="alternatingRowColors">
+           <bool>true</bool>
+          </property>
+          <attribute name="headerVisible">
+           <bool>false</bool>
+          </attribute>
+          <column>
+           <property name="text">
+            <string>Display name</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Value</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Key</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Type</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Range</string>
+           </property>
+          </column>
+          <item>
+           <property name="text">
+            <string>Palette</string>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <item>
+            <property name="text">
+             <string>Colorization amount</string>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+            <property name="text">
+             <string>specific.palette.intensity</string>
+            </property>
+            <property name="text">
+             <string>int</string>
+            </property>
+            <property name="text">
+             <string>0-100</string>
+            </property>
+            <property name="flags">
+             <set>ItemIsSelectable|ItemIsEditable|ItemIsUserCheckable|ItemIsEnabled</set>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>3D effect</string>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+            <property name="text">
+             <string>specific.palette.3dframes</string>
+            </property>
+            <property name="text">
+             <string>bool</string>
+            </property>
+            <property name="text">
+             <string>enabled,disabled</string>
+            </property>
+            <property name="flags">
+             <set>ItemIsSelectable|ItemIsEditable|ItemIsUserCheckable|ItemIsEnabled</set>
+            </property>
+           </item>
+          </item>
+          <item>
+           <property name="text">
+            <string>Radio buttons/Check boxes</string>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <item>
+            <property name="text">
+             <string>Button--Label space</string>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+            <property name="text">
+             <string>specific.radiocheckbox.label.tispace</string>
+            </property>
+            <property name="text">
+             <string>int</string>
+            </property>
+            <property name="text">
+             <string>0-99</string>
+            </property>
+            <property name="flags">
+             <set>ItemIsSelectable|ItemIsEditable|ItemIsUserCheckable|ItemIsEnabled</set>
+            </property>
+           </item>
+          </item>
+          <item>
+           <property name="text">
+            <string>Spin Boxes</string>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <item>
+            <property name="text">
+             <string>Buttons variant</string>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+            <property name="text">
+             <string>specific.spinbox.variant</string>
+            </property>
+            <property name="text">
+             <string>int_enum</string>
+            </property>
+            <property name="text">
+             <string>Side by side,Opposite,Stacked</string>
+            </property>
+           </item>
+          </item>
+          <item>
+           <property name="text">
+            <string>Progress Bars</string>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <item>
+            <property name="text">
+             <string>Busy indicator variant</string>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+            <property name="text">
+             <string>specific.progressbar.busy.variant</string>
+            </property>
+            <property name="text">
+             <string>int_enum</string>
+            </property>
+            <property name="text">
+             <string>Wrap, Back and forth,Full length</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Full length busy indicator direction</string>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+            <property name="text">
+             <string>specific.progressbar.busy.full.variant</string>
+            </property>
+            <property name="text">
+             <string>int_enum</string>
+            </property>
+            <property name="text">
+             <string>Forward,Backward</string>
+            </property>
+           </item>
+          </item>
+          <item>
+           <property name="text">
+            <string>Layout default margins</string>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <item>
+            <property name="text">
+             <string>Left</string>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+            <property name="text">
+             <string>specific.layoutmargins.left</string>
+            </property>
+            <property name="text">
+             <string>int</string>
+            </property>
+            <property name="text">
+             <string>0-99</string>
+            </property>
+            <property name="flags">
+             <set>ItemIsSelectable|ItemIsEditable|ItemIsUserCheckable|ItemIsEnabled</set>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Right</string>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+            <property name="text">
+             <string>specific.layoutmargins.right</string>
+            </property>
+            <property name="text">
+             <string>int</string>
+            </property>
+            <property name="text">
+             <string>0-99</string>
+            </property>
+            <property name="flags">
+             <set>ItemIsSelectable|ItemIsEditable|ItemIsUserCheckable|ItemIsEnabled</set>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Top</string>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+            <property name="text">
+             <string>specific.layoutmargins.top</string>
+            </property>
+            <property name="text">
+             <string>int</string>
+            </property>
+            <property name="text">
+             <string>0-99</string>
+            </property>
+            <property name="flags">
+             <set>ItemIsSelectable|ItemIsEditable|ItemIsUserCheckable|ItemIsEnabled</set>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Bottom</string>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+            <property name="text">
+             <string>specific.layoutmargins.bottom</string>
+            </property>
+            <property name="text">
+             <string>int</string>
+            </property>
+            <property name="text">
+             <string>0-99</string>
+            </property>
+            <property name="flags">
+             <set>ItemIsSelectable|ItemIsEditable|ItemIsUserCheckable|ItemIsEnabled</set>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>H spacing</string>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+            <property name="text">
+             <string>specific.layoutmargins.hspace</string>
+            </property>
+            <property name="text">
+             <string>int</string>
+            </property>
+            <property name="text">
+             <string>0-99</string>
+            </property>
+            <property name="flags">
+             <set>ItemIsSelectable|ItemIsEditable|ItemIsUserCheckable|ItemIsEnabled</set>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>V Spacing</string>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+            <property name="text">
+             <string>specific.layoutmargins.vspace</string>
+            </property>
+            <property name="text">
+             <string>int</string>
+            </property>
+            <property name="text">
+             <string>0-99</string>
+            </property>
+            <property name="flags">
+             <set>ItemIsSelectable|ItemIsEditable|ItemIsUserCheckable|ItemIsEnabled</set>
+            </property>
+           </item>
+          </item>
+          <item>
+           <property name="text">
+            <string>Menu Items &amp; Menu bars</string>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <item>
+            <property name="text">
+             <string>Menu bar item spacing</string>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+            <property name="text">
+             <string>specific.menubar.space</string>
+            </property>
+            <property name="text">
+             <string>int</string>
+            </property>
+            <property name="text">
+             <string>0-99</string>
+            </property>
+            <property name="flags">
+             <set>ItemIsSelectable|ItemIsEditable|ItemIsUserCheckable|ItemIsEnabled</set>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Menu bar H margin</string>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+            <property name="text">
+             <string>specific.menubar.hspace</string>
+            </property>
+            <property name="text">
+             <string>int</string>
+            </property>
+            <property name="text">
+             <string>0-99</string>
+            </property>
+            <property name="flags">
+             <set>ItemIsSelectable|ItemIsEditable|ItemIsUserCheckable|ItemIsEnabled</set>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Menu tearoff height</string>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+            <property name="text">
+             <string>specific.menu.tearoff.height</string>
+            </property>
+            <property name="text">
+             <string>int</string>
+            </property>
+            <property name="text">
+             <string>1-99</string>
+            </property>
+            <property name="flags">
+             <set>ItemIsSelectable|ItemIsEditable|ItemIsUserCheckable|ItemIsEnabled</set>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Menu separator height</string>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+            <property name="text">
+             <string>specific.menu.separator.height</string>
+            </property>
+            <property name="text">
+             <string>int</string>
+            </property>
+            <property name="text">
+             <string>1-99</string>
+            </property>
+           </item>
+          </item>
+          <item>
+           <property name="text">
+            <string>Toolbars</string>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <item>
+            <property name="text">
+             <string>Item spacing</string>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+            <property name="text">
+             <string>specific.toolbar.space</string>
+            </property>
+            <property name="text">
+             <string>int</string>
+            </property>
+            <property name="text">
+             <string>0-99</string>
+            </property>
+            <property name="flags">
+             <set>ItemIsSelectable|ItemIsEditable|ItemIsUserCheckable|ItemIsEnabled</set>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Handle width</string>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+            <property name="text">
+             <string>specific.toolbar.handle.width</string>
+            </property>
+            <property name="text">
+             <string>int</string>
+            </property>
+            <property name="text">
+             <string>1-99</string>
+            </property>
+            <property name="flags">
+             <set>ItemIsSelectable|ItemIsEditable|ItemIsUserCheckable|ItemIsEnabled</set>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Separator width</string>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+            <property name="text">
+             <string>specific.toolbar.separator.width</string>
+            </property>
+            <property name="text">
+             <string>int</string>
+            </property>
+            <property name="text">
+             <string>1-99</string>
+            </property>
+            <property name="flags">
+             <set>ItemIsSelectable|ItemIsEditable|ItemIsUserCheckable|ItemIsEnabled</set>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Extension button width</string>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+            <property name="text">
+             <string>specific.toolbar.extension.width</string>
+            </property>
+            <property name="text">
+             <string>int</string>
+            </property>
+            <property name="text">
+             <string>1-99</string>
+            </property>
+            <property name="flags">
+             <set>ItemIsSelectable|ItemIsEditable|ItemIsUserCheckable|ItemIsEnabled</set>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Icon size (hint)</string>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+            <property name="text">
+             <string>specific.toolbar.icon.size</string>
+            </property>
+            <property name="text">
+             <string>int</string>
+            </property>
+            <property name="text">
+             <string>1-99</string>
+            </property>
+            <property name="flags">
+             <set>ItemIsSelectable|ItemIsEditable|ItemIsUserCheckable|ItemIsEnabled</set>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Item Margin</string>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+            <property name="text">
+             <string>specific.toolbar.itemmargin</string>
+            </property>
+            <property name="text">
+             <string>int</string>
+            </property>
+            <property name="text">
+             <string>0-99</string>
+            </property>
+           </item>
+          </item>
+          <item>
+           <property name="text">
+            <string>Scroll bars</string>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <item>
+            <property name="text">
+             <string>Thickness</string>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+            <property name="text">
+             <string>specific.scrollbar.thickness</string>
+            </property>
+            <property name="text">
+             <string>int</string>
+            </property>
+            <property name="text">
+             <string>1-99</string>
+            </property>
+            <property name="flags">
+             <set>ItemIsSelectable|ItemIsEditable|ItemIsUserCheckable|ItemIsEnabled</set>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Slider minimum size</string>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+            <property name="text">
+             <string>specific.scrollbar.slider.minsize</string>
+            </property>
+            <property name="text">
+             <string>int</string>
+            </property>
+            <property name="text">
+             <string>1-99</string>
+            </property>
+            <property name="flags">
+             <set>ItemIsSelectable|ItemIsEditable|ItemIsUserCheckable|ItemIsEnabled</set>
+            </property>
+           </item>
+          </item>
+          <item>
+           <property name="text">
+            <string>Sliders</string>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <item>
+            <property name="text">
+             <string>Thickness</string>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+            <property name="text">
+             <string>specific.slider.thickness</string>
+            </property>
+            <property name="text">
+             <string>int</string>
+            </property>
+            <property name="text">
+             <string>1-99</string>
+            </property>
+            <property name="flags">
+             <set>ItemIsSelectable|ItemIsEditable|ItemIsUserCheckable|ItemIsEnabled</set>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Cursor size</string>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+            <property name="text">
+             <string>specific.slider.cursor.size</string>
+            </property>
+            <property name="text">
+             <string>int</string>
+            </property>
+            <property name="text">
+             <string>1-99</string>
+            </property>
+            <property name="flags">
+             <set>ItemIsSelectable|ItemIsEditable|ItemIsUserCheckable|ItemIsEnabled</set>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Ticks offset</string>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+            <property name="text">
+             <string>specific.slider.ticks.offset</string>
+            </property>
+            <property name="text">
+             <string>int</string>
+            </property>
+            <property name="text">
+             <string>1-99</string>
+            </property>
+           </item>
+          </item>
+          <item>
+           <property name="text">
+            <string>Progress bars</string>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <item>
+            <property name="text">
+             <string>Chunk width</string>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+            <property name="text">
+             <string>specific.progressbar.chunk.width</string>
+            </property>
+            <property name="text">
+             <string>int</string>
+            </property>
+            <property name="text">
+             <string>1-99</string>
+            </property>
+            <property name="flags">
+             <set>ItemIsSelectable|ItemIsEditable|ItemIsUserCheckable|ItemIsEnabled</set>
+            </property>
+           </item>
+          </item>
+          <item>
+           <property name="text">
+            <string>Drop down buttons</string>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <item>
+            <property name="text">
+             <string>Button size</string>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+            <property name="text">
+             <string>specific.dropdown.size</string>
+            </property>
+            <property name="text">
+             <string>int</string>
+            </property>
+            <property name="text">
+             <string>1-99</string>
+            </property>
+           </item>
+          </item>
+          <item>
+           <property name="text">
+            <string>Docks</string>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <item>
+            <property name="text">
+             <string>Separator width</string>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+            <property name="text">
+             <string>specific.dock.separator.size</string>
+            </property>
+            <property name="text">
+             <string>int</string>
+            </property>
+            <property name="text">
+             <string>1-99</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Handle width</string>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+            <property name="text">
+             <string>specific.dock.handle.width</string>
+            </property>
+            <property name="text">
+             <string>int</string>
+            </property>
+            <property name="text">
+             <string>1-99</string>
+            </property>
+           </item>
+          </item>
+         </widget>
+        </item>
         <item row="1" column="0">
          <widget class="QLineEdit" name="themeNameEdit">
           <property name="placeholderText">
@@ -547,10 +1177,31 @@
           </property>
          </widget>
         </item>
-        <item row="2" column="0">
+        <item row="4" column="0" colspan="3">
+         <widget class="QLineEdit" name="descrEdit">
+          <property name="placeholderText">
+           <string>Short description of the theme</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="QLineEdit" name="variantEdit">
+          <property name="placeholderText">
+           <string>Variant</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="3">
          <widget class="QLabel" name="label_22">
           <property name="text">
            <string>Author</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QLabel" name="label_24">
+          <property name="text">
+           <string>Variant</string>
           </property>
          </widget>
         </item>
@@ -733,7 +1384,7 @@
           <item row="1" column="0">
            <widget class="QToolBox" name="genToolbox">
             <property name="frameShape">
-             <enum>QFrame::WinPanel</enum>
+             <enum>QFrame::StyledPanel</enum>
             </property>
             <property name="frameShadow">
              <enum>QFrame::Raised</enum>
@@ -746,8 +1397,8 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>195</width>
-               <height>255</height>
+               <width>138</width>
+               <height>138</height>
               </rect>
              </property>
              <attribute name="label">
@@ -1040,8 +1691,8 @@
                   <rect>
                    <x>0</x>
                    <y>0</y>
-                   <width>163</width>
-                   <height>161</height>
+                   <width>91</width>
+                   <height>30</height>
                   </rect>
                  </property>
                  <layout class="QGridLayout" name="gridLayout_27">
@@ -1068,8 +1719,8 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>219</width>
-               <height>54</height>
+               <width>200</width>
+               <height>48</height>
               </rect>
              </property>
              <attribute name="label">
@@ -1263,8 +1914,8 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>222</width>
-               <height>96</height>
+               <width>203</width>
+               <height>82</height>
               </rect>
              </property>
              <attribute name="label">
@@ -1878,7 +2529,7 @@
            <item row="0" column="0">
             <widget class="QLabel" name="label_3">
              <property name="text">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:18pt; font-weight:600;&quot;&gt;QSvgStyle Theme Builder&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;Copyright (C) 2014 Said Lankri, under the GNU GPL License version 2+&lt;br/&gt;Please send bugs, suggestions and feedback to &lt;a href=&quot;said.lankri@gmail.com&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0057ae;&quot;&gt;said.lankri@gmail.com&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;&lt;br/&gt;Uses icons from Qt Designer,&lt;br/&gt;(C) 2013 Digia Plc and/or its subsidiary(-ies).&lt;br/&gt;&lt;a href=&quot;http://qt.digia.com&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0057ae;&quot;&gt;http://qt.digia.com&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;Built-in SVG cleaner courtesy of SVGCleaner team,&lt;br/&gt;Copyright (C) 2012-2014 Evgeniy Reizner,&lt;br/&gt;under the GNU GPL Licence version 2+&lt;br/&gt;&lt;a href=&quot;svgcleanerteam@gmail.com&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0057ae;&quot;&gt;svgcleanerteam@gmail.com&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:18pt; font-weight:600;&quot;&gt;QSvgStyle Theme Builder&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;Copyright (C) 2014 Said Lankri, under the GNU GPL License version 2+&lt;br/&gt;&lt;a href=&quot;http://github.com/QSvgStyle&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0057ae;&quot;&gt;http://github.com/QSvgStyle&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;&lt;br/&gt;Uses icons from Qt Designer,&lt;br/&gt;(C) 2017 The Qt Company Ltd.&lt;br/&gt;&lt;a href=&quot;http://qt.digia.com&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0057ae;&quot;&gt;http://qt.io&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;Built-in SVG cleaner courtesy of SVGCleaner team,&lt;br/&gt;Copyright (C) 2012-2014 Evgeniy Reizner,&lt;br/&gt;under the GNU GPL Licence version 2+&lt;br/&gt;&lt;a href=&quot;svgcleanerteam@gmail.com&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0057ae;&quot;&gt;svgcleanerteam@gmail.com&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
              </property>
              <property name="alignment">
               <set>Qt::AlignCenter</set>
@@ -1924,35 +2575,18 @@
       </widget>
      </widget>
     </item>
-    <item row="2" column="0" rowspan="4">
-     <widget class="QToolBox" name="toolBox">
-      <property name="enabled">
-       <bool>false</bool>
-      </property>
+    <item row="3" column="2">
+     <widget class="QTabWidget" name="tabWidget3">
       <property name="sizePolicy">
-       <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+       <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
         <horstretch>0</horstretch>
         <verstretch>0</verstretch>
        </sizepolicy>
       </property>
-      <property name="frameShape">
-       <enum>QFrame::StyledPanel</enum>
-      </property>
-      <property name="frameShadow">
-       <enum>QFrame::Raised</enum>
-      </property>
       <property name="currentIndex">
        <number>0</number>
       </property>
-      <widget class="QWidget" name="page_5">
-       <property name="geometry">
-        <rect>
-         <x>0</x>
-         <y>0</y>
-         <width>256</width>
-         <height>490</height>
-        </rect>
-       </property>
+      <widget class="QWidget" name="previewTab">
        <property name="palette">
         <palette>
          <active>
@@ -1960,303 +2594,7 @@
            <brush brushstyle="SolidPattern">
             <color alpha="255">
              <red>255</red>
-             <green>0</green>
-             <blue>127</blue>
-            </color>
-           </brush>
-          </colorrole>
-         </active>
-         <inactive>
-          <colorrole role="Button">
-           <brush brushstyle="SolidPattern">
-            <color alpha="255">
-             <red>255</red>
-             <green>0</green>
-             <blue>127</blue>
-            </color>
-           </brush>
-          </colorrole>
-         </inactive>
-         <disabled>
-          <colorrole role="Button">
-           <brush brushstyle="SolidPattern">
-            <color alpha="255">
-             <red>255</red>
-             <green>0</green>
-             <blue>127</blue>
-            </color>
-           </brush>
-          </colorrole>
-         </disabled>
-        </palette>
-       </property>
-       <attribute name="label">
-        <string>Buttons</string>
-       </attribute>
-       <layout class="QGridLayout" name="gridLayout_2">
-        <property name="leftMargin">
-         <number>0</number>
-        </property>
-        <property name="topMargin">
-         <number>0</number>
-        </property>
-        <property name="rightMargin">
-         <number>0</number>
-        </property>
-        <property name="bottomMargin">
-         <number>0</number>
-        </property>
-        <item row="0" column="0">
-         <widget class="QListWidget" name="buttonList">
-          <property name="frameShape">
-           <enum>QFrame::NoFrame</enum>
-          </property>
-          <property name="currentRow">
-           <number>-1</number>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </widget>
-      <widget class="QWidget" name="page_6">
-       <property name="geometry">
-        <rect>
-         <x>0</x>
-         <y>0</y>
-         <width>256</width>
-         <height>490</height>
-        </rect>
-       </property>
-       <property name="palette">
-        <palette>
-         <active>
-          <colorrole role="Button">
-           <brush brushstyle="SolidPattern">
-            <color alpha="255">
-             <red>122</red>
-             <green>255</green>
-             <blue>39</blue>
-            </color>
-           </brush>
-          </colorrole>
-         </active>
-         <inactive>
-          <colorrole role="Button">
-           <brush brushstyle="SolidPattern">
-            <color alpha="255">
-             <red>122</red>
-             <green>255</green>
-             <blue>39</blue>
-            </color>
-           </brush>
-          </colorrole>
-         </inactive>
-         <disabled>
-          <colorrole role="Button">
-           <brush brushstyle="SolidPattern">
-            <color alpha="255">
-             <red>122</red>
-             <green>255</green>
-             <blue>39</blue>
-            </color>
-           </brush>
-          </colorrole>
-         </disabled>
-        </palette>
-       </property>
-       <attribute name="label">
-        <string>Input</string>
-       </attribute>
-       <layout class="QGridLayout" name="gridLayout_9">
-        <property name="leftMargin">
-         <number>0</number>
-        </property>
-        <property name="topMargin">
-         <number>0</number>
-        </property>
-        <property name="rightMargin">
-         <number>0</number>
-        </property>
-        <property name="bottomMargin">
-         <number>0</number>
-        </property>
-        <item row="0" column="0">
-         <widget class="QListWidget" name="inputList">
-          <property name="frameShape">
-           <enum>QFrame::NoFrame</enum>
-          </property>
-          <property name="currentRow">
-           <number>-1</number>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </widget>
-      <widget class="QWidget" name="page_7">
-       <property name="geometry">
-        <rect>
-         <x>0</x>
-         <y>0</y>
-         <width>256</width>
-         <height>490</height>
-        </rect>
-       </property>
-       <property name="palette">
-        <palette>
-         <active>
-          <colorrole role="Button">
-           <brush brushstyle="SolidPattern">
-            <color alpha="255">
-             <red>255</red>
-             <green>85</green>
-             <blue>0</blue>
-            </color>
-           </brush>
-          </colorrole>
-         </active>
-         <inactive>
-          <colorrole role="Button">
-           <brush brushstyle="SolidPattern">
-            <color alpha="255">
-             <red>255</red>
-             <green>85</green>
-             <blue>0</blue>
-            </color>
-           </brush>
-          </colorrole>
-         </inactive>
-         <disabled>
-          <colorrole role="Button">
-           <brush brushstyle="SolidPattern">
-            <color alpha="255">
-             <red>255</red>
-             <green>85</green>
-             <blue>0</blue>
-            </color>
-           </brush>
-          </colorrole>
-         </disabled>
-        </palette>
-       </property>
-       <attribute name="label">
-        <string>Display</string>
-       </attribute>
-       <layout class="QGridLayout" name="gridLayout_10">
-        <property name="leftMargin">
-         <number>0</number>
-        </property>
-        <property name="topMargin">
-         <number>0</number>
-        </property>
-        <property name="rightMargin">
-         <number>0</number>
-        </property>
-        <property name="bottomMargin">
-         <number>0</number>
-        </property>
-        <item row="0" column="0">
-         <widget class="QListWidget" name="displayList">
-          <property name="frameShape">
-           <enum>QFrame::NoFrame</enum>
-          </property>
-          <property name="currentRow">
-           <number>-1</number>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </widget>
-      <widget class="QWidget" name="page_8">
-       <property name="geometry">
-        <rect>
-         <x>0</x>
-         <y>0</y>
-         <width>256</width>
-         <height>490</height>
-        </rect>
-       </property>
-       <property name="palette">
-        <palette>
-         <active>
-          <colorrole role="Button">
-           <brush brushstyle="SolidPattern">
-            <color alpha="255">
-             <red>255</red>
-             <green>255</green>
-             <blue>127</blue>
-            </color>
-           </brush>
-          </colorrole>
-         </active>
-         <inactive>
-          <colorrole role="Button">
-           <brush brushstyle="SolidPattern">
-            <color alpha="255">
-             <red>255</red>
-             <green>255</green>
-             <blue>127</blue>
-            </color>
-           </brush>
-          </colorrole>
-         </inactive>
-         <disabled>
-          <colorrole role="Button">
-           <brush brushstyle="SolidPattern">
-            <color alpha="255">
-             <red>255</red>
-             <green>255</green>
-             <blue>127</blue>
-            </color>
-           </brush>
-          </colorrole>
-         </disabled>
-        </palette>
-       </property>
-       <attribute name="label">
-        <string>Containers</string>
-       </attribute>
-       <layout class="QGridLayout" name="gridLayout_11">
-        <property name="leftMargin">
-         <number>0</number>
-        </property>
-        <property name="topMargin">
-         <number>0</number>
-        </property>
-        <property name="rightMargin">
-         <number>0</number>
-        </property>
-        <property name="bottomMargin">
-         <number>0</number>
-        </property>
-        <item row="0" column="0">
-         <widget class="QListWidget" name="containerList">
-          <property name="frameShape">
-           <enum>QFrame::NoFrame</enum>
-          </property>
-          <property name="currentRow">
-           <number>-1</number>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </widget>
-      <widget class="QWidget" name="page_9">
-       <property name="geometry">
-        <rect>
-         <x>0</x>
-         <y>0</y>
-         <width>256</width>
-         <height>490</height>
-        </rect>
-       </property>
-       <property name="palette">
-        <palette>
-         <active>
-          <colorrole role="Button">
-           <brush brushstyle="SolidPattern">
-            <color alpha="255">
-             <red>85</red>
-             <green>85</green>
+             <green>170</green>
              <blue>255</blue>
             </color>
            </brush>
@@ -2266,8 +2604,8 @@
           <colorrole role="Button">
            <brush brushstyle="SolidPattern">
             <color alpha="255">
-             <red>85</red>
-             <green>85</green>
+             <red>255</red>
+             <green>170</green>
              <blue>255</blue>
             </color>
            </brush>
@@ -2277,8 +2615,8 @@
           <colorrole role="Button">
            <brush brushstyle="SolidPattern">
             <color alpha="255">
-             <red>85</red>
-             <green>85</green>
+             <red>255</red>
+             <green>170</green>
              <blue>255</blue>
             </color>
            </brush>
@@ -2286,30 +2624,173 @@
          </disabled>
         </palette>
        </property>
-       <attribute name="label">
-        <string>Misc</string>
+       <attribute name="icon">
+        <iconset resource="ThemeBuilderUIBase.qrc">
+         <normaloff>:/icon/pixmaps/preview.png</normaloff>:/icon/pixmaps/preview.png</iconset>
        </attribute>
-       <layout class="QGridLayout" name="gridLayout_6">
-        <property name="leftMargin">
-         <number>0</number>
-        </property>
-        <property name="topMargin">
-         <number>0</number>
-        </property>
-        <property name="rightMargin">
-         <number>0</number>
-        </property>
-        <property name="bottomMargin">
-         <number>0</number>
-        </property>
+       <attribute name="title">
+        <string>Preview</string>
+       </attribute>
+       <layout class="QGridLayout" name="gridLayout_22">
         <item row="0" column="0">
-         <widget class="QListWidget" name="miscList">
+         <layout class="QGridLayout" name="gridLayout_8">
+          <item row="0" column="0">
+           <widget class="QToolButton" name="repaintBtn">
+            <property name="toolTip">
+             <string>Repaint</string>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+            <property name="icon">
+             <iconset resource="ThemeBuilderUIBase.qrc">
+              <normaloff>:/icon/pixmaps/insertimage.png</normaloff>:/icon/pixmaps/insertimage.png</iconset>
+            </property>
+            <property name="toolButtonStyle">
+             <enum>Qt::ToolButtonTextBesideIcon</enum>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QToolButton" name="rtlBtn">
+            <property name="toolTip">
+             <string>Right to left layout</string>
+            </property>
+            <property name="icon">
+             <iconset resource="ThemeBuilderUIBase.qrc">
+              <normaloff>:/icon/pixmaps/righttoleft.png</normaloff>:/icon/pixmaps/righttoleft.png</iconset>
+            </property>
+            <property name="checkable">
+             <bool>true</bool>
+            </property>
+            <property name="toolButtonStyle">
+             <enum>Qt::ToolButtonTextBesideIcon</enum>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="2">
+           <widget class="QToolButton" name="enableBtn">
+            <property name="toolTip">
+             <string>Enable/Disable</string>
+            </property>
+            <property name="icon">
+             <iconset resource="ThemeBuilderUIBase.qrc">
+              <normaloff>:/icon/pixmaps/checkbox.png</normaloff>:/icon/pixmaps/checkbox.png</iconset>
+            </property>
+            <property name="checkable">
+             <bool>true</bool>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+            <property name="toolButtonStyle">
+             <enum>Qt::ToolButtonTextBesideIcon</enum>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="3">
+           <widget class="QToolButton" name="previewVariantBtn">
+            <property name="toolTip">
+             <string>Preview variant</string>
+            </property>
+            <property name="text">
+             <string>1/1</string>
+            </property>
+            <property name="icon">
+             <iconset resource="ThemeBuilderUIBase.qrc">
+              <normaloff>:/icon/pixmaps/widgetstack.png</normaloff>:/icon/pixmaps/widgetstack.png</iconset>
+            </property>
+            <property name="toolButtonStyle">
+             <enum>Qt::ToolButtonTextBesideIcon</enum>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="4">
+           <widget class="QSpinBox" name="fontSizeSpin">
+            <property name="toolTip">
+             <string>Font size</string>
+            </property>
+            <property name="minimum">
+             <number>1</number>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="5">
+           <spacer name="horizontalSpacer_14">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeType">
+             <enum>QSizePolicy::Fixed</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>20</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item row="0" column="6">
+           <widget class="QComboBox" name="paletteCombo">
+            <property name="toolTip">
+             <string>Choose a palette</string>
+            </property>
+            <property name="sizeAdjustPolicy">
+             <enum>QComboBox::AdjustToContents</enum>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="7">
+           <spacer name="horizontalSpacer_12">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>20</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item row="0" column="8">
+           <widget class="QToolButton" name="detachBtn">
+            <property name="text">
+             <string>Detach</string>
+            </property>
+            <property name="icon">
+             <iconset resource="ThemeBuilderUIBase.qrc">
+              <normaloff>:/icon/pixmaps/widget.png</normaloff>:/icon/pixmaps/widget.png</iconset>
+            </property>
+            <property name="toolButtonStyle">
+             <enum>Qt::ToolButtonTextBesideIcon</enum>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item row="1" column="0">
+         <widget class="QScrollArea" name="previewArea">
           <property name="frameShape">
            <enum>QFrame::NoFrame</enum>
           </property>
-          <property name="currentRow">
-           <number>-1</number>
+          <property name="widgetResizable">
+           <bool>true</bool>
           </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+          <widget class="QWidget" name="previewAreaWidgetContents">
+           <property name="geometry">
+            <rect>
+             <x>0</x>
+             <y>0</y>
+             <width>690</width>
+             <height>58</height>
+            </rect>
+           </property>
+          </widget>
          </widget>
         </item>
        </layout>
@@ -2940,21 +3421,1019 @@ spacing</string>
       </widget>
      </widget>
     </item>
-    <item row="4" column="2">
-     <spacer name="verticalSpacer_13">
-      <property name="orientation">
-       <enum>Qt::Vertical</enum>
+    <item row="2" column="0" rowspan="4">
+     <widget class="QToolBox" name="toolBox">
+      <property name="enabled">
+       <bool>false</bool>
       </property>
-      <property name="sizeType">
-       <enum>QSizePolicy::Fixed</enum>
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
       </property>
-      <property name="sizeHint" stdset="0">
-       <size>
-        <width>482</width>
-        <height>20</height>
-       </size>
+      <property name="frameShape">
+       <enum>QFrame::StyledPanel</enum>
       </property>
-     </spacer>
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
+      </property>
+      <property name="currentIndex">
+       <number>0</number>
+      </property>
+      <widget class="QWidget" name="page_5">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>0</y>
+         <width>256</width>
+         <height>534</height>
+        </rect>
+       </property>
+       <property name="palette">
+        <palette>
+         <active>
+          <colorrole role="Button">
+           <brush brushstyle="SolidPattern">
+            <color alpha="255">
+             <red>255</red>
+             <green>0</green>
+             <blue>127</blue>
+            </color>
+           </brush>
+          </colorrole>
+         </active>
+         <inactive>
+          <colorrole role="Button">
+           <brush brushstyle="SolidPattern">
+            <color alpha="255">
+             <red>255</red>
+             <green>0</green>
+             <blue>127</blue>
+            </color>
+           </brush>
+          </colorrole>
+         </inactive>
+         <disabled>
+          <colorrole role="Button">
+           <brush brushstyle="SolidPattern">
+            <color alpha="255">
+             <red>255</red>
+             <green>0</green>
+             <blue>127</blue>
+            </color>
+           </brush>
+          </colorrole>
+         </disabled>
+        </palette>
+       </property>
+       <attribute name="label">
+        <string>Buttons</string>
+       </attribute>
+       <layout class="QGridLayout" name="gridLayout_2">
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="topMargin">
+         <number>0</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
+        <item row="0" column="0">
+         <widget class="QTreeWidget" name="buttonList">
+          <property name="frameShape">
+           <enum>QFrame::NoFrame</enum>
+          </property>
+          <attribute name="headerVisible">
+           <bool>false</bool>
+          </attribute>
+          <column>
+           <property name="text">
+            <string>Name</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>(F)rame (I)interior In(D)icator (L)abel</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Widget</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>QSvgStyle group</string>
+           </property>
+          </column>
+          <item>
+           <property name="text">
+            <string>Button</string>
+           </property>
+           <property name="icon">
+            <iconset resource="ThemeBuilderUIBase.qrc">
+             <normaloff>:/icon/pixmaps/pushbutton.png</normaloff>:/icon/pixmaps/pushbutton.png</iconset>
+           </property>
+           <property name="text">
+            <string>FIDL</string>
+           </property>
+           <property name="text">
+            <string>CE_PushButton</string>
+           </property>
+           <property name="text">
+            <string>PushButton</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Tool button</string>
+           </property>
+           <property name="icon">
+            <iconset resource="ThemeBuilderUIBase.qrc">
+             <normaloff>:/icon/pixmaps/toolbutton.png</normaloff>:/icon/pixmaps/toolbutton.png</iconset>
+           </property>
+           <property name="text">
+            <string>FIDL</string>
+           </property>
+           <property name="text">
+            <string>CC_ToolButton</string>
+           </property>
+           <property name="text">
+            <string>ToolButton</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Radio button</string>
+           </property>
+           <property name="icon">
+            <iconset resource="ThemeBuilderUIBase.qrc">
+             <normaloff>:/icon/pixmaps/radiobutton.png</normaloff>:/icon/pixmaps/radiobutton.png</iconset>
+           </property>
+           <property name="text">
+            <string>FIDL</string>
+           </property>
+           <property name="text">
+            <string>CE_RadioButton</string>
+           </property>
+           <property name="text">
+            <string>RadioButton</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Check box</string>
+           </property>
+           <property name="icon">
+            <iconset resource="ThemeBuilderUIBase.qrc">
+             <normaloff>:/icon/pixmaps/checkbox.png</normaloff>:/icon/pixmaps/checkbox.png</iconset>
+           </property>
+           <property name="text">
+            <string>FIDL</string>
+           </property>
+           <property name="text">
+            <string>CE_CheckBox</string>
+           </property>
+           <property name="text">
+            <string>CheckBox</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="page_6">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>0</y>
+         <width>96</width>
+         <height>56</height>
+        </rect>
+       </property>
+       <property name="palette">
+        <palette>
+         <active>
+          <colorrole role="Button">
+           <brush brushstyle="SolidPattern">
+            <color alpha="255">
+             <red>122</red>
+             <green>255</green>
+             <blue>39</blue>
+            </color>
+           </brush>
+          </colorrole>
+         </active>
+         <inactive>
+          <colorrole role="Button">
+           <brush brushstyle="SolidPattern">
+            <color alpha="255">
+             <red>122</red>
+             <green>255</green>
+             <blue>39</blue>
+            </color>
+           </brush>
+          </colorrole>
+         </inactive>
+         <disabled>
+          <colorrole role="Button">
+           <brush brushstyle="SolidPattern">
+            <color alpha="255">
+             <red>122</red>
+             <green>255</green>
+             <blue>39</blue>
+            </color>
+           </brush>
+          </colorrole>
+         </disabled>
+        </palette>
+       </property>
+       <attribute name="label">
+        <string>Input</string>
+       </attribute>
+       <layout class="QGridLayout" name="gridLayout_9">
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="topMargin">
+         <number>0</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
+        <item row="0" column="0">
+         <widget class="QTreeWidget" name="inputList">
+          <property name="frameShape">
+           <enum>QFrame::NoFrame</enum>
+          </property>
+          <attribute name="headerVisible">
+           <bool>false</bool>
+          </attribute>
+          <column>
+           <property name="text">
+            <string>Name</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>(F)rame (I)interior In(D)icator (L)abel</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Widget</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>QSvgStyle group</string>
+           </property>
+          </column>
+          <item>
+           <property name="text">
+            <string>Line edit</string>
+           </property>
+           <property name="icon">
+            <iconset resource="ThemeBuilderUIBase.qrc">
+             <normaloff>:/icon/pixmaps/lineedit.png</normaloff>:/icon/pixmaps/lineedit.png</iconset>
+           </property>
+           <property name="text">
+            <string>FIDL</string>
+           </property>
+           <property name="text">
+            <string>PE_FrameLineEdit</string>
+           </property>
+           <property name="text">
+            <string>LineEdit</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Spin box</string>
+           </property>
+           <property name="icon">
+            <iconset resource="ThemeBuilderUIBase.qrc">
+             <normaloff>:/icon/pixmaps/spinbox.png</normaloff>:/icon/pixmaps/spinbox.png</iconset>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="text">
+            <string>CC_SpinBox</string>
+           </property>
+           <property name="text">
+            <string>SpinBox</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Scroll bar</string>
+           </property>
+           <property name="icon">
+            <iconset resource="ThemeBuilderUIBase.qrc">
+             <normaloff>:/icon/pixmaps/vscrollbar.png</normaloff>:/icon/pixmaps/vscrollbar.png</iconset>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="text">
+            <string>CC_ScrollBar</string>
+           </property>
+           <item>
+            <property name="text">
+             <string>Groove</string>
+            </property>
+            <property name="text">
+             <string>FI</string>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+            <property name="text">
+             <string>ScrollBarGroove</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Buttons</string>
+            </property>
+            <property name="text">
+             <string>FID</string>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+            <property name="text">
+             <string>ScrollBarButton</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Cursor</string>
+            </property>
+            <property name="text">
+             <string>FI</string>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+            <property name="text">
+             <string>ScrollBarCursor</string>
+            </property>
+           </item>
+          </item>
+          <item>
+           <property name="text">
+            <string>Slider</string>
+           </property>
+           <property name="icon">
+            <iconset resource="ThemeBuilderUIBase.qrc">
+             <normaloff>:/icon/pixmaps/hslider.png</normaloff>:/icon/pixmaps/hslider.png</iconset>
+           </property>
+           <property name="text">
+            <string>FI</string>
+           </property>
+           <property name="text">
+            <string>CC_Slider</string>
+           </property>
+           <property name="text">
+            <string>Slider</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Dial</string>
+           </property>
+           <property name="icon">
+            <iconset resource="ThemeBuilderUIBase.qrc">
+             <normaloff>:/icon/pixmaps/dial.png</normaloff>:/icon/pixmaps/dial.png</iconset>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="text">
+            <string>CC_Dial</string>
+           </property>
+           <property name="text">
+            <string>Dial</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="page_7">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>0</y>
+         <width>96</width>
+         <height>56</height>
+        </rect>
+       </property>
+       <property name="palette">
+        <palette>
+         <active>
+          <colorrole role="Button">
+           <brush brushstyle="SolidPattern">
+            <color alpha="255">
+             <red>255</red>
+             <green>85</green>
+             <blue>0</blue>
+            </color>
+           </brush>
+          </colorrole>
+         </active>
+         <inactive>
+          <colorrole role="Button">
+           <brush brushstyle="SolidPattern">
+            <color alpha="255">
+             <red>255</red>
+             <green>85</green>
+             <blue>0</blue>
+            </color>
+           </brush>
+          </colorrole>
+         </inactive>
+         <disabled>
+          <colorrole role="Button">
+           <brush brushstyle="SolidPattern">
+            <color alpha="255">
+             <red>255</red>
+             <green>85</green>
+             <blue>0</blue>
+            </color>
+           </brush>
+          </colorrole>
+         </disabled>
+        </palette>
+       </property>
+       <attribute name="label">
+        <string>Display</string>
+       </attribute>
+       <layout class="QGridLayout" name="gridLayout_10">
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="topMargin">
+         <number>0</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
+        <item row="0" column="0">
+         <widget class="QTreeWidget" name="displayList">
+          <property name="frameShape">
+           <enum>QFrame::NoFrame</enum>
+          </property>
+          <attribute name="headerVisible">
+           <bool>false</bool>
+          </attribute>
+          <column>
+           <property name="text">
+            <string>Name</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>(F)rame (I)interior In(D)icator (L)abel</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Widget</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>QSvgStyleGroup</string>
+           </property>
+          </column>
+          <item>
+           <property name="text">
+            <string>Progress bar</string>
+           </property>
+           <property name="icon">
+            <iconset resource="ThemeBuilderUIBase.qrc">
+             <normaloff>:/icon/pixmaps/progress.png</normaloff>:/icon/pixmaps/progress.png</iconset>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="text">
+            <string>CE_ProgressBar</string>
+           </property>
+           <property name="text">
+            <string>ProgressBar</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Splitter</string>
+           </property>
+           <property name="icon">
+            <iconset resource="ThemeBuilderUIBase.qrc">
+             <normaloff>:/icon/pixmaps/edithlayout.png</normaloff>:/icon/pixmaps/edithlayout.png</iconset>
+           </property>
+           <property name="text">
+            <string>FI</string>
+           </property>
+           <property name="text">
+            <string>CE_Splitter</string>
+           </property>
+           <property name="text">
+            <string>Splitter</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Tooltip</string>
+           </property>
+           <property name="icon">
+            <iconset resource="ThemeBuilderUIBase.qrc">
+             <normaloff>:/icon/pixmaps/hint.png</normaloff>:/icon/pixmaps/hint.png</iconset>
+           </property>
+           <property name="text">
+            <string>FIL</string>
+           </property>
+           <property name="text">
+            <string>PE_PanelTipLabbel</string>
+           </property>
+           <property name="text">
+            <string>Tooltip</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Header</string>
+           </property>
+           <property name="icon">
+            <iconset resource="ThemeBuilderUIBase.qrc">
+             <normaloff>:/icon/pixmaps/color.png</normaloff>:/icon/pixmaps/color.png</iconset>
+           </property>
+           <property name="text">
+            <string>FIDL</string>
+           </property>
+           <property name="text">
+            <string>CE_Header</string>
+           </property>
+           <property name="text">
+            <string>Header</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>View item</string>
+           </property>
+           <property name="icon">
+            <iconset resource="ThemeBuilderUIBase.qrc">
+             <normaloff>:/icon/pixmaps/listview.png</normaloff>:/icon/pixmaps/listview.png</iconset>
+           </property>
+           <property name="text">
+            <string>FIDL</string>
+           </property>
+           <property name="text">
+            <string>CE_ItemViewItem</string>
+           </property>
+           <property name="text">
+            <string>ViewItem</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>RubberBand</string>
+           </property>
+           <property name="icon">
+            <iconset resource="ThemeBuilderUIBase.qrc">
+             <normaloff>:/icon/pixmaps/frame.png</normaloff>:/icon/pixmaps/frame.png</iconset>
+           </property>
+           <property name="text">
+            <string>FI</string>
+           </property>
+           <property name="text">
+            <string>CE_RubberBand</string>
+           </property>
+           <property name="text">
+            <string>RubberBand</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="page_8">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>0</y>
+         <width>256</width>
+         <height>534</height>
+        </rect>
+       </property>
+       <property name="palette">
+        <palette>
+         <active>
+          <colorrole role="Button">
+           <brush brushstyle="SolidPattern">
+            <color alpha="255">
+             <red>255</red>
+             <green>255</green>
+             <blue>127</blue>
+            </color>
+           </brush>
+          </colorrole>
+         </active>
+         <inactive>
+          <colorrole role="Button">
+           <brush brushstyle="SolidPattern">
+            <color alpha="255">
+             <red>255</red>
+             <green>255</green>
+             <blue>127</blue>
+            </color>
+           </brush>
+          </colorrole>
+         </inactive>
+         <disabled>
+          <colorrole role="Button">
+           <brush brushstyle="SolidPattern">
+            <color alpha="255">
+             <red>255</red>
+             <green>255</green>
+             <blue>127</blue>
+            </color>
+           </brush>
+          </colorrole>
+         </disabled>
+        </palette>
+       </property>
+       <attribute name="label">
+        <string>Containers</string>
+       </attribute>
+       <layout class="QGridLayout" name="gridLayout_11">
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="topMargin">
+         <number>0</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
+        <item row="0" column="0">
+         <widget class="QTreeWidget" name="containerList">
+          <property name="frameShape">
+           <enum>QFrame::NoFrame</enum>
+          </property>
+          <attribute name="headerVisible">
+           <bool>false</bool>
+          </attribute>
+          <column>
+           <property name="text">
+            <string>Name</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>(F)rame (I)interior In(D)icator (L)abel</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Widget</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>QSvgStyleGroup</string>
+           </property>
+          </column>
+          <item>
+           <property name="text">
+            <string>Frame</string>
+           </property>
+           <property name="icon">
+            <iconset resource="ThemeBuilderUIBase.qrc">
+             <normaloff>:/icon/pixmaps/frame.png</normaloff>:/icon/pixmaps/frame.png</iconset>
+           </property>
+           <property name="text">
+            <string>FI</string>
+           </property>
+           <property name="text">
+            <string>PE_Frame</string>
+           </property>
+           <property name="text">
+            <string>Frame</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Menu bar</string>
+           </property>
+           <property name="icon">
+            <iconset resource="ThemeBuilderUIBase.qrc">
+             <normaloff>:/icon/pixmaps/menubar.png</normaloff>:/icon/pixmaps/menubar.png</iconset>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="text">
+            <string>CE_MenuBarItem</string>
+           </property>
+           <item>
+            <property name="text">
+             <string>Bar</string>
+            </property>
+            <property name="text">
+             <string>FI</string>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+            <property name="text">
+             <string>MenuBar</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Items</string>
+            </property>
+            <property name="text">
+             <string>FIL</string>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+            <property name="text">
+             <string>MenuBarItem</string>
+            </property>
+           </item>
+          </item>
+          <item>
+           <property name="text">
+            <string>Menu</string>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="text">
+            <string>CE_MenuItem</string>
+           </property>
+           <item>
+            <property name="text">
+             <string>Panel</string>
+            </property>
+            <property name="text">
+             <string>FI</string>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+            <property name="text">
+             <string>Menu</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Items</string>
+            </property>
+            <property name="text">
+             <string>FIDL</string>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+            <property name="text">
+             <string>MenuItem</string>
+            </property>
+           </item>
+          </item>
+          <item>
+           <property name="text">
+            <string>Tool bar</string>
+           </property>
+           <property name="text">
+            <string>FI</string>
+           </property>
+           <property name="text">
+            <string>CE_ToolBar</string>
+           </property>
+           <property name="text">
+            <string>ToolBar</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Tool box</string>
+           </property>
+           <property name="icon">
+            <iconset resource="ThemeBuilderUIBase.qrc">
+             <normaloff>:/icon/pixmaps/toolbox.png</normaloff>:/icon/pixmaps/toolbox.png</iconset>
+           </property>
+           <property name="text">
+            <string>FIDL</string>
+           </property>
+           <property name="text">
+            <string>CE_ToolBoxTab</string>
+           </property>
+           <property name="text">
+            <string>ToolBox</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Group box</string>
+           </property>
+           <property name="icon">
+            <iconset resource="ThemeBuilderUIBase.qrc">
+             <normaloff>:/icon/pixmaps/groupbox.png</normaloff>:/icon/pixmaps/groupbox.png</iconset>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="text">
+            <string>CC_GroupBox</string>
+           </property>
+           <item>
+            <property name="text">
+             <string>Title</string>
+            </property>
+            <property name="text">
+             <string>FIDL</string>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+            <property name="text">
+             <string>GroupBoxTitle</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Contents</string>
+            </property>
+            <property name="text">
+             <string>FI</string>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+            <property name="text">
+             <string>GroupBoxContents</string>
+            </property>
+           </item>
+          </item>
+          <item>
+           <property name="text">
+            <string>Tab widget</string>
+           </property>
+           <property name="icon">
+            <iconset resource="ThemeBuilderUIBase.qrc">
+             <normaloff>:/icon/pixmaps/tabwidget.png</normaloff>:/icon/pixmaps/tabwidget.png</iconset>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="text">
+            <string>CE_TabBarTab</string>
+           </property>
+           <item>
+            <property name="text">
+             <string>Tab base</string>
+            </property>
+            <property name="text">
+             <string>FI</string>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+            <property name="text">
+             <string>TabBarBase</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Tab</string>
+            </property>
+            <property name="text">
+             <string>FIDL</string>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+            <property name="text">
+             <string>TabBarTab</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Content</string>
+            </property>
+            <property name="text">
+             <string>FI</string>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+            <property name="text">
+             <string>TabContents</string>
+            </property>
+           </item>
+          </item>
+          <item>
+           <property name="text">
+            <string>Dock</string>
+           </property>
+           <property name="icon">
+            <iconset resource="ThemeBuilderUIBase.qrc">
+             <normaloff>:/icon/pixmaps/dockwidget.png</normaloff>:/icon/pixmaps/dockwidget.png</iconset>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="text">
+            <string>CE_DockWidgetTitle</string>
+           </property>
+           <item>
+            <property name="text">
+             <string>Title</string>
+            </property>
+            <property name="text">
+             <string>FIDL</string>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+            <property name="text">
+             <string>DockWidgetTitle</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Contents</string>
+            </property>
+            <property name="text">
+             <string>FI</string>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+            <property name="text">
+             <string>DockWidgetContents</string>
+            </property>
+           </item>
+          </item>
+          <item>
+           <property name="text">
+            <string>Window</string>
+           </property>
+           <property name="icon">
+            <iconset resource="ThemeBuilderUIBase.qrc">
+             <normaloff>:/icon/pixmaps/widgetstack.png</normaloff>:/icon/pixmaps/widgetstack.png</iconset>
+           </property>
+           <property name="text">
+            <string>FIDL</string>
+           </property>
+           <property name="text">
+            <string>PE_FrameWindow</string>
+           </property>
+           <property name="text">
+            <string>Window</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Status bar</string>
+           </property>
+           <property name="text">
+            <string>FIDL</string>
+           </property>
+           <property name="text">
+            <string>PE_PanelStatusBar</string>
+           </property>
+           <property name="text">
+            <string>StatusBar</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </widget>
     </item>
    </layout>
   </widget>

@@ -28,10 +28,10 @@
 #include <QClipboard>
 
 // UI
-#include <QListWidget>
 #include <QFileDialog>
 #include <QTreeWidget>
 #include <QTreeWidgetItem>
+#include <QHeaderView>
 #include <QFileInfo>
 #include <QStyleFactory>
 #include <QMessageBox>
@@ -86,6 +86,291 @@
 #include "remover.h"
 #include "replacer.h"
 
+// Specific tree Item Delegate
+// name is stored in SpecificSettingName
+// display value is stored in Qt::DisplayRole
+// internal value is stored in Qt::EditRole
+// setting type is stored in SpecificSettingType
+// setting range is stored in SpecificSetting Range
+SpecificTreeDelegate::SpecificTreeDelegate(QObject *parent)
+  : QStyledItemDelegate(parent)
+{
+}
+
+QWidget *SpecificTreeDelegate::createEditor(QWidget *parent,
+                                       const QStyleOptionViewItem &/* option */,
+                                       const QModelIndex &index) const
+{
+  QWidget *res = NULL;
+
+  // Delegate is only for column 2
+  if ( index.column() != 1 )
+    return NULL;
+
+  const QString type = index.data(SpecificSettingType).toString();
+  const QString range_str = index.data(SpecificSettingRange).toString();
+
+  if ( type == "int" ) {
+    QSpinBox *widget = new QSpinBox(parent);
+    QStringList min_max = range_str.split('-');
+    if ( min_max.size() == 2 ) {
+      bool ok = false;
+      int min = min_max.at(0).toInt(&ok);
+      if ( ok )
+        widget->setMinimum(min);
+      int max = min_max.at(1).toInt(&ok);
+      if ( ok )
+        widget->setMaximum(max);
+    }
+
+    connect(widget,SIGNAL(valueChanged(int)), this,SLOT(slot_valueChanged(int)));
+
+    res = widget;
+  }
+
+  if ( type == "bool" ) {
+    QCheckBox *widget = new QCheckBox(parent);
+
+    connect(widget,SIGNAL(toggled(bool)), this,SLOT(slot_boolChanged(bool)));
+
+    res = widget;
+  }
+
+  if ( type == "enum" || type == "int_enum" ) {
+    QComboBox *widget = new QComboBox(parent);
+    QStringList items = range_str.split(',');
+    widget->addItems(items);
+
+    connect(widget,SIGNAL(currentIndexChanged(int)), this,SLOT(slot_currentIndexChanged(int)));
+    res = widget;
+  }
+
+  connect(res,SIGNAL(destroyed(QObject*)),
+          this,SLOT(slot_editorDestroyed(QObject*)));
+
+  return res;
+}
+
+void SpecificTreeDelegate::slot_editorDestroyed(QObject *o)
+{
+  Q_UNUSED(o);
+}
+
+void SpecificTreeDelegate::setEditorData(QWidget *editor,
+                                         const QModelIndex &index) const
+{
+  const QString type = index.data(SpecificSettingType).toString();
+  const QString range_str = index.data(SpecificSettingRange).toString();
+  const QVariant value_data = index.data(Qt::EditRole);
+
+  if ( type == "int" ) {
+    QSpinBox *widget = qobject_cast<QSpinBox *>(editor);
+    widget->blockSignals(true);
+    if ( widget ) {
+      bool ok = false;
+      int value = value_data.toInt(&ok);
+      if ( ok )
+        widget->setValue(value);
+      else
+        widget->setValue(0);
+    }
+    widget->blockSignals(false);
+  }
+
+  if ( type == "bool" ) {
+    //qWarning() << "setEditorData" << value_data;
+    QCheckBox *widget = qobject_cast<QCheckBox *>(editor);
+    widget->blockSignals(true);
+    const QStringList true_false = range_str.split(',');
+    QString true_str = "true";
+    QString false_str = "false";
+    if ( true_false.size() >= 1 )
+      true_str = true_false.at(0);
+    if ( true_false.size() >= 2 )
+      false_str = true_false.at(1);
+    if ( widget ) {
+      if ( value_data.toBool() ) {
+        widget->setChecked(true);
+        widget->setText(true_str);
+      } else {
+        widget->setChecked(false);
+        widget->setText(false_str);
+      }
+    }
+    widget->blockSignals(false);
+  }
+
+  if ( type == "enum" || type == "int_enum" ) {
+    //qWarning() << "setEditorData" << value_data;
+    QComboBox *widget = qobject_cast<QComboBox *>(editor);
+    widget->blockSignals(true);
+    if ( type == "enum" ) {
+      // enums stored as strings
+      int idx = widget->findText(value_data.toString());
+      widget->setCurrentIndex(idx);
+    } else {
+      // enums stored as ints
+      widget->setCurrentIndex(value_data.toInt());
+    }
+    widget->blockSignals(false);
+  }
+}
+
+void SpecificTreeDelegate::setModelData(QWidget *editor, QAbstractItemModel *model,
+                                        const QModelIndex &index) const
+{
+  const QString type = index.data(SpecificSettingType).toString();
+  const QString range_str = index.data(SpecificSettingRange).toString();
+
+  //model->blockSignals(true); // avoid ping pong
+
+  // Qt Bug : The model installed on QTreeWidget is a QTreeModel.
+  // This has the particularity of considering that Qt::DisplayRole = Qt::EditRole
+  // see qtreewidget.cpp::QTreeModem::setData() which calls
+  // QTreeWidget::setData() for which DisplayRole=EditRole
+
+  if ( type == "int" ) {
+    QSpinBox *widget = qobject_cast<QSpinBox *>(editor);
+    if ( widget ) {
+      widget->interpretText();
+      model->setData(index, widget->value(), Qt::EditRole);
+      //model->setData(index, widget->value(), Qt::DisplayRole);
+    }
+  }
+
+  if ( type == "bool" ) {
+    QCheckBox *widget = qobject_cast<QCheckBox *>(editor);
+    const QStringList true_false = range_str.split(',');
+    QString true_str = "true";
+    QString false_str = "false";
+    if ( true_false.size() >= 1 )
+      true_str = true_false.at(0);
+    if ( true_false.size() >= 2 )
+      false_str = true_false.at(1);
+
+    if ( widget ) {
+      //qWarning() << "setModelData" << widget->isChecked();
+
+      model->setData(index, widget->isChecked(), Qt::EditRole);
+      //model->setData(index, widget->isChecked() ? true_str : false_str, Qt::DisplayRole);
+    }
+
+    // HACK in addition to setting the model data, we have to change
+    // the checkbox text because no repaint is trigerred when setting
+    // the model data
+    widget->setText(widget->isChecked() ? true_str : false_str);
+  }
+
+  if ( type == "enum" || type == "int_enum" ) {
+    QComboBox *widget = qobject_cast<QComboBox *>(editor);
+    if ( widget ) {
+      if ( type == "int_enum" ) {
+        // Store index
+        //qWarning() << "setModelData" << widget->currentIndex();
+        model->setData(index, widget->currentIndex(), Qt::EditRole);
+      } else {
+        // Store string
+        //qWarning() << "setModelData" << widget->currentText();
+        model->setData(index, widget->currentText(), Qt::EditRole);
+      }
+      //model->setData(index, widget->currentText(), Qt::DisplayRole);
+    }
+  }
+
+  model->blockSignals(false);
+}
+
+void SpecificTreeDelegate::updateEditorGeometry(QWidget *editor,
+                                           const QStyleOptionViewItem &option,
+                                           const QModelIndex &/* index */) const
+{
+  editor->setGeometry(option.rect);
+}
+
+void SpecificTreeDelegate::paint(QPainter *painter,
+                            const QStyleOptionViewItem &option,
+                            const QModelIndex &index) const
+{
+  if ( index.column() != 1) {
+    QStyledItemDelegate::paint(painter,option,index);
+    return;
+  }
+
+  const QString type = index.data(SpecificSettingType).toString();
+  const QString range_str = index.data(SpecificSettingRange).toString();
+  const QVariant value_data = index.data(Qt::EditRole);
+
+  const QStyle *s = option.widget ? option.widget->style() :  0;
+
+  if ( !s )
+    return;
+
+  // Checkboxes: we need to draw the checkbox and the text
+  if ( type == "bool" ) {
+    //qWarning() << "paint" << value_data;
+    QStyleOptionButton o;
+    o.initFrom(option.widget);
+    o.rect = option.rect;
+
+    const QStringList true_false = range_str.split(',');
+    QString true_str = "true";
+    QString false_str = "false";
+    if ( true_false.size() >= 1 )
+      true_str = true_false.at(0);
+    if ( true_false.size() >= 2 )
+      false_str = true_false.at(1);
+
+    o.state &= ~(QStyle::State_NoChange | QStyle::State_On);
+
+    if ( value_data.toBool() ) {
+      o.state |= QStyle::State_On;
+      o.text = true_str;
+    } else {
+      o.state &= ~QStyle::State_On;
+      o.text = false_str;
+    }
+
+    s->drawControl(QStyle::CE_CheckBox, &o, painter, 0);
+    return;
+  }
+
+  if ( type == "enum" || type == "int_enum" ) {
+    QStyleOptionViewItem o(option);
+    initStyleOption(&o, index);
+
+    const QStringList items = range_str.split(',');
+    if ( items.size()-1 >= value_data.toInt() )
+      o.text = items.at(value_data.toInt());
+
+    s->drawControl(QStyle::CE_ItemViewItem, &o, painter, 0);
+    return;
+  }
+
+  // Others: showing text is fine, so we can rely on default implementation
+  QStyledItemDelegate::paint(painter,option,index);
+}
+
+void SpecificTreeDelegate::slot_currentIndexChanged(int idx)
+{
+  Q_UNUSED(idx);
+
+  emit commitData(qobject_cast<QComboBox *>(sender()));
+}
+
+void SpecificTreeDelegate::slot_valueChanged(int val)
+{
+  Q_UNUSED(val);
+
+  emit commitData(qobject_cast<QSpinBox *>(sender()));
+}
+
+void SpecificTreeDelegate::slot_boolChanged(bool checked)
+{
+  Q_UNUSED(checked);
+
+  emit commitData(qobject_cast<QCheckBox *>(sender()));
+}
+
 ThemeBuilderUI::ThemeBuilderUI(QWidget* parent)
  : QMainWindow(parent), config(0), style(0), previewWidget(0),
    currentWidget(0),
@@ -100,215 +385,47 @@ ThemeBuilderUI::ThemeBuilderUI(QWidget* parent)
   setupUi(this);
   setWindowTitle(windowTitle()+"[*]");
 
-  // populate widget tree views
-  QListWidgetItem *i;
-
-  // TODO replace all this shit by an automatic generation like
-  // the one used by QSvgThemeManager
-  QIcon icon1;
-  icon1.addFile(QString::fromUtf8(":/icon/pixmaps/pushbutton.png"), QSize(), QIcon::Normal, QIcon::Off);
-  i = new QListWidgetItem(buttonList);
-  i->setIcon(icon1);
-  i->setText("Push button");
-  i->setData(GroupRole,CE_group(QStyle::CE_PushButton));
-
-  QIcon icon2;
-  icon2.addFile(QString::fromUtf8(":/icon/pixmaps/toolbutton.png"), QSize(), QIcon::Normal, QIcon::Off);
-  i = new QListWidgetItem(buttonList);
-  i->setIcon(icon2);
-  i->setText("Tool button");
-  i->setData(GroupRole,CC_group(QStyle::CC_ToolButton));
-
-  QIcon icon3;
-  icon3.addFile(QString::fromUtf8(":/icon/pixmaps/radiobutton.png"), QSize(), QIcon::Normal, QIcon::Off);
-  i = new QListWidgetItem(buttonList);
-  i->setIcon(icon3);
-  i->setText("Radio button");
-  i->setData(GroupRole,CE_group(QStyle::CE_RadioButton));
-
-  QIcon icon4;
-  icon4.addFile(QString::fromUtf8(":/icon/pixmaps/checkbox.png"), QSize(), QIcon::Normal, QIcon::Off);
-  i = new QListWidgetItem(buttonList);
-  i->setIcon(icon4);
-  i->setText("Check box");
-  i->setData(GroupRole,CE_group(QStyle::CE_CheckBox));
-
-  QIcon icon5;
-  icon5.addFile(QString::fromUtf8(":/icon/pixmaps/lineedit.png"), QSize(), QIcon::Normal, QIcon::Off);
-  i = new QListWidgetItem(inputList);
-  i->setIcon(icon5);
-  i->setText("Line edit");
-  i->setData(GroupRole,PE_group(QStyle::PE_FrameLineEdit));
-
-  QIcon icon6;
-  icon6.addFile(QString::fromUtf8(":/icon/pixmaps/spinbox.png"), QSize(), QIcon::Normal, QIcon::Off);
-  i = new QListWidgetItem(inputList);
-  i->setIcon(icon6);
-  i->setText("Spin box");
-  i->setData(GroupRole,CC_group(QStyle::CC_SpinBox));
-
-  QIcon icon7;
-  icon7.addFile(QString::fromUtf8(":/icon/pixmaps/vscrollbar.png"), QSize(), QIcon::Normal, QIcon::Off);
-  i = new QListWidgetItem(inputList);
-  i->setIcon(icon7);
-  i->setText("Scroll bar");
-  i->setData(GroupRole,CC_group(QStyle::CC_ScrollBar));
-
-  QIcon icon8;
-  icon8.addFile(QString::fromUtf8(":/icon/pixmaps/hslider.png"), QSize(), QIcon::Normal, QIcon::Off);
-  i = new QListWidgetItem(inputList);
-  i->setIcon(icon8);
-  i->setText("Slider");
-  i->setData(GroupRole,CC_group(QStyle::CC_Slider));
-
-  QIcon icon9;
-  icon9.addFile(QString::fromUtf8(":/icon/pixmaps/dial.png"), QSize(), QIcon::Normal, QIcon::Off);
-  i = new QListWidgetItem(inputList);
-  i->setIcon(icon9);
-  i->setText("Dial");
-  i->setData(GroupRole,CC_group(QStyle::CC_Dial));
-
-  QIcon icon10;
-  icon10.addFile(QString::fromUtf8(":/icon/pixmaps/progress.png"), QSize(), QIcon::Normal, QIcon::Off);
-  i = new QListWidgetItem(displayList);
-  i->setIcon(icon10);
-  i->setText("Progress bar");
-  i->setData(GroupRole,CE_group(QStyle::CE_ProgressBar));
-
-  QIcon icon11;
-  icon11.addFile(QString::fromUtf8(":/icon/pixmaps/edithlayout.png"), QSize(), QIcon::Normal, QIcon::Off);
-  i = new QListWidgetItem(displayList);
-  i->setIcon(icon11);
-  i->setText("Splitter");
-  i->setData(GroupRole,CE_group(QStyle::CE_Splitter));
-
-  QIcon icon111;
-  //icon111.addFile(QString::fromUtf8(":/icon/pixmaps/edithlayout.png"), QSize(), QIcon::Normal, QIcon::Off);
-  i = new QListWidgetItem(displayList);
-  i->setIcon(icon111);
-  i->setText("Tooltip");
-  i->setData(GroupRole,PE_group(QStyle::PE_PanelTipLabel));
-
-  QIcon icon112;
-  //icon112.addFile(QString::fromUtf8(":/icon/pixmaps/edithlayout.png"), QSize(), QIcon::Normal, QIcon::Off);
-  i = new QListWidgetItem(displayList);
-  i->setIcon(icon112);
-  i->setText("Header");
-  i->setData(GroupRole,CE_group(QStyle::CE_Header));
-
-  QIcon icon113;
-  //icon112.addFile(QString::fromUtf8(":/icon/pixmaps/edithlayout.png"), QSize(), QIcon::Normal, QIcon::Off);
-  i = new QListWidgetItem(displayList);
-  i->setIcon(icon113);
-  i->setText("View item");
-  i->setData(GroupRole,PE_group(QStyle::PE_PanelItemViewItem));
-
-  QIcon icon114;
-  //icon112.addFile(QString::fromUtf8(":/icon/pixmaps/edithlayout.png"), QSize(), QIcon::Normal, QIcon::Off);
-  i = new QListWidgetItem(displayList);
-  i->setIcon(icon113);
-  i->setText("RubberBand");
-  i->setData(GroupRole,CE_group(QStyle::CE_RubberBand));
-
-  QIcon icon12;
-  icon12.addFile(QString::fromUtf8(":/icon/pixmaps/groupbox.png"), QSize(), QIcon::Normal, QIcon::Off);
-  i = new QListWidgetItem(containerList);
-  i->setIcon(icon12);
-  i->setText("Group box");
-  i->setData(GroupRole,CC_group(QStyle::CC_GroupBox));
-
-  QIcon icon13;
-  icon13.addFile(QString::fromUtf8(":/icon/pixmaps/toolbox.png"), QSize(), QIcon::Normal, QIcon::Off);
-  i = new QListWidgetItem(containerList);
-  i->setIcon(icon13);
-  i->setText("Tool box");
-  i->setData(GroupRole,CE_group(QStyle::CE_ToolBoxTab));
-
-  QIcon icon14;
-  icon14.addFile(QString::fromUtf8(":/icon/pixmaps/tabwidget.png"), QSize(), QIcon::Normal, QIcon::Off);
-  i = new QListWidgetItem(containerList);
-  i->setIcon(icon14);
-  i->setText("Tab widget");
-  i->setData(GroupRole,CE_group(QStyle::CE_TabBarTab));
-
-  QIcon icon15;
-  icon15.addFile(QString::fromUtf8(":/icon/pixmaps/frame.png"), QSize(), QIcon::Normal, QIcon::Off);
-  i = new QListWidgetItem(containerList);
-  i->setIcon(icon15);
-  i->setText("Frame");
-  i->setData(GroupRole,PE_group(QStyle::PE_Frame));
-
-  QIcon icon16;
-  icon16.addFile(QString::fromUtf8(":/icon/pixmaps/dockwidget.png"), QSize(), QIcon::Normal, QIcon::Off);
-  i = new QListWidgetItem(containerList);
-  i->setIcon(icon16);
-  i->setText("Dock widget");
-  i->setData(GroupRole,CE_group(QStyle::CE_DockWidgetTitle));
-
-  QIcon icon17;
-  icon17.addFile(QString::fromUtf8(":/icon/pixmaps/toolbox.png"), QSize(), QIcon::Normal, QIcon::Off);
-  i = new QListWidgetItem(containerList);
-  //i->setIcon(icon17);
-  i->setText("Tool bar");
-  i->setData(GroupRole,CE_group(QStyle::CE_ToolBar));
-
-  QIcon icon18;
-  icon18.addFile(QString::fromUtf8(":/icon/pixmaps/menubar.png"), QSize(), QIcon::Normal, QIcon::Off);
-  i = new QListWidgetItem(containerList);
-  i->setIcon(icon18);
-  i->setText("Menu bar item");
-  i->setData(GroupRole,CE_group(QStyle::CE_MenuBarItem));
-
-  QIcon icon19;
-  icon19.addFile(QString::fromUtf8(":/icon/pixmaps/toolbox.png"), QSize(), QIcon::Normal, QIcon::Off);
-  i = new QListWidgetItem(containerList);
-  //i->setIcon(icon19);
-  i->setText("Menu item");
-  i->setData(GroupRole,CE_group(QStyle::CE_MenuItem));
-
-  QIcon icon20;
-  icon19.addFile(QString::fromUtf8(":/icon/pixmaps/toolbox.png"), QSize(), QIcon::Normal, QIcon::Off);
-  i = new QListWidgetItem(containerList);
-  //i->setIcon(icon19);
-  i->setText("Windows");
-  i->setData(GroupRole,PE_group(QStyle::PE_FrameWindow));
-
-  QIcon icon21;
-  icon19.addFile(QString::fromUtf8(":/icon/pixmaps/toolbox.png"), QSize(), QIcon::Normal, QIcon::Off);
-  i = new QListWidgetItem(containerList);
-  //i->setIcon(icon19);
-  i->setText("Status bar");
-  i->setData(GroupRole,PE_group(QStyle::PE_PanelStatusBar));
-
-//   QIcon icon22;
-//   icon22.addFile(QString::fromUtf8(":/icon/pixmaps/optimize.png"), QSize(), QIcon::Normal, QIcon::Off);
-//   i = new QListWidgetItem(miscList);
-//   i->setIcon(icon21);
-//   i->setText("Metrics");
-  //i->setData(GroupRole,"ToolBox");
-
   // Menu for recent files
   recentFiles = new QMenu("Recent files", recentBtn);
   recentBtn->setMenu(recentFiles);
 
-  // Adjust toolBox size
-  // Shitty QListWidget size policies do not work
-  int maxW = buttonList->sizeHintForColumn(0);
-  maxW = qMax(maxW,inputList->sizeHintForColumn(0));
-  maxW = qMax(maxW,displayList->sizeHintForColumn(0));
-  maxW = qMax(maxW,containerList->sizeHintForColumn(0));
-  maxW = qMax(maxW,miscList->sizeHintForColumn(0));
+  // Columns contain internal data that are not intended to be shown
+  // Column 0: display name
+  // Column 1: Flags: F=Frame, I=Interior, D=Indicator, L=Label support
+  // Column 2: QStyle Enum used to draw the preview
+  // Column 3: QSvgStyle config group
+  buttonList->setColumnHidden(1, true);
+  buttonList->setColumnHidden(2, true);
+  buttonList->setColumnHidden(3, true);
+
+  inputList->setColumnHidden(1, true);
+  inputList->setColumnHidden(2, true);
+  inputList->setColumnHidden(3, true);
+
+  displayList->setColumnHidden(1, true);
+  displayList->setColumnHidden(2, true);
+  displayList->setColumnHidden(3, true);
+
+  containerList->setColumnHidden(1, true);
+  containerList->setColumnHidden(2, true);
+  containerList->setColumnHidden(3, true);
+
+  buttonList->header()->setSectionResizeMode(0,QHeaderView::ResizeToContents);
+  inputList->header()->setSectionResizeMode(0,QHeaderView::ResizeToContents);
+  displayList->header()->setSectionResizeMode(0,QHeaderView::ResizeToContents);
+  containerList->header()->setSectionResizeMode(0,QHeaderView::ResizeToContents);
+
+  int maxW = 0;
+  maxW = qMax(maxW,buttonList->header()->sectionSize(0));
+  maxW = qMax(maxW,inputList->header()->sectionSize(0));
+  maxW = qMax(maxW,displayList->header()->sectionSize(0));
+  maxW = qMax(maxW,containerList->header()->sectionSize(0));
   maxW += 30; // be comfortable
 
   buttonList->setFixedWidth(maxW);
   inputList->setFixedWidth(maxW);
   displayList->setFixedWidth(maxW);
   containerList->setFixedWidth(maxW);
-  miscList->setFixedWidth(maxW);
-
-  toolBox->setSizePolicy(QSizePolicy::Fixed,QSizePolicy::Expanding);
-
-  //previewArea->setBackgroundRole(QPalette::Mid);
 
   // Adjust gen tool box size
   // Shitty QToolBox in fact renders its pages inside a QScrollArea
@@ -323,18 +440,88 @@ ThemeBuilderUI::ThemeBuilderUI(QWidget* parent)
   genToolbox->setFixedWidth(maxW);
 
   // also populate inherit combo box
-  foreach(QListWidgetItem *i, buttonList->findItems("*",Qt::MatchWildcard)) {
-    inheritCombo->addItem(i->icon(),i->text(),i->data(GroupRole));
+  foreach(QTreeWidgetItem *i, buttonList->findItems("*",Qt::MatchWildcard)) {
+    if ( !i->text(2).isEmpty() )
+      inheritCombo->addItem(i->icon(0),i->text(0),i->text(3));
+    else {
+      for (int j=0; j<i->childCount(); j++) {
+        QTreeWidgetItem *c = i->child(j);
+        if ( !c->text(3).isEmpty() )
+          inheritCombo->addItem(i->icon(0),
+                                QString("%1::%2").arg(i->text(0)).arg(c->text(0)),
+                                c->text(3));
+      }
+    }
   }
-  foreach(QListWidgetItem *i, inputList->findItems("*",Qt::MatchWildcard)) {
-    inheritCombo->addItem(i->icon(),i->text(),i->data(GroupRole));
+  inheritCombo->insertSeparator(999);
+  foreach(QTreeWidgetItem *i, inputList->findItems("*",Qt::MatchWildcard)) {
+    if ( !i->text(3).isEmpty() )
+      inheritCombo->addItem(i->icon(0),i->text(0),i->text(3));
+    else {
+      for (int j=0; j<i->childCount(); j++) {
+        QTreeWidgetItem *c = i->child(j);
+        if ( !c->text(3).isEmpty() )
+          inheritCombo->addItem(i->icon(0),
+                                QString("%1::%2").arg(i->text(0)).arg(c->text(0)),
+                                c->text(3));
+      }
+    }
   }
-  foreach(QListWidgetItem *i, displayList->findItems("*",Qt::MatchWildcard)) {
-    inheritCombo->addItem(i->icon(),i->text(),i->data(GroupRole));
+  inheritCombo->insertSeparator(999);
+  foreach(QTreeWidgetItem *i, displayList->findItems("*",Qt::MatchWildcard)) {
+    if ( !i->text(3).isEmpty() )
+      inheritCombo->addItem(i->icon(0),i->text(0),i->text(3));
+    else {
+      for (int j=0; j<i->childCount(); j++) {
+        QTreeWidgetItem *c = i->child(j);
+        if ( !c->text(3).isEmpty() )
+          inheritCombo->addItem(i->icon(0),
+                                QString("%1::%2").arg(i->text(0)).arg(c->text(0)),
+                                c->text(3));
+      }
+    }
   }
-  foreach(QListWidgetItem *i, containerList->findItems("*",Qt::MatchWildcard)) {
-    inheritCombo->addItem(i->icon(),i->text(),i->data(GroupRole));
+  inheritCombo->insertSeparator(999);
+  foreach(QTreeWidgetItem *i, containerList->findItems("*",Qt::MatchWildcard)) {
+    if ( !i->text(3).isEmpty() )
+      inheritCombo->addItem(i->icon(0),i->text(0),i->text(3));
+    else {
+      for (int j=0; j<i->childCount(); j++) {
+        QTreeWidgetItem *c = i->child(j);
+        if ( !c->text(3).isEmpty() )
+          inheritCombo->addItem(i->icon(0),
+                                QString("%1::%2").arg(i->text(0)).arg(c->text(0)),
+                                c->text(3));
+      }
+    }
   }
+
+  // Further setup for specific tree: move item text to item data
+  // Column 0: display name
+  // Column 1: value
+  // Column 2: setting name
+  // Column 3: type
+  // Column 4: range
+  specificTree->setColumnHidden(2, true);
+  specificTree->setColumnHidden(3, true);
+  specificTree->setColumnHidden(4, true);
+
+  // Setup Delegates for specific tree
+  SpecificTreeDelegate *d = new SpecificTreeDelegate();
+  specificTree->setItemDelegate(d);
+
+  QTreeWidgetItemIterator it(specificTree);
+  while (*it) {
+    if ( !(*it)->childCount() ) { // leaf
+      (*it)->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEditable|Qt::ItemIsUserCheckable|Qt::ItemIsEnabled);
+      // move .ui texts to item data
+      (*it)->setData(1, SpecificSettingName, (*it)->text(2));
+      (*it)->setData(1, SpecificSettingType, (*it)->text(3));
+      (*it)->setData(1, SpecificSettingRange, (*it)->text(4));
+    }
+    ++it;
+  }
+  specificTree->header()->setSectionResizeMode(0,QHeaderView::ResizeToContents);
 
   // add tree widgets after window creation to get minimal window size
   drawStackTree = new QTreeWidget(previewTab);
@@ -344,15 +531,7 @@ ThemeBuilderUI::ThemeBuilderUI(QWidget* parent)
   drawStackTree->headerItem()->setText(1,"Args");
   debugLayout->addWidget(drawStackTree, 2, 0, 1, 1);
 
-//   resolvedValuesTree = new QTreeWidget(previewTab);
-//   resolvedValuesTree->setObjectName(QString::fromUtf8("resolvedValuesTree"));
-//   resolvedValuesTree->headerItem()->setText(0,"Name");
-//   resolvedValuesTree->headerItem()->setText(1,"File value");
-//   resolvedValuesTree->headerItem()->setText(2,"Resolved value");
-//   previewLayout->addWidget(resolvedValuesTree, 5, 0, 1, 1);
-
   drawStackTree->header()->setSectionResizeMode(0,QHeaderView::ResizeToContents);
-//   resolvedValuesTree->header()->setResizeMode(QHeaderView::ResizeToContents);
 
   // insert appropriate widget into status bar
   statusbarLbl1 = new QLabel(this);
@@ -432,26 +611,28 @@ ThemeBuilderUI::ThemeBuilderUI(QWidget* parent)
   connect(editSvgBtn,SIGNAL(clicked()), this,SLOT(slot_editSvg()));
 
   // Change of selected widget to edit
-  connect(buttonList,SIGNAL(currentItemChanged(QListWidgetItem*,QListWidgetItem*)),
-          this,SLOT(slot_widgetChanged(QListWidgetItem*,QListWidgetItem*)));
-  connect(inputList,SIGNAL(currentItemChanged(QListWidgetItem*,QListWidgetItem*)),
-          this,SLOT(slot_widgetChanged(QListWidgetItem*,QListWidgetItem*)));
-  connect(displayList,SIGNAL(currentItemChanged(QListWidgetItem*,QListWidgetItem*)),
-          this,SLOT(slot_widgetChanged(QListWidgetItem*,QListWidgetItem*)));
-  connect(containerList,SIGNAL(currentItemChanged(QListWidgetItem*,QListWidgetItem*)),
-          this,SLOT(slot_widgetChanged(QListWidgetItem*,QListWidgetItem*)));
-  connect(miscList,SIGNAL(currentItemChanged(QListWidgetItem*,QListWidgetItem*)),
-          this,SLOT(slot_widgetChanged(QListWidgetItem*,QListWidgetItem*)));
+  connect(buttonList,SIGNAL(currentItemChanged(QTreeWidgetItem*,QTreeWidgetItem*)),
+          this,SLOT(slot_widgetChanged(QTreeWidgetItem*,QTreeWidgetItem*)));
+  connect(inputList,SIGNAL(currentItemChanged(QTreeWidgetItem*,QTreeWidgetItem*)),
+          this,SLOT(slot_widgetChanged(QTreeWidgetItem*,QTreeWidgetItem*)));
+  connect(displayList,SIGNAL(currentItemChanged(QTreeWidgetItem*,QTreeWidgetItem*)),
+          this,SLOT(slot_widgetChanged(QTreeWidgetItem*,QTreeWidgetItem*)));
+  connect(containerList,SIGNAL(currentItemChanged(QTreeWidgetItem*,QTreeWidgetItem*)),
+          this,SLOT(slot_widgetChanged(QTreeWidgetItem*,QTreeWidgetItem*)));
   connect(toolBox,SIGNAL(currentChanged(int)),
           this,SLOT(slot_toolboxTabChanged(int)));
 
   // Changes inside properties tab
   connect(authorEdit,SIGNAL(textEdited(QString)),
           this,SLOT(slot_authorEditChanged(QString)));
+  connect(variantEdit,SIGNAL(textEdited(QString)),
+          this,SLOT(slot_variantEditChanged(QString)));
   connect(descrEdit,SIGNAL(textEdited(QString)),
           this,SLOT(slot_descrEditChanged(QString)));
   connect(themeNameEdit,SIGNAL(textEdited(QString)),
           this,SLOT(slot_themeNameEditChanged(QString)));
+  connect(keywordsEdit,SIGNAL(textEdited(QString)),
+          this,SLOT(slot_keywordsEditChanged(QString)));
 
   // Changes inside the common tab
   connect(inheritCb,SIGNAL(stateChanged(int)),
@@ -578,6 +759,10 @@ ThemeBuilderUI::ThemeBuilderUI(QWidget* parent)
           this,SLOT(slot_genShadowRightBtnClicked(bool)));
 
 
+  // Tweaks tree
+  connect(specificTree,SIGNAL(itemChanged(QTreeWidgetItem *, int)),
+          this,SLOT(slot_specificChanged(QTreeWidgetItem *,int)));
+
   // style callbacks
   if ( style ) {
     // NOTE connect/disconnect both begin and end
@@ -625,6 +810,9 @@ ThemeBuilderUI::ThemeBuilderUI(QWidget* parent)
             this,SLOT(slot_sizeFromContents_begin(QString)));
     connect(style,SIGNAL(sig_sizeFromContents_end(QString)),
             this,SLOT(slot_sizeFromContents_end(QString)));
+
+    connect(style,SIGNAL(sig_missingElement(QString)),
+            this,SLOT(slot_missingElement(QString)));
   }
 
   // Timer for previewed widget repaints
@@ -814,6 +1002,18 @@ void ThemeBuilderUI::noteStyleOperation_end(const QString& op, const QString& ar
 
   if ( currentDrawStackItem )
     currentDrawStackItem = currentDrawStackItem->parent();
+}
+
+void ThemeBuilderUI::noteStyleOperation_missingElement(const QString &s)
+{
+  QTreeWidgetItem *i = new QTreeWidgetItem(currentDrawStackItem);
+  i->setText(0,"renderElement");
+  i->setText(1,s);
+  i->setIcon(0,QIcon(":/icon/pixmaps/debug.png"));
+  if ( !currentDrawStackItem )
+    drawStackTree->addTopLevelItem(i);
+  else
+    currentDrawStackItem->setExpanded(true);
 }
 
 void ThemeBuilderUI::resetUi()
@@ -1037,8 +1237,21 @@ bool ThemeBuilderUI::openTheme(const QString& filename)
 
   // properties tab
   themeNameEdit->setText(ts.name);
+  variantEdit->setText(ts.variant);
   authorEdit->setText(ts.author);
   descrEdit->setText(ts.descr);
+  keywordsEdit->setText(ts.keywords);
+
+  // Fill in tweaks tree values
+  QTreeWidgetItemIterator it(specificTree, QTreeWidgetItemIterator::Editable);
+  while (*it) {
+    if ( !(*it)->childCount() ) {
+      // set value from config file
+      const QVariant v = config->getThemeTweak((*it)->data(1,SpecificSettingName).toString());
+      (*it)->setData(1, Qt::EditRole, v);
+    }
+    ++it;
+  }
 
   // preview tab
 
@@ -1404,17 +1617,16 @@ void ThemeBuilderUI::slot_reloadSvgFile()
   }
 }
 
-void ThemeBuilderUI::setupUiForWidget(const QListWidgetItem* current)
+void ThemeBuilderUI::setupUiForWidget(const QTreeWidgetItem *current)
 {
   if ( !config )
     return;
 
   previewUpdateEnabled = false;
+  QString group = current ? current->text(3) : QString();
 
-  if ( current ) {
+  if ( current && !group.isEmpty() ) {
     blockUISignals(true);
-
-    QString group = current->data(GroupRole).toString();
 
     tabWidget->setEnabled(true);
 
@@ -1533,7 +1745,7 @@ void ThemeBuilderUI::setupUiForWidget(const QListWidgetItem* current)
   previewUpdateEnabled = true;
 }
 
-void ThemeBuilderUI::setupPreviewForWidget(const QListWidgetItem *current)
+void ThemeBuilderUI::setupPreviewForWidget(const QTreeWidgetItem *current)
 {
   if ( previewWidget ) {
     delete previewWidget;
@@ -1548,7 +1760,7 @@ void ThemeBuilderUI::setupPreviewForWidget(const QListWidgetItem *current)
   QSizePolicy qsz = QSizePolicy(QSizePolicy::Maximum,QSizePolicy::Maximum);
 
   QIcon icon;
-  QString group;
+  QString widget_str;
 
   if ( !current )
     goto end;
@@ -1559,14 +1771,14 @@ void ThemeBuilderUI::setupPreviewForWidget(const QListWidgetItem *current)
   // prepare icon
   icon.addFile(QString::fromUtf8(":/icon/pixmaps/insertimage.png"), QSize(), QIcon::Normal, QIcon::Off);
 
-  // get group
-  group = current->data(GroupRole).toString();
-
-  // NOTE strictly use the same XX_group(XXX) calls as the ones
-  // used to setup the UI in the constructor
+  // get widget
+  widget_str = current->text(2);
+  // widget string is empty, likely a sub control of a global one
+  if ( widget_str.isEmpty() && current->parent() )
+    widget_str = current->parent()->text(2);
 
   // Push button
-  if ( group == CE_group(QStyle::CE_PushButton) ) {
+  if ( widget_str == CE_str(QStyle::CE_PushButton) ) {
     variants = 5;
 
     QPushButton *widget = new QPushButton();
@@ -1598,7 +1810,7 @@ void ThemeBuilderUI::setupPreviewForWidget(const QListWidgetItem *current)
   }
 
   // Tool button
-  if ( group == CC_group(QStyle::CC_ToolButton) ) {
+  if ( widget_str == CC_str(QStyle::CC_ToolButton) ) {
     variants = 20;
 
     QToolButton *widget = new QToolButton();
@@ -1751,7 +1963,7 @@ void ThemeBuilderUI::setupPreviewForWidget(const QListWidgetItem *current)
     previewWidget = widget;
   }
 
-  if ( group == CE_group(QStyle::CE_RadioButton) ) {
+  if ( widget_str == CE_str(QStyle::CE_RadioButton) ) {
     variants = 3;
 
     QRadioButton *widget = new QRadioButton();
@@ -1771,7 +1983,7 @@ void ThemeBuilderUI::setupPreviewForWidget(const QListWidgetItem *current)
     previewWidget = widget;
   }
 
-  if ( group == CE_group(QStyle::CE_CheckBox) ) {
+  if ( widget_str == CE_str(QStyle::CE_CheckBox) ) {
     variants = 3;
 
     QCheckBox *widget = new QCheckBox();
@@ -1792,7 +2004,7 @@ void ThemeBuilderUI::setupPreviewForWidget(const QListWidgetItem *current)
     previewWidget = widget;
   }
 
-  if ( group == PE_group(QStyle::PE_FrameLineEdit) ) {
+  if ( widget_str == PE_str(QStyle::PE_FrameLineEdit) ) {
     variants = 5;
 
     QLineEdit *widget = new QLineEdit();
@@ -1821,7 +2033,7 @@ void ThemeBuilderUI::setupPreviewForWidget(const QListWidgetItem *current)
     previewWidget = widget;
   }
 
-  if ( group == CC_group(QStyle::CC_SpinBox) ) {
+  if ( widget_str == CC_str(QStyle::CC_SpinBox) ) {
     variants = 4;
 
     QSpinBox *widget = new QSpinBox();
@@ -1850,7 +2062,7 @@ void ThemeBuilderUI::setupPreviewForWidget(const QListWidgetItem *current)
     previewWidget = widget;
   }
 
-  if ( group == CC_group(QStyle::CC_ScrollBar) ) {
+  if ( widget_str == CC_str(QStyle::CC_ScrollBar) ) {
     variants = 2;
 
     QScrollBar *widget = new QScrollBar();
@@ -1869,7 +2081,7 @@ void ThemeBuilderUI::setupPreviewForWidget(const QListWidgetItem *current)
     qsz = widget->sizePolicy();
   }
 
-  if ( group == CC_group(QStyle::CC_Slider) ) {
+  if ( widget_str == CC_str(QStyle::CC_Slider) ) {
     variants = 4;
 
     QSlider *widget = new QSlider();
@@ -1895,7 +2107,7 @@ void ThemeBuilderUI::setupPreviewForWidget(const QListWidgetItem *current)
     qsz = widget->sizePolicy();
   }
 
-  if ( group == CC_group(QStyle::CC_Dial) ) {
+  if ( widget_str == CC_str(QStyle::CC_Dial) ) {
     variants = 2;
 
     QDial *widget = new QDial();
@@ -1912,7 +2124,7 @@ void ThemeBuilderUI::setupPreviewForWidget(const QListWidgetItem *current)
     qsz = widget->sizePolicy();
   }
 
-  if ( group == CE_group(QStyle::CE_ProgressBar) ) {
+  if ( widget_str == CE_str(QStyle::CE_ProgressBar) ) {
     variants = 4;
 
     QProgressBar *widget = new QProgressBar();
@@ -1941,11 +2153,13 @@ void ThemeBuilderUI::setupPreviewForWidget(const QListWidgetItem *current)
     qsz = widget->sizePolicy();
   }
 
-  if ( group == CC_group(QStyle::CC_GroupBox) ) {
+  if ( widget_str == CC_str(QStyle::CC_GroupBox) ) {
     variants = 6;
 
     QGroupBox *widget = new QGroupBox();
     widget->setTitle("This is a group box");
+
+    widget->setSizePolicy(QSizePolicy::Expanding, widget->sizePolicy().verticalPolicy());
 
     switch (currentPreviewVariant % variants) {
       case 0:
@@ -1974,7 +2188,7 @@ void ThemeBuilderUI::setupPreviewForWidget(const QListWidgetItem *current)
     previewWidget = widget;
   }
 
-  if ( group == CE_group(QStyle::CE_ToolBoxTab) ) {
+  if ( widget_str == CE_str(QStyle::CE_ToolBoxTab) ) {
     variants = 1;
 
     QToolBox *widget = new QToolBox();
@@ -1987,15 +2201,20 @@ void ThemeBuilderUI::setupPreviewForWidget(const QListWidgetItem *current)
     previewWidget = widget;
   }
 
-  if ( group == CE_group(QStyle::CE_TabBarTab) ) {
-    variants = 4;
+  if ( widget_str == CE_str(QStyle::CE_TabBarTab) ) {
+    variants = 5;
 
     QTabWidget *widget = new QTabWidget();
 
-    widget->addTab(new QLabel("content 1"),icon,"First Tab");
+    widget->addTab(new QLabel("content 1"),icon,"1st");
     widget->addTab(new QLabel("content 2"),icon,"Middle Tab");
     widget->addTab(new QLabel("content 3"),"Last Tab");
     widget->setTabsClosable(true);
+
+    QToolButton *cornerWidget = new QToolButton();
+    cornerWidget->setText("Corner widget");
+
+    widget->setCornerWidget(cornerWidget);
 
     switch (currentPreviewVariant % variants) {
       case 0:
@@ -2009,13 +2228,16 @@ void ThemeBuilderUI::setupPreviewForWidget(const QListWidgetItem *current)
       case 3:
         widget->setTabPosition(QTabWidget::West);
         break;
+      case 4:
+        widget->setDocumentMode(true);
+        break;
     }
 
     previewWidget = widget;
     qsz = widget->sizePolicy();
   }
 
-  if ( group == PE_group(QStyle::PE_Frame) ) {
+  if ( widget_str == PE_str(QStyle::PE_Frame) ) {
     variants = 2;
 
     QFrame *widget = new QFrame();
@@ -2034,7 +2256,7 @@ void ThemeBuilderUI::setupPreviewForWidget(const QListWidgetItem *current)
     qsz = widget->sizePolicy();
   }
 
-  if ( group == CE_group(QStyle::CE_DockWidgetTitle) ) {
+  if ( widget_str == CE_str(QStyle::CE_DockWidgetTitle) ) {
     variants = 2;
 
     QDockWidget *widget = new QDockWidget();
@@ -2057,7 +2279,7 @@ void ThemeBuilderUI::setupPreviewForWidget(const QListWidgetItem *current)
     qsz = widget->sizePolicy();
   }
 
-  if ( group == CE_group(QStyle::CE_ToolBar) ) {
+  if ( widget_str == CE_str(QStyle::CE_ToolBar) ) {
     variants = 1;
 
     QToolBar *widget = new QToolBar(this);
@@ -2072,7 +2294,7 @@ void ThemeBuilderUI::setupPreviewForWidget(const QListWidgetItem *current)
     previewWidget = widget;
   }
 
-  if ( group == CE_group(QStyle::CE_MenuBarItem) ) {
+  if ( widget_str == CE_str(QStyle::CE_MenuBarItem) || widget_str == PE_str(QStyle::PE_PanelMenuBar) ) {
     variants = 1;
 
     QMenuBar *widget = new QMenuBar();
@@ -2083,7 +2305,7 @@ void ThemeBuilderUI::setupPreviewForWidget(const QListWidgetItem *current)
     qsz = QSizePolicy(QSizePolicy::Expanding,QSizePolicy::Fixed);
   }
 
-  if ( group == CE_group(QStyle::CE_MenuItem) ) {
+  if ( widget_str == CE_str(QStyle::CE_MenuItem) || widget_str == PE_str(QStyle::PE_PanelMenu) ) {
     variants = 1;
 
     QMenu *widget = new QMenu("this is a menu");
@@ -2105,7 +2327,7 @@ void ThemeBuilderUI::setupPreviewForWidget(const QListWidgetItem *current)
     previewWidget = widget;
   }
 
-  if ( group == CE_group(QStyle::CE_Header) ) {
+  if ( widget_str == CE_str(QStyle::CE_Header) ) {
     variants = 1;
 
     QHeaderView *widget = new QHeaderView(Qt::Horizontal);
@@ -2125,7 +2347,7 @@ void ThemeBuilderUI::setupPreviewForWidget(const QListWidgetItem *current)
     qsz = QSizePolicy(widget->sizePolicy().horizontalPolicy(),QSizePolicy::Maximum);;
   }
 
-  if ( group == PE_group(QStyle::PE_PanelItemViewItem) ) {
+  if ( widget_str == CE_str(QStyle::CE_ItemViewItem) ) {
     variants = 1;
 
     QTreeWidget *widget = new QTreeWidget();
@@ -2156,7 +2378,7 @@ void ThemeBuilderUI::setupPreviewForWidget(const QListWidgetItem *current)
     previewWidget = widget;
   }
 
-  if ( group == PE_group(QStyle::PE_PanelStatusBar) ) {
+  if ( widget_str == PE_str(QStyle::PE_PanelStatusBar) ) {
     variants = 1;
 
     QStatusBar *widget = new QStatusBar();
@@ -2172,7 +2394,7 @@ void ThemeBuilderUI::setupPreviewForWidget(const QListWidgetItem *current)
     previewWidget = widget;
   }
 
-  if ( group == PE_group(QStyle::PE_FrameWindow) ) {
+  if ( widget_str == PE_str(QStyle::PE_FrameWindow) ) {
     variants = 1;
 
     QMdiArea *widget = new QMdiArea();
@@ -2217,7 +2439,6 @@ end:
     fontSizeSpin->setEnabled(true);
     enableBtn->setEnabled(true);
     drawStackTree->setEnabled(true);
-//     resolvedValuesTree->setEnabled(true);
     previewArea->setEnabled(true);
     previewVariantBtn->setEnabled(true);
 
@@ -2245,10 +2466,14 @@ end:
 //     resolvedValuesTree->setEnabled(false);
     previewVariantBtn->setEnabled(false);
 
-    if ( !svgFile.isEmpty() )
-      previewWidget = new QLabel("There is no preview available for this element");
-    else
+    if ( !svgFile.isEmpty() ) {
+      if ( currentWidget )
+        previewWidget = new QLabel("There is no preview available for this element");
+      else
+        previewWidget = new QLabel("Select an element to see a preview");
+    } else {
       previewWidget = new QLabel("Matching SVG file not found. No preview available");
+    }
 
     previewWidget->setSizePolicy(qsz);
     previewArea->setWidget(previewWidget);
@@ -2257,7 +2482,7 @@ end:
   }
 }
 
-void ThemeBuilderUI::saveSettingsFromUi(const QListWidgetItem *current)
+void ThemeBuilderUI::saveSettingsFromUi(const QTreeWidgetItem *current)
 {
   if ( !config )
     return;
@@ -2265,8 +2490,10 @@ void ThemeBuilderUI::saveSettingsFromUi(const QListWidgetItem *current)
   // General options
   theme_spec_t _ts;
   _ts.author = authorEdit->text();
+  _ts.variant = variantEdit->text();
   _ts.name = themeNameEdit->text();
   _ts.descr = descrEdit->text();
+  _ts.keywords = keywordsEdit->text();
 
   config->setThemeSpec(_ts);
 
@@ -2274,7 +2501,7 @@ void ThemeBuilderUI::saveSettingsFromUi(const QListWidgetItem *current)
   if ( !current )
     return;
 
-  QString group = current->data(GroupRole).toString();
+  QString group = current->text(3);
 
   element_spec_t _es;
   if ( inheritCb->isChecked() )
@@ -2338,6 +2565,17 @@ void ThemeBuilderUI::saveSettingsFromUi(const QListWidgetItem *current)
   }
 
   config->setElementSpec(group, _es);
+
+  // Tweak options
+  QTreeWidgetItemIterator it(specificTree, QTreeWidgetItemIterator::Editable);
+  while (*it) {
+    QTreeWidgetItem *item = (*it);
+    if ( !item->data(1,SpecificSettingName).isNull() ) {
+      config->setThemeTweak(item->data(1,SpecificSettingName).toString(),
+                            item->data(1,Qt::EditRole).toString());
+    }
+    ++it;
+  }
 
   // re-read specs and setup UI again when inheritCombo changes
   if ( _es.inherits != raw_es.inherits ) {
@@ -2475,6 +2713,13 @@ void ThemeBuilderUI::slot_authorEditChanged(const QString& text)
   schedulePreviewUpdate();
 }
 
+void ThemeBuilderUI::slot_variantEditChanged(const QString& text)
+{
+  Q_UNUSED(text);
+
+  schedulePreviewUpdate();
+}
+
 void ThemeBuilderUI::slot_themeNameEditChanged(const QString& text)
 {
   Q_UNUSED(text);
@@ -2485,6 +2730,21 @@ void ThemeBuilderUI::slot_themeNameEditChanged(const QString& text)
 void ThemeBuilderUI::slot_descrEditChanged(const QString& text)
 {
   Q_UNUSED(text);
+
+  schedulePreviewUpdate();
+}
+
+void ThemeBuilderUI::slot_keywordsEditChanged(const QString& text)
+{
+  Q_UNUSED(text);
+
+  schedulePreviewUpdate();
+}
+
+void ThemeBuilderUI::slot_specificChanged(QTreeWidgetItem *item, int column)
+{
+  Q_UNUSED(item);
+  Q_UNUSED(column);
 
   schedulePreviewUpdate();
 }
@@ -3257,7 +3517,7 @@ void ThemeBuilderUI::slot_interiorIdCbChanged(int state)
     }
   }
   if ( state == Qt::PartiallyChecked ) {
-    interiorIdCombo->setEditText(QString("=%1").arg(inherit_es.frame.element));
+    interiorIdCombo->setEditText(QString("=%1").arg(inherit_es.interior.element));
   }
   if ( state == Qt::Unchecked ) {
     interiorIdCombo->setEditText("<none>");
@@ -3484,7 +3744,7 @@ void ThemeBuilderUI::slot_indicatorSizeSpinChanged(int val)
 
 void ThemeBuilderUI::slot_toolboxTabChanged(int index)
 {
-  QListWidgetItem *previous = 0, *current = 0;
+  QTreeWidgetItem *previous = 0, *current = 0;
 
   switch ( currentToolboxTab ) {
     case 0:
@@ -3498,9 +3758,6 @@ void ThemeBuilderUI::slot_toolboxTabChanged(int index)
       break;
     case 3:
       previous = containerList->currentItem();
-      break;
-    case 4:
-      previous = miscList->currentItem();
       break;
     default:
       break;
@@ -3521,9 +3778,6 @@ void ThemeBuilderUI::slot_toolboxTabChanged(int index)
     case 3:
       current = containerList->currentItem();
       break;
-    case 4:
-      current = miscList->currentItem();
-      break;
     default:
       break;
   }
@@ -3534,20 +3788,29 @@ void ThemeBuilderUI::slot_toolboxTabChanged(int index)
   slot_widgetChanged(current,previous);
 }
 
-void ThemeBuilderUI::slot_widgetChanged(QListWidgetItem *current, QListWidgetItem *previous)
+void ThemeBuilderUI::slot_widgetChanged(QTreeWidgetItem *current, QTreeWidgetItem *previous)
 {
-  Q_UNUSED(previous);
-
   saveSettingsFromUi(currentWidget);
-
-  if ( current ) {
-    currentPreviewVariant = 0;
-  }
 
   currentWidget = current;
 
   setupUiForWidget(currentWidget);
-  setupPreviewForWidget(currentWidget);
+
+  if ( previous &&
+       current &&
+       (
+         (current->parent() == previous)  || // selected child of previous
+         (current == previous->parent()) || // selected parent of previous
+         ( (current->parent() == previous->parent()) && // selected sibling
+           current->parent() // except if root children
+         )
+       )
+     )
+    ; // nothing -> same widget
+  else {
+    currentPreviewVariant = 0;
+    setupPreviewForWidget(currentWidget);
+  }
 }
 
 void ThemeBuilderUI::slot_drawPrimitive_begin(const QString& s)
@@ -3623,4 +3886,9 @@ void ThemeBuilderUI::slot_sizeFromContents_begin(const QString &s)
 void ThemeBuilderUI::slot_sizeFromContents_end(const QString &s)
 {
   noteStyleOperation_end("sizeFromContents",s);
+}
+
+void ThemeBuilderUI::slot_missingElement(const QString &s)
+{
+  noteStyleOperation_missingElement(s);
 }

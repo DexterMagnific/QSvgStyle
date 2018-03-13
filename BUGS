@@ -7,11 +7,9 @@ QSvgStyle
 * slider full part in vertical mode: not centered
   (same for empty part when controls are inverted)
   (groove seems 1 pixel wider than expected)
-* should ticks be drawn above or under cursor ?
 
 -- Tab
 * tab bar close button overlaps frame (thick frames)
-* implement PE_FrameTabBarBase
 * implement PE_IndicatorTabTear*
 
 -- Toolbar
@@ -19,6 +17,8 @@ QSvgStyle
 
 -- Progressbar
 * overdraw in busy progress bar in vertical mode
+* glitch for FULL and WRAP busy progressbar type
+
 
 -- Dock
 * dock widget buttons overlap with frame
@@ -30,7 +30,6 @@ QSvgStyle
   -> PE_FrameDockWidget is never called
 
 -- Scroll
-* use different variants for buttons and groove and cursor
 * use own indicators instead of generic arrows that
   have the pushbutton specs
 
@@ -48,6 +47,9 @@ Qt limitations
 * Despite SH_TitleBar_NoBorder set to true, QMdiSubWindow class will show a
 resize handle on the title bar of the size of PM_MdiSubWindowFrameWidth and it
 will overlap the title
+* When using QSvgThemeBuilder to adjust some indicator sizes, the widget
+may not apply the new size. This is because this indicator is used as an icon
+and that the widget caches it. Example: size of "clear" button in line edits
 
 
 QSvgThemeBuilder

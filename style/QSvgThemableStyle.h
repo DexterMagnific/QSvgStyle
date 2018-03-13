@@ -47,6 +47,23 @@ class QSvgThemableStyle : public QCommonStyle {
     enum QSvgStyleVersion { Version = 2 };
 
     /**
+     * Custom QSvgStyle rendering elements
+     */
+    enum QSvgPrimitiveElement {
+      PE_QSvgStyleBase = PE_CustomBase + 10,
+
+      PE_IndicatorGroupBoxCheckMark,
+    };
+
+    enum QSvgStyleControlElement {
+      CE_QSvgStyleBase = CE_CustomBase + 100,
+
+      CE_ScrollBarGroove,
+
+      CE_GroupBoxTitle,
+    };
+
+    /**
      * QSvgStyle constructor
      */
     QSvgThemableStyle();
@@ -177,6 +194,8 @@ class QSvgThemableStyle : public QCommonStyle {
     void sig_sizeFromContents_begin(const QString &) const;
     void sig_sizeFromContents_end(const QString &) const;
 
+    void sig_missingElement(const QString &) const;
+
   private:
      /**
       * Extension of Qt::orientation
@@ -232,9 +251,13 @@ class QSvgThemableStyle : public QCommonStyle {
      */
     inline label_spec_t getLabelSpec(const QString &group) const;
     /**
-     * Returns the specific setting from the config file
+     * Returns the specific style setting from the style config file
      */
-    inline QVariant getSpecificValue(const QString &key) const;
+    inline QVariant getStyleTweak(const QString &key) const;
+    /**
+     * Returns the specific theme setting from the theme config file
+     */
+    inline QVariant getThemeTweak(const QString &key) const;
     /**
      * Returns the color spec of the given group
      */
@@ -435,14 +458,6 @@ class QSvgThemableStyle : public QCommonStyle {
       return c.present ? QBrush(QRgba64::fromArgb32(c)) : b;
     }
 
-    /** Helper functions that convert various QStyle enums to strings */
-    QString PE_str(PrimitiveElement element) const;
-    QString CE_str(ControlElement element) const;
-    QString CC_str(ComplexControl element) const;
-    QString SE_str(SubElement element) const;
-    QString SC_str(ComplexControl control, SubControl subControl) const;
-    QString CT_str(ContentsType type) const;
-
     friend class ThemeBuilderUI;
 
     /**
@@ -486,12 +501,6 @@ class QSvgThemableStyle : public QCommonStyle {
 
     /* timer used for progress bars */
     QTimer *progresstimer;
-
-    /* timer used for focused widgets */
-    QTimer *focustimer;
-
-    /* is set to true when focus overlay should be drawn */
-    bool drawFocusOverlay;
 
     /* List of registered widgets for a animations */
     QList<QWidget *> animatedWidgets;
