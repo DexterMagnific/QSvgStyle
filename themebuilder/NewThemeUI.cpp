@@ -25,6 +25,8 @@
 #include <QCompleter>
 #include <QDirModel>
 
+#include "StyleConfig.h"
+
 NewThemeUI::NewThemeUI(QWidget* parent, Qt::WindowFlags f)
   : QDialog(parent, f)
 {
@@ -50,7 +52,7 @@ void NewThemeUI::slot_dirResetBtnClicked(bool checked)
 {
   Q_UNUSED(checked);
 
-  dirEdit->setText(QDir::home().absolutePath()+"/.config/QSvgStyle");
+  dirEdit->setText(StyleConfig::getUserConfigDir().absolutePath());
 }
 
 void NewThemeUI::slot_dirChooseBtnClicked(bool checked)

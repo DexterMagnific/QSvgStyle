@@ -87,7 +87,7 @@ $ qsvgthememanager
 ```
 
 - Choose the active theme and tweak the engine
-![QSvgThemeManager](screenshots/thememanager1.png)
+![QSvgThemeManager](/screenshots/thememanager1.png)
 
 # QSvgThemeBuilder: build theme configuration
 
@@ -101,19 +101,19 @@ $ qsvgthemebuilder
 ```
 
 - QSvgThemeBuilder at startup
-![QSvgThemeBuilder](screenshots/themebuilder1.png)
+![QSvgThemeBuilder](/screenshots/themebuilder1.png)
 
 - Editing configuration for a flat theme
-![QSvgThemeBuilder](screenshots/themebuilder2.png)
+![QSvgThemeBuilder](/screenshots/themebuilder2.png)
 
 - Showing effective values of inherited settings
-![QSvgThemeBuilder](screenshots/themebuilder3.png)
+![QSvgThemeBuilder](/screenshots/themebuilder3.png)
 
 - Quick SVG generator to generate SVG items with frames, interiors and shadows
   with many generation options
-![QSvgThemeBuilder](screenshots/themebuilder4.png)
+![QSvgThemeBuilder](/screenshots/themebuilder4.png)
 
 - Export to SVG editing application of accurate, clean and minimal SVG data with
   given SVG ids
-![QSvgThemeBuilder](screenshots/themebuilder5.png)
-![QSvgThemeBuilder](screenshots/themebuilder6.png)
+![QSvgThemeBuilder](/screenshots/themebuilder5.png)
+![QSvgThemeBuilder](/screenshots/themebuilder6.png)

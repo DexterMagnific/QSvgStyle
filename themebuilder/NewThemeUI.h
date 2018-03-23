@@ -32,7 +32,7 @@ class NewThemeUI : public QDialog, private Ui::NewThemeUIBase {
     virtual ~NewThemeUI();
 
     QString themeBaseFilename() const { return mThemeBaseFilename; }
-    QString directory() const { return mDirectory; };
+    QString directory() const { return mDirectory; }
 
   protected:
     virtual void accept();

@@ -1338,7 +1338,7 @@ restart:
     goto restart;
   }
 
-  qDebug() << "[QSvgThemeBuilder]" << "creating" << basename+".cfg" << "based on default theme";
+  qWarning() << "[QSvgThemeBuilder]" << "creating" << basename+".cfg" << "based on default theme";
 
   if ( !QFile::copy(":default.cfg",basename+".cfg") ) {
     QMessageBox::critical(this, "Error", "Could not create file\n"+basename+".cfg",
@@ -1346,7 +1346,7 @@ restart:
     return;
   }
 
-  qDebug() << "[QSvgThemeBuilder]" << "creating" << basename+".svg" << "based on default theme";
+  qWarning() << "[QSvgThemeBuilder]" << "creating" << basename+".svg" << "based on default theme";
 
   if ( !QFile::copy(":default.svg",basename+".svg") ) {
     QMessageBox::critical(this, "Error", "Could not create file\n"+basename+".svg",
@@ -2008,7 +2008,7 @@ void ThemeBuilderUI::setupPreviewForWidget(const QTreeWidgetItem *current)
     variants = 5;
 
     QLineEdit *widget = new QLineEdit();
-    widget->setText("This is a line edit");
+    //widget->setText("This is a line edit");
     widget->setPlaceholderText("type some text here");
 
     switch ( currentPreviewVariant % variants ) {
@@ -2039,6 +2039,7 @@ void ThemeBuilderUI::setupPreviewForWidget(const QTreeWidgetItem *current)
     QSpinBox *widget = new QSpinBox();
     widget->setSuffix(" suffix");
     widget->setPrefix("prefix ");
+    widget->setSpecialValueText("Special minimum value");
 
     switch ( currentPreviewVariant % variants ) {
       case 0:
@@ -2497,6 +2498,17 @@ void ThemeBuilderUI::saveSettingsFromUi(const QTreeWidgetItem *current)
 
   config->setThemeSpec(_ts);
 
+  // Tweak options
+  QTreeWidgetItemIterator it(specificTree, QTreeWidgetItemIterator::Editable);
+  while (*it) {
+    QTreeWidgetItem *item = (*it);
+    if ( !item->data(1,SpecificSettingName).isNull() ) {
+      config->setThemeTweak(item->data(1,SpecificSettingName).toString(),
+                            item->data(1,Qt::EditRole).toString());
+    }
+    ++it;
+  }
+
   // Group options
   if ( !current )
     return;
@@ -2565,17 +2577,6 @@ void ThemeBuilderUI::saveSettingsFromUi(const QTreeWidgetItem *current)
   }
 
   config->setElementSpec(group, _es);
-
-  // Tweak options
-  QTreeWidgetItemIterator it(specificTree, QTreeWidgetItemIterator::Editable);
-  while (*it) {
-    QTreeWidgetItem *item = (*it);
-    if ( !item->data(1,SpecificSettingName).isNull() ) {
-      config->setThemeTweak(item->data(1,SpecificSettingName).toString(),
-                            item->data(1,Qt::EditRole).toString());
-    }
-    ++it;
-  }
 
   // re-read specs and setup UI again when inheritCombo changes
   if ( _es.inherits != raw_es.inherits ) {

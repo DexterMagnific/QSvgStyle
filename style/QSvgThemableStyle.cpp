@@ -3187,22 +3187,21 @@ QSize QSvgThemableStyle::sizeFromContents ( ContentsType type, const QStyleOptio
     case CT_LineEdit : {
       if ( const QStyleOptionFrame *opt =
            qstyleoption_cast<const QStyleOptionFrame *>(option) ) {
+        const QLineEdit *l = qobject_cast<const QLineEdit *>(widget);
 
-        s = csz;
-        // add frame size
         if ( !opt->lineWidth  ) // that's how QLineEdit tells us there is a frame
           fs.hasFrame = false;
 
         s = sizeFromContents(fm,fs,is,ls,
-                             "W",
-                             pixelMetric(PM_SmallIconSize));
+                             l && !l->placeholderText().isEmpty() ?
+                               l->placeholderText() : "Some minimal text",0);
 
-        s = s.expandedTo(QSize(csz.width(),0));
+        if ( l && l->isClearButtonEnabled() ) {
+          s += QSize(ds.size+ls.tispace,0);
+          s = s.expandedTo(QSize(0,ds.size+fs.top+fs.bottom));
+        }
 
-        //if ( opt->editable )
-          s += QSize(4,0); // QLineEdit hard-coded margins
-
-        //s += QSize(8,0); // QComboBox missing in csz ?
+        s += QSize(4,0); // QLineEdit hardcoded margins
       }
       break;
     }
@@ -3210,29 +3209,25 @@ QSize QSvgThemableStyle::sizeFromContents ( ContentsType type, const QStyleOptio
     case CT_SpinBox : {
       if ( const QStyleOptionSpinBox *opt =
            qstyleoption_cast<const QStyleOptionSpinBox *>(option) ) {
-        const QSpinBox *w = qobject_cast<const QSpinBox *>(widget);
-        // FIXME: handle specialValueText()
 
-        if ( !opt->frame )
-          fs.hasFrame = false;
+        s = csz;
+        if ( opt->frame )
+          s += QSize(fs.left+fs.right,fs.top+fs.bottom);
 
-        s = sizeFromContents(fm,fs,is,ls,
-                             QString("%1%2%3").arg(w ? w->prefix(): "").arg(w ? w->maximum() : 99).arg(w? w->suffix() : ""));
-
-        s = s.expandedTo(csz);
-
-        s += QSize(4,0); // QLineEdit hard-coded margins
         if ( opt->buttonSymbols != QAbstractSpinBox::NoButtons ) {
           if ( getThemeTweak("specific.spinbox.variant").toInt() == VA_SPINBOX_BUTTONS_STACKED )
             s += QSize(pixelMetric(PM_MenuButtonIndicator),0); // buttons
           else
             s += QSize(2*pixelMetric(PM_MenuButtonIndicator),0); // buttons
         }
+
         if ( !opt->frame)
           s = s.expandedTo(QSize(0,pixelMetric(PM_MenuButtonIndicator))); // minimum height
         else
           s = s.expandedTo(QSize(fs.left+fs.right,
                                  pixelMetric(PM_MenuButtonIndicator)+fs.top+fs.bottom));
+
+        s += QSize(4,0); // QLineEdit hardcoded margins
       }
 
       break;
@@ -3241,22 +3236,32 @@ QSize QSvgThemableStyle::sizeFromContents ( ContentsType type, const QStyleOptio
     case CT_ComboBox : {
       if ( const QStyleOptionComboBox *opt =
            qstyleoption_cast<const QStyleOptionComboBox *>(option) ) {
+        const QComboBox *w = qobject_cast<const QComboBox *>(widget);
 
-        s = csz;
         if ( !opt->frame )
           fs.hasFrame = false;
 
-        s = sizeFromContents(fm,fs,is,ls,
-                             "W",
-                             opt->iconSize.width());
-
-        s = s.expandedTo(QSize(csz.width(),0));
+        if ( w ) {
+          s = sizeFromContents(fm,fs,is,ls,
+                               "W",0); // min size
+          bool iconFound = false;
+          for (int i=0; i<w->count(); i++) {
+            if ( !w->itemIcon(i).isNull() )
+              iconFound = true;
+            s = sizeFromContents(fm,fs,is,ls,
+                                 w->itemText(i),
+                                 opt->iconSize.width()).expandedTo(s);
+          }
+          if ( w->count() && !iconFound )
+            s -= QSize(opt->iconSize.width(), 0); // all items without icons
+        } else {
+          s = csz;
+        }
 
         if ( opt->editable )
-          s += QSize(4,0); // QLineEdit hard-coded margins
-        s += QSize(pixelMetric(PM_MenuButtonIndicator),0); // drop down button;
+          s += QSize(4,0); // QLineEdit hardcoded margins
 
-        s += QSize(8,0); // QComboBox missing in csz ?
+        s += QSize(pixelMetric(PM_MenuButtonIndicator),0); // drop down button
 
         if ( !opt->frame )
           s = s.expandedTo(QSize(0,pixelMetric(PM_MenuButtonIndicator))); // minimum height
@@ -3291,7 +3296,7 @@ QSize QSvgThemableStyle::sizeFromContents ( ContentsType type, const QStyleOptio
 
         s = sizeFromContents(fm,fs,is,ls,
                              opt->text,
-                             opt->iconSize.width());
+                             opt->icon.isNull() ? 0 : opt->iconSize.width());
         s += QSize(pixelMetric(PM_CheckBoxLabelSpacing)+pixelMetric(PM_IndicatorWidth),0);
         s = s.expandedTo(QSize(pixelMetric(PM_IndicatorWidth),pixelMetric(PM_IndicatorHeight))); // minimal checkbox size is size of indicator
       }
