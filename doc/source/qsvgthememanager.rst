@@ -1,0 +1,2 @@
+QSvgThemeManager Application
+============================

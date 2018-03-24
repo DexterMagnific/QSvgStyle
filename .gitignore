@@ -26,6 +26,9 @@ ui_*
 .qmake.stash
 *.pro.user
 
+# doc generated files
+doc/build
+
 # Misc
 *~
 *.backup

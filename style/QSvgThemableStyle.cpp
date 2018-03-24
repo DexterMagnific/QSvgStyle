@@ -3309,7 +3309,7 @@ QSize QSvgThemableStyle::sizeFromContents ( ContentsType type, const QStyleOptio
 
         s = sizeFromContents(fm,fs,is,ls,
                              opt->text,
-                             opt->iconSize.width());
+                             opt->icon.isNull() ? 0 : opt->iconSize.width());
         s += QSize(pixelMetric(PM_CheckBoxLabelSpacing)+pixelMetric(PM_ExclusiveIndicatorWidth),0);
         s = s.expandedTo(QSize(pixelMetric(PM_ExclusiveIndicatorWidth),pixelMetric(PM_ExclusiveIndicatorHeight))); // minimal checkbox size is size of indicator
       }
