@@ -87,7 +87,7 @@ $ qsvgthememanager
 ```
 
 - Choose the active theme and tweak the engine
-![QSvgThemeManager](/screenshots/thememanager1.png)
+![QSvgThemeManager](screenshots/thememanager1.jpg)
 
 # QSvgThemeBuilder: build theme configuration
 
@@ -101,19 +101,25 @@ $ qsvgthemebuilder
 ```
 
 - QSvgThemeBuilder at startup
-![QSvgThemeBuilder](/screenshots/themebuilder1.png)
+![QSvgThemeBuilder](screenshots/themebuilder1.jpg)
 
 - Editing configuration for a flat theme
-![QSvgThemeBuilder](/screenshots/themebuilder2.png)
+![QSvgThemeBuilder](screenshots/themebuilder2.jpg)
 
 - Showing effective values of inherited settings
-![QSvgThemeBuilder](/screenshots/themebuilder3.png)
+![QSvgThemeBuilder](screenshots/themebuilder3.jpg)
 
 - Quick SVG generator to generate SVG items with frames, interiors and shadows
   with many generation options
-![QSvgThemeBuilder](/screenshots/themebuilder4.png)
+![QSvgThemeBuilder](screenshots/themebuilder4.jpg)
 
 - Export to SVG editing application of accurate, clean and minimal SVG data with
   given SVG ids
-![QSvgThemeBuilder](/screenshots/themebuilder5.png)
-![QSvgThemeBuilder](/screenshots/themebuilder6.png)
+![QSvgThemeBuilder](screenshots/themebuilder5.jpg)
+![QSvgThemeBuilder](screenshots/themebuilder6.jpg)
+
+# Documentation
+
+[![Documentation Status](https://readthedocs.org/projects/qsvgstyle/badge/?version=latest)](http://qsvgstyle.readthedocs.io/en/latest/?badge=latest)
+
+The latest documentation is always available at [Read The Docs](http://qsvgstyle.readthedocs.io/en/latest)

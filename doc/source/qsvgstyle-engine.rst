@@ -284,7 +284,7 @@ interiors and indicators.
 QSvgStyle engine expects this single file to contain all the necessary
 objects to render all the widgets. In order to know which SVG
 objects are used to render some widget, it requires that SVG objects
-follow some **naming rules**.
+follow some :ref:`naming rules <qsvgstyle-naming-rules>`.
 
 SVG objects can be given **names**. In the SVG terminology, these are
 called ``id`` and appear in the SVG XML tag as attributes like this:
@@ -704,5 +704,331 @@ The drawing stack of widgets can be shown in the
 QSvgStyle Widget Rendering
 --------------------------
 
-TODO
+.. _qsvgengine-drawing-primitives:
+
+Rendering Primitives
+~~~~~~~~~~~~~~~~~~~~
+
+QSvgStyle can render all Qt widgets using the following drawing
+**primitives**:
+
+1. Frames
+2. Interiors
+3. Indicators
+4. Labels
+
+Rendering happens in this **order**.  Let's take an example to
+illustrate this:
+
++------------------------------------------------------+------------------------------------------------------+
+| Step                                                 |  Rendering                                           |
++======================================================+======================================================+
+| 1. Frame + 3D effect + Colorization + Overlay state  | .. figure:: images/frame.png                         |
++------------------------------------------------------+------------------------------------------------------+
+| 2. Interior + Colorization + Overlay state           | .. figure:: images/interior.png                      |
++------------------------------------------------------+------------------------------------------------------+
+| 3. Indicator                                         | .. figure:: images/indicator.png                     |
++------------------------------------------------------+------------------------------------------------------+
+| 4. Label (text+icon)                                 | .. figure:: images/label.png                         |
++------------------------------------------------------+------------------------------------------------------+
+| Final rendering                                      | .. figure:: images/widget-rendering-tree-result.png  |
++------------------------------------------------------+------------------------------------------------------+
+
+.. _qsvgstyle-states:
+
+States
+~~~~~~
+
+Each of these primitives is rendered using a given **state**. There are
+two types of states:
+
+- **Exclusive states**: The widget may only be in one of these states
+  at a time
+- **Overlay states**: One of the overlay states is applied on top of
+  one of the exclusive states
+
+The state to use is deducted from the widget's state.
+
+The table below describes the supported exclusive states:
+
+.. _qsvgstyle-exclusive-states:
+
++------------------------+-------------------------------------------------+
+| State                  |  Description                                    |
++========================+=================================================+
+| ``normal``             | when the widget is enabled and not in any other |
+|                        | state below                                     |
++------------------------+-------------------------------------------------+
+| ``hovered``            |when the mouse cursor is over the widget         |
+|                        |                                                 |
++------------------------+-------------------------------------------------+
+| ``pressed``            |when the widget is clicked (mouse button pressed |
+|                        |over it)                                         |
++------------------------+-------------------------------------------------+
+| ``toggled``            |when the widget is checked for chckeable widgets |
+|                        |like tool buttons, check boxes, ...  It is also  |
+|                        |used for selected items like menus, item views,  |
+|                        |...                                              |
++------------------------+-------------------------------------------------+
+| ``disabled``           |when the widget is disabled                      |
+|                        |                                                 |
++------------------------+-------------------------------------------------+
+| ``disabled-toggled``   |when the widget is disabled in a checked or      |
+|                        |selected state                                   |
++------------------------+-------------------------------------------------+
+
+And this one describes the **overlay states**:
+
+.. _qsvgstyle-overlay-states:
+
++------------------------+-------------------------------------------------+
+| State                  |  Description                                    |
++========================+=================================================+
+| ``focused``            | when the widget has keyboard focus              |
++------------------------+-------------------------------------------------+
+| ``default``            | only for push buttons when they are default     |
++------------------------+-------------------------------------------------+
+
+.. note:: When a widget is both ``focused`` and ``default``, the default
+          overlay takes precedence.
+
+.. note:: ``focused`` and ``default`` states only apply to non
+          disabled widgets by definition
+
+Here is how a push button may look like in the SVG file:
+
+.. figure:: images/svg-parts.png
+   :align: center
+
+All the states are represented in this picture: ``normal``,
+``hovered``, ``pressed``, ``toggled``, ``disabled``,
+``toggled-disabled``, ``focused``, ``default``.
+
+.. note:: Some states are not relevant for some widgets.  Refer to
+          :doc:`theme-specs` for per-widget specifications.
+
+.. _qsvgstyle-frames:
+
+Frames
+~~~~~~
+
+Frames are drawn for widgets that support them. They **have a fixed
+width** which is specified for each widget.
+
+The table below summarizes the admissible settings and values in the
+:ref:`theme-config-file` for the ``frame.*`` settings collection:
+
++-----------------------------------+-----------+-----------------------------------+
+| Setting name                      | type      | Description                       |
++===================================+===========+===================================+
+| ``frame``                         | ``bool``  | Whether frame drawing is enabled  |
+|                                   |           |for widgets that support it        |
++-----------------------------------+-----------+-----------------------------------+
+| ``frame.element``                 |``string`` | The SVG id of the element that    |
+|                                   |           |will be used as a basename to draw |
+|                                   |           |the frame                          |
++-----------------------------------+-----------+-----------------------------------+
+| ``frame.width``                   | int > 0   | The width of the frame            |
+|                                   |           |                                   |
++-----------------------------------+-----------+-----------------------------------+
+
+.. warning:: We strongly recommend to set ``frame=true`` for widgets
+             that naturally have frames, like push buttons, spin
+             boxes, ...
+
+.. note:: QSvgStyle engine offers the choice of showing some types of
+          widgets like menu items with or without frames
+
+.. note:: QSvgStyle engine may only draw the frame when the widget
+          is in a specific :ref:`state <qsvgstyle-states>`. Refer to
+          :doc:`theme-specs` for per-widget specifications.
+
+.. _qsvgstyle-interiors:
+
+Interiors
+~~~~~~~~~
+
+Interiors are drawn **stretched** to fit the interior of a widget,
+immediately after the frame if the widget supports one and its
+``frame`` is ``true``, or fills the whole rect of the widget if it
+does not support a frame of its ``frame`` is ``false``.
+
+The table below summarizes the admissible settings and values in the
+:ref:`theme-config-file` for the ``interior.*`` settings collection:
+
++-----------------------------------+-----------+-----------------------------------+
+| Setting name                      | type      | Description                       |
++===================================+===========+===================================+
+| ``interior``                      | ``bool``  | Whether interior drawing is       |
+|                                   |           |enabled for widgets that support it|
++-----------------------------------+-----------+-----------------------------------+
+| ``interior.element``              |``string`` | The SVG id of the element that    |
+|                                   |           |will be used as a basename to draw |
+|                                   |           |the interior                       |
++-----------------------------------+-----------+-----------------------------------+
+| ``interior.xrepeat``              | int > 0   | For pattern interiors, this sets  |
+|                                   |           |the width of the pattern           |
++-----------------------------------+-----------+-----------------------------------+
+| ``interior.yrepeat``              | int > 0   | for pattern interiors, this sets  |
+|                                   |           |the height of the pattern          |
++-----------------------------------+-----------+-----------------------------------+
+
+.. note:: QSvgStyle engine may only draw the interior when the widget
+          is in a specific :ref:`state <qsvgstyle-states>`. Refer to
+          :doc:`theme-specs` for per-widget specifications.
+
+.. _qsvgstyle-indicators:
+
+Indicators
+~~~~~~~~~~
+
+Indicators are small elements like arrows, radios, checks, ... that
+are drawn in a **square** size.
+
+The table below summarizes the admissible settings and values in the
+:ref:`theme-config-file` for the ``indicator.*`` settings collection:
+
++-----------------------------------+-----------+-----------------------------------+
+| Setting name                      | type      | Description                       |
++===================================+===========+===================================+
+| ``indicator.element``             |``string`` |The SVG id of the element that will|
+|                                   |           | be used as a basename to draw the |
+|                                   |           |indicator                          |
++-----------------------------------+-----------+-----------------------------------+
+| ``indicator.size``                | int > 0   |The size of the indicator          |
+|                                   |           |                                   |
++-----------------------------------+-----------+-----------------------------------+
+
+.. note:: Indicators are not colorized by QSvgStyle engine.
+
+
+.. _qsvgstyle-labels:
+
+Labels
+~~~~~~
+
+Labels consist of text and icons that are drawn inside the interior
+rect. They are supplied by the widget itself and there are no
+specific SVG objects for them. Only the theme configuration file
+contains some settings for them, especially margins.
+
+The table below summarizes the admissible settings and values in the
+:ref:`theme-config-file` for the ``label.*`` settings collection:
+
++-----------------------------------+-----------+-----------------------------------+
+| Setting name                      | type      | Description                       |
++===================================+===========+===================================+
+| ``label.hmargin``                 | int >= 0  | The horizontal margin between the |
+|                                   |           |interior rect and the label        |
+|                                   |           |                                   |
++-----------------------------------+-----------+-----------------------------------+
+| ``label.vmargin``                 | int >= 0  |The vertical margin between the    |
+|                                   |           |interior rect and the label        |
+|                                   |           |                                   |
++-----------------------------------+-----------+-----------------------------------+
+| ``label.tispace``                 | int >= 0  |The spacing between the icon and   |
+|                                   |           |the text                           |
+|                                   |           |                                   |
++-----------------------------------+-----------+-----------------------------------+
+
+.. _qsvgstyle-naming-rules:
+
+SVG object naming rules
+~~~~~~~~~~~~~~~~~~~~~~~
+
+QSvgStyle engine takes the shapes of Frames, Interiors and Indicators
+from the :ref:`theme-svg-file` by looking at the ``id`` field of the
+SVG objects and matching it with respectively the ``frame.element``,
+``interior.element`` and ``indicator.element`` configuration entries
+in the :ref:`theme-config-file`.
+
+The ``element`` settings in taken only as a starting point
+(**basename**). It is then modified to obtain the right SVG object to
+use.
+
+The ``id`` searched given a basename is obtained as follows:
+
+- for :ref:`qsvgstyle-interiors` and :ref:`qsvgstyle-indicators`, the
+  :ref:`state <qsvgstyle-states>` is added like this: ``<basename>-<state>``
+       
+- for :ref:`qsvgstyle-frames`, the :ref:`state <qsvgstyle-states>` is
+  added first, then the side of the frame, like this:
+  ``<basename>-<side>-<state>``
+
+The ``<side>`` of the frame is one of ``top``, ``bottom``, ``left``,
+``right``, ``topleft``, ``topright``, ``bottomleft``, ``bottomright``.
+
+As you can see, in order to draw a frame, there must be **8** SVG
+objects per state. This can be lengthy to create and we recommend using the
+:doc:`qsvgthemebuilder` to automatically generate SVG frames.
+
+
+Given the following configuration entries:
+
+.. code-block:: ini
+
+   [PushButton]
+   frame=true
+   frame.element=frm
+   frame.width=3
+   interior=true
+   interior.element=intr
+
+and the ``normal`` state, here is what the SVG objects should look
+like:
+
+.. figure:: images/svg-naming.png
+   :align: center
+
+.. _qsvgstyle-svg-rtl:
+
+SVG RTL considerations
+~~~~~~~~~~~~~~~~~~~~~~
+
+QSvgStyle engine has routines to flip the objects when the layout
+changes to RTL. As such, when designing themes, objects should always
+be drawn assuming an **LTR** layout.
+
+Here is an example of CheckBox SVG objects:
+
+.. figure:: images/svg-ltr-design.png
+   :align: center
+
+The objects are designed assuming LTR layout, and QSvgStyle engine
+will flip them when it detects that the used layout is RTL:
+
+.. figure:: images/rtl-support.png
+   :align: center
+
+All of :ref:`qsvgstyle-frames`, :ref:`qsvgstyle-interiors` and
+:ref:`qsvgstyle-indicators` primitives are flipped when necessary.
+
+.. _qsvgstyle-svg-vertical:
+
+SVG Vertical considerations
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+QSvgStyle engine has good but incomplete support for **vertical**
+widgets. Vertical widgets are those that can be shown vertically, like
+progress bars, sliders, scroll bars, ...
+
+QSvgStyle engine can flip :ref:`qsvgstyle-frames` and
+:ref:`qsvgstyle-interiors`, but usually **cannot** flip
+:ref:`qsvgstyle-indicators`. When a widget requires an indicator
+to be shown vertically, it has to be explicitly designed in the SVG
+theme file.
+
+Vertical indicators that have to be designed in SVG file include
+scroll bar arrows, toolbar separators, view item tree branches, ...
+
+Refer to :doc:`theme-specs` for per-widget specifications.
+
+.. note:: Vertical indicators have to be also designed in
+          LTR. QSvgStyle engine will arrange to flip them when the
+          layout is RTL.
+
+.. _qsvgstyle-svg-recommendations:
+
+SVG design hints
+~~~~~~~~~~~~~~~~
 

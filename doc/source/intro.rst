@@ -30,6 +30,9 @@ available.
 - QSvgStyleBuilder and QSvgStyleManager use icons from Qt Designer
   which are (C) The Qt Company Ltd.
 
+The latest QSvgStyle distribution documentation is always available at
+`Read the Docs <http://qsvgstyle.readthedocs.io>`_.
+
 .. _download:
 
 Download
@@ -129,6 +132,32 @@ As an example, if your are working on KDE_, you can launch the
 .. note:: The style name is not case sensitive when supplied to the
    ``-style`` option
 
+Build the documentation
+~~~~~~~~~~~~~~~~~~~~~~~
+
+QSvgStyle distribution comes with its documentation in source
+format. The documentation is not built as part of the source build
+described above.
+
+The documentation relies on the Sphinx_ documentation builder, which
+must be installed prior to building it::
+
+  sudo apt install sphinx-common
+
+To build it, just type::
+
+  cd doc
+  make html
+
+This will build the documentation in HTML format. The main entry point
+is located in::
+
+  build/html/index.html
+
+Remember that this documentation is always available online at `Read
+the Docs`_.
+
+.. _Sphinx: http://www.sphinx-doc.org
 
 Set as default
 --------------
