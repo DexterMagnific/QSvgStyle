@@ -2006,11 +2006,11 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
         if ( opt->features & QStyleOptionButton::HasMenu ) {
           QStyleOptionButton o(*opt);
           renderLabel(p,cs2b(cs.fg,pal.text()),
-                      dir,r.adjusted(0,0,-ds.size-2*ls.tispace,0),fs,is,ls,
+                      dir,r.adjusted(0,0,-ds.size-ls.tispace,0),fs,is,ls,
                       Qt::AlignCenter | Qt::AlignVCenter | Qt::TextShowMnemonic,
                       opt->text,
                       opt->icon.pixmap(opt->iconSize,icm,ics));
-          o.rect = QRect(x+w-ds.size-ls.tispace-fs.right,y,ds.size,h);
+          o.rect = QRect(x+w-ds.size-fs.right-ls.hmargin,y,ds.size,h);
           drawPrimitive(PE_IndicatorArrowDown,&o,p,widget);
         } else {
           renderLabel(p,cs2b(cs.fg,pal.text()),
@@ -3283,7 +3283,7 @@ QSize QSvgThemableStyle::sizeFromContents ( ContentsType type, const QStyleOptio
                              opt->icon.isNull() ? 0 : opt->iconSize.width());
 
         if ( opt->features & QStyleOptionButton::HasMenu ) {
-          s.rwidth() += 2*ls.tispace+ds.size;
+          s.rwidth() += ls.tispace+ds.size;
         }
       }
 
@@ -3405,14 +3405,14 @@ QSize QSvgThemableStyle::sizeFromContents ( ContentsType type, const QStyleOptio
 
         if (opt->arrowType != Qt::NoArrow) {
           // add room for arrow
-          s = s + QSize(ds.size,0);
+          s.rwidth() += ds.size;
           // add spacing between arrow and label if necessary
           if ( (opt->toolButtonStyle != Qt::ToolButtonIconOnly) &&
                !opt->text.isEmpty() )
-            s = s + QSize(ls.tispace,0);
+            s.rwidth() += ls.tispace;
           else if ( (opt->toolButtonStyle != Qt::ToolButtonTextOnly) &&
                !opt->icon.isNull() )
-            s = s + QSize(ls.tispace,0);
+            s.rwidth() += ls.tispace;
         }
 
         // add room for simple down arrow or drop down arrow

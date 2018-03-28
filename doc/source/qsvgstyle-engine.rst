@@ -150,7 +150,7 @@ utility, usually it is ``~/.config``.
 
 This file is used to store the currently active theme, as well as
 engine specific tweaks. You do not need to manually edit this file,
-instead use the :doc:`qsvgthemebuilder` to manage it.
+instead use the :doc:`qsvgthememanager` to manage it.
 
 .. _svg-theme:
 
@@ -160,8 +160,8 @@ Themes
 A theme for QSvgStyle engine is a **directory** containing two files:
 
 - The :ref:`theme-svg-file`: an SVG file containing the theme shapes for
-    buttons, scroll bars, ...
-- The :ref:`theme-config-file`: a accompanying configuration file
+  buttons, scroll bars, ...
+- The :ref:`theme-config-file`: an accompanying configuration file
   that mostly specifies which SVG elements are used to draw which
   widget, sizes of some elements, margins, ...
 
@@ -379,8 +379,8 @@ configuration file for the theme. This file contains settings for
 various widget elements, such as the size of the check boxes (remember
 that an SVG file is scalable by definition, and the size of an SVG
 element is meaningless). Again, this information in accessed dozens
-and dozens of times. QSvgStyle also caching to store these values when
-they are read for the first time.
+and dozens of times. QSvgStyle also uses caching to store these values
+when they are read for the first time.
 
 .. _inheritance:
 
@@ -425,8 +425,8 @@ Palette Support
 QSvgStyle engine is able to apply the QPalette set on a widget on top
 of the current theme. This is called **colorization**.
 
-After drawing the widget, a colorization layer is applied on top of
-it. The amount (intensity) of colorization is tunable and is theme specific.
+During widget rendering, a colorization layer is applied. The amount
+(intensity) of colorization is tunable and is theme specific.
 
 Here is what it looks like:
 
@@ -436,27 +436,38 @@ Here is what it looks like:
 The color used in the colorization layer is extracted from the
 widget's palette. QSvgStyle uses the color of the widget's
 `backgroundRole()
-<http://doc.qt.io/qt-5/qwidget.html#backgroundRole>`_ like this:
+<http://doc.qt.io/qt-5/qwidget.html#backgroundRole>`_ for
+:ref:`qsvgstyle-frames` and :ref:`qsvgstyle-interiors` like this:
 
 .. code-block:: c++
 
    QPalette::ColorRole bgRole = widget->backgroundRole();
    QPalette::ColorGroup cgroup = widget->isEnabled() ? QPalette::Active : QPalette::Inactive
    QColor c = widget->palette().color(cgroup, bgRole);
-            
-In addition, QSvgStyle engine can apply a 3D effect on widgets that
-have frames. The effect is either 'raised' or 'sunken' depending on
-whether the widget is pressed or not. This effect can be enabled or
-disabled in the theme configuration file.
+
+In a similar way, it uses the color of the widget's `foregroundRole()
+<http://doc.qt.io/qt-5/qwidget.html#foregroundRole>`_ for
+:ref:`qsvgstyle-labels`.
+
+In addition, QSvgStyle engine can apply a 3D
+effect on widgets that have frames. The effect is either 'raised' or
+'sunken' depending on whether the widget is pressed or not. This
+effect can be enabled or disabled in the theme configuration file.
 
 Below is an example of the same push button rendered with and without
 3D effect:
-          
+
 +--------------------------------------+--------------------------------------+
 | .. figure:: images/pushbutton-3d.png | .. figure:: images/pushbutton-2d.png |
 |                                      |                                      |
 |    3D effect enabled                 |    3D effect disabled                |
 +--------------------------------------+--------------------------------------+
+
+.. figure:: images/3d-effect.png
+   :align: center
+
+   3D effect and colorization process
+
 
 .. _capsule-grouping:
 
@@ -465,7 +476,7 @@ Capsule grouping
 
 Capsule grouping is a special processing used to render **push
 buttons** and **tool buttons** when they are laid out together. When
-**capsule grouping conditions** are met, the buttons are shows as if
+:ref:`capsule-conditions` are met, the buttons are shown as if
 they are merged together. In this case:
 
 - A single frame is shown for the whole set of buttons
@@ -482,6 +493,11 @@ rendering:
           feature. It is not natively supported by Qt. As such,
           applications should not rely on capsule grouping appearance
           as other style engines do not support it.
+
+.. _capsule-conditions:
+
+Capsule grouping conditions
++++++++++++++++++++++++++++
 
 In order to be rendered in a capsule, the following conditions must be
 met:
@@ -712,10 +728,10 @@ Rendering Primitives
 QSvgStyle can render all Qt widgets using the following drawing
 **primitives**:
 
-1. Frames
-2. Interiors
-3. Indicators
-4. Labels
+1. :ref:`qsvgstyle-frames`
+2. :ref:`qsvgstyle-interiors`
+3. :ref:`qsvgstyle-indicators`
+4. :ref:`qsvgstyle-labels`
 
 Rendering happens in this **order**.  Let's take an example to
 illustrate this:
@@ -733,6 +749,7 @@ illustrate this:
 +------------------------------------------------------+------------------------------------------------------+
 | Final rendering                                      | .. figure:: images/widget-rendering-tree-result.png  |
 +------------------------------------------------------+------------------------------------------------------+
+
 
 .. _qsvgstyle-states:
 
@@ -821,14 +838,14 @@ The table below summarizes the admissible settings and values in the
 +-----------------------------------+-----------+-----------------------------------+
 | Setting name                      | type      | Description                       |
 +===================================+===========+===================================+
-| ``frame``                         | ``bool``  | Whether frame drawing is enabled  |
+| ``frame``                         | ``bool``  |Whether frame drawing is enabled   |
 |                                   |           |for widgets that support it        |
 +-----------------------------------+-----------+-----------------------------------+
-| ``frame.element``                 |``string`` | The SVG id of the element that    |
+| ``frame.element``                 |``string`` |The SVG id of the element that     |
 |                                   |           |will be used as a basename to draw |
 |                                   |           |the frame                          |
 +-----------------------------------+-----------+-----------------------------------+
-| ``frame.width``                   | int > 0   | The width of the frame            |
+| ``frame.width``                   | int > 0   |The width of the frame             |
 |                                   |           |                                   |
 +-----------------------------------+-----------+-----------------------------------+
 
@@ -856,22 +873,26 @@ does not support a frame of its ``frame`` is ``false``.
 The table below summarizes the admissible settings and values in the
 :ref:`theme-config-file` for the ``interior.*`` settings collection:
 
-+-----------------------------------+-----------+-----------------------------------+
-| Setting name                      | type      | Description                       |
-+===================================+===========+===================================+
-| ``interior``                      | ``bool``  | Whether interior drawing is       |
-|                                   |           |enabled for widgets that support it|
-+-----------------------------------+-----------+-----------------------------------+
-| ``interior.element``              |``string`` | The SVG id of the element that    |
-|                                   |           |will be used as a basename to draw |
-|                                   |           |the interior                       |
-+-----------------------------------+-----------+-----------------------------------+
-| ``interior.xrepeat``              | int > 0   | For pattern interiors, this sets  |
-|                                   |           |the width of the pattern           |
-+-----------------------------------+-----------+-----------------------------------+
-| ``interior.yrepeat``              | int > 0   | for pattern interiors, this sets  |
-|                                   |           |the height of the pattern          |
-+-----------------------------------+-----------+-----------------------------------+
++-----------------------------------+-----------+-------------------------------------+
+| Setting name                      | type      | Description                         |
++===================================+===========+=====================================+
+| ``interior``                      | ``bool``  |Whether interior drawing is enabled  |
+|                                   |           |for widgets that support it          |
+|                                   |           |                                     |
++-----------------------------------+-----------+-------------------------------------+
+| ``interior.element``              |``string`` |The SVG id of the element that will  |
+|                                   |           |be used as a basename to draw the    |
+|                                   |           |interior                             |
+|                                   |           |                                     |
++-----------------------------------+-----------+-------------------------------------+
+| ``interior.xrepeat``              | int > 0   |For pattern interiors, this sets the |
+|                                   |           |width of the pattern                 |
+|                                   |           |                                     |
++-----------------------------------+-----------+-------------------------------------+
+| ``interior.yrepeat``              | int > 0   |For pattern interiors, this sets the |
+|                                   |           |height of the pattern                |
+|                                   |           |                                     |
++-----------------------------------+-----------+-------------------------------------+
 
 .. note:: QSvgStyle engine may only draw the interior when the widget
           is in a specific :ref:`state <qsvgstyle-states>`. Refer to
@@ -883,21 +904,22 @@ Indicators
 ~~~~~~~~~~
 
 Indicators are small elements like arrows, radios, checks, ... that
-are drawn in a **square** size.
+are drawn in a **square** size inside the interior rect.
 
 The table below summarizes the admissible settings and values in the
 :ref:`theme-config-file` for the ``indicator.*`` settings collection:
 
-+-----------------------------------+-----------+-----------------------------------+
-| Setting name                      | type      | Description                       |
-+===================================+===========+===================================+
-| ``indicator.element``             |``string`` |The SVG id of the element that will|
-|                                   |           | be used as a basename to draw the |
-|                                   |           |indicator                          |
-+-----------------------------------+-----------+-----------------------------------+
-| ``indicator.size``                | int > 0   |The size of the indicator          |
-|                                   |           |                                   |
-+-----------------------------------+-----------+-----------------------------------+
++-----------------------------------+-----------+------------------------------------+
+| Setting name                      | type      | Description                        |
++===================================+===========+====================================+
+| ``indicator.element``             |``string`` |The SVG id of the element that will |
+|                                   |           |be used as a basename to draw the   |
+|                                   |           |indicator                           |
+|                                   |           |                                    |
++-----------------------------------+-----------+------------------------------------+
+| ``indicator.size``                | int > 0   |The size of the indicator           |
+|                                   |           |                                    |
++-----------------------------------+-----------+------------------------------------+
 
 .. note:: Indicators are not colorized by QSvgStyle engine.
 
@@ -918,7 +940,7 @@ The table below summarizes the admissible settings and values in the
 +-----------------------------------+-----------+-----------------------------------+
 | Setting name                      | type      | Description                       |
 +===================================+===========+===================================+
-| ``label.hmargin``                 | int >= 0  | The horizontal margin between the |
+| ``label.hmargin``                 | int >= 0  |The horizontal margin between the  |
 |                                   |           |interior rect and the label        |
 |                                   |           |                                   |
 +-----------------------------------+-----------+-----------------------------------+
@@ -931,6 +953,13 @@ The table below summarizes the admissible settings and values in the
 |                                   |           |                                   |
 +-----------------------------------+-----------+-----------------------------------+
 
+
+The figure below illustrates the use of these values in the rendering:
+
+.. figure:: images/widget-metrics.png
+   :align: center
+
+           
 .. _qsvgstyle-naming-rules:
 
 SVG object naming rules
@@ -970,7 +999,7 @@ Given the following configuration entries:
    [PushButton]
    frame=true
    frame.element=frm
-   frame.width=3
+   frame.width=5
    interior=true
    interior.element=intr
 
@@ -1032,3 +1061,23 @@ Refer to :doc:`theme-specs` for per-widget specifications.
 SVG design hints
 ~~~~~~~~~~~~~~~~
 
+.. _qsvgstyle-grouping:
+
+Object Grouping
++++++++++++++++
+
+TODO
+
+.. _qsvgstyle-frame-width:
+
+Frame width
++++++++++++
+
+TODO
+
+.. _qsvgstyle-invisible-objects:
+
+Invisible objects
++++++++++++++++++
+
+TODO
