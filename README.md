@@ -1,3 +1,7 @@
+[![Build Status](https://travis-ci.org/DexterMagnific/QSvgStyle.svg?branch=master)](https://travis-ci.org/DexterMagnific/QSvgStyle)
+
+[![Documentation Status](https://readthedocs.org/projects/qsvgstyle/badge/?version=latest)](http://qsvgstyle.readthedocs.io/en/latest/?badge=latest)
+
 # QSvgStyle distribution
 
 QSvgStyle is a themeable SVG style for Qt 5 desktop applications
@@ -119,7 +123,5 @@ $ qsvgthemebuilder
 ![QSvgThemeBuilder](screenshots/themebuilder6.jpg)
 
 # Documentation
-
-[![Documentation Status](https://readthedocs.org/projects/qsvgstyle/badge/?version=latest)](http://qsvgstyle.readthedocs.io/en/latest/?badge=latest)
 
 The latest documentation is always available at [Read The Docs](http://qsvgstyle.readthedocs.io/en/latest)

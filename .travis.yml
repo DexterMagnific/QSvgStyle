@@ -1,6 +1,9 @@
 sudo: required
 dist: trusty
 
+language: c++
+os: linux
+
 before_install:
   - sudo add-apt-repository --yes ppa:beineri/opt-qt593-trusty
   - sudo apt-get update -qq
