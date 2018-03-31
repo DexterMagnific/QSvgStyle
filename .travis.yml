@@ -4,6 +4,10 @@ dist: trusty
 language: c++
 os: linux
 
+branches:
+  only:
+    - master
+
 before_install:
   - sudo add-apt-repository --yes ppa:beineri/opt-qt593-trusty
   - sudo apt-get update -qq
