@@ -478,10 +478,6 @@ class QSvgThemableStyle : public QCommonStyle {
      * Slot called on timer timeout to animate busy progress bars
      */
     void slot_animateProgressBars();
-    /**
-     * Slot called on timer timeout to animate current focused widget
-     */
-    void slot_animateFocus();
 
   private:
     QString cls;
