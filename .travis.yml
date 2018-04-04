@@ -8,14 +8,33 @@ branches:
   only:
     - master
 
+env:
+  global:
+   # The next declaration is the encrypted COVERITY_SCAN_TOKEN, created
+   #   via the "travis encrypt" command using the project repo's public key
+   - secure: "rtjPeZ1zCm2ejQMK52o1AgWVPvZ5qICq+JiZYhoGTl20jd/7l2mMQpCLKiUm16pqpEe54TMmtDshyUm7H1owPjcnG2dBZ/eGjOYxYibBMfbevw7EiXnf3/u4LowGjQheUlNZj5+Fgq+yDMKBiKeV2/casUeznRDNpy3RHdB0Q1VdNHTj2Waf59XGrdkvjDKti0wDwrmOc0P/dvqX16wLVf5GWUmfN3aeQ+oeQVZuw4Y9/8ESf7Eu0kb+/P9uaWn/yFjaBsuH4oFtHn72K2JbmxxCUPavCHoqauemmIxjiZWdiKGqx89yB6M4361Rr3ephnA3+V+P9U2NUmjPPr4qeKcz29x/bCmYvGv71Zw6rdAv5Vpdtzsm5mnhTb24EOjJ5AJZY2aHFbyQT2FzQ9d5qFgrfx+I5H2gBYI20/LbSEfEOQokeK3L9UfuaPlRO7GcfJklzJi+SLqlrD8SCMakij3qoB7vgMjk0T5kokMv2qUTpM7PrJNBf64rqdos+fLqHGLJvJZPr6XF60b8dCysHfaLY+n+CWrGtbuynABctS/MqcPuEAky9E35ToWVlS0qlNTQh0hUcWeGf0zsoEtxWFIXZJlok+PVUT0rtYhO+/rCaZPBYDgf/3YW7bTgGOnhmE5spL3C9wH0Y309otvY1VDRJG74L+Jt3k2GBPOwRUk="
+
+addons:
+  coverity_scan:
+    project:
+      name: "DexterMagnific/QSvgStyle"
+      description: "SVG based Qt5 theme engine and tools suite"
+    notification_email: dextermagnific@yahoo.fr
+    build_command_prepend: qmake
+    build_command: make
+    branch_pattern: coverity_scan
+
 before_install:
+  - echo -n | openssl s_client -connect https://scan.coverity.com:443 | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' | sudo tee -a /etc/ssl/certs/ca-
   - sudo add-apt-repository --yes ppa:beineri/opt-qt593-trusty
   - sudo apt-get update -qq
 
 install:
   - sudo apt-get -y install qt59svg qt59x11extras
-
-script:
   - source /opt/qt59/bin/qt59-env.sh
-  - /opt/qt59/bin/qmake
+
+before_script:
+  - qmake
+  
+script:
   - make
