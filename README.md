@@ -1,6 +1,6 @@
-[![Build Status](https://travis-ci.org/DexterMagnific/QSvgStyle.svg?branch=master)](https://travis-ci.org/DexterMagnific/QSvgStyle)
-
-[![Documentation Status](https://readthedocs.org/projects/qsvgstyle/badge/?version=latest)](http://qsvgstyle.readthedocs.io/en/latest/?badge=latest)
+|Linux Build Status|Documentation Build Status|Coverity Scan Build Status|
+|:--:|:--:|:--:|
+|[![Build Status](https://travis-ci.org/DexterMagnific/QSvgStyle.svg?branch=master)](https://travis-ci.org/DexterMagnific/QSvgStyle)|[![Documentation Status](https://readthedocs.org/projects/qsvgstyle/badge/?version=latest)](http://qsvgstyle.readthedocs.io/en/latest/?badge=latest)|[![Coverity Scan Build Status](https://img.shields.io/coverity/scan/15379.svg)](https://scan.coverity.com/projects/15379)|
 
 # QSvgStyle distribution
 
