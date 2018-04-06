@@ -12,17 +12,14 @@ QSvgStyle
 * use environment variable QSVGSTYLE_THEME to override active theme stored
   in qsvgstyle.cfg
 
--- Lineedit
-* minimum width should be sufficient to show placeholder text
-
--- SpinBox
-* minimum width should be sufficient to show special value text
-
--- Scroll
-* add option to show/hide buttons
-
 -- Toolbar
 * use different settings for toolbuttons located on a toolbar
+
+-- Frame
+* Allow frames to have focus
+
+-- Menu items
+* add option to merge menu bar item with its menu (like a tab and its contents)
 
 QSvgThemeBuilder
 ----------------
@@ -30,6 +27,9 @@ QSvgThemeBuilder
 * add measure tool/tracer
 * add 'revert' button for each setting
 * add 'clear menu' action in recent files menu
+* SVG generator: when colorizing the interior, add option to include first
+  frame
+* SVG generator: implement gradient export (e.g. by adding a ::toSvgDefs() function)
 
 -- Extras
 * Add ability to capture menu bar items into a single toolbar button

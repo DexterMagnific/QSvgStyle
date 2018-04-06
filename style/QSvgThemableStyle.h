@@ -288,7 +288,7 @@ class QSvgThemableStyle : public QCommonStyle {
      * @note although this function works for all types of widgets, QSvgStyle
      * uses it mostly on button widgets (push buttons and tool buttons)
      */
-    void capsulePosition(const QWidget *widget, bool &capsule, int &h, int &v) const;
+    void computeButtonCapsule(const QWidget *widget, bool &capsule, int &h, int &v) const;
 
     /**
      * Recursively looks for the given widget inside the given layout

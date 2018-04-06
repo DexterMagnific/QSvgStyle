@@ -415,6 +415,11 @@ ThemeBuilderUI::ThemeBuilderUI(QWidget* parent)
   displayList->header()->setSectionResizeMode(0,QHeaderView::ResizeToContents);
   containerList->header()->setSectionResizeMode(0,QHeaderView::ResizeToContents);
 
+//  buttonList->resizeColumnToContents(0);
+//  inputList->resizeColumnToContents(0);
+//  displayList->resizeColumnToContents(0);
+//  containerList->resizeColumnToContents(0);
+
   int maxW = 0;
   maxW = qMax(maxW,buttonList->header()->sectionSize(0));
   maxW = qMax(maxW,inputList->header()->sectionSize(0));

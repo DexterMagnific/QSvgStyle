@@ -69,16 +69,28 @@ public:
   }
 };
 
-/** Some defines about widget variants */
+/* Some defines about widget variants */
+/* SpinBox */
 #define VA_SPINBOX_BUTTONS_SIDEBYSIDE 0
 #define VA_SPINBOX_BUTTONS_OPPOSITE   1
 #define VA_SPINBOX_BUTTONS_STACKED    2
 
+/* ProgressBar */
 #define VA_PROGRESSBAR_BUSY_WRAP 0
 #define VA_PROGRESSBAR_BUSY_BACKANDFORTH 1
 #define VA_PROGRESSBAR_BUSY_FULLLENGTH 2
 #define VA_PROGRESSBAR_BUSY_FULLLENGTH_DIRECTION_FWD 0
 #define VA_PROGRESSBAR_BUSY_FULLLENGTH_DIRECTION_BWD 1
+
+/* ScrollBar */
+#define VA_SCROLLBAR_BUTTONS 0
+#define VA_SCROLLBAR_NO_BUTTONS 1
+#define VA_SCROLLBAR_CURSOR_INSIDE_GROOVE 0
+#define VA_SCROLLBAR_CURSOR_OVERLAPS_GROOVE 1
+
+/* Palette to use */
+#define PALETTE_TYPE_SYSTEM 0
+#define PALETTE_TYPE_THEME  1
 
 /** Generic information about a theme */
 typedef struct {
@@ -97,7 +109,7 @@ typedef struct {
 typedef struct frame_spec_t {
   frame_spec_t () {
     hasCapsule = false;
-    capsuleH = capsuleV = 0;
+    capsuleH = capsuleV = 2;
     top = bottom = left = right = 0;
     hasFrame = false;
     width = 0;

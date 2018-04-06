@@ -49,7 +49,23 @@ It comes with the style engine (QSvgStyle), a theme builder (QSvgThemeBuilder),
 - Download online themes
 - Live preview of themes
 
-# Compile and Deploy
+# Binary builds
+
+Binary builds are provided for few distributions. If you want to contribute,
+please send me an email.
+
+## Ubuntu Artful/Bionic
+
+Binary packages are provided on PPA for both i386 and xx86_64
+architectures for Ubuntu Artful and Bionic
+
+```
+  sudo add-apt-repository ppa:dextermagnific/ppa
+  sudo apt update
+  sudo apt install qt-style-qsvgstyle-qt5
+```
+
+# Build the source
 
 ## Compile
 

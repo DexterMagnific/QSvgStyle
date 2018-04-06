@@ -514,11 +514,17 @@ met:
 
 .. note:: Capsules have the same size as the standard rendering
 
-.. warning:: Capsule grouping cannot be disabled at this time
-
 .. hint:: Layout spacing is never zero by default. So you don't need
           to check it when designing your form to ensure that widgets
           are not put in capsules.
+
+QSvgStyle engine can also render **menu items** in capsules, given
+that they have frames. In this case, :ref:`capsule-conditions` do not
+apply since they are already laid out vertically with zero
+spacing. For best results, menu tear off should not be forced in theme
+settings.
+
+.. note:: Capsule grouping availability is part of the theme settings
 
 .. _variants:
 
@@ -549,6 +555,12 @@ Widgets for which QSvgStyle engine has multiple variants are:
   variant, the direction of the animation can be ``Forward`` or
   ``Backward``.
 
+- **Scroll Bars**: The engine supplies the variants ``Classic`` and
+  ``No buttons``. With the latter, the scrollbar will not show buttons
+  and control can only be done using the scroll bar cursor. In
+  addition, the engine offers the ability to draw the scroll bar
+  cursor either inside the groove (``Inside groove``) or on top of it
+  (``Overlaps groove``).
 
 .. note:: The variants QSvgStyle should use are part of the theme settings
 
@@ -959,6 +971,11 @@ The figure below illustrates the use of these values in the rendering:
 .. figure:: images/widget-metrics.png
    :align: center
 
+.. warning:: No matter how big the indicator size is, it will never
+             make the widget's size grow. The widget's size is only
+             influenced by its contents (text+icon). If the indicator size is
+             too big, it is scaled down to fit inside the interior rect
+             computed to hold the label. Exceptions to this rule exist.
            
 .. _qsvgstyle-naming-rules:
 

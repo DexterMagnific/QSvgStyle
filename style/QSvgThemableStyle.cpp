@@ -56,6 +56,8 @@
 #include <QTreeWidget>
 #include <QToolBox>
 #include <QRubberBand>
+#include <QToolTip>
+#include <QMenuBar>
 
 #include "QSvgCachedRenderer.h"
 #include "ThemeConfig.h"
@@ -349,8 +351,7 @@ bool QSvgThemableStyle::isContainerWidget(const QWidget * widget) const
     widget->inherits("QStatusBar") ||
     // Ok this one is not a container widget but we want to treat it as such
     // because it has its own groove
-    widget->inherits("QProgressBar") ||
-    (QString(widget->metaObject()->className()) == "QWidget")
+    widget->inherits("QProgressBar")
   ));
 }
 
@@ -388,9 +389,11 @@ void QSvgThemableStyle::polish(QWidget * widget)
     b->installEventFilter(this);
   }
 
-  // Enable menu tear off
+  // Enable menu tear off, enable translucency
   if ( QMenu *m = qobject_cast< QMenu* >(widget) ) {
-    m->setTearOffEnabled(true);
+    if ( getThemeTweak("specific.menu.forcetearoff").toBool() )
+      m->setTearOffEnabled(true);
+    m->setAttribute(Qt::WA_TranslucentBackground, true);
   }
 
   // QLineEdit inside a SpinBox of variant VA_SPINBOX_BUTTONS_OPPOSITE : center text
@@ -534,7 +537,7 @@ void QSvgThemableStyle::drawPrimitive(PrimitiveElement e, const QStyleOption * o
     case PE_PanelButtonBevel :
     case PE_PanelButtonCommand : {
       // Interior for push buttons
-      capsulePosition(widget,fs.hasCapsule,fs.capsuleH,fs.capsuleV);
+      computeButtonCapsule(widget,fs.hasCapsule,fs.capsuleH,fs.capsuleV);
       renderInterior(p,cs2b(cs.bg,pal.button()),r,fs,is,is.element+"-"+st,dir);
 
       bool isDefault = false;
@@ -557,13 +560,13 @@ void QSvgThemableStyle::drawPrimitive(PrimitiveElement e, const QStyleOption * o
       // Frame for default buttons
       // use "default" status
       st = "default";
-      capsulePosition(widget,fs.hasCapsule,fs.capsuleH,fs.capsuleV);
+      computeButtonCapsule(widget,fs.hasCapsule,fs.capsuleH,fs.capsuleV);
       renderFrame(p,cs2b(cs.bg,pal.button()),r,fs,fs.element+"-"+st,dir);
       break;
     }
     case PE_FrameButtonBevel : {
       // Frame for push buttons
-      capsulePosition(widget,fs.hasCapsule,fs.capsuleH,fs.capsuleV);
+      computeButtonCapsule(widget,fs.hasCapsule,fs.capsuleH,fs.capsuleV);
       renderFrame(p,cs2b(cs.bg,pal.button()),r,fs,fs.element+"-"+st,dir);
 
       bool isDefault = false;
@@ -586,7 +589,7 @@ void QSvgThemableStyle::drawPrimitive(PrimitiveElement e, const QStyleOption * o
       // Interior for tool buttons
       // Do not compute capsule position for autoraise buttons
       if ( !(option->state & State_AutoRaise) )
-        capsulePosition(widget,fs.hasCapsule,fs.capsuleH,fs.capsuleV);
+        computeButtonCapsule(widget,fs.hasCapsule,fs.capsuleH,fs.capsuleV);
       renderInterior(p,cs2b(cs.bg,pal.button()),r,fs,is,is.element+"-"+st,dir);
       if ( focus ) {
         renderInterior(p,QBrush(),r,fs,is,is.element+"-focused",dir);
@@ -597,7 +600,7 @@ void QSvgThemableStyle::drawPrimitive(PrimitiveElement e, const QStyleOption * o
       // Frame for tool buttons
       // Do not compute capsule position for autoraise buttons
       if ( !(option->state & State_AutoRaise) )
-        capsulePosition(widget,fs.hasCapsule,fs.capsuleH,fs.capsuleV);
+        computeButtonCapsule(widget,fs.hasCapsule,fs.capsuleH,fs.capsuleV);
       renderFrame(p,cs2b(cs.bg,pal.button()),r,fs,fs.element+"-"+st,dir);
       if ( focus ) {
         renderFrame(p,QBrush(),r,fs,fs.element+"-focused",dir);
@@ -614,7 +617,8 @@ void QSvgThemableStyle::drawPrimitive(PrimitiveElement e, const QStyleOption * o
       // a radio button (exclusive choice)
       // QSvgStyle: no pressed or toggled status for radio buttons
       st = (option->state & State_Enabled) ?
-          (option->state & State_Selected) ? "toggled" : "normal"
+          (option->state & State_Selected) ? "toggled" :
+          (option->state & State_MouseOver) ? "hovered" : "normal"
         : "disabled";
       if ( option->state & State_On )
         st = "checked-"+st;
@@ -942,6 +946,9 @@ void QSvgThemableStyle::drawPrimitive(PrimitiveElement e, const QStyleOption * o
     }
     case PE_PanelMenu : {
       // Interior of a menu
+      // Qt::Menu has always State_None
+      if ( option->state == State_None )
+        st = "normal";
       renderInterior(p,cs2b(cs.bg,pal.brush(brole)),r,fs,is,is.element+"-"+st,dir);
       break;
     }
@@ -998,11 +1005,7 @@ void QSvgThemableStyle::drawPrimitive(PrimitiveElement e, const QStyleOption * o
         if ( const QStyleOptionViewItem *opt =
           qstyleoption_cast<const QStyleOptionViewItem *>(option) ) {
 
-          QStyleOptionViewItem o = *opt;
-          o.state &= ~State_MouseOver;
-          st = state_str(o.state,widget);
-
-          if ( (o.features & QStyleOptionViewItem::Alternate) && (st == "normal") )
+          if ( (opt->features & QStyleOptionViewItem::Alternate) && (st == "normal") )
             st = "alt-"+st;
 
           if ( st != "normal" ) {
@@ -1091,28 +1094,26 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
 
         QStyleOptionButton o(*opt);
 
-        drawPrimitive(PE_FrameButtonBevel,&o,p,widget);
-
-        if ( opt->features & QStyleOptionButton::DefaultButton )
-          drawPrimitive(PE_FrameDefaultButton,&o,p,widget);
-
-        bool drawInterior = false;
+        bool nonflat = false;
 
         if ( opt->features & QStyleOptionButton::Flat ) {
-          // flat buttons
+          // flat buttons: only applicable to normal state
           if ( (option->state & State_Enabled) &&
                 ((option->state & State_Sunken) ||
                 (option->state & State_On) ||
                 (option->state & State_MouseOver))
               ) {
-            // Draw interior around normal non flat tool buttons
-            drawInterior = true;
+            nonflat = true;
           }
         } else {
-          drawInterior = true;
+          nonflat = true;
         }
 
-        if ( drawInterior ) {
+        if ( opt->features & QStyleOptionButton::DefaultButton )
+          drawPrimitive(PE_FrameDefaultButton,&o,p,widget);
+
+        if ( nonflat ) {
+          drawPrimitive(PE_FrameButtonBevel,&o,p,widget);
           drawPrimitive(PE_PanelButtonBevel,option,p,widget);
         }
       }
@@ -1142,14 +1143,49 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
           // NOTE QSvgStyle ignores pressed state
           o.state &= ~State_Sunken;
           st = state_str(o.state,widget);
+
+          // l[0] : text, l[1] shortcut if any
+          const QStringList l = opt->text.split('\t');
+
+          if ( getThemeTweak("specific.menu.usecapsule").toBool() && widget ) {
+            // use V capsules. Lookup for menu item position
+            fs.hasCapsule = true;
+            fs.capsuleV = 2; // for now
+            fs.capsuleH = 2;
+
+            const QMenu *m = qobject_cast<const QMenu *>(widget);
+            if ( m ) {
+              int nb = m->actions().size();
+              int pos = -1;
+
+              foreach (QAction *a, m->actions()) {
+                pos++;
+                if ( !a->isSeparator() && (l.size() > 0) &&
+                     (a->text() == l[0]) ) {
+                  break; // found
+                }
+              }
+
+              if ( nb == 1 )
+                fs.capsuleV = 2; // only one
+              else if ( pos == 0 )
+                fs.capsuleV = -1; // first
+              else if ( pos == nb-1 )
+                fs.capsuleV = 1; // last
+              else
+                fs.capsuleV = 0; // middle
+            }
+          }
+
           renderFrame(p,cs2b(cs.bg,pal.brush(brole)),r,fs,fs.element+"-"+st,dir);
           renderInterior(p,cs2b(cs.bg,pal.brush(brole)),r,fs,is,is.element+"-"+st,dir);
+
+          fs.hasCapsule = false;
 
           QRect rtext = r; // text rect (menu item label+shortcut)
           QRect rcheckmark, rchild;
 
           // determine positions
-          const QStringList l = opt->text.split('\t');
           if ( (l.size() > 0) && (opt->icon.isNull()) )
             // No icon ? leave space for icon anyway
             rtext.adjust(opt->maxIconWidth+ls.tispace,0,0,0);
@@ -2629,9 +2665,15 @@ void QSvgThemableStyle::drawComplexControl(ComplexControl control, const QStyleO
         fs.hasFrame = false;
         fs.hasCapsule = false;
         o.rect = subControlRect(CC_Slider,opt,SC_SliderHandle,widget);
-        renderInterior(p,cs2b(cs.bg,pal.brush(brole)),o.rect,fs,is,is.element+"-cursor-"+st,dir,orn);
+        if ( opt->tickPosition == QSlider::NoTicks )
+          renderInterior(p,cs2b(cs.bg,pal.brush(brole)),o.rect,fs,is,is.element+"-cursor-tickless-"+st,dir,orn);
+        else
+          renderInterior(p,cs2b(cs.bg,pal.brush(brole)),o.rect,fs,is,is.element+"-cursor-"+st,dir,orn);
         if ( focus ) {
-          renderInterior(p,QBrush(),o.rect,fs,is,is.element+"-cursor-focused",dir,orn);
+          if ( opt->tickPosition == QSlider::NoTicks )
+            renderInterior(p,QBrush(),o.rect,fs,is,is.element+"-cursor-tickless-focused",dir,orn);
+          else
+            renderInterior(p,QBrush(),o.rect,fs,is,is.element+"-cursor-focused",dir,orn);
         }
       }
 
@@ -3194,10 +3236,10 @@ QSize QSvgThemableStyle::sizeFromContents ( ContentsType type, const QStyleOptio
 
         s = sizeFromContents(fm,fs,is,ls,
                              l && !l->placeholderText().isEmpty() ?
-                               l->placeholderText() : "Some minimal text",0);
+                               l->placeholderText() : "Some minimal text", 0);
 
         if ( l && l->isClearButtonEnabled() ) {
-          s += QSize(ds.size+ls.tispace,0);
+          s += QSize(32+ls.tispace,0); /* QLineEdit hardcoded clear button size */
           s = s.expandedTo(QSize(0,ds.size+fs.top+fs.bottom));
         }
 
@@ -3433,7 +3475,7 @@ QSize QSvgThemableStyle::sizeFromContents ( ContentsType type, const QStyleOptio
 
         s = sizeFromContents(fm,fs,is,ls,
                              opt->text,
-                             opt->iconSize.width());
+                             opt->icon.isNull() ? 0 : opt->iconSize.width());
 
         if ( (qobject_cast< const QTabBar* >(widget))->tabsClosable() ) {
             s.rwidth() += ls.tispace+pixelMetric(PM_TabCloseIndicatorWidth);
@@ -3524,7 +3566,7 @@ QSize QSvgThemableStyle::sizeFromContents ( ContentsType type, const QStyleOptio
 
         s = sizeFromContents(fm,fs,is,ls,
                              opt->text,
-                             pixelMetric(PM_ListViewIconSize));
+                             opt->icon.isNull() ? 0 : pixelMetric(PM_ListViewIconSize));
 
         if ( opt->features & QStyleOptionViewItem::HasCheckIndicator ) {
           s.rwidth() += pixelMetric(PM_CheckBoxLabelSpacing)+qMin(s.height(),(int)ds.size);
@@ -3899,20 +3941,31 @@ QRect QSvgThemableStyle::subControlRect(ComplexControl control, const QStyleOpti
       if (option->state & State_Horizontal)
         switch (subControl) {
           case SC_ScrollBarGroove :
-            ret = QRect(x+extent,y,w-2*extent,h);
+            ret = r;
+            if ( getThemeTweak("specific.scrollbar.variant").toInt() == VA_SCROLLBAR_BUTTONS )
+              ret.adjust(extent,0,-extent,0);
             break;
           case SC_ScrollBarSubLine :
-            ret = QRect(x,y,extent,extent);
+            if ( getThemeTweak("specific.scrollbar.variant").toInt() == VA_SCROLLBAR_BUTTONS )
+              ret = QRect(x,y,extent,extent);
+            else
+              ret = QRect();
             break;
           case SC_ScrollBarAddLine :
-            ret = QRect(x+w-extent,y,extent,extent);
+            if ( getThemeTweak("specific.scrollbar.variant").toInt() == VA_SCROLLBAR_BUTTONS )
+              ret = QRect(x+w-extent,y,extent,extent);
+            else
+              ret = QRect();
             break;
           case SC_ScrollBarSlider : {
             if ( const QStyleOptionSlider *opt =
                  qstyleoption_cast<const QStyleOptionSlider *>(option) ) {
 
               r = subControlRect(CC_ScrollBar,option,SC_ScrollBarGroove,widget);
-              r = interiorRect(r,fs,is);
+
+              if ( getThemeTweak("specific.scrollbar.slider.area").toInt() == VA_SCROLLBAR_CURSOR_INSIDE_GROOVE )
+                r = interiorRect(r,fs,is);
+
               r.getRect(&x,&y,&w,&h);
 
               const int minLength = pixelMetric(PM_ScrollBarSliderMin,option,widget);
@@ -3945,20 +3998,31 @@ QRect QSvgThemableStyle::subControlRect(ComplexControl control, const QStyleOpti
       else
         switch (subControl) {
           case SC_ScrollBarGroove :
-            ret = QRect(x,y+extent,w,h-2*extent);
+            ret = r;
+            if ( getThemeTweak("specific.scrollbar.variant").toInt() == VA_SCROLLBAR_BUTTONS )
+              ret.adjust(0,extent,0,-extent);
             break;
           case SC_ScrollBarSubLine :
-            ret = QRect(x,y,extent,extent);
+            if ( getThemeTweak("specific.scrollbar.variant").toInt() == VA_SCROLLBAR_BUTTONS )
+              ret = QRect(x,y,extent,extent);
+            else
+              ret = QRect();
             break;
           case SC_ScrollBarAddLine :
-            ret = QRect(x,y+h-extent,extent,extent);
+            if ( getThemeTweak("specific.scrollbar.variant").toInt() == VA_SCROLLBAR_BUTTONS )
+              ret = QRect(x,y+h-extent,extent,extent);
+            else
+              ret = QRect();
             break;
           case SC_ScrollBarSlider : {
             if ( const QStyleOptionSlider *opt =
                  qstyleoption_cast<const QStyleOptionSlider *>(option) ) {
 
               r = subControlRect(CC_ScrollBar,option,SC_ScrollBarGroove,widget);
-              r = interiorRect(r,fs,is);
+
+              if ( getThemeTweak("specific.scrollbar.slider.area").toInt() == VA_SCROLLBAR_CURSOR_INSIDE_GROOVE )
+                r = interiorRect(r,fs,is);
+
               r.getRect(&x,&y,&w,&h);
 
               const int minLength = pixelMetric(PM_ScrollBarSliderMin,option,widget);
@@ -4454,7 +4518,7 @@ void QSvgThemableStyle::renderElement(QPainter* p, const QString& element, const
     p->drawLine(x+w-1,y,x,y+h-1);
     p->restore();
     emit sig_missingElement(element);
-    qWarning() << "element" << element << "not found in SVG file";
+    qWarning() << "[QSvgStyle] object" << element << "missing in SVG file";
     return;
   }
 
@@ -4615,11 +4679,12 @@ void QSvgThemableStyle::renderFrame(QPainter *p,
 
   int x0,y0,w,h;
   int intensity;
-  bool use3dFrame;
+  bool use3dFrame, usePalette;
 
   bounds.getRect(&x0,&y0,&w,&h);
   intensity = getThemeTweak("specific.palette.intensity").toInt();
   use3dFrame = getThemeTweak("specific.palette.3dframes").toBool();
+  usePalette = getThemeTweak("specific.palette.usepalette").toBool();
 
   // rects to draw frame parts
   QRect top, bottom, left, right, topleft, topright, bottomleft, bottomright;
@@ -4634,6 +4699,9 @@ void QSvgThemableStyle::renderFrame(QPainter *p,
     bottomleft.adjust(0,0,1,1);
 
   QPainterPath lightPath; // top and left 3D effect
+  QPainterPath darkPath; // bottom and right 3D effect
+
+  // top 3d
   if ( !top.isNull() )
     lightPath.addRect(top);
   if ( !topleft.isNull() )
@@ -4644,24 +4712,24 @@ void QSvgThemableStyle::renderFrame(QPainter *p,
     // make corners wider by +1 because the QPolygon fill is missing one pixel
     bottomleft.adjust(0,0,1,1);
     lightPath.addPolygon(QPolygon(
-      QVector<QPoint>() <<
-      bottomleft.topLeft() <<
-      bottomleft.bottomLeft() <<
-      bottomleft.topRight() <<
-      bottomleft.topLeft()
-    ));
+                           QVector<QPoint>() <<
+                           bottomleft.topLeft() <<
+                           bottomleft.bottomLeft() <<
+                           bottomleft.topRight() <<
+                           bottomleft.topLeft()
+                           ));
     bottomleft.adjust(0,0,-1,-1);
   }
   if ( !topright.isNull() )
     lightPath.addPolygon(QPolygon(
-      QVector<QPoint>() <<
-      topright.topLeft() <<
-      topright.topRight() <<
-      topright.bottomLeft() <<
-      topright.topLeft()
-    ));
+                           QVector<QPoint>() <<
+                           topright.topLeft() <<
+                           topright.topRight() <<
+                           topright.bottomLeft() <<
+                           topright.topLeft()
+                           ));
 
-  QPainterPath darkPath; // bottom and right 3D effect
+  // bottom 3d
   if ( !bottom.isNull() )
     darkPath.addRect(bottom);
   if ( !bottomright.isNull() )
@@ -4670,20 +4738,20 @@ void QSvgThemableStyle::renderFrame(QPainter *p,
     darkPath.addRect(right);
   if ( !topright.isNull() )
     darkPath.addPolygon(QPolygon(
-      QVector<QPoint>() <<
-      topright.topRight() <<
-      topright.bottomRight() <<
-      topright.bottomLeft() <<
-      topright.topRight()
-    ));
+                          QVector<QPoint>() <<
+                          topright.topRight() <<
+                          topright.bottomRight() <<
+                          topright.bottomLeft() <<
+                          topright.topRight()
+                          ));
   if ( !bottomleft.isNull() )
     darkPath.addPolygon(QPolygon(
-      QVector<QPoint>() <<
-      bottomleft.topRight() <<
-      bottomleft.bottomRight() <<
-      bottomleft.bottomLeft() <<
-      bottomleft.topRight()
-    ));
+                          QVector<QPoint>() <<
+                          bottomleft.topRight() <<
+                          bottomleft.bottomRight() <<
+                          bottomleft.bottomLeft() <<
+                          bottomleft.topRight()
+                          ));
 
   if ( !topright.isNull() )
     topright.adjust(0,0,-1,-1);
@@ -4721,7 +4789,7 @@ void QSvgThemableStyle::renderFrame(QPainter *p,
   }
 
   // Colorize !
-  if ( b.style() != Qt::NoBrush ) {
+  if ( usePalette && (b.style() != Qt::NoBrush) ) {
     QBrush lightBrush(b), darkBrush(b);
     QColor lightColor, darkColor;
 
@@ -4807,7 +4875,10 @@ void QSvgThemableStyle::computeInteriorRect(const QRect& bounds,
   computeFrameRects(bounds,fs,orn, top,bottom,left,right,
                     topleft,topright,bottomleft,bottomright);
 
+  // FIXME even if we are in a capsule, interiorRect should be the same
+  // as without capsule
   QMargins m(left.width(),top.height(),right.width(),bottom.height());
+  //QMargins m(fs.left,fs.top,fs.right,fs.bottom);
 
   r = r.marginsRemoved(m);
 
@@ -4833,9 +4904,11 @@ void QSvgThemableStyle::renderInterior(QPainter *p,
 
   int x0,y0,w,h;
   int intensity;
+  bool usePalette;
 
   bounds.getRect(&x0,&y0,&w,&h);
   intensity = getThemeTweak("specific.palette.intensity").toInt();
+  usePalette = getThemeTweak("specific.palette.usepalette").toBool();
 
   // drawing rect
   QRect r;
@@ -4864,7 +4937,7 @@ void QSvgThemableStyle::renderInterior(QPainter *p,
   if ( !dbgWireframe )
     renderElement(p,e,r,is.px,is.py);
 
-  if ( b.style() != Qt::NoBrush ) {
+  if ( usePalette && (b.style() != Qt::NoBrush) ) {
     // Colorize !
     QBrush interiorBrush(b);
 
@@ -5177,10 +5250,13 @@ QLayout * QSvgThemableStyle::layoutForWidget(const QWidget* widget, QLayout *l) 
   return NULL;
 }
 
-void QSvgThemableStyle::capsulePosition(const QWidget *widget, bool &capsule, int &h, int &v) const
+void QSvgThemableStyle::computeButtonCapsule(const QWidget *widget, bool &capsule, int &h, int &v) const
 {
   capsule = false;
   h = v = 2;
+
+  if ( getThemeTweak("specific.button.usecapsule").toBool() == false )
+    return;
 
   QLayout *myLayout = layoutForWidget(widget);
   if ( !myLayout )

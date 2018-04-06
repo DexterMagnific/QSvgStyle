@@ -33,10 +33,31 @@ available.
 The latest QSvgStyle distribution documentation is always available at
 `Read the Docs <http://qsvgstyle.readthedocs.io>`_.
 
-.. _download:
+.. _bin-builds:
 
-Download
---------
+Binary builds
+-------------
+
+Binary builds are provided for few distributions. If you want to contribute,
+please send me an email.
+
+Ubuntu Artful/Bionic
+~~~~~~~~~~~~~~~~~~~~
+
+Binary packages are provided on PPA for both i386 and xx86_64
+architectures for Ubuntu Artful and Bionic::
+
+  sudo add-apt-repository ppa:dextermagnific/ppa
+  sudo apt update
+  sudo apt install qt-style-qsvgstyle-qt5
+
+.. _source-build:
+
+Build the source
+----------------
+
+If a binary package is not available for your distribution, you have
+to build QSvgStyle from the sources.
 
 The QSvgStyle distribution is hosted as a Github project `here
 <https://github.com/DexterMagnific/QSvgStyle>`_.
@@ -49,11 +70,6 @@ Alternatively, a tarball can be downloaded using::
 
   wget https://github.com/DexterMagnific/QSvgStyle/archive/master.zip
 
-
-.. _build-n-run:
-
-Build & Run
------------
 
 Prerequisites
 ~~~~~~~~~~~~~
@@ -116,22 +132,6 @@ command::
 
   qtdiag
 
-.. _run:
-
-Run
-~~~
-
-In order to test your install, you can run any Qt5 application with
-the ``-style QSvgStyle`` argument.
-
-As an example, if your are working on KDE_, you can launch the
-:program:`dolphin` file manager::
-
-   dolphin -style qsvgstyle
-
-.. note:: The style name is not case sensitive when supplied to the
-   ``-style`` option
-
 Build the documentation
 ~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -158,6 +158,22 @@ Remember that this documentation is always available online at `Read
 the Docs`_.
 
 .. _Sphinx: http://www.sphinx-doc.org
+
+.. _run:
+
+Run
+---
+
+In order to test your install, you can run any Qt5 application with
+the ``-style QSvgStyle`` argument.
+
+As an example, if your are working on KDE_, you can launch the
+:program:`dolphin` file manager::
+
+   dolphin -style qsvgstyle
+
+.. note:: The style name is not case sensitive when supplied to the
+   ``-style`` option
 
 Set as default
 --------------
