@@ -309,7 +309,9 @@ void SpecificTreeDelegate::paint(QPainter *painter,
   if ( type == "bool" ) {
     //qWarning() << "paint" << value_data;
     QStyleOptionButton o;
-    o.initFrom(option.widget);
+    // we can't assign QStyleOptionViewItem to a QStyleOptionButton,
+    // but what we can do is doing assignement of their base classes only
+    o.QStyleOption::operator =(option);
     o.rect = option.rect;
 
     const QStringList true_false = range_str.split(',');
@@ -330,19 +332,19 @@ void SpecificTreeDelegate::paint(QPainter *painter,
       o.text = false_str;
     }
 
+    s->drawPrimitive(QStyle::PE_PanelItemViewItem, &option, painter, option.widget);
     s->drawControl(QStyle::CE_CheckBox, &o, painter, 0);
     return;
   }
 
   if ( type == "enum" || type == "int_enum" ) {
     QStyleOptionViewItem o(option);
-    initStyleOption(&o, index);
 
     const QStringList items = range_str.split(',');
     if ( items.size()-1 >= value_data.toInt() )
       o.text = items.at(value_data.toInt());
 
-    s->drawControl(QStyle::CE_ItemViewItem, &o, painter, 0);
+    s->drawControl(QStyle::CE_ItemViewItem, &o, painter, option.widget);
     return;
   }
 

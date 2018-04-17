@@ -45,7 +45,7 @@
          <x>0</x>
          <y>0</y>
          <width>256</width>
-         <height>529</height>
+         <height>568</height>
         </rect>
        </property>
        <property name="palette">
@@ -211,7 +211,7 @@
          <x>0</x>
          <y>0</y>
          <width>256</width>
-         <height>529</height>
+         <height>568</height>
         </rect>
        </property>
        <property name="palette">
@@ -434,7 +434,7 @@
          <x>0</x>
          <y>0</y>
          <width>256</width>
-         <height>529</height>
+         <height>568</height>
         </rect>
        </property>
        <property name="palette">
@@ -636,7 +636,7 @@
          <x>0</x>
          <y>0</y>
          <width>256</width>
-         <height>529</height>
+         <height>568</height>
         </rect>
        </property>
        <property name="palette">
@@ -1313,6 +1313,60 @@
            </property>
            <item>
             <property name="text">
+             <string>Chunk width</string>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+            <property name="text">
+             <string>specific.progressbar.chunk.width</string>
+            </property>
+            <property name="text">
+             <string>int</string>
+            </property>
+            <property name="text">
+             <string>1-99</string>
+            </property>
+            <property name="flags">
+             <set>ItemIsSelectable|ItemIsEditable|ItemIsUserCheckable|ItemIsEnabled</set>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Bar variant</string>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+            <property name="text">
+             <string>specific.progressbar.variant</string>
+            </property>
+            <property name="text">
+             <string>int_enum</string>
+            </property>
+            <property name="text">
+             <string>Classic,Thin</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Thin bar variant min height</string>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+            <property name="text">
+             <string>specific.progressbar.thin.minheight</string>
+            </property>
+            <property name="text">
+             <string>int</string>
+            </property>
+            <property name="text">
+             <string>1-99</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
              <string>Busy indicator variant</string>
             </property>
             <property name="text">
@@ -1325,7 +1379,7 @@
              <string>int_enum</string>
             </property>
             <property name="text">
-             <string>Wrap, Back and forth,Full length</string>
+             <string>Wrap,Back and forth,Full length</string>
             </property>
            </item>
            <item>
@@ -1912,43 +1966,6 @@
           </item>
           <item>
            <property name="text">
-            <string>Progress bars</string>
-           </property>
-           <property name="text">
-            <string/>
-           </property>
-           <property name="text">
-            <string/>
-           </property>
-           <property name="text">
-            <string/>
-           </property>
-           <property name="text">
-            <string/>
-           </property>
-           <item>
-            <property name="text">
-             <string>Chunk width</string>
-            </property>
-            <property name="text">
-             <string/>
-            </property>
-            <property name="text">
-             <string>specific.progressbar.chunk.width</string>
-            </property>
-            <property name="text">
-             <string>int</string>
-            </property>
-            <property name="text">
-             <string>1-99</string>
-            </property>
-            <property name="flags">
-             <set>ItemIsSelectable|ItemIsEditable|ItemIsUserCheckable|ItemIsEnabled</set>
-            </property>
-           </item>
-          </item>
-          <item>
-           <property name="text">
             <string>Drop down buttons</string>
            </property>
            <property name="text">
@@ -2261,8 +2278,8 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>200</width>
-               <height>249</height>
+               <width>340</width>
+               <height>354</height>
               </rect>
              </property>
              <attribute name="label">
@@ -2555,8 +2572,8 @@
                   <rect>
                    <x>0</x>
                    <y>0</y>
-                   <width>169</width>
-                   <height>151</height>
+                   <width>322</width>
+                   <height>282</height>
                   </rect>
                  </property>
                  <layout class="QGridLayout" name="gridLayout_27">
@@ -2583,8 +2600,8 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>246</width>
-               <height>59</height>
+               <width>159</width>
+               <height>40</height>
               </rect>
              </property>
              <attribute name="label">
@@ -2778,8 +2795,8 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>249</width>
-               <height>100</height>
+               <width>162</width>
+               <height>72</height>
               </rect>
              </property>
              <attribute name="label">
@@ -3891,8 +3908,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>659</width>
-             <height>80</height>
+             <width>701</width>
+             <height>62</height>
             </rect>
            </property>
           </widget>

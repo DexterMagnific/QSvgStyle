@@ -338,7 +338,8 @@ bool QSvgThemableStyle::isContainerWidget(const QWidget * widget) const
       !(
         widget->inherits("QTreeWidget") ||
         widget->inherits("QHeaderView") ||
-        widget->inherits("QSplitter")
+        widget->inherits("QSplitter") ||
+        widget->inherits("QToolBox")
       )
     ) ||
     widget->inherits("QGroupBox") ||
@@ -395,6 +396,15 @@ void QSvgThemableStyle::polish(QWidget * widget)
       m->setTearOffEnabled(true);
     m->setAttribute(Qt::WA_TranslucentBackground, true);
   }
+
+#if 0
+  // Enable menu tear off, enable translucency
+  if ( QMenuBar *b = qobject_cast< QMenuBar* >(widget) ) {
+    // FIXME
+    //b->setAttribute(Qt::WA_TranslucentBackground, true);
+    //b->setAutoFillBackground(true);
+  }
+#endif
 
   // QLineEdit inside a SpinBox of variant VA_SPINBOX_BUTTONS_OPPOSITE : center text
   if ( QLineEdit *l = qobject_cast< QLineEdit * >(widget) ) {
@@ -744,6 +754,9 @@ void QSvgThemableStyle::drawPrimitive(PrimitiveElement e, const QStyleOption * o
     }
     case PE_IndicatorTabClose : {
       // tab close buttons. used when icon theme does not supply one
+      fs.hasFrame = false;
+      // do not set toggled
+      st = state_str(option->state & ~(State_On | State_Selected), widget);
       ds.size = pixelMetric(PM_TabCloseIndicatorWidth);
       renderIndicator(p,r,fs,is,ds,ds.element+"-tabclose-"+st, dir);
       break;
@@ -1007,6 +1020,17 @@ void QSvgThemableStyle::drawPrimitive(PrimitiveElement e, const QStyleOption * o
 
           if ( (opt->features & QStyleOptionViewItem::Alternate) && (st == "normal") )
             st = "alt-"+st;
+
+          fs.hasCapsule = true;
+          fs.capsuleH = 2;
+          fs.capsuleV = 2;
+
+          if ( opt->viewItemPosition == QStyleOptionViewItem::Beginning )
+            fs.capsuleH = -1;
+          else if ( opt->viewItemPosition == QStyleOptionViewItem::End )
+            fs.capsuleH = 1;
+          else if ( opt->viewItemPosition == QStyleOptionViewItem::Middle )
+            fs.capsuleH = 0;
 
           if ( st != "normal" ) {
             // only paint when state in not normal, otherwise keep
@@ -1694,7 +1718,7 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
       // "background" of a progress bar
       renderFrame(p,cs2b(cs.bg,pal.brush(brole)),r,fs,fs.element+"-"+st,dir,orn);
       renderInterior(p,cs2b(cs.bg,pal.brush(brole)),r,fs,is,is.element+"-"+st,dir,orn);
-
+      // FIXME render the progress bar contents frame here
       break;
     }
 
@@ -1718,6 +1742,9 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
 
           r.setRect(0,0,r.height(),r.width());
         }
+        if ( getThemeTweak("specific.progressbar.variant") == VA_PROGRESSBAR_THIN ) {
+          fs.hasFrame = false;
+        }
         renderLabel(p,cs2b(cs.fg,pal.text()),
                     dir,r,fs,is,ls,
                     opt->textAlignment,opt->text,
@@ -1732,18 +1759,25 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
 
     case CE_ProgressBarContents : {
       // FIXME use pe_progressbarchunk
+      // FIXME do not render the frame here
       // the progress indicator
       if ( const QStyleOptionProgressBar *opt =
            qstyleoption_cast<const QStyleOptionProgressBar *>(option) ) {
 
+        QRect orig = r;
+
+        // Get interior
+        r = interiorRect(r,fs,is);
+        r.getRect(&x,&y,&w,&h);
+
         if ( orn != Horizontal ) {
           // perform computations on horizontalized widget
           r = transposedRect(r);
+          orig = transposedRect(orig);
           qSwap(x,y);
           qSwap(w,h);
         }
 
-        QRect orig = r;
         is.px = pixelMetric(PM_ProgressBarChunkWidth);
 
         if ( opt->progress >= 0 ) {
@@ -1751,15 +1785,18 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
           int empty = sliderPositionFromValue(opt->minimum,
                                               opt->maximum,
                                               opt->maximum-opt->progress,
-                                              interiorRect(r,fs,is).width(),
+                                              r.width(),
                                               false);
 
           r = r.adjusted(0,0,-empty,0); // filled area
 
+          // add frame again
+          r = r.adjusted(-fs.left,-fs.top,fs.right,fs.bottom);
+
           // right part of frame: only show if progress is full
           QRect cr = r; // Clip rect for r
           if ( opt->progress < opt->maximum )
-                cr = cr.adjusted(0,0,-fs.right,0);
+            cr = cr.adjusted(0,0,-fs.right,0);
 
           if ( orn == Horizontal ) {
             r = visualRect(dir,orig,r);
@@ -1796,39 +1833,79 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
           int animcount = progressbars[wd];
           int pm = w;
           if ( is.px > 0 )
-            pm = fs.left+fs.right+is.px;
+            pm = is.px; // cursor size
 
           switch (variant) {
             case VA_PROGRESSBAR_BUSY_WRAP : {
               r = r.adjusted(animcount%w,0,0,0);
               r.setWidth(pm);
+
+              // add frame again
+              r = r.adjusted(-fs.left,-fs.top,fs.right,fs.bottom);
+
+              QRect cr = r; // Clip rect for r
+
               if ( r.x()+r.width()-1 > x+w-1 ) {
-                // wrap busy indicator
-                int ww = x+w-r.x();
+                // two half cursors
 
-                if ( orn == Horizontal )
+                // wrap busy indicator: second cursor size
+                int pm2 = x+w-r.x();
+
+                cr.setWidth(pm2);
+
+                // left part of frame: only show if cursor is at the beginning
+                if ( r.left() <= orig.left() )
+                  cr = cr.adjusted(fs.left,0,0,0);
+
+                // right part of frame: only show if cursor is at the end
+                if ( r.right() >= orig.right() )
+                  cr = cr.adjusted(0,0,-fs.right,0);
+
+                if ( orn == Horizontal ) {
                   r = visualRect(dir,orig,r);
+                  cr = visualRect(dir,orig,cr);
+                }
 
-                if ( opt->invertedAppearance )
+                if ( opt->invertedAppearance ) {
                   r = visualRect(Qt::RightToLeft,orig,r);
+                  cr = visualRect(Qt::RightToLeft,orig,cr);
+                }
 
-                p->setClipRect(r.x(),r.y(),ww,r.height());
+                p->save();
+                p->setClipRect(r.x(),r.y(),pm2,r.height());
                 renderInterior(p,cs2b(cs.bg,pal.brush(brole)),
                               (orn != Horizontal) ? transposedRect(r) : r,
                               fs,is,
                               is.element+"-elapsed-"+st,
                               dir,
                               orn);
-                p->setClipRect(QRect());
+                p->restore();
 
-                r = QRect(orig.x()-ww,orig.y(),pm,h);
+                // now the second cursor
+                r = QRect(orig.x()-pm2,orig.y(),pm,h);
+                // add frame again
+                r = r.adjusted(-fs.left,-fs.top,fs.right,fs.bottom);
+                cr = r;
 
-                if ( orn == Horizontal )
+                // left part of frame: only show if cursor is at the beginning
+                if ( r.left() <= orig.left() )
+                  cr = cr.adjusted(fs.left,0,0,0);
+
+                // right part of frame: only show if cursor is at the end
+                if ( r.right() >= orig.right() )
+                  cr = cr.adjusted(0,0,-fs.right,0);
+
+                if ( orn == Horizontal ) {
                   r = visualRect(dir,orig,r);
+                  cr = visualRect(dir,orig,cr);
+                }
 
-                if ( opt->invertedAppearance )
+                if ( opt->invertedAppearance ) {
                   r = visualRect(Qt::RightToLeft,orig,r);
+                  cr = visualRect(Qt::RightToLeft,orig,cr);
+                }
 
+                p->save();
                 p->setClipRect(orig.x(),orig.y(),pm,h);
                 renderInterior(p,cs2b(cs.bg,pal.brush(brole)),
                               (orn != Horizontal) ? transposedRect(r) : r,
@@ -1836,13 +1913,42 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
                               is.element+"-elapsed-"+st,
                               dir,
                               orn);
-                p->setClipRect(QRect());
+                p->restore();
               } else {
-                if ( orn == Horizontal )
-                  r = visualRect(dir,orig,r);
+                  // single cursor
 
-                if ( opt->invertedAppearance )
+                  // add frame again
+                  r = r.adjusted(-fs.left,-fs.top,fs.right,fs.bottom);
+
+                  QRect cr = r; // Clip rect for r
+                  // left part of frame: only show if cursor is at the beginning
+                  if ( r.left() == orig.left() )
+                    cr = cr.adjusted(fs.left,0,0,0);
+
+                  // right part of frame: only show if cursor is at the end
+                  if ( r.right() != orig.right() )
+                    cr = cr.adjusted(0,0,-fs.right,0);
+
+                if ( orn == Horizontal ) {
+                  r = visualRect(dir,orig,r);
+                  cr = visualRect(dir,orig,cr);
+                }
+
+                if ( opt->invertedAppearance ) {
                   r = visualRect(Qt::RightToLeft,orig,r);
+                  cr = visualRect(Qt::RightToLeft,orig,cr);
+                }
+
+                if ( orn != Horizontal )
+                  cr = transposedRect(cr);
+
+                p->save();
+                p->setClipRect(cr);
+                renderFrame(p,cs2b(cs.bg,pal.brush(brole)),
+                               (orn != Horizontal) ? transposedRect(r) : r,
+                               fs,fs.element+"-elapsed-"+st,
+                               dir,
+                               orn);
 
                 renderInterior(p,cs2b(cs.bg,pal.brush(brole)),
                               (orn != Horizontal) ? transposedRect(r) : r,
@@ -1850,20 +1956,48 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
                               is.element+"-elapsed-"+st,
                               dir,
                               orn);
+                p->restore();
               }
               break;
             }
             case VA_PROGRESSBAR_BUSY_BACKANDFORTH : {
-              r = r.adjusted(animcount%(2*(w-pm)),0,0,0);
-              if ( r.x() > x+w-pm )
-                r.setX(x+2*(w-pm)-r.x());
+              r = r.adjusted(animcount%(2*(w-pm+1)),0,0,0);
+              if ( r.x()+pm-1 > x+w-1 )
+                r.setX(x+2*(w-pm+1)-r.x());
               r.setWidth(pm);
 
-              if ( orn == Horizontal )
-                r = visualRect(dir,orig,r);
+              // add frame again
+              r = r.adjusted(-fs.left,-fs.top,fs.right,fs.bottom);
 
-              if ( opt->invertedAppearance )
+              QRect cr = r; // Clip rect for r
+              // left part of frame: only show if cursor is at the beginning
+              if ( r.left() != orig.left() )
+                cr = cr.adjusted(fs.left,0,0,0);
+
+              // right part of frame: only show if cursor is at the end
+              if ( r.right() != orig.right() )
+                cr = cr.adjusted(0,0,-fs.right,0);
+
+              if ( orn == Horizontal ) {
+                r = visualRect(dir,orig,r);
+                cr = visualRect(dir,orig,cr);
+              }
+
+              if ( opt->invertedAppearance ) {
                 r = visualRect(Qt::RightToLeft,orig,r);
+                cr = visualRect(Qt::RightToLeft,orig,cr);
+              }
+
+              if ( orn != Horizontal )
+                cr = transposedRect(cr);
+
+              p->save();
+              p->setClipRect(cr);
+              renderFrame(p,cs2b(cs.bg,pal.brush(brole)),
+                             (orn != Horizontal) ? transposedRect(r) : r,
+                             fs,fs.element+"-elapsed-"+st,
+                             dir,
+                             orn);
 
               renderInterior(p,cs2b(cs.bg,pal.brush(brole)),
                             (orn != Horizontal) ? transposedRect(r) : r,
@@ -1871,6 +2005,8 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
                             is.element+"-elapsed-"+st,
                             dir,
                             orn);
+              p->restore();
+
               break;
             }
             case VA_PROGRESSBAR_BUSY_FULLLENGTH :
@@ -1881,20 +2017,41 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
                 ni = pm-ni;
               r.adjust(-ni,0,w+ni,0);
 
-              if ( orn == Horizontal )
+              // add frame again
+              r = r.adjusted(-fs.left,-fs.top,fs.right,fs.bottom);
+
+              QRect cr = orig.adjusted(fs.left,0,-fs.right,0); // Clip rect for r
+
+              if ( orn == Horizontal ) {
                 r = visualRect(dir,orig,r);
+                cr = visualRect(dir,orig,cr);
+              }
 
-              if ( opt->invertedAppearance )
+              if ( opt->invertedAppearance ) {
                 r = visualRect(Qt::RightToLeft,orig,r);
+                cr = visualRect(Qt::RightToLeft,orig,cr);
+              }
 
-              p->setClipRect(orig);
+              if ( orn != Horizontal )
+                cr = transposedRect(cr);
+
+              // render whole frame
+              renderFrame(p,cs2b(cs.bg,pal.brush(brole)),
+                             (orn != Horizontal) ? transposedRect(orig) : orig,
+                             fs,fs.element+"-elapsed-"+st,
+                             dir,
+                             orn);
+
+              p->save();
+              p->setClipRect(cr);
               renderInterior(p,cs2b(cs.bg,pal.brush(brole)),
                             (orn != Horizontal) ? transposedRect(r) : r,
                             fs,is,
                             is.element+"-elapsed-"+st,
                             dir,
                             orn);
-              p->setClipRect(QRect());
+              p->restore();
+
               break;
             }
           }
@@ -1984,8 +2141,23 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
 
     case CE_HeaderEmptyArea :
     case CE_HeaderSection : {
-      renderFrame(p,cs2b(cs.bg,pal.brush(brole)),r,fs,fs.element+"-"+st,dir);
-      renderInterior(p,cs2b(cs.bg,pal.brush(brole)),r,fs,is,is.element+"-"+st,dir);
+      if ( const QStyleOptionHeader *opt =
+           qstyleoption_cast<const QStyleOptionHeader *>(option) ) {
+
+        fs.hasCapsule = true;
+        fs.capsuleH = 2;
+        fs.capsuleV = 2;
+
+        if ( opt->position == QStyleOptionHeader::Beginning )
+          fs.capsuleH = -1;
+        if ( opt->position == QStyleOptionHeader::End )
+          fs.capsuleH = 1;
+        if ( opt->position == QStyleOptionHeader::Middle )
+          fs.capsuleH = 0;
+
+        renderFrame(p,cs2b(cs.bg,pal.brush(brole)),r,fs,fs.element+"-"+st,dir);
+        renderInterior(p,cs2b(cs.bg,pal.brush(brole)),r,fs,is,is.element+"-"+st,dir);
+      }
       break;
     }
 
@@ -2198,9 +2370,9 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
 
         renderLabel(p,cs2b(cs.fg,pal.text()),
                     dir,rlabel,fs,is,ls,
-                    Qt::AlignLeft,
+                    opt->displayAlignment,
                     opt->text,
-                    opt->icon.pixmap(pixelMetric(PM_ListViewIconSize)));
+                    opt->icon.pixmap(opt->decorationSize));
       }
 
       break;
@@ -2218,6 +2390,9 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
         fs.capsuleV = -1;
 
         QRect r1 = subControlRect(CC_GroupBox,opt,SC_GroupBoxLabel,widget);
+
+        // remove toggled for frame and interior
+        st = state_str(o.state & ~State_On, widget);
 
         renderFrame(p,cs2b(cs.bg,pal.brush(brole)),r1,fs,fs.element+"-"+st,dir);
         renderInterior(p,cs2b(cs.bg,pal.brush(brole)),r1,fs,is,is.element+"-"+st,dir);
@@ -2755,12 +2930,12 @@ void QSvgThemableStyle::drawComplexControl(ComplexControl control, const QStyleO
 
         QStyleOptionGroupBox o(*opt);
 
-        QRect r1,r2;
-
+        QRect r1;
         r1 = subControlRect(CC_GroupBox,&o,SC_GroupBoxFrame,widget);
-        r2 = subControlRect(CC_GroupBox,&o,SC_GroupBoxLabel,widget);
 
         // Draw frame and interior around contents
+        // remove toggled for checkable group boxes
+        o.state &= ~State_On;
         if ( !(opt->features && QStyleOptionFrame::Flat) ) {
           if ( (opt->subControls & SC_GroupBoxCheckBox) && !(opt->state & State_On) ) {
             // not checked -> draw contents frame with disabled state
@@ -2773,8 +2948,8 @@ void QSvgThemableStyle::drawComplexControl(ComplexControl control, const QStyleO
         }
 
         // Draw title
-        //o.rect = r2;
-        drawControl(static_cast<ControlElement>(CE_GroupBoxTitle),&o,p,widget);
+        if ( opt->subControls & SC_GroupBoxLabel)
+          drawControl(static_cast<ControlElement>(CE_GroupBoxTitle),&o,p,widget);
       }
 
       break;
@@ -3158,6 +3333,7 @@ int QSvgThemableStyle::pixelMetric(PixelMetric metric, const QStyleOption * opti
     case PM_MaximumDragDistance :
     case PM_TreeViewIndentation :
     case PM_ScrollView_ScrollBarOverlap :
+    case PM_ScrollView_ScrollBarSpacing :
     case PM_HeaderDefaultSectionSizeHorizontal :
     case PM_HeaderDefaultSectionSizeVertical :
     case PM_MdiSubWindowMinimizedWidth :
@@ -3403,10 +3579,28 @@ QSize QSvgThemableStyle::sizeFromContents ( ContentsType type, const QStyleOptio
       if ( const QStyleOptionProgressBar *opt =
            qstyleoption_cast<const QStyleOptionProgressBar *>(option) )  {
 
-        s = sizeFromContents(fm,fs,is,ls,
-                             opt->textVisible ?
+        if ( getThemeTweak("specific.progressbar.variant").toInt() == VA_PROGRESSBAR_THIN ) {
+          // thin progressbar : text above bar
+          QSize barSz = sizeFromContents(fm,fs,is,ls, QString::null);
+          fs.hasFrame = false;
+          is.hasInterior = false;
+          QSize textSz;
+          // this is to avoid the (2,2) minimum size of sizeFromContents()
+          if ( opt->textVisible && !opt->text.isEmpty() )
+            textSz = sizeFromContents(fm,fs,is,ls,
+                                      opt->textVisible ?
+                                        opt->text.isEmpty() ? "W" : opt->text
+                                                            : QString::null);
+          barSz = barSz.expandedTo(
+                QSize(textSz.width(),
+                      getThemeTweak("specific.progressbar.thin.minheight").toInt()));
+          s = QSize(barSz.width(),barSz.height()+textSz.height());
+        } else {
+          s = sizeFromContents(fm,fs,is,ls,
+                               opt->textVisible ?
                                opt->text.isEmpty() ? "W" : opt->text
                                : QString::null);
+        }
 
         if ( opt->orientation == Qt::Vertical )
           s.transpose();
@@ -3477,8 +3671,9 @@ QSize QSvgThemableStyle::sizeFromContents ( ContentsType type, const QStyleOptio
                              opt->text,
                              opt->icon.isNull() ? 0 : opt->iconSize.width());
 
-        if ( (qobject_cast< const QTabBar* >(widget))->tabsClosable() ) {
-            s.rwidth() += ls.tispace+pixelMetric(PM_TabCloseIndicatorWidth);
+        if ( const QTabBar *w = qobject_cast< const QTabBar* >(widget) ) {
+            if ( w->tabsClosable() )
+              s.rwidth() += ls.tispace+pixelMetric(PM_TabCloseIndicatorWidth);
         }
 
         if ( opt->shape == QTabBar::TriangularEast ||
@@ -3524,13 +3719,15 @@ QSize QSvgThemableStyle::sizeFromContents ( ContentsType type, const QStyleOptio
         is = getInteriorSpec(g);
         ls = getLabelSpec(g);
 
-        if ( opt->subControls & SC_GroupBoxCheckBox )
-          stitle = sizeFromContents(fm,fs,is,ls,opt->text)+QSize(pixelMetric(PM_CheckBoxLabelSpacing)+ds.size,0);
-        else
-          stitle = sizeFromContents(fm,fs,is,ls,opt->text);
+        if ( opt->subControls & SC_GroupBoxLabel ) {
+          if ( opt->subControls & SC_GroupBoxCheckBox )
+            stitle = sizeFromContents(fm,fs,is,ls,opt->text)+QSize(pixelMetric(PM_CheckBoxLabelSpacing)+ds.size,0);
+          else
+            stitle = sizeFromContents(fm,fs,is,ls,opt->text);
 
-        // 30 is title margin (left and right)
-        stitle += QSize(30+30,0);
+          // 30 is title margin (left and right)
+          stitle += QSize(30+30,0);
+        }
 
         QSize scontents;
         g = PE_group(PE_FrameGroupBox);
@@ -3660,15 +3857,12 @@ QRect QSvgThemableStyle::subElementRect(SubElement e, const QStyleOption * optio
   int x,y,w,h;
   QRect r = option->rect;
   r.getRect(&x,&y,&w,&h);
-  QString st = state_str(option->state, widget);
-  Qt::LayoutDirection dir = option->direction;
-  bool focus = option->state & State_HasFocus;
-
-  Q_UNUSED(dir);
-  Q_UNUSED(focus);
+  const QFontMetrics fm = option->fontMetrics;
+  const Qt::LayoutDirection dir = option->direction;
+  const Orientation orn = option->state & State_Horizontal ? Horizontal : Vertical;
 
   // Get QSvgStyle configuration group used to render this element
-  QString g = SE_group(e);
+  const QString g = SE_group(e);
 
   // Configuration for group g
   frame_spec_t fs;
@@ -3696,9 +3890,39 @@ QRect QSvgThemableStyle::subElementRect(SubElement e, const QStyleOption * optio
       break;
     }
     case SE_ProgressBarGroove :
-    case SE_ProgressBarContents :
+    case SE_ProgressBarContents : {
+      if ( orn != Horizontal ) {
+        // perform computations on horizontalized widget
+        ret = transposedRect(r);
+        qSwap(x,y);
+        qSwap(w,h);
+      }
+      if ( getThemeTweak("specific.progressbar.variant").toInt() == VA_PROGRESSBAR_THIN ) {
+        QSize barSz = sizeFromContents(fm,fs,is,ls, QString::null);
+        ret.setTop(ret.bottom()-
+                   qMax(barSz.height(),
+                         getThemeTweak("specific.progressbar.thin.minheight").toInt()));
+      }
+      if ( orn != Horizontal )
+        ret = transposedRect(ret);
+      break;
+    }
     case SE_ProgressBarLabel: {
-      ret = r;
+      if ( orn != Horizontal ) {
+        // perform computations on horizontalized widget
+        ret = transposedRect(r);
+        qSwap(x,y);
+        qSwap(w,h);
+      }
+      if ( getThemeTweak("specific.progressbar.variant") == VA_PROGRESSBAR_THIN ) {
+        QRect barRect = subElementRect(SE_ProgressBarGroove,option,widget);
+        if ( orn != Horizontal )
+          barRect = transposedRect(barRect);
+        ret.setHeight(h-barRect.height());
+      }
+      if ( orn != Horizontal )
+        ret = transposedRect(ret);
+
       break;
     }
     case SE_LineEditContents : {
@@ -3744,8 +3968,9 @@ QRect QSvgThemableStyle::subElementRect(SubElement e, const QStyleOption * optio
     }
 
     case SE_TabWidgetTabContents : {
+      // already a visual rect
       ret = subElementRect(SE_TabWidgetTabPane,option,widget);
-      ret = interiorRect(ret,fs,is);
+      return interiorRect(ret,fs,is);
       break;
     }
 
@@ -4153,18 +4378,20 @@ QRect QSvgThemableStyle::subControlRect(ComplexControl control, const QStyleOpti
           qstyleoption_cast<const QStyleOptionGroupBox *>(option) ) {
 
         // title size
-        stitle = sizeFromContents(fm,fs,is,ls,
-                                  opt->text);
-        if ( opt->subControls & SC_GroupBoxCheckBox ) {
-          // ensure checkbox indicator fits within title interior
-          stitle += QSize(ds.size+pixelMetric(PM_CheckBoxLabelSpacing),0);
-          stitle = stitle.expandedTo(QSize(0,fs.top+fs.bottom+ds.size));
-        }
+        if ( opt->subControls & SC_GroupBoxLabel ) {
+          stitle = sizeFromContents(fm,fs,is,ls,
+                                    opt->text);
+          if ( opt->subControls & SC_GroupBoxCheckBox ) {
+            // ensure checkbox indicator fits within title interior
+            stitle += QSize(ds.size+pixelMetric(PM_CheckBoxLabelSpacing),0);
+            stitle = stitle.expandedTo(QSize(0,fs.top+fs.bottom+ds.size));
+          }
 
-        labelRect = alignedRect(Qt::LeftToRight,
-                                opt->textAlignment & ~Qt::AlignVertical_Mask,
-                                stitle,
-                                r.adjusted(30,0,-30,0));
+          labelRect = alignedRect(Qt::LeftToRight,
+                                  opt->textAlignment & ~Qt::AlignVertical_Mask,
+                                  stitle,
+                                  r.adjusted(30,0,-30,0));
+        }
       }
 
       switch (subControl) {
@@ -4529,7 +4756,7 @@ void QSvgThemableStyle::renderElement(QPainter* p, const QString& element, const
         int hpatterns = (w/hsize)+1;
 
         p->save();
-        p->setClipRect(QRect(x,y,w,h));
+        p->setClipRect(QRect(x,y,w,h), Qt::IntersectClip);
         for (int i=0; i<hpatterns; i++)
           themeRndr->render(p,element,QRect(x+i*hsize,y,hsize,h));
         p->restore();
@@ -4539,7 +4766,7 @@ void QSvgThemableStyle::renderElement(QPainter* p, const QString& element, const
         int vpatterns = (h/vsize)+1;
 
         p->save();
-        p->setClipRect(QRect(x,y,w,h));
+        p->setClipRect(QRect(x,y,w,h), Qt::IntersectClip);
         for (int i=0; i<vpatterns; i++)
           themeRndr->render(p,element,QRect(x,y+i*vsize,w,vsize));
         p->restore();
@@ -4550,7 +4777,7 @@ void QSvgThemableStyle::renderElement(QPainter* p, const QString& element, const
         int vpatterns = (h/vsize)+1;
 
         p->save();
-        p->setClipRect(bounds);
+        p->setClipRect(bounds, Qt::IntersectClip);
         for (int i=0; i<hpatterns; i++)
           for (int j=0; j<vpatterns; j++)
             themeRndr->render(p,element,QRect(x+i*hsize,y+j*vsize,hsize,vsize));
@@ -4625,40 +4852,40 @@ void QSvgThemableStyle::computeFrameRects(const QRect& bounds,
     if ( (fs.capsuleV == -1) || (fs.capsuleV == 2) ) {
       top = QRect(x0+la,y0,w-la-ra,fs.top);
       // topleft corner
-      if (fs.capsuleH == -1)
+      if ( (fs.capsuleH == -1) || (fs.capsuleH == 2) )
         topleft = QRect(x0,y0,fs.left,fs.top);
       // topright corner
-      if (fs.capsuleH == 1)
+      if ( (fs.capsuleH == 1) || (fs.capsuleH == 2) )
         topright = QRect(x1-fs.right+1,y0,fs.right,fs.top);
     }
     // bottom
     if ( (fs.capsuleV == 1) || (fs.capsuleV == 2) ) {
       bottom = QRect(x0+la,y1-ba+1,w-la-ra,fs.bottom);
       // bottomleft corner
-      if (fs.capsuleH == -1)
+      if ( (fs.capsuleH == -1) || (fs.capsuleH == 2) )
         bottomleft = QRect(x0,y1-fs.bottom+1,fs.left,fs.bottom);
       // bottomright corner
-      if (fs.capsuleH == 1)
+      if ( (fs.capsuleH == 1) || (fs.capsuleH == 2) )
         bottomright = QRect(x1-fs.right+1,y1-fs.bottom+1,fs.right,fs.bottom);
     }
     // left
     if ( (fs.capsuleH == -1) || (fs.capsuleH == 2) ) {
       left = QRect(x0,y0+ta,fs.left,h-ta-ba);
       // topleft corner
-      if (fs.capsuleV == -1)
+      if ( (fs.capsuleV == -1) || (fs.capsuleV == 2) )
         topleft = QRect(x0,y0,fs.left,fs.top);
       // bottomleft corner
-      if (fs.capsuleV == 1)
+      if ( (fs.capsuleV == 1)|| (fs.capsuleV == 2) )
         bottomleft = QRect(x0,y1-fs.bottom+1,fs.left,fs.bottom);
     }
     // right
     if ( (fs.capsuleH == 1) || (fs.capsuleH == 2) ) {
       right = QRect(x1-fs.right+1,y0+ta,fs.right,h-ta-ba);
       // topright corner
-      if (fs.capsuleV == -1)
+      if ( (fs.capsuleV == -1) || (fs.capsuleV == 2) )
         topright = QRect(x1-fs.right+1,y0,fs.right,fs.top);
       // bottomright corner
-      if (fs.capsuleV == 1)
+      if ( (fs.capsuleV == 1) || (fs.capsuleV == 2) )
         bottomright = QRect(x1-fs.right+1,y1-fs.bottom+1,fs.right,fs.bottom);
     }
   }

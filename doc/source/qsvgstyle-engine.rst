@@ -549,12 +549,16 @@ Widgets for which QSvgStyle engine has multiple variants are:
 +------------------------------------------------+---------------------------------------------------+-----------------------------------------------------+
 
 
+- **Progress Bars**: The engine supplies the variants ``Classic`` and
+  ``Thin``. The latter shows a thin progress bar whose height is
+  adjusted by the theme with the text above it.
+
 - **Busy Progress Bars**: The engine supplies the variants ``Wrap``,
   ``Back and Forth`` and ``Full length``. The difference is how the
   busy cursor is drawn and its run length. For the ``Full length``
   variant, the direction of the animation can be ``Forward`` or
   ``Backward``.
-
+  
 - **Scroll Bars**: The engine supplies the variants ``Classic`` and
   ``No buttons``. With the latter, the scrollbar will not show buttons
   and control can only be done using the scroll bar cursor. In
