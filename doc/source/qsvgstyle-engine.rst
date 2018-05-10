@@ -425,7 +425,7 @@ Palette Support
 QSvgStyle engine is able to apply the QPalette set on a widget on top
 of the current theme. This is called **colorization**.
 
-During widget rendering, a colorization layer is applied. The amount
+During widget rendering, a colorization layer can be applied. The amount
 (intensity) of colorization is tunable and is theme specific.
 
 Here is what it looks like:
@@ -449,10 +449,14 @@ In a similar way, it uses the color of the widget's `foregroundRole()
 <http://doc.qt.io/qt-5/qwidget.html#foregroundRole>`_ for
 :ref:`qsvgstyle-labels`.
 
-In addition, QSvgStyle engine can apply a 3D
-effect on widgets that have frames. The effect is either 'raised' or
-'sunken' depending on whether the widget is pressed or not. This
-effect can be enabled or disabled in the theme configuration file.
+Both the foreground and the background can also be forced to a
+specific value. Whether colorization is enabled and the type of color
+to apply (system or forced) is theme specific.
+
+In addition, QSvgStyle engine can apply a 3D effect on widgets that
+have frames. The effect is either 'raised' or 'sunken' depending on
+whether the widget is pressed or not. This effect can be enabled or
+disabled in the theme configuration file.
 
 Below is an example of the same push button rendered with and without
 3D effect:
@@ -835,7 +839,7 @@ Here is how a push button may look like in the SVG file:
 
 All the states are represented in this picture: ``normal``,
 ``hovered``, ``pressed``, ``toggled``, ``disabled``,
-``toggled-disabled``, ``focused``, ``default``.
+``disabled-toggled``, ``focused``, ``default``.
 
 .. note:: Some states are not relevant for some widgets.  Refer to
           :doc:`theme-specs` for per-widget specifications.

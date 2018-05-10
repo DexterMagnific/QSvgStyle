@@ -41,17 +41,31 @@ class ThemeConfig : public QSvgCachedSettings {
     interior_spec_t getInteriorSpec(const QString &group) const;
     indicator_spec_t getIndicatorSpec(const QString &group) const;
     label_spec_t getLabelSpec(const QString &group) const;
+    palette_spec_t getPaletteSpec(const QString &group) const;
+    font_spec_t getFontSpec(const QString &group) const;
     element_spec_t getElementSpec(const QString &group) const;
     theme_spec_t getThemeSpec() const;
     QVariant getThemeTweak(const QString &key) const {
       return getRawValue("Tweaks",key);
     }
 
+    /* Helper function that returns a pointer to a palette's
+     * color entry given a string status */
+    static color_spec_t *paletteRef(palette_spec_t *ps,
+                                    const QString &status);
+
+    /* Helper function that returns a pointer to a font's
+     * attribute entry given a string status */
+    static font_attr_spec_t *fontRef(font_spec_t *ts,
+                                    const QString &status);
+
     /* Get frame spec exactly as read from the configuration file */
     frame_spec_t getRawFrameSpec(const QString &group) const;
     interior_spec_t getRawInteriorSpec(const QString &group) const;
     indicator_spec_t getRawIndicatorSpec(const QString &group) const;
     label_spec_t getRawLabelSpec(const QString &group) const;
+    palette_spec_t getRawPaletteSpec(const QString &group) const;
+    font_spec_t getRawFontSpec(const QString &group) const;
     element_spec_t getRawElementSpec(const QString &group) const;
 
     /* Get the frame as read from the configuration file and recursively
@@ -64,6 +78,8 @@ class ThemeConfig : public QSvgCachedSettings {
     void setInteriorSpec(const QString& group, const interior_spec_t& is);
     void setIndicatorSpec(const QString &group, const indicator_spec_t &ds);
     void setLabelSpec(const QString &group, const label_spec_t &ls);
+    void setPaletteSpec(const QString &group, const palette_spec_t &ps);
+    void setFontSpec(const QString &group, const font_spec_t &ts);
     void setElementSpec(const QString &group, const element_spec_t &es);
     void setThemeSpec(const theme_spec_t &ts);
     void setThemeTweak(const QString &key, const QVariant &v) {

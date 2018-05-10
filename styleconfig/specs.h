@@ -90,10 +90,6 @@ public:
 #define VA_SCROLLBAR_CURSOR_INSIDE_GROOVE 0
 #define VA_SCROLLBAR_CURSOR_OVERLAPS_GROOVE 1
 
-/* Palette to use */
-#define PALETTE_TYPE_SYSTEM 0
-#define PALETTE_TYPE_THEME  1
-
 /** Generic information about a theme */
 typedef struct {
   value_t<QString> name;
@@ -169,10 +165,9 @@ typedef struct indicator_spec_t {
 typedef struct label_spec_t {
   label_spec_t() {
     hasShadow = false;
-    xshift = yshift = r = g = b = a = depth = hmargin = vmargin = tispace = 0;
-    hasShadow.present = xshift.present = yshift.present = r.present =
-        b.present = g.present = a.present = depth.present = hmargin.present =
-        vmargin.present = tispace.present = false;
+    xshift = yshift = depth = hmargin = vmargin = tispace = 0;
+    hasShadow.present = xshift.present = yshift.present = depth.present
+    = hmargin.present = vmargin.present = tispace.present = false;
     margin = 0;
   }
 
@@ -180,8 +175,6 @@ typedef struct label_spec_t {
   value_t<bool> hasShadow;
   /* shadow shift */
   value_t<int> xshift,yshift;
-  /* shadow color */
-  value_t<int> r,g,b,a;
   /* shadow depth */
   value_t<int> depth;
   /* text margins */
@@ -193,13 +186,43 @@ typedef struct label_spec_t {
 
 } label_spec_t;
 
-/** Generic information about colors */
+/** Generic information about a color */
 typedef struct {
-  /* foreground (usually used for text) */
-  value_t<int> fg;
-  /* background (windows, 3D, ...) */
-  value_t<int> bg;
+    /* fg color, can be "<none>", "<system>" or r,g,b,a color string */
+  value_t<QString> fg;
+  value_t<QString> bg;
 } color_spec_t;
+
+/** Generic information about a palette */
+typedef struct {
+    color_spec_t normal;
+    color_spec_t hovered;
+    color_spec_t pressed;
+    color_spec_t toggled;
+    color_spec_t disabled;
+    color_spec_t disabled_toggled;
+    color_spec_t focused;
+    color_spec_t defaultt;
+} palette_spec_t;
+
+/** Generic information about font attribute */
+typedef struct {
+    value_t<bool> bold;
+    value_t<bool> italic;
+    value_t<bool> underline;
+} font_attr_spec_t;
+
+/** Generic information about fonts */
+typedef struct {
+    font_attr_spec_t normal;
+    font_attr_spec_t hovered;
+    font_attr_spec_t pressed;
+    font_attr_spec_t toggled;
+    font_attr_spec_t disabled;
+    font_attr_spec_t disabled_toggled;
+    font_attr_spec_t focused;
+    font_attr_spec_t defaultt;
+} font_spec_t;
 
 /** Generic information about an element */
 typedef struct {
@@ -209,22 +232,13 @@ typedef struct {
   interior_spec_t interior;
   indicator_spec_t indicator;
   label_spec_t label;
-  color_spec_t color;
+  palette_spec_t palette;
+  font_spec_t font;
 } element_spec_t;
-
-/** Generic information about a palette */
-typedef struct {
-  value_t<QString> name;
-  value_t<QString> author;
-  value_t<QString> descr;
-  /* theme path, PaletteConfig::getThemeSpec() */
-  value_t<QString> path;
-} palette_spec_t;
 
 /** QSvgStyle global config */
 typedef struct {
   value_t<QString> theme;
-  value_t<QString> palette;
 } style_spec_t;
 
 #endif

@@ -23,7 +23,6 @@
 #include "specs.h"
 #include "QSvgCachedSettings.h"
 #include "ThemeConfig.h"
-#include "PaletteConfig.h"
 
 class QVariant;
 class QSettings;
@@ -56,11 +55,6 @@ class StyleConfig : public QSvgCachedSettings {
      * Returns the list of themes. List contains user themes first
      */
     static QList<theme_spec_t> getThemeList();
-
-    /**
-     * Returns the list of palettes. List contains user palettes first
-     */
-    static QList<palette_spec_t> getPaletteList();
 
     /**
      * Returns the system config dir

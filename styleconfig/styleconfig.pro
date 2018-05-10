@@ -16,7 +16,6 @@ INCLUDEPATH += ..
 SOURCES += \
   groups.cpp \
   ThemeConfig.cpp \
-  PaletteConfig.cpp \
   StyleConfig.cpp \
   QSvgCachedSettings.cpp
 
@@ -24,6 +23,5 @@ HEADERS += \
   specs.h  \
   groups.h \
   ThemeConfig.h \
-  PaletteConfig.h \
   StyleConfig.h \
   QSvgCachedSettings.h

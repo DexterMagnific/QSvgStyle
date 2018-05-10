@@ -80,7 +80,7 @@ class ThemeBuilderUI : public QMainWindow, private Ui::ThemeBuilderUIBase {
     void slot_themeNameEditChanged(const QString &text);
     void slot_keywordsEditChanged(const QString &text);
 
-    // called on common tab changes
+    // called on shape tab changes
     void slot_inheritCbChanged(int state);
     void slot_inheritComboChanged(int idx);
 
@@ -108,6 +108,20 @@ class ThemeBuilderUI : public QMainWindow, private Ui::ThemeBuilderUIBase {
     void slot_labelMarginHSpinChanged(int val);
     void slot_labelMarginVSpinChanged(int val);
 
+    // called on palette tab changes
+    void slot_paletteStatusComboChanged(int idx);
+    void slot_fgCbChanged(int state);
+    void slot_fgSystemRadioToggled(bool checked);
+    void slot_fgColorRadioToggled(bool checked);
+    void slot_fgColorBtnClicked(bool checked);
+    void slot_bgCbChanged(int state);
+    void slot_bgSystemRadioToggled(bool checked);
+    void slot_bgColorRadioToggled(bool checked);
+    void slot_bgColorBtnClicked(bool checked);
+    void slot_boldCbChanged(int state);
+    void slot_italicCbChanged(int state);
+    void slot_underlineCbChanged(int state);
+
     // called on preview tab changes
     void slot_repaintBtnClicked(bool checked);
     void slot_rtlBtnClicked(bool checked);
@@ -116,7 +130,6 @@ class ThemeBuilderUI : public QMainWindow, private Ui::ThemeBuilderUIBase {
     void slot_enableBtnClicked(bool checked);
     void slot_previewVariantBtnClicked(bool checked);
     void slot_fontSizeChanged(int val);
-    void slot_paletteChanged(int val);
 
     // called on SVG Gen tab changes
     void slot_genFrameBtnClicked(bool checked);
@@ -209,6 +222,7 @@ class ThemeBuilderUI : public QMainWindow, private Ui::ThemeBuilderUIBase {
     void schedulePreviewUpdate(bool modified = true);
 
     // Block signals from various UI widgets while we are changing them
+    // to avoid signal->slot ping pong
     void blockUISignals(bool blocked);
 
     // Setup the UI to reflect the settings for the given item
@@ -246,12 +260,16 @@ class ThemeBuilderUI : public QMainWindow, private Ui::ThemeBuilderUIBase {
     // widgets to be inserted inside the status bar
     QLabel *statusbarLbl1, *statusbarLbl2;
 
-    // current opened theme config
+    // current opened theme config (temporary copy of original)
     ThemeConfig *config;
     // current element spec, as read from the config file
     element_spec_t raw_es;
     // element spec of inherited
     element_spec_t inherit_es;
+    // working element spec, as modified from the UI
+    // FIXME currently only used for palette tab, others are directly read from
+    // the UI as there is one control per setting
+    element_spec_t new_es;
 
     // an instance of QSvgStyle
     QSvgThemableStyle *style;

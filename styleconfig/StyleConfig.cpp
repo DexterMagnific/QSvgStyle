@@ -54,7 +54,6 @@ style_spec_t StyleConfig::getStyleSpec() const
   style_spec_t r;
 
   r.theme = getRawValue("General","theme");
-  r.palette = getRawValue("General","palette");
 
   return r;
 }
@@ -64,7 +63,6 @@ void StyleConfig::setStyleSpec(const style_spec_t& ss)
   removeAllWithPrefix("Ganaral","");
 
   setValue("General","theme", ss.theme);
-  setValue("General","palette", ss.palette);
 }
 
 QDir StyleConfig::getSystemConfigDir()
@@ -133,41 +131,6 @@ QList<theme_spec_t> StyleConfig::getThemeList()
 
       result.append(ts);
     }
-  }
-
-  return result;
-}
-
-QList<palette_spec_t> StyleConfig::getPaletteList()
-{
-  QList<palette_spec_t> result;
-  QDir cfgDir;
-  QStringList paletteFiles;
-
-  // get user palettes
-  cfgDir = getUserConfigDir();
-  paletteFiles = cfgDir.entryList(QStringList() << "*.pal",
-                                  QDir::Files | QDir::Readable);
-
-  Q_FOREACH(QString f, paletteFiles) {
-    QString filename = cfgDir.absolutePath().append("/%1").arg(f);
-    PaletteConfig p(filename);
-    palette_spec_t ps = p.getPaletteSpec();
-
-    result.append(ps);
-  }
-
-  // get system palettes
-  cfgDir = getSystemConfigDir();
-  paletteFiles = cfgDir.entryList(QStringList() << "*.pal",
-                                  QDir::Files | QDir::Readable);
-
-  Q_FOREACH(QString f, paletteFiles) {
-    QString filename = cfgDir.absolutePath().append("/%1").arg(f);
-    PaletteConfig p(filename);
-    palette_spec_t ps = p.getPaletteSpec();
-
-    result.append(ps);
   }
 
   return result;

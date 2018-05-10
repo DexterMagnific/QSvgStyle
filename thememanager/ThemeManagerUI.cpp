@@ -37,7 +37,6 @@
 #endif
 
 #include "ThemeConfig.h"
-#include "PaletteConfig.h"
 #include "StyleConfig.h"
 #include "../style/QSvgThemableStyle.h"
 
@@ -86,9 +85,8 @@ ThemeManagerUI::ThemeManagerUI(QWidget* parent)
 
   setStyleForWidgetAndChildren(style, previewWidget);
 
-  // add themes and palettes
+  // add themes
   QList<theme_spec_t> tlist = StyleConfig::getThemeList();
-  QList<palette_spec_t> plist = StyleConfig::getPaletteList();
 
   // add builtin theme
   QTreeWidgetItem *i = new QTreeWidgetItem(themeList);
@@ -103,11 +101,6 @@ ThemeManagerUI::ThemeManagerUI(QWidget* parent)
 
     themeList->addTopLevelItem(i);
     //themeList->addItem(t.name, t.path);
-  }
-  //paletteCombo->addItem("<none>");
-  //paletteCombo->addItem("<system>");
-  Q_FOREACH(palette_spec_t p, plist) {
-    //paletteCombo->addItem(p.name, p.path);
   }
 
   // Create temp cfg file from current qsvgstyle.cfg
@@ -218,44 +211,6 @@ void ThemeManagerUI::slot_themeChanged(QTreeWidgetItem *item, QTreeWidgetItem *p
   }
 
   schedulePreviewUpdate();
-}
-
-#if 0
-void ThemeManagerUI::slot_paletteChanged(int idx)
-{
-  QString palette = paletteCombo->itemText(idx);
-  QString palettePath = paletteCombo->itemData(idx).toString();
-
-  if ( palette == "<none>" ) {
-    /* No palette */
-    QStyle::staticMetaObject.invokeMethod(style,"unloadPalette",
-                                          Qt::DirectConnection);
-
-    //paletteLbl->setText("No palette applied");
-  } else if ( palette == "<system>" ) {
-    /* System palette */
-    QStyle::staticMetaObject.invokeMethod(style,"loadSystemPalette",
-                                          Qt::DirectConnection);
-
-    //paletteLbl->setText("Uses the desktop environment colors");
-  } else {
-    PaletteConfig p(palettePath);
-    palette_spec_t ps = p.getPaletteSpec();
-
-    QStyle::staticMetaObject.invokeMethod(style,"loadPalette",
-                                          Qt::DirectConnection,
-                                          Q_ARG(QString,palette));
-
-    //paletteLbl->setText(QString("%1 by %2").arg(ps.descr).arg(ps.author));
-  }
-
-  schedulePreviewUpdate();
-}
-#endif
-
-void ThemeManagerUI::slot_paletteChanged(int idx)
-{
-  Q_UNUSED(idx);
 }
 
 void ThemeManagerUI::slot_uiSettingsChanged()
@@ -410,8 +365,6 @@ void ThemeManagerUI::saveSettingsFromUi()
 {
   style_spec_t ss;
   ss.theme = themeList->currentItem()->text(0);
-  //ss.palette = paletteCombo->currentText();
-  ss.palette = "<system>";
 
   config->setStyleSpec(ss);
 }
@@ -433,16 +386,6 @@ void ThemeManagerUI::setupUiFromCfg()
   else
     themeList->setCurrentItem(NULL);
 
-  // get palette at startup
-  QString startupPalette = config->getStyleSpec().palette;
-
-#if 0
-  idx = paletteCombo->findText(startupPalette);
-  if ( idx > -1 )
-    paletteCombo->setCurrentIndex(idx);
-  else
-    paletteCombo->setCurrentIndex(0);
-#endif
   QStyle::staticMetaObject.invokeMethod(style,"loadCustomStyleConfig",
                                       Qt::DirectConnection,
                                       Q_ARG(QString,tempCfgFile));

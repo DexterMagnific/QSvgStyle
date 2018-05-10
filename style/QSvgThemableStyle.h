@@ -36,7 +36,6 @@ template<typename T> class QList;
 template<typename T1, typename T2> class QMap;
 
 class ThemeConfig;
-class PaletteConfig;
 class StyleConfig;
 class QSvgCachedRenderer;
 
@@ -106,8 +105,6 @@ class QSvgThemableStyle : public QCommonStyle {
     /* Used internally by QSvgThemeBuilder */
     Q_INVOKABLE void loadCustomThemeConfig(const QString &filename);
     Q_INVOKABLE void loadCustomSVG(const QString &filename);
-    /* Used internally by QSvgPaletteBuilder */
-    Q_INVOKABLE void loadCustomPaletteConfig(const QString &filename);
     /* User internally by QSvgThemeManager */
     Q_INVOKABLE void loadCustomStyleConfig(const QString &filename);
     /* Use config caches ? */
@@ -136,30 +133,6 @@ class QSvgThemableStyle : public QCommonStyle {
      * the theme set with the variable theme=
      */
     void loadUserTheme();
-
-    /**
-     * Loads and sets the given palette
-     * Palette is searched for in ~/.config/QSvgStyle/palette.pal file
-     */
-    Q_INVOKABLE void loadPalette(const QString& palette);
-    Q_INVOKABLE QString currentPalette() const { return curPalette; }
-
-    /**
-     * Wrapper method around @ref loadPalette that reads
-     * ~/.config/QSvgStyle/qsvgstyle.cfg configuration file and loads
-     * the palette set with the variable palette=
-     */
-    void loadUserPalette();
-
-    /**
-     * Loads and sets the system palette
-     */
-    Q_INVOKABLE void loadSystemPalette();
-
-    /**
-     * Do not use palette
-     */
-    Q_INVOKABLE void unloadPalette();
 
   signals:
     /**
@@ -259,9 +232,13 @@ class QSvgThemableStyle : public QCommonStyle {
      */
     inline QVariant getThemeTweak(const QString &key) const;
     /**
-     * Returns the color spec of the given group
+     * Returns the palette spec of the given group
      */
-    inline color_spec_t getColorSpec(const QString &group) const;
+    inline palette_spec_t getPaletteSpec(const QString &group) const;
+    /**
+     * Returns the font spec of the given group
+     */
+    inline font_spec_t getFontSpec(const QString &group) const;
 
     /**
      * QSvgStyle support for capsule grouping
@@ -451,12 +428,30 @@ class QSvgThemableStyle : public QCommonStyle {
     void drawRealRect(QPainter *p, const QRect &r) const;
 
     /**
-     * Converts a color_spec_t fg or bg field to a QBrush.
-     * If the field is not set, takes the defaut supplied brush b
+     * Returns the effective bg QBrush to use to colorize the widget
+     *
+     * Takes into account the widget's palette; state and the palette spec
      */
-    QBrush cs2b(value_t<int> c, const QBrush &b) const {
-      return c.present ? QBrush(QRgba64::fromArgb32(c)) : b;
-    }
+    QBrush bgBrush(const palette_spec_t &ps,
+                   const QStyleOption *opt,
+                   const QWidget *widget,
+                   const QString &status) const;
+
+    /**
+     * Returns the effective fg QBrush to use to colorize the widget
+     *
+     * Takes into account the widget's palette; state and the palette spec
+     */
+    QBrush fgBrush(const palette_spec_t &ps,
+                   const QStyleOption *opt,
+                   const QWidget *widget,
+                   const QString &status) const;
+
+    /**
+     * Sets up the given QPainter according to the font spec
+     */
+    void setupPainterFromFontSpec(QPainter *p, const font_spec_t &ts,
+                                  const QString &status) const;
 
     friend class ThemeBuilderUI;
 
@@ -483,7 +478,6 @@ class QSvgThemableStyle : public QCommonStyle {
     QString cls;
     QSvgCachedRenderer *themeRndr;
     ThemeConfig *themeSettings;
-    PaletteConfig *paletteSettings;
     StyleConfig *styleSettings;
 
     /* config cache */

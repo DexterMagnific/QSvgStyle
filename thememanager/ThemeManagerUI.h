@@ -41,7 +41,6 @@ class ThemeManagerUI : public QMainWindow, private Ui::ThemeManagerUIBase {
   private slots:
     void slot_currentColorGroupChanged();
     void slot_themeChanged(QTreeWidgetItem *item, QTreeWidgetItem *prev);
-    void slot_paletteChanged(int idx);
     void slot_uiSettingsChanged();
     void slot_cancelBtnClicked();
     void slot_okBtnClicked();

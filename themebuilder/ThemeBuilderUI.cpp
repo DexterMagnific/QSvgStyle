@@ -74,7 +74,6 @@
 
 #include "NewThemeUI.h"
 #include "ThemeConfig.h"
-#include "PaletteConfig.h"
 #include "StyleConfig.h"
 #include "SvgGen.h"
 #include "../style/QSvgThemableStyle.h"
@@ -578,25 +577,6 @@ ThemeBuilderUI::ThemeBuilderUI(QWidget* parent)
                                         Qt::DirectConnection,
                                         Q_ARG(bool, false));
 
-  // Populate palette combo
-  paletteCombo->addItem("<none>");
-  paletteCombo->addItem("<system>");
-  Q_FOREACH(palette_spec_t p, StyleConfig::getPaletteList()) {
-    paletteCombo->addItem(p.name);
-  }
-
-  // current palette
-  QString startupPalette;
-  QStyle::staticMetaObject.invokeMethod(style,"currentPalette",
-                                        Qt::DirectConnection,
-                                        Q_RETURN_ARG(QString,startupPalette));
-
-  int idx = paletteCombo->findText(startupPalette);
-  if ( idx > -1 )
-    paletteCombo->setCurrentIndex(idx);
-  else
-    paletteCombo->setCurrentIndex(0);
-
   // install event filter on previewArea so that we can react to resize and
   // close events and save its geometry
   tabWidget3->installEventFilter(this);
@@ -641,7 +621,7 @@ ThemeBuilderUI::ThemeBuilderUI(QWidget* parent)
   connect(keywordsEdit,SIGNAL(textEdited(QString)),
           this,SLOT(slot_keywordsEditChanged(QString)));
 
-  // Changes inside the common tab
+  // Changes inside the shape tab
   connect(inheritCb,SIGNAL(stateChanged(int)),
           this,SLOT(slot_inheritCbChanged(int)));
   connect(inheritCombo,SIGNAL(currentIndexChanged(int)),
@@ -691,6 +671,34 @@ ThemeBuilderUI::ThemeBuilderUI(QWidget* parent)
   connect(labelMarginVSpin,SIGNAL(valueChanged(int)),
           this,SLOT(slot_labelMarginVSpinChanged(int)));
 
+  // Changes inside the palette tab
+  connect(paletteStatusCombo,SIGNAL(currentIndexChanged(int)),
+          this,SLOT(slot_paletteStatusComboChanged(int)));
+  connect(fgCb,SIGNAL(stateChanged(int)),
+          this,SLOT(slot_fgCbChanged(int)));
+  connect(fgSystemRadio,SIGNAL(toggled(bool)),
+          this,SLOT(slot_fgSystemRadioToggled(bool)));
+  connect(fgColorRadio,SIGNAL(toggled(bool)),
+          this,SLOT(slot_fgColorRadioToggled(bool)));
+  connect(fgColorBtn,SIGNAL(clicked(bool)),
+          this,SLOT(slot_fgColorBtnClicked(bool)));
+  connect(bgCb,SIGNAL(stateChanged(int)),
+          this,SLOT(slot_bgCbChanged(int)));
+  connect(bgSystemRadio,SIGNAL(toggled(bool)),
+          this,SLOT(slot_bgSystemRadioToggled(bool)));
+  connect(bgColorRadio,SIGNAL(toggled(bool)),
+          this,SLOT(slot_bgColorRadioToggled(bool)));
+  connect(bgColorBtn,SIGNAL(clicked(bool)),
+          this,SLOT(slot_bgColorBtnClicked(bool)));
+
+  connect(boldCb,SIGNAL(stateChanged(int)),
+          this,SLOT(slot_boldCbChanged(int)));
+  connect(italicCb,SIGNAL(stateChanged(int)),
+          this,SLOT(slot_italicCbChanged(int)));
+  connect(underlineCb,SIGNAL(stateChanged(int)),
+          this,SLOT(slot_underlineCbChanged(int)));
+
+
   // Preview tab
   connect(repaintBtn,SIGNAL(clicked(bool)),
           this,SLOT(slot_repaintBtnClicked(bool)));
@@ -706,8 +714,6 @@ ThemeBuilderUI::ThemeBuilderUI(QWidget* parent)
           this,SLOT(slot_enableBtnClicked(bool)));
   connect(previewVariantBtn,SIGNAL(clicked(bool)),
           this,SLOT(slot_previewVariantBtnClicked(bool)));
-  connect(paletteCombo,SIGNAL(currentIndexChanged(int)),
-          this,SLOT(slot_paletteChanged(int)));
 
   // SVG quick gen tab
   connect(genFrameBtn,SIGNAL(clicked(bool)),
@@ -1051,6 +1057,9 @@ void ThemeBuilderUI::resetUi()
   interiorRepeatCb->setCheckState(Qt::PartiallyChecked);
   labelSpacingCb->setCheckState(Qt::PartiallyChecked);
   labelMarginCb->setCheckState(Qt::PartiallyChecked);
+  paletteStatusCombo->setCurrentIndex(0);
+  fgCb->setCheckState(Qt::PartiallyChecked);
+  bgCb->setCheckState(Qt::PartiallyChecked);
   blockUISignals(false);
 
   currentToolboxTab = toolBox->currentIndex();
@@ -1145,6 +1154,16 @@ void ThemeBuilderUI::blockUISignals(bool blocked)
   labelMarginVSpin->blockSignals(blocked);
   labelSpacingCb->blockSignals(blocked);
   labelSpacingSpin->blockSignals(blocked);
+
+  paletteStatusCombo->blockSignals(blocked);
+  fgCb->blockSignals(blocked);
+  fgSystemRadio->blockSignals(blocked);
+  fgColorRadio->blockSignals(blocked);
+  fgColorBtn->blockSignals(blocked);
+  bgCb->blockSignals(blocked);
+  bgSystemRadio->blockSignals(blocked);
+  bgColorRadio->blockSignals(blocked);
+  bgColorBtn->blockSignals(blocked);
 }
 
 bool ThemeBuilderUI::openTheme(const QString& filename)
@@ -1641,6 +1660,8 @@ void ThemeBuilderUI::setupUiForWidget(const QTreeWidgetItem *current)
     raw_es = config->getRawElementSpec(group);
     // now get the inherited spec
     inherit_es = config->getElementSpec(raw_es.inherits);
+    // working spec = raw spec for now
+    new_es = raw_es;
 
     // common tab
     // inherit cb and combo
@@ -1745,6 +1766,7 @@ void ThemeBuilderUI::setupUiForWidget(const QTreeWidgetItem *current)
     slot_labelMarginCbChanged(labelMarginCb->checkState());
     slot_indicatorIdCbChanged(indicatorIdCb->checkState());
     slot_indicatorSizeCbChanged(indicatorSizeCb->checkState());
+    slot_paletteStatusComboChanged(paletteStatusCombo->currentIndex());
   } else {
     tabWidget->setEnabled(false);
   }
@@ -2583,6 +2605,10 @@ void ThemeBuilderUI::saveSettingsFromUi(const QTreeWidgetItem *current)
     _es.label.vmargin = 0;
   }
 
+  // palette: copy from temp struct
+  _es.palette = new_es.palette;
+  _es.font =new_es.font;
+
   config->setElementSpec(group, _es);
 
   // re-read specs and setup UI again when inheritCombo changes
@@ -2703,15 +2729,6 @@ void ThemeBuilderUI::slot_previewVariantBtnClicked(bool checked)
   currentPreviewVariant++;
 
   setupPreviewForWidget(currentWidget);
-}
-
-void ThemeBuilderUI::slot_paletteChanged(int val)
-{
-  QStyle::staticMetaObject.invokeMethod(style,"loadPalette",
-                                        Qt::DirectConnection,
-                                        Q_ARG(QString,paletteCombo->itemText(val)));
-
-  schedulePreviewUpdate(0);
 }
 
 void ThemeBuilderUI::slot_authorEditChanged(const QString& text)
@@ -3412,7 +3429,7 @@ void ThemeBuilderUI::slot_frameIdCbChanged(int state)
   } else {
     frameIdCombo->setEnabled(false);
   }
-  if ( state == Qt::Checked ) {
+  if ( state == Qt::Checked ) {        
     if ( raw_es.frame.element.present ) {
       int idx = frameIdCombo->findText(raw_es.frame.element);
       if ( idx == -1 )
@@ -3746,6 +3763,458 @@ void ThemeBuilderUI::slot_indicatorSizeCbChanged(int state)
 void ThemeBuilderUI::slot_indicatorSizeSpinChanged(int val)
 {
   Q_UNUSED(val);
+
+  schedulePreviewUpdate();
+}
+
+void ThemeBuilderUI::slot_paletteStatusComboChanged(int idx)
+{
+  Q_UNUSED(idx);
+
+  blockUISignals(true);
+
+  QString status = paletteStatusCombo->currentText();
+  color_spec_t *pval = ThemeConfig::paletteRef(&raw_es.palette, status);
+  font_attr_spec_t *fval = ThemeConfig::fontRef(&raw_es.font, status);
+
+  if ( pval->fg.present ) {
+    if ( pval->fg == "<system>" )
+      fgCb->setCheckState(Qt::Checked);
+    else if ( pval->fg == "<none>" )
+      fgCb->setCheckState(Qt::Unchecked);
+    else
+      fgCb->setCheckState(Qt::Checked);
+  } else {
+    fgCb->setCheckState(Qt::PartiallyChecked);
+  }
+
+  if ( pval->bg.present ) {
+    if ( pval->bg == "<system>" )
+      bgCb->setCheckState(Qt::Checked);
+    else if ( pval->bg == "<none>" )
+      bgCb->setCheckState(Qt::Unchecked);
+    else
+      bgCb->setCheckState(Qt::Checked);
+  } else {
+    bgCb->setCheckState(Qt::PartiallyChecked);
+  }
+
+  if ( fval->bold.present ) {
+    if ( fval->bold )
+      boldCb->setCheckState(Qt::Checked);
+    else
+      boldCb->setCheckState(Qt::Unchecked);
+  } else {
+    boldCb->setCheckState(Qt::PartiallyChecked);
+  }
+
+  if ( fval->italic.present ) {
+    if ( fval->italic )
+      italicCb->setCheckState(Qt::Checked);
+    else
+      italicCb->setCheckState(Qt::Unchecked);
+  } else {
+    italicCb->setCheckState(Qt::PartiallyChecked);
+  }
+
+  if ( fval->underline.present ) {
+    if ( fval->underline )
+      underlineCb->setCheckState(Qt::Checked);
+    else
+      underlineCb->setCheckState(Qt::Unchecked);
+  } else {
+    underlineCb->setCheckState(Qt::PartiallyChecked);
+  }
+
+  blockUISignals(false);
+
+  slot_fgCbChanged(fgCb->checkState());
+  slot_bgCbChanged(bgCb->checkState());
+  slot_boldCbChanged(boldCb->checkState());
+  slot_italicCbChanged(italicCb->checkState());
+  slot_underlineCbChanged(underlineCb->checkState());
+}
+
+void ThemeBuilderUI::slot_fgCbChanged(int state)
+{
+  blockUISignals(true);
+
+  fgEdit->setEnabled(fgCb->isChecked());
+
+  QString status = paletteStatusCombo->currentText();
+  color_spec_t *val = 0;
+
+  if ( state == Qt::Checked ) {
+    fgEdit->setText("<set>");
+    fgEdit->setEnabled(true);
+    fgSystemRadio->setEnabled(true);
+    fgColorRadio->setEnabled(true);
+
+    val = ThemeConfig::paletteRef(&raw_es.palette, status);
+
+    if ( val->fg == "<system>" ) {
+      fgSystemRadio->setChecked(true);
+      fgColorRadio->setChecked(false);
+    } else {
+      fgSystemRadio->setChecked(false);
+      fgColorRadio->setChecked(true);
+    }
+
+    QStringList l = ((QString) val->fg).split(',');
+    if ( l.size() == 4 ) {
+      QColor c(l[0].toInt(),l[1].toInt(),l[2].toInt(),l[3].toInt());
+      QPalette pal = fgColorBtn->palette();
+      pal.setColor(fgColorBtn->backgroundRole(), c);
+      fgColorBtn->setPalette(pal);
+    }
+  } else if ( state == Qt::PartiallyChecked ) {
+    fgSystemRadio->setEnabled(false);
+    fgColorRadio->setEnabled(false);
+
+    val = ThemeConfig::paletteRef(&inherit_es.palette, status);
+
+    if ( val->fg == "<system>" ) {
+      fgSystemRadio->setChecked(true);
+      fgColorRadio->setChecked(false);
+    } else if ( val->fg == "<none>" ) {
+      fgSystemRadio->setChecked(false);
+      fgColorRadio->setChecked(false);
+    } else {
+      fgSystemRadio->setChecked(false);
+      fgColorRadio->setChecked(true);
+    }
+
+    fgEdit->setEnabled(false);
+    fgEdit->setText(QString("=%1").arg(val->fg));
+
+    QStringList l = ((QString) val->fg).split(',');
+    if ( l.size() == 4 ) {
+      QColor c(l[0].toInt(),l[1].toInt(),l[2].toInt(),l[3].toInt());
+      QPalette pal = fgColorBtn->palette();
+      pal.setColor(fgColorBtn->backgroundRole(), c);
+      fgColorBtn->setPalette(pal);
+    }
+  } else {
+    fgEdit->setEnabled(false);
+    fgEdit->setText("<none>");
+    fgSystemRadio->setEnabled(false);
+    fgColorRadio->setEnabled(false);
+    fgColorBtn->setEnabled(false);
+  }
+
+  color_spec_t *new_val = ThemeConfig::paletteRef(&new_es.palette, status);
+
+  // store in struct
+  if ( state == Qt::Unchecked ) {
+    new_val->fg = "<none>";
+  }
+  if ( state == Qt::PartiallyChecked) {
+    new_val->fg.present = false;
+  }
+  if ( state == Qt::Checked ) {
+    // Will be handled in the below slots
+  }
+
+  blockUISignals(false);
+
+  if ( state == Qt::Checked ) {
+    // color or system ?
+    slot_fgColorRadioToggled(fgColorRadio->isChecked());
+    slot_fgSystemRadioToggled(fgSystemRadio->isChecked());
+  }
+
+  schedulePreviewUpdate();
+}
+
+void ThemeBuilderUI::slot_fgSystemRadioToggled(bool checked)
+{
+  blockUISignals(true);
+
+  fgColorBtn->setEnabled(!checked);
+
+  QString status = paletteStatusCombo->currentText();
+  color_spec_t *new_val = ThemeConfig::paletteRef(&new_es.palette, status);
+
+  if ( checked ) {
+    new_val->fg = "<system>";
+  }
+
+  blockUISignals(false);
+
+  schedulePreviewUpdate();
+}
+
+void ThemeBuilderUI::slot_fgColorRadioToggled(bool checked)
+{
+  blockUISignals(true);
+
+  fgColorBtn->setEnabled(checked);
+
+  QString status = paletteStatusCombo->currentText();
+  color_spec_t *new_val = ThemeConfig::paletteRef(&new_es.palette, status);
+
+  if ( checked ) {
+    QPalette pal = fgColorBtn->palette();
+    QColor c = pal.color(fgColorBtn->backgroundRole());
+    new_val->fg = QString("%1,%2,%3,%4")
+        .arg(c.red()).arg(c.green()).arg(c.blue()).arg(c.alpha());
+  }
+
+  blockUISignals(false);
+
+  schedulePreviewUpdate();
+}
+
+void ThemeBuilderUI::slot_fgColorBtnClicked(bool checked)
+{
+  Q_UNUSED(checked);
+
+  QPalette pal = fgColorBtn->palette();
+
+  QColor c = QColorDialog::getColor(pal.color(fgColorBtn->backgroundRole()),
+                                    NULL,
+                                    QString("Select background color"),
+                                    QColorDialog::ShowAlphaChannel);
+
+  if ( c.isValid() ) {
+    pal.setColor(fgColorBtn->backgroundRole(), c);
+    fgColorBtn->setPalette(pal);
+
+    QString status = paletteStatusCombo->currentText();
+    color_spec_t *new_val = ThemeConfig::paletteRef(&new_es.palette, status);
+    new_val->fg = QString("%1,%2,%3,%4")
+        .arg(c.red()).arg(c.green()).arg(c.blue()).arg(c.alpha());
+  }
+
+  schedulePreviewUpdate();
+}
+
+/********************************************************/
+void ThemeBuilderUI::slot_bgCbChanged(int state)
+{
+  blockUISignals(true);
+
+  bgEdit->setEnabled(bgCb->isChecked());
+
+  QString status = paletteStatusCombo->currentText();
+  color_spec_t *val = 0;
+
+  if ( state == Qt::Checked ) {
+    bgEdit->setEnabled(true);
+    bgEdit->setText("<set>");
+    bgSystemRadio->setEnabled(true);
+    bgColorRadio->setEnabled(true);
+
+    val = ThemeConfig::paletteRef(&raw_es.palette, status);
+
+    if ( val->bg == "<system>" ) {
+      bgSystemRadio->setChecked(true);
+      bgColorRadio->setChecked(false);
+    } else {
+      bgSystemRadio->setChecked(false);
+      bgColorRadio->setChecked(true);
+    }
+
+    QStringList l = ((QString) val->bg).split(',');
+    if ( l.size() == 4 ) {
+      QColor c(l[0].toInt(),l[1].toInt(),l[2].toInt(),l[3].toInt());
+      QPalette pal = bgColorBtn->palette();
+      pal.setColor(bgColorBtn->backgroundRole(), c);
+      bgColorBtn->setPalette(pal);
+    }
+  } else if ( state == Qt::PartiallyChecked ) {
+    bgSystemRadio->setEnabled(false);
+    bgColorRadio->setEnabled(false);
+
+    val = ThemeConfig::paletteRef(&inherit_es.palette, status);
+
+    if ( val->bg == "<system>" ) {
+      bgSystemRadio->setChecked(true);
+      bgColorRadio->setChecked(false);
+    } else if ( val->bg == "<none>" ) {
+      bgSystemRadio->setChecked(false);
+      bgColorRadio->setChecked(false);
+    } else {
+      bgSystemRadio->setChecked(false);
+      bgColorRadio->setChecked(true);
+    }
+
+    bgEdit->setEnabled(false);
+    bgEdit->setText(QString("=%1").arg(val->bg));
+
+    QStringList l = ((QString) val->bg).split(',');
+    if ( l.size() == 4 ) {
+      QColor c(l[0].toInt(),l[1].toInt(),l[2].toInt(),l[3].toInt());
+      QPalette pal = bgColorBtn->palette();
+      pal.setColor(bgColorBtn->backgroundRole(), c);
+      bgColorBtn->setPalette(pal);
+    }
+  } else {
+    bgEdit->setEnabled(false);
+    bgEdit->setText("<none>");
+    bgSystemRadio->setEnabled(false);
+    bgColorRadio->setEnabled(false);
+    bgColorBtn->setEnabled(false);
+  }
+
+  color_spec_t *new_val = ThemeConfig::paletteRef(&new_es.palette, status);
+
+  // store in struct
+  if ( state == Qt::Unchecked ) {
+    new_val->bg = "<none>";
+  }
+  if ( state == Qt::PartiallyChecked) {
+    new_val->bg.present = false;
+  }
+  if ( state == Qt::Checked ) {
+    // Will be handled in the below slots
+  }
+
+  blockUISignals(false);
+
+  if ( state == Qt::Checked ) {
+    // color or system ?
+    slot_bgColorRadioToggled(bgColorRadio->isChecked());
+    slot_bgSystemRadioToggled(bgSystemRadio->isChecked());
+  }
+
+  schedulePreviewUpdate();
+}
+
+void ThemeBuilderUI::slot_bgSystemRadioToggled(bool checked)
+{
+  blockUISignals(true);
+
+  bgColorBtn->setEnabled(!checked);
+
+  QString status = paletteStatusCombo->currentText();
+  color_spec_t *new_val = ThemeConfig::paletteRef(&new_es.palette, status);
+
+  if ( checked ) {
+    new_val->bg = "<system>";
+  }
+
+  blockUISignals(false);
+
+  schedulePreviewUpdate();
+}
+
+void ThemeBuilderUI::slot_bgColorRadioToggled(bool checked)
+{
+  blockUISignals(true);
+
+  bgColorBtn->setEnabled(checked);
+
+  QString status = paletteStatusCombo->currentText();
+  color_spec_t *new_val = ThemeConfig::paletteRef(&new_es.palette, status);
+
+  if ( checked ) {
+    QPalette pal = bgColorBtn->palette();
+    QColor c = pal.color(bgColorBtn->backgroundRole());
+    new_val->bg = QString("%1,%2,%3,%4")
+        .arg(c.red()).arg(c.green()).arg(c.blue()).arg(c.alpha());
+  }
+
+  blockUISignals(false);
+
+  schedulePreviewUpdate();
+}
+
+void ThemeBuilderUI::slot_bgColorBtnClicked(bool checked)
+{
+  Q_UNUSED(checked);
+
+  QPalette pal = bgColorBtn->palette();
+
+  QColor c = QColorDialog::getColor(pal.color(bgColorBtn->backgroundRole()),
+                                    NULL,
+                                    QString("Select background color"),
+                                    QColorDialog::ShowAlphaChannel);
+
+  if ( c.isValid() ) {
+    pal.setColor(bgColorBtn->backgroundRole(), c);
+    bgColorBtn->setPalette(pal);
+
+    QString status = paletteStatusCombo->currentText();
+    color_spec_t *new_val = ThemeConfig::paletteRef(&new_es.palette, status);
+    new_val->bg = QString("%1,%2,%3,%4")
+        .arg(c.red()).arg(c.green()).arg(c.blue()).arg(c.alpha());
+  }
+
+  schedulePreviewUpdate();
+}
+
+void ThemeBuilderUI::slot_boldCbChanged(int state)
+{
+  QString status = paletteStatusCombo->currentText();
+  font_attr_spec_t *new_val = ThemeConfig::fontRef(&new_es.font, status);
+
+  if ( state == Qt::Checked ) {
+    boldEdit->setEnabled(true);
+    boldEdit->setText("<yes>");
+    new_val->bold = true;
+  }
+  if ( state == Qt::PartiallyChecked ) {
+    boldEdit->setEnabled(false);
+    font_attr_spec_t *val = ThemeConfig::fontRef(&inherit_es.font, status);
+    boldEdit->setText(QString("=%1").arg(val->bold ? "yes" : "no"));
+    new_val->bold.present = false;
+  }
+  if ( state == Qt::Unchecked ) {
+    boldEdit->setEnabled(false);
+    boldEdit->setText("<no>");
+    new_val->bold = false;
+  }
+
+  schedulePreviewUpdate();
+}
+
+void ThemeBuilderUI::slot_italicCbChanged(int state)
+{
+  QString status = paletteStatusCombo->currentText();
+  font_attr_spec_t *new_val = ThemeConfig::fontRef(&new_es.font, status);
+
+  if ( state == Qt::Checked ) {
+    italicEdit->setEnabled(true);
+    italicEdit->setText("<yes>");
+    new_val->italic = true;
+  }
+  if ( state == Qt::PartiallyChecked ) {
+    italicEdit->setEnabled(false);
+    font_attr_spec_t *val = ThemeConfig::fontRef(&inherit_es.font, status);
+    italicEdit->setText(QString("=%1").arg(val->italic ? "yes" : "no"));
+    new_val->italic.present = false;
+  }
+  if ( state == Qt::Unchecked ) {
+    italicEdit->setEnabled(false);
+    italicEdit->setText("<no>");
+    new_val->italic = false;
+  }
+
+  schedulePreviewUpdate();
+}
+
+void ThemeBuilderUI::slot_underlineCbChanged(int state)
+{
+  QString status = paletteStatusCombo->currentText();
+  font_attr_spec_t *new_val = ThemeConfig::fontRef(&new_es.font, status);
+
+  if ( state == Qt::Checked ) {
+    underlineEdit->setEnabled(true);
+    underlineEdit->setText("<yes>");
+    new_val->underline = true;
+  }
+  if ( state == Qt::PartiallyChecked ) {
+    underlineEdit->setEnabled(false);
+    font_attr_spec_t *val = ThemeConfig::fontRef(&inherit_es.font, status);
+    underlineEdit->setText(QString("=%1").arg(val->underline ? "yes" : "no"));
+    new_val->underline.present = false;
+  }
+  if ( state == Qt::Unchecked ) {
+    underlineEdit->setEnabled(false);
+    underlineEdit->setText("<no>");
+    new_val->underline = false;
+  }
 
   schedulePreviewUpdate();
 }
