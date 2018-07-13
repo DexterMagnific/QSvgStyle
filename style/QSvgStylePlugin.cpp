@@ -33,7 +33,3 @@ QStyle *QSvgStylePlugin::create(const QString &key)
 
   return 0;
 }
-
-#if QT_VERSION < 0x050000
-Q_EXPORT_PLUGIN2(pnp_qsvgstyle, QSvgStylePlugin)
-#endif

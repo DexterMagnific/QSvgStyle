@@ -335,6 +335,9 @@ class SpecificTreeDelegate : public QStyledItemDelegate {
                        const QStyleOptionViewItem &option,
                        const QModelIndex &index) const;
 
+    virtual QSize sizeHint(const QStyleOptionViewItem &option,
+                          const QModelIndex &index) const;
+
   private slots:
     //void slot_valueChanged(int);
     void slot_currentIndexChanged(int idx);

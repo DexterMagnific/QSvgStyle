@@ -283,7 +283,75 @@ void SpecificTreeDelegate::updateEditorGeometry(QWidget *editor,
                                            const QStyleOptionViewItem &option,
                                            const QModelIndex &/* index */) const
 {
-  editor->setGeometry(option.rect);
+  editor->move(option.rect.x(),option.rect.y());
+}
+
+QSize SpecificTreeDelegate::sizeHint(const QStyleOptionViewItem &option,
+                                     const QModelIndex &index) const
+{
+  if ( index.column() != 1) {
+    return QStyledItemDelegate::sizeHint(option,index);
+  }
+
+  const QString type = index.data(SpecificSettingType).toString();
+  const QString range_str = index.data(SpecificSettingRange).toString();
+  const QVariant value_data = index.data(Qt::EditRole);
+
+  const QStyle *s = option.widget ? option.widget->style() :  0;
+
+  if ( !s )
+    return QStyledItemDelegate::sizeHint(option,index);
+
+  if ( type == "bool" ) {
+    //qWarning() << "paint" << value_data;
+    QStyleOptionButton o;
+    // we can't assign QStyleOptionViewItem to a QStyleOptionButton,
+    // but what we can do is doing assignement of their base classes only
+    o.QStyleOption::operator =(option);
+    o.rect = option.rect;
+
+    const QStringList true_false = range_str.split(',');
+    QString true_str = "true";
+    QString false_str = "false";
+    if ( true_false.size() >= 1 )
+      true_str = true_false.at(0);
+    if ( true_false.size() >= 2 )
+      false_str = true_false.at(1);
+
+    o.state &= ~(QStyle::State_NoChange | QStyle::State_On);
+
+    if ( value_data.toBool() ) {
+      o.state |= QStyle::State_On;
+      o.text = true_str;
+    } else {
+      o.state &= ~QStyle::State_On;
+      o.text = false_str;
+    }
+
+    return s->sizeFromContents(QStyle::CT_CheckBox, &o, QSize(), NULL);
+  }
+
+  if ( type == "enum" || type == "int_enum" ) {
+    QStyleOptionComboBox o;
+    o.QStyleOption::operator =(option);
+
+    return s->sizeFromContents(QStyle::CT_ComboBox, &o, QSize(), NULL);
+  }
+
+  if ( type == "int" ) {
+    QSpinBox l;
+    l.setValue(value_data.toInt());
+
+    QStyleOptionSpinBox o;
+    o.QStyleOption::operator =(option);
+    o.frame = true;
+
+    QSize sz = option.fontMetrics.boundingRect(option.text).size();
+
+    return s->sizeFromContents(QStyle::CT_SpinBox, &o, sz, &l);
+  }
+
+  return QStyledItemDelegate::sizeHint(option,index);
 }
 
 void SpecificTreeDelegate::paint(QPainter *painter,

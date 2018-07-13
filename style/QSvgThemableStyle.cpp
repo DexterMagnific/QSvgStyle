@@ -1272,6 +1272,9 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
       if ( const QStyleOptionButton *opt =
            qstyleoption_cast<const QStyleOptionButton *>(option) ) {
 
+        if ( focus )
+          setupPainterFromFontSpec(p,ts, "focused");
+
         if ( opt->state & State_MouseOver )
           renderInterior(p,bg,r,fs,is,is.element+"-"+st,dir);
 
@@ -1310,6 +1313,9 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
       if ( const QStyleOptionButton *opt =
           qstyleoption_cast<const QStyleOptionButton *>(option) ) {
 
+        if ( focus )
+          setupPainterFromFontSpec(p,ts, "focused");
+
         if ( opt->state & State_MouseOver )
           renderInterior(p,bg,r,fs,is,is.element+"-"+st,dir);
 
@@ -1325,6 +1331,9 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
     case CE_ComboBoxLabel : {
       if ( const QStyleOptionComboBox *opt =
            qstyleoption_cast<const QStyleOptionComboBox *>(option) ) {
+
+        if ( focus )
+          setupPainterFromFontSpec(p,ts, "focused");
 
         if ( !opt->editable ) {
           // NOTE Editable label is rendered by an embedded QLineEdit
@@ -1524,6 +1533,9 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
           }
         }
 
+        if ( focus )
+          setupPainterFromFontSpec(p,ts, "focused");
+
         renderLabel(p,fg,
                     dir,
                     r,
@@ -1612,6 +1624,9 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
           }
         }
 
+        if ( focus )
+          setupPainterFromFontSpec(p,ts, "focused");
+
         renderLabel(p,fg,
                     dir,r,fs,is,ls,
                     Qt::AlignCenter | Qt::TextShowMnemonic,
@@ -1675,6 +1690,10 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
         if ( getThemeTweak("specific.progressbar.variant") == VA_PROGRESSBAR_THIN ) {
           fs.hasFrame = false;
         }
+
+        if ( focus )
+          setupPainterFromFontSpec(p,ts, "focused");
+
         renderLabel(p,fg,
                     dir,r,fs,is,ls,
                     opt->textAlignment,opt->text,
@@ -2097,6 +2116,9 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
 
         QStyleOptionHeader o(*opt);
 
+        if ( focus )
+          setupPainterFromFontSpec(p,ts, "focused");
+
         o.rect = subElementRect(SE_HeaderLabel,opt,widget);
         // FIXME does not honor icon alignment
         renderLabel(p,fg,
@@ -2141,6 +2163,20 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
       if ( const QStyleOptionButton *opt =
            qstyleoption_cast<const QStyleOptionButton *>(option) ) {
 
+        bool isDefault = false;
+
+        // Draw either default overlay or focus overlay
+        if ( opt->features & QStyleOptionButton::DefaultButton )
+          isDefault = true;
+
+        if ( isDefault ) {
+          st = "default";
+        } else if ( focus ) {
+          st = "focused";
+        }
+
+        setupPainterFromFontSpec(p,ts, st);
+
         if ( opt->features & QStyleOptionButton::HasMenu ) {
           QStyleOptionButton o(*opt);
           renderLabel(p,fg,
@@ -2166,6 +2202,9 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
       ds = getIndicatorSpec(PE_group(PE_IndicatorArrowDown));
       if ( const QStyleOptionToolButton *opt =
           qstyleoption_cast<const QStyleOptionToolButton *>(option) ) {
+
+        if ( focus )
+          setupPainterFromFontSpec(p,ts, "focused");
 
         if (opt->arrowType == Qt::NoArrow)
           renderLabel(p,fg,
@@ -2244,6 +2283,10 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
           p->rotate(-90);
           p->translate(-r.left(), -r.top());
         }
+
+        if ( focus )
+          setupPainterFromFontSpec(p,ts, "focused");
+
         renderLabel(p,fg,
                     dir,r,fs,is,ls,
                     Qt::AlignLeft | Qt::AlignVCenter | Qt::TextShowMnemonic,
@@ -2331,6 +2374,9 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
           renderFrame(p,QBrush(),r1,fs,fs.element+"-focused",dir);
           renderInterior(p,QBrush(),r1,fs,is,is.element+"-focused",dir);
         }
+
+        if ( focus )
+          setupPainterFromFontSpec(p,ts, "focused");
 
         // Draw title
         fs.hasCapsule = false;
@@ -2909,6 +2955,9 @@ void QSvgThemableStyle::drawComplexControl(ComplexControl control, const QStyleO
 
         // interior
         renderInterior(p,bg,r,fs,is,is.element+"-"+st,dir);
+
+        if ( focus )
+          setupPainterFromFontSpec(p,ts, "focused");
 
         // title
         ls.hmargin = 0; // this has been taken into account in SC_TitleBarLabel
@@ -5726,23 +5775,26 @@ void QSvgThemableStyle::setupPainterFromFontSpec(QPainter *p,
     val = ts.defaultt;
   }
 
-  if ( val.bold.present )
+  if ( val.bold.present ) {
     if ( val.bold )
       f.setBold(true);
     else
       f.setBold(false);
+  }
 
-  if ( val.italic.present )
+  if ( val.italic.present ) {
     if ( val.italic )
       f.setItalic(true);
     else
       f.setItalic(false);
+  }
 
-  if ( val.underline.present )
+  if ( val.underline.present ) {
     if ( val.underline )
       f.setUnderline(true);
     else
       f.setUnderline(false);
+  }
 
   p->setFont(f);
 }
