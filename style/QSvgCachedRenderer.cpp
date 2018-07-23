@@ -118,6 +118,8 @@ void QSvgCachedRenderer::render(QPainter *painter, const QString &elementId, con
 
     t.restart();
     renderer->render(&p,elementId,QRect(QPoint(0,0),bounds.size()));
+    entry.mask = entry.pixmap.mask();
+    // save the mask
     elapsed = t.elapsed();
 
     // now render the pixmap using the original painter
@@ -127,6 +129,22 @@ void QSvgCachedRenderer::render(QPainter *painter, const QString &elementId, con
     totalSvgRenderTime += elapsed;
 
     svgCache.insert(e,entry);
+  }
+}
+
+QRegion QSvgCachedRenderer::elementRegion(const QString &elementId, const QRect &bounds)
+{
+  // key = elementId @ width x height
+  const QString e = QString("%1@%2x%3")
+      .arg(elementId)
+      .arg(bounds.width())
+      .arg(bounds.height());
+
+  if ( svgCache.contains(e) ) {
+    svgCacheEntry &entry = svgCache[e];
+    return QRegion(entry.mask).translated(bounds.x(),bounds.y());
+  } else {
+    return QRegion(bounds);
   }
 }
 

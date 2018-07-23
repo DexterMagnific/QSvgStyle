@@ -4898,6 +4898,8 @@ void QSvgThemableStyle::renderFrame(QPainter *p,
 
   // rects to draw frame parts
   QRect top, bottom, left, right, topleft, topright, bottomleft, bottomright;
+  // Clipping region
+  QRegion region;
 
   computeFrameRects(bounds,fs,orn,
                     top,bottom,left,right,
@@ -5017,6 +5019,18 @@ void QSvgThemableStyle::renderFrame(QPainter *p,
     darkBrush.setColor(darkColor);
 
     if ( !dbgWireframe && (curPalette != "<none>") ) {
+      region += themeRndr->elementRegion(e+"-top", top);
+      region += themeRndr->elementRegion(e+"-bottom", bottom);
+      region += themeRndr->elementRegion(e+"-left", left);
+      region += themeRndr->elementRegion(e+"-right", right);
+      region += themeRndr->elementRegion(e+"-topleft", topleft);
+      region += themeRndr->elementRegion(e+"-topright", topright);
+      region += themeRndr->elementRegion(e+"-bottomleft", bottomleft);
+      region += themeRndr->elementRegion(e+"-bottomright", bottomright);
+
+      p->save();
+      p->setClipRegion(region, Qt::IntersectClip);
+
       if ( !fs.pressed ) {
         p->fillPath(lightPath,lightColor);
         p->fillPath(darkPath,darkColor);
@@ -5024,6 +5038,8 @@ void QSvgThemableStyle::renderFrame(QPainter *p,
         p->fillPath(lightPath,darkColor);
         p->fillPath(darkPath,lightColor);
       }
+
+      p->restore();
     }
   }
 
@@ -5126,6 +5142,9 @@ void QSvgThemableStyle::renderInterior(QPainter *p,
 
   computeInteriorRect(bounds,fs,is,orn, r);
 
+  if  ( !r.isValid() )
+    return;
+
   if ( dir == Qt::RightToLeft ) {
     p->save();
     if ( orn == Horizontal ) {
@@ -5156,8 +5175,14 @@ void QSvgThemableStyle::renderInterior(QPainter *p,
     interiorColor.setAlpha(intensity);
     interiorBrush.setColor(interiorColor);
 
-    if ( !dbgWireframe && (curPalette != "<none>") )
+    if ( !dbgWireframe && (curPalette != "<none>") ) {
+      p->save();
+      QRegion region = themeRndr->elementRegion(e, r);
+      //qWarning() << "Region for" << e << "is" << region;
+      p->setClipRegion(region, Qt::IntersectClip);
       p->fillRect(r,interiorColor);
+      p->restore();
+    }
   }
 
   // debugging facilities

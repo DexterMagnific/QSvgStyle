@@ -23,6 +23,7 @@
 
 #include <QHash>
 #include <QPixmap>
+#include <QBitmap>
 #include <QSvgRenderer>
 
 class QPainter;
@@ -61,6 +62,14 @@ class QSvgCachedRenderer
       return renderer ? renderer->elementExists(id) : false;
     }
 
+    /**
+      * Returns the computed clip region for the given element translated
+      * to the given bounds. The element must have
+      * been rendered at least once, otherwise a full region will be
+      * returned
+      */
+    QRegion elementRegion(const QString &elementId, const QRect &bounds);
+
   private:
     typedef struct svgCacheEntry {
         quint32 hits;
@@ -68,6 +77,7 @@ class QSvgCachedRenderer
         quint64 cachedRenderTime;
 
         QPixmap pixmap;
+        QRegion mask;
     } svgCacheEntry;
 
     void dumpStats();
