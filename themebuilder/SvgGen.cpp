@@ -374,9 +374,10 @@ void SvgGenSubFrame::calcSubFrame()
   // NOTE all parts will be built at 0,0 and then moved to their final location
   QPainterPath tl,tr,bl,br;
   QPainterPath t,b,l,r;
+  QPainterPath lj,rj;
 
   // reminder: thickness of subframe is sbwidth
-  // width,height is the size the sides (without corners)
+  // width,height is the size of the sides (without corners)
 
   // outer corner size
   qreal oR = roundness+sbwidth;

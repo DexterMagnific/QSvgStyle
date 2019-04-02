@@ -30,7 +30,7 @@ QString PE_group(QStyle::PrimitiveElement element)
     // Frames
     case QStyle::PE_Frame : return "Frame";
     case QStyle::PE_FrameDefaultButton : return "PushButton";
-    case QStyle::PE_FrameDockWidget : return "DockWidget";
+    case QStyle::PE_FrameDockWidget : return "DockWidgetContents";
     case QStyle::PE_FrameFocusRect : return "Frame";
     case QStyle::PE_FrameGroupBox : return "GroupBoxContents";
     case QStyle::PE_FrameLineEdit : return "LineEdit";
@@ -63,7 +63,7 @@ QString PE_group(QStyle::PrimitiveElement element)
     case QStyle::PE_IndicatorButtonDropDown : return "PushButton";
     case QStyle::PE_IndicatorViewItemCheck : return "ViewItem";
     case QStyle::PE_IndicatorCheckBox : return "CheckBox";
-    case QStyle::PE_IndicatorDockWidgetResizeHandle : return "DockWidget";
+    case QStyle::PE_IndicatorDockWidgetResizeHandle : return "DockWidgetContents";
     case QStyle::PE_IndicatorHeaderArrow : return "Header";
     case QStyle::PE_IndicatorMenuCheckMark : return "MenuItem";
     case QStyle::PE_IndicatorProgressChunk : return "ProgressBar";
@@ -119,7 +119,7 @@ QString CE_group(QStyle::ControlElement element)
     case QStyle::CE_SizeGrip : return "Window";
     case QStyle::CE_Splitter : return "Splitter";
     case QStyle::CE_RubberBand : return "RubberBand";
-    case QStyle::CE_DockWidgetTitle : return "DockWidget";
+    case QStyle::CE_DockWidgetTitle : return "DockWidgetTitle";
     case QStyle::CE_ScrollBarAddLine : return "ScrollBarButton";
     case QStyle::CE_ScrollBarSubLine : return "ScrollBarButton";
     case QStyle::CE_ScrollBarAddPage : return "ScrollBarButton";
@@ -202,10 +202,10 @@ QString SE_group(QStyle::SubElement element)
     case QStyle::SE_TabBarTearIndicator : return "TabBarBase";
     case QStyle::SE_LineEditContents : return "LineEdit";
     case QStyle::SE_FrameContents : return "Frame";
-    case QStyle::SE_DockWidgetCloseButton : return "DockWidget";
-    case QStyle::SE_DockWidgetFloatButton : return "DockWidget";
-    case QStyle::SE_DockWidgetTitleBarText : return "DockWidget";
-    case QStyle::SE_DockWidgetIcon : return "DockWidget";
+    case QStyle::SE_DockWidgetCloseButton : return "DockWidgetTitle";
+    case QStyle::SE_DockWidgetFloatButton : return "DockWidgetTitle";
+    case QStyle::SE_DockWidgetTitleBarText : return "DockWidgetTitle";
+    case QStyle::SE_DockWidgetIcon : return "DockWidgetTitle";
     case QStyle::SE_ItemViewItemDecoration : return "ViewItem";
     case QStyle::SE_ItemViewItemText : return "ViewItem";
     case QStyle::SE_ItemViewItemFocusRect : return "Frame";

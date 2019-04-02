@@ -2407,6 +2407,7 @@ void ThemeBuilderUI::setupPreviewForWidget(const QTreeWidgetItem *current)
     variants = 1;
 
     QMenu *widget = new QMenu("this is a menu");
+    widget->addSection(QIcon(":/icon/pixmaps/hint.png"), "Menu section");
     widget->addAction("Menu item 1");
     widget->addAction(icon,"Menu item 2");
     widget->addSeparator();

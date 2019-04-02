@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1119</width>
-    <height>642</height>
+    <width>1139</width>
+    <height>717</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -61,7 +61,7 @@
          <x>0</x>
          <y>0</y>
          <width>256</width>
-         <height>422</height>
+         <height>489</height>
         </rect>
        </property>
        <property name="palette">
@@ -227,7 +227,7 @@
          <x>0</x>
          <y>0</y>
          <width>256</width>
-         <height>422</height>
+         <height>489</height>
         </rect>
        </property>
        <property name="palette">
@@ -450,7 +450,7 @@
          <x>0</x>
          <y>0</y>
          <width>256</width>
-         <height>422</height>
+         <height>489</height>
         </rect>
        </property>
        <property name="palette">
@@ -652,7 +652,7 @@
          <x>0</x>
          <y>0</y>
          <width>256</width>
-         <height>422</height>
+         <height>489</height>
         </rect>
        </property>
        <property name="palette">
@@ -1250,7 +1250,7 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>517</width>
+             <width>521</width>
              <height>50</height>
             </rect>
            </property>
@@ -2028,6 +2028,28 @@
           </item>
           <item>
            <property name="text">
+            <string>Tabs</string>
+           </property>
+           <item>
+            <property name="text">
+             <string>Variant</string>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+            <property name="text">
+             <string>specific.tab.variant</string>
+            </property>
+            <property name="text">
+             <string>int_enum</string>
+            </property>
+            <property name="text">
+             <string>Individual,Group all,Group non selected</string>
+            </property>
+           </item>
+          </item>
+          <item>
+           <property name="text">
             <string>Scroll bars</string>
            </property>
            <property name="text">
@@ -2505,8 +2527,8 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>202</width>
-               <height>228</height>
+               <width>186</width>
+               <height>261</height>
               </rect>
              </property>
              <attribute name="label">
@@ -2799,8 +2821,8 @@
                   <rect>
                    <x>0</x>
                    <y>0</y>
-                   <width>188</width>
-                   <height>158</height>
+                   <width>172</width>
+                   <height>183</height>
                   </rect>
                  </property>
                  <layout class="QGridLayout" name="gridLayout_27">
@@ -2827,8 +2849,8 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>153</width>
-               <height>40</height>
+               <width>169</width>
+               <height>44</height>
               </rect>
              </property>
              <attribute name="label">
@@ -3022,8 +3044,8 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>156</width>
-               <height>70</height>
+               <width>172</width>
+               <height>78</height>
               </rect>
              </property>
              <attribute name="label">

@@ -350,7 +350,7 @@ class QSvgThemableStyle : public QCommonStyle {
                      /* frame spec */ const frame_spec_t &fs,
                      /* interior spec */ const interior_spec_t &is,
                      /* label spec */ const label_spec_t &ls,
-                     /* text alignment */ int talign,
+                     /* text alignment */ unsigned int talign,
                      /* text */ const QString &text,
                      /* icon */ const QPixmap &icon = QPixmap(),
                      /* text-icon alignment */ const Qt::ToolButtonStyle tialign = Qt::ToolButtonTextBesideIcon) const;

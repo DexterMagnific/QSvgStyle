@@ -58,6 +58,7 @@
 #include <QRubberBand>
 #include <QToolTip>
 #include <QMenuBar>
+#include <QHeaderView>
 
 #include "QSvgCachedRenderer.h"
 #include "ThemeConfig.h"
@@ -67,12 +68,12 @@
 QSvgThemableStyle::QSvgThemableStyle()
   : QCommonStyle(),
     cls(QString(this->metaObject()->className())),
-    themeRndr(NULL),
-    themeSettings(NULL),
-    styleSettings(NULL),
+    themeRndr(nullptr),
+    themeSettings(nullptr),
+    styleSettings(nullptr),
     useConfigCache(true),
     useShapeCache(true),
-    progresstimer(NULL),
+    progresstimer(nullptr),
     dbgWireframe(false),
     dbgOverdraw(false)
 {
@@ -93,7 +94,7 @@ void QSvgThemableStyle::loadUserConfig()
   QString filename = StyleConfig::getUserConfigFile();
 
   delete styleSettings;
-  styleSettings = NULL;
+  styleSettings = nullptr;
 
   if ( !QFile::exists(filename) ) {
     QDir().mkpath(StyleConfig::getUserConfigDir().absolutePath());
@@ -120,7 +121,7 @@ void QSvgThemableStyle::loadCustomStyleConfig(const QString& filename)
     return;
 
   delete styleSettings;
-  styleSettings = NULL;
+  styleSettings = nullptr;
 
   styleSettings = new StyleConfig(filename);
   styleSettings->setUseCache(useConfigCache);
@@ -136,10 +137,10 @@ void QSvgThemableStyle::loadBuiltinTheme()
     return;
 
   delete themeRndr;
-  themeRndr = NULL;
+  themeRndr = nullptr;
 
   delete themeSettings;
-  themeSettings = NULL;
+  themeSettings = nullptr;
 
   themeSettings = new ThemeConfig(":/default.cfg");
   themeRndr = new QSvgCachedRenderer();
@@ -163,13 +164,13 @@ void QSvgThemableStyle::loadTheme(const QString& theme)
   Q_FOREACH(theme_spec_t t, tlist) {
     if ( theme == t.name ) {
       delete themeSettings;
-      themeSettings = NULL;
+      themeSettings = nullptr;
 
       themeSettings = new ThemeConfig(t.path);
       themeSettings->setUseCache(useConfigCache);
 
       delete themeRndr;
-      themeRndr = NULL;
+      themeRndr = nullptr;
 
       themeRndr = new QSvgCachedRenderer();
       themeRndr->load(
@@ -207,7 +208,7 @@ void QSvgThemableStyle::loadCustomSVG(const QString& filename)
     return;
 
   delete themeRndr;
-  themeRndr = NULL;
+  themeRndr = nullptr;
 
   themeRndr = new QSvgCachedRenderer();
   themeRndr->load(filename);
@@ -221,7 +222,7 @@ void QSvgThemableStyle::loadCustomThemeConfig(const QString& filename)
     return;
 
   delete themeSettings;
-  themeSettings = NULL;
+  themeSettings = nullptr;
 
   themeSettings = new ThemeConfig(filename);
   themeSettings->setUseCache(useConfigCache);
@@ -342,6 +343,11 @@ void QSvgThemableStyle::polish(QWidget * widget)
 
   // QSpinBox: set background role to Button
   if ( QSpinBox *s = qobject_cast< QSpinBox * >(widget) ) {
+    s->setBackgroundRole(QPalette::Button);
+  }
+
+  // QHeader: set background role to Button
+  if ( QHeaderView *s = qobject_cast< QHeaderView * >(widget) ) {
     s->setBackgroundRole(QPalette::Button);
   }
 }
@@ -669,6 +675,8 @@ void QSvgThemableStyle::drawPrimitive(PrimitiveElement e, const QStyleOption * o
     }
     case PE_IndicatorDockWidgetResizeHandle : {
       // resize handle of dock separators
+      fs.hasFrame  = false;
+      is.hasInterior = true;
       if ( orn == Horizontal ) {
         r = alignedRect(dir, Qt::AlignCenter, QSize(pixelMetric(PM_DockWidgetHandleExtent),h), r);
         renderInterior(p,QBrush(),r,fs,is,ds.element+"-hhandle-"+st,dir);
@@ -680,6 +688,15 @@ void QSvgThemableStyle::drawPrimitive(PrimitiveElement e, const QStyleOption * o
     }
     case PE_IndicatorTabClose : {
       // tab close buttons. used when icon theme does not supply one
+      int variant = getThemeTweak("specific.tab.variant").toInt();
+      if ( option->state & State_Selected ) {
+        if ( (variant == VA_TAB_GROUP_NON_SELECTED) ||
+             (variant == VA_TAB_INDIVIDUAL )
+             ) {
+          r.adjust(0,5,0,0);
+        }
+      }
+
       fs.hasFrame = false;
       // do not set toggled
       st = state_str(option->state & ~(State_On | State_Selected), widget);
@@ -710,7 +727,6 @@ void QSvgThemableStyle::drawPrimitive(PrimitiveElement e, const QStyleOption * o
     }
     case PE_FrameTabBarBase : {
       // FIXME
-      qDebug() << r;
       renderFrame(p,bg,r,fs,fs.element+"-"+st,dir);
       break;
     }
@@ -738,17 +754,9 @@ void QSvgThemableStyle::drawPrimitive(PrimitiveElement e, const QStyleOption * o
       break;
     }
     case PE_FrameDockWidget : {
-      // Frame for "detached" dock widgets
-      if ( const QStyleOptionDockWidget *opt =
-        qstyleoption_cast<const QStyleOptionDockWidget *>(option) ) {
-        if ( opt->verticalTitleBar )
-          orn = Vertical;
-        else
-          orn = Horizontal;
-        renderFrame(p,bg,r,fs,fs.element+"-"+st,dir,orn);
-        renderInterior(p,bg,r,fs,is,is.element+"-"+st,dir,orn);
-        qWarning() << "render frame dock widget";
-      }
+      // Frame for floating dock widgets
+      renderFrame(p,bg,r,fs,fs.element+"-"+st,dir,orn);
+      renderInterior(p,bg,r,fs,is,is.element+"-"+st,dir,orn);
       break;
     }
     case PE_FrameStatusBarItem : {
@@ -764,8 +772,25 @@ void QSvgThemableStyle::drawPrimitive(PrimitiveElement e, const QStyleOption * o
     }
     case PE_FrameTabWidget : {
       // Frame and interior for tab widgets (contents)
-      renderFrame(p,bg,r,fs,fs.element+"-"+st,dir);
-      renderInterior(p,bg,r,fs,is,is.element+"-"+st,dir);
+      orn = Horizontal;
+      if ( const QTabWidget *tw = qobject_cast<const QTabWidget *>(widget) ) {
+        const QTabBar *tb = tw->tabBar();
+        QTabBar::Shape s = tb->shape();
+        if ( s == QTabBar::RoundedEast ||
+             s == QTabBar::RoundedWest ||
+             s == QTabBar::TriangularEast ||
+             s == QTabBar::TriangularWest )
+          orn = Vertical;
+
+        QRect selectedRect = tb->tabRect(tb->currentIndex());
+        fs.hasCuts = true;
+        fs.h0 = tb->mapToParent(selectedRect.topLeft()).x();
+        fs.h1 = tb->mapToParent(selectedRect.topRight()).x();
+      } else
+        orn = Horizontal;
+
+      renderFrame(p,bg,r,fs,fs.element+"-"+st,dir,orn);
+      renderInterior(p,bg,r,fs,is,is.element+"-"+st,dir,orn);
       break;
     }
     case PE_FrameLineEdit : {
@@ -776,6 +801,7 @@ void QSvgThemableStyle::drawPrimitive(PrimitiveElement e, const QStyleOption * o
       QStyleOption o(*option);
       o.state &= ~(State_Sunken | State_On);
       st = state_str(o.state,widget);
+      bg = bgBrush(ps,option,widget,st);
       renderFrame(p,bg,r,fs,fs.element+"-"+st,dir);
       if ( focus ) {
         renderFrame(p,QBrush(),r,fs,fs.element+"-focused",dir);
@@ -799,6 +825,7 @@ void QSvgThemableStyle::drawPrimitive(PrimitiveElement e, const QStyleOption * o
       QStyleOption o(*option);
       o.state &=  ~ (State_Sunken | State_On);
       st = state_str(o.state,widget);
+      bg = bgBrush(ps,option,widget,st);
       renderInterior(p,bg,r,fs,is,is.element+"-"+st,dir);
       if ( focus ) {
         renderInterior(p,QBrush(),r,fs,is,is.element+"-focused",dir);
@@ -958,6 +985,15 @@ void QSvgThemableStyle::drawPrimitive(PrimitiveElement e, const QStyleOption * o
           else if ( opt->viewItemPosition == QStyleOptionViewItem::Middle )
             fs.capsuleH = 0;
 
+          // view items have their own brushes
+          QBrush br = p->brush();
+          QPen pn = p->pen();
+          p->setBrush(opt->backgroundBrush);
+          p->setPen(Qt::NoPen);
+          p->drawRect(r);
+          p->setBrush(br);
+          p->setPen(pn);
+
           if ( st != "normal" ) {
             // only paint when state in not normal, otherwise keep
             // container widget background
@@ -1083,13 +1119,24 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
 
         QStyleOptionMenuItem o(*opt);
 
-        if (opt->menuItemType == QStyleOptionMenuItem::Separator)
-          // Menu separator
-          renderElement(p,ds.element+"-separator-normal",r);
-        else if (opt->menuItemType == QStyleOptionMenuItem::TearOff)
+        if (opt->menuItemType == QStyleOptionMenuItem::Separator) {
+          if ( opt->text.isEmpty() ) {
+            // Menu separator
+            renderElement(p,ds.element+"-separator-normal",r);
+          } else {
+            // Menu section
+            QStyleOptionButton o;
+            o.QStyleOption::operator=(*opt);
+            o.text = opt->text;
+            o.icon = opt->icon;
+            o.state |= State_On;
+            o.iconSize = QSize(opt->maxIconWidth,opt->maxIconWidth);
+            drawControl(CE_PushButton,&o,p,widget);
+          }
+        } else if (opt->menuItemType == QStyleOptionMenuItem::TearOff) {
           // Menu tear off
           drawControl(CE_MenuTearoff,opt,p,widget);
-        else {
+        } else {
           // Standard menu item
           // NOTE QSvgStyle ignores pressed state
           o.state &= ~State_Sunken;
@@ -1370,9 +1417,6 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
           st = state_str(o.state,widget);
         }
 
-        fs.hasCapsule = true;
-        int capsule = 2;
-
         if ( (opt->shape == QTabBar::RoundedNorth) ||
              (opt->shape == QTabBar::TriangularNorth) ||
              (opt->shape == QTabBar::RoundedSouth) ||
@@ -1381,14 +1425,56 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
         else
           orn = Vertical;
 
-        if (opt->position == QStyleOptionTab::Beginning)
-          capsule = -1;
-        else if (opt->position == QStyleOptionTab::Middle)
-          capsule = 0;
-        else if (opt->position == QStyleOptionTab::End)
-          capsule = 1;
-        else if (opt->position == QStyleOptionTab::OnlyOneTab)
-          capsule = 2;
+        int variant = getThemeTweak("specific.tab.variant").toInt();
+        int capsule = 2;
+        int adjust = 0;
+        fs.hasCapsule = true;
+
+        if ( (variant == VA_TAB_INDIVIDUAL) ||
+             (variant == VA_TAB_GROUP_NON_SELECTED) ) {
+          adjust = 5;  // selected tab is higher than others
+        }
+
+        if ( variant == VA_TAB_GROUP_ALL ) {
+          if (opt->position == QStyleOptionTab::Beginning)
+            capsule = -1;
+          else if (opt->position == QStyleOptionTab::Middle)
+            capsule = 0;
+          else if (opt->position == QStyleOptionTab::End)
+            capsule = 1;
+          else if (opt->position == QStyleOptionTab::OnlyOneTab)
+            capsule = 2;
+        }
+
+        if ( variant == VA_TAB_GROUP_NON_SELECTED ) {
+          if ( o.state & State_On || o.state & State_Selected )
+            // selected
+            capsule = 2;
+          else {
+            if (opt->position == QStyleOptionTab::Beginning) {
+              if (opt->selectedPosition == QStyleOptionTab::NextIsSelected)
+                capsule = 2;
+              else
+                capsule = -1;
+            }
+            else if (opt->position == QStyleOptionTab::End) {
+              if (opt->selectedPosition == QStyleOptionTab::PreviousIsSelected)
+                capsule = 2;
+              else
+                capsule = 1;
+            }
+            else if (opt->position == QStyleOptionTab::Middle) {
+              if (opt->selectedPosition == QStyleOptionTab::PreviousIsSelected)
+                capsule = -1;
+              else if (opt->selectedPosition == QStyleOptionTab::NextIsSelected)
+                capsule = 1;
+              else if (opt->selectedPosition == QStyleOptionTab::NotAdjacent)
+                capsule = 0;
+              else
+                capsule = 2;
+            }
+          }
+        }
 
         if ( (orn == Vertical) && (dir == Qt::RightToLeft) ) {
           // TabWidget bug :
@@ -1408,24 +1494,36 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
              (opt->shape == QTabBar::TriangularNorth)
         ) {
           fs.capsuleV = -1;
+          if ( !(o.state & State_Selected) && !(o.state & State_On) ) {
+            r.adjust(0,adjust,0,0);
+          }
         }
 
         if ( (opt->shape == QTabBar::RoundedSouth) ||
              (opt->shape == QTabBar::TriangularSouth)
         ) {
           fs.capsuleV = 1;
+          if ( !(o.state & State_Selected) && !(o.state & State_On) ) {
+            r.adjust(0,0,0,-adjust);
+          }
         }
 
         if ( (opt->shape == QTabBar::RoundedWest) ||
              (opt->shape == QTabBar::TriangularWest)
         ) {
           fs.capsuleV = 1;
+          if ( !(o.state & State_Selected) && !(o.state & State_On) ) {
+            r.adjust(adjust,0,0,0);
+          }
         }
 
         if ( (opt->shape == QTabBar::RoundedEast) ||
              (opt->shape == QTabBar::TriangularEast)
         ) {
           fs.capsuleV = -1;
+          if ( !(o.state & State_Selected) && !(o.state & State_On) ) {
+            r.adjust(0,0,-adjust,0);
+          }
         }
 
         // In order to colorize tabs, look up the tab widget contents
@@ -1483,6 +1581,41 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
 
           icm = state_iconmode(o.state);
           ics = state_iconstate(o.state);
+        }
+
+        int variant = getThemeTweak("specific.tab.variant").toInt();
+        int adjust = 0;
+
+        if ( (variant == VA_TAB_INDIVIDUAL) ||
+             (variant == VA_TAB_GROUP_NON_SELECTED) ) {
+          adjust = 5;  // selected tab is higher than others
+        }
+
+        if ( !(o.state & State_Selected) && !(o.state & State_On) ) {
+
+          if ( (opt->shape == QTabBar::RoundedNorth) ||
+               (opt->shape == QTabBar::TriangularNorth)
+               ) {
+            r.adjust(0,adjust,0,0);
+          }
+
+          if ( (opt->shape == QTabBar::RoundedSouth) ||
+               (opt->shape == QTabBar::TriangularSouth)
+               ) {
+            r.adjust(0,0,0,-adjust);
+          }
+
+          if ( (opt->shape == QTabBar::RoundedWest) ||
+               (opt->shape == QTabBar::TriangularWest)
+               ) {
+            r.adjust(-adjust,0,0,0);
+          }
+
+          if ( (opt->shape == QTabBar::RoundedEast) ||
+               (opt->shape == QTabBar::TriangularEast)
+               ) {
+            r.adjust(0,0,adjust,0);
+          }
         }
 
         if ( opt->shape == QTabBar::TriangularEast ||
@@ -1796,7 +1929,6 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
 
               if ( r.x()+r.width()-1 > x+w-1 ) {
                 // two half cursors
-
                 // wrap busy indicator: second cursor size
                 int pm2 = x+w-r.x();
 
@@ -1864,19 +1996,14 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
                               orn);
                 p->restore();
               } else {
-                  // single cursor
+                // single cursor
+                // left part of frame: only show if cursor is at the beginning
+                if ( r.left() > orig.left() )
+                  cr = cr.adjusted(fs.left,0,0,0);
 
-                  // add frame again
-                  r = r.adjusted(-fs.left,-fs.top,fs.right,fs.bottom);
-
-                  QRect cr = r; // Clip rect for r
-                  // left part of frame: only show if cursor is at the beginning
-                  if ( r.left() <= orig.left() )
-                    cr = cr.adjusted(fs.left,0,0,0);
-
-                  // right part of frame: only show if cursor is at the end
-                  if ( r.right() < orig.right() )
-                    cr = cr.adjusted(0,0,-fs.right,0);
+                // right part of frame: only show if cursor is at the end
+                if ( r.right() < orig.right() )
+                  cr = cr.adjusted(0,0,-fs.right,0);
 
                 if ( orn == Horizontal ) {
                   r = visualRect(dir,orig,r);
@@ -1920,11 +2047,11 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
 
               QRect cr = r; // Clip rect for r
               // left part of frame: only show if cursor is at the beginning
-              if ( r.left() != orig.left() )
+              if ( r.left() > orig.left() )
                 cr = cr.adjusted(fs.left,0,0,0);
 
               // right part of frame: only show if cursor is at the end
-              if ( r.right() != orig.right() )
+              if ( r.right() < orig.right() )
                 cr = cr.adjusted(0,0,-fs.right,0);
 
               if ( orn == Horizontal ) {
@@ -2020,6 +2147,10 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
     case CE_RubberBand : {
       if ( const QStyleOptionRubberBand *opt =
            qstyleoption_cast<const QStyleOptionRubberBand *>(option) ) {
+
+      QStyleOptionRubberBand o(*opt);
+      o.state &= ~State_MouseOver;
+      st = state_str(o.state,widget);
 
       renderFrame(p,bg,option->rect,fs,fs.element+"-"+st,dir,orn);
 
@@ -2341,6 +2472,9 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
           drawPrimitive(PE_IndicatorViewItemCheck,&o,p,widget);
         }
 
+        // FIXME obey QTreeWidgetItem's foreground()
+        p->setFont(opt->font);
+        fg = opt->palette.foreground();
         renderLabel(p,fg,
                     dir,rlabel,fs,is,ls,
                     opt->displayAlignment,
@@ -2849,8 +2983,8 @@ void QSvgThemableStyle::drawComplexControl(ComplexControl control, const QStyleO
         renderInterior(p,bg,o.rect,fs,is,is.element+"-"+st,dir,orn);
 
         // TODO make configurable
-        qreal startAngle = -60;
-        qreal endAngle = 230;
+        int startAngle = -60;
+        int endAngle = 230;
 
         // tick marks
         if ( opt->subControls & QStyle::SC_DialTickmarks ) {
@@ -2878,7 +3012,7 @@ void QSvgThemableStyle::drawComplexControl(ComplexControl control, const QStyleO
         }
 
         // handle
-        const qreal range = endAngle-startAngle;
+        const int range = endAngle-startAngle;
         qreal pos = sliderPositionFromValue(opt->minimum,opt->maximum,
                                             opt->sliderValue, range,
                                             !opt->upsideDown);
@@ -3242,28 +3376,21 @@ int QSvgThemableStyle::pixelMetric(PixelMetric metric, const QStyleOption * opti
       // NOTE used by QDockWidgetLayout to compute title size
       int ret = 0;
       ret += getLabelSpec(CE_group(CE_DockWidgetTitle)).vmargin;
-      // TODO make configurable whether title has frame in non floating docks
-      if ( const QDockWidget *w =
-        qobject_cast<const QDockWidget *>(widget)) {
-        Q_UNUSED(w);
-        //if ( w->isFloating() )
-          ret += getFrameSpec(CE_group(CE_DockWidgetTitle)).width;
-      }
+      ret += getFrameSpec(CE_group(CE_DockWidgetTitle)).width;
       return ret;
     }
     break;
     case PM_DockWidgetFrameWidth :
-      /// NOTE Only used for floatable docks
+      /// NOTE Only used when dock is floating
       return getFrameSpec(PE_group(PE_FrameDockWidget)).width;
     case PM_DockWidgetTitleBarButtonMargin : {
       // NOTE Dock widget button "margins" are used in their sizeHint() calculation
       // CHEAT: they must include both the label margins and the frame size
       // since their sizeHint() does not take into account frame size
       int ret = 0;
-      if ( styleHint(QStyle::SH_DockWidget_ButtonsHaveFrame, 0, widget) )
+      if ( styleHint(QStyle::SH_DockWidget_ButtonsHaveFrame, nullptr, widget) )
         ret += getFrameSpec(CC_group(CC_ToolButton)).width;
       ret += getLabelSpec(CC_group(CC_ToolButton)).vmargin;
-      //ret *= 2; // HACK why ? sizeHint() already has it
       return ret;
     }
     break;
@@ -3331,6 +3458,7 @@ int QSvgThemableStyle::styleHint(StyleHint hint, const QStyleOption * option, co
 {
   switch (hint) {
     case SH_ComboBox_ListMouseTracking :
+    case QStyle::SH_Menu_SupportsSections :
     case SH_Menu_MouseTracking :
     case SH_MenuBar_MouseTracking : return true;
 
@@ -3520,9 +3648,20 @@ QSize QSvgThemableStyle::sizeFromContents ( ContentsType type, const QStyleOptio
       if ( const QStyleOptionMenuItem *opt =
            qstyleoption_cast<const QStyleOptionMenuItem *>(option) ) {
 
-        if (opt->menuItemType == QStyleOptionMenuItem::Separator)
-          s = QSize(csw,getThemeTweak("specific.menu.separator.height").toInt());
-        else {
+        if (opt->menuItemType == QStyleOptionMenuItem::Separator) {
+          if ( opt->text.isEmpty() ) {
+            // separator
+            s = QSize(csw,getThemeTweak("specific.menu.separator.height").toInt());
+          } else {
+            // menu section with title
+            QStyleOptionButton o;
+            o.QStyleOption::operator =(*opt);
+            o.text = opt->text;
+            o.icon = opt->icon;
+            o.iconSize = QSize(opt->maxIconWidth,opt->maxIconWidth);
+            s = sizeFromContents(CT_PushButton,&o,csz,widget);
+          }
+        } else {
           s = sizeFromContents(fm,fs,is,ls,opt->text,opt->maxIconWidth);
         }
 
@@ -3649,6 +3788,7 @@ QSize QSvgThemableStyle::sizeFromContents ( ContentsType type, const QStyleOptio
       if ( const QStyleOptionTab *opt =
            qstyleoption_cast<const QStyleOptionTab *>(option) ) {
 
+        // Size of this tab
         s = sizeFromContents(fm,fs,is,ls,
                              opt->text,
                              opt->icon.isNull() ? 0 : opt->iconSize.width());
@@ -3656,6 +3796,13 @@ QSize QSvgThemableStyle::sizeFromContents ( ContentsType type, const QStyleOptio
         if ( const QTabBar *w = qobject_cast< const QTabBar* >(widget) ) {
             if ( w->tabsClosable() )
               s.rwidth() += ls.tispace+pixelMetric(PM_TabCloseIndicatorWidth);
+        }
+
+        if ( getThemeTweak("specific.tab.variant") == VA_TAB_INDIVIDUAL ||
+             getThemeTweak("specific.tab.variant") == VA_TAB_GROUP_NON_SELECTED ) {
+          // allow active tab to be higher than others
+          // this is substracted from non toggled tabs when drawing
+          s.rheight() += 5;
         }
 
         if ( opt->shape == QTabBar::TriangularEast ||
@@ -3743,6 +3890,8 @@ QSize QSvgThemableStyle::sizeFromContents ( ContentsType type, const QStyleOptio
       if ( const QStyleOptionViewItem *opt =
            qstyleoption_cast<const QStyleOptionViewItem *>(option) ) {
 
+        // use item's own font
+        fm = opt->fontMetrics;
         s = sizeFromContents(fm,fs,is,ls,
                              opt->text,
                              opt->icon.isNull() ? 0 : pixelMetric(PM_ListViewIconSize));
@@ -3944,6 +4093,30 @@ QRect QSvgThemableStyle::subElementRect(SubElement e, const QStyleOption * optio
       break;
     }
 
+    case SE_TabWidgetTabBar : {
+      // already a visual rect
+      ret = QCommonStyle::subElementRect(SE_TabWidgetTabBar,option,widget);
+      // limit width/height and remove left and right (top, bottom) of tab contents if necessary
+      if ( const QTabWidget *tw = qobject_cast<const QTabWidget *>(widget) ) {
+        QTabBar::Shape s = tw->tabBar()->shape();
+        if ( s == QTabBar::RoundedEast ||
+             s == QTabBar::RoundedWest ||
+             s == QTabBar::TriangularEast ||
+             s == QTabBar::TriangularWest ) {
+          if ( ret.top() < y+fs.left )
+            ret.setLeft(y+fs.left);
+          if ( ret.bottom() > y+h-fs.right )
+            ret.setBottom(y+h-fs.right );
+        } else {
+          if ( ret.left() < x+fs.left )
+            ret.setLeft(x+fs.left);
+          if ( ret.right() > x+w-fs.right )
+            ret.setRight(x+w-fs.right );
+        }
+      }
+      break;
+    }
+
     case SE_TabBarTabText : {
       ret = labelRect(r,fs,is,ls);
       break;
@@ -3958,7 +4131,7 @@ QRect QSvgThemableStyle::subElementRect(SubElement e, const QStyleOption * optio
 
     case SE_ItemViewItemCheckIndicator : {
       ret = r.adjusted(ls.hmargin,0,0,0);
-      ret.setWidth(qMin(ret.height(),(int)ds.size));
+      ret.setWidth(qMin(ret.height(),static_cast<int>(ds.size)));
       break;
     }
 
@@ -3973,7 +4146,7 @@ QRect QSvgThemableStyle::subElementRect(SubElement e, const QStyleOption * optio
            qstyleoption_cast<const QStyleOptionViewItem *>(option) ) {
         //ret = r.adjusted(ls.hmargin,0,0,0);
         if ( opt->features & QStyleOptionViewItem::HasCheckIndicator )
-          ret = ret.adjusted(pixelMetric(PM_CheckBoxLabelSpacing)+qMin(ret.height(),(int)ds.size),0,0,0);
+          ret = ret.adjusted(pixelMetric(PM_CheckBoxLabelSpacing)+qMin(ret.height(),static_cast<int>(ds.size)),0,0,0);
       }
       break;
     }
@@ -4898,8 +5071,6 @@ void QSvgThemableStyle::renderFrame(QPainter *p,
 
   // rects to draw frame parts
   QRect top, bottom, left, right, topleft, topright, bottomleft, bottomright;
-  // Clipping region
-  QRegion region;
 
   computeFrameRects(bounds,fs,orn,
                     top,bottom,left,right,
@@ -4970,6 +5141,23 @@ void QSvgThemableStyle::renderFrame(QPainter *p,
   if ( !bottomleft.isNull() )
     bottomleft.adjust(0,0,-1,-1);
 
+  /* Cuts */
+  if ( fs.hasCuts ) {
+    QRect topClip = top;
+    QRegion clip = bounds;
+
+    if ( (fs.h0 >= x0) && (fs.h1 >= fs.h0) ) {
+      topClip.setLeft(fs.h0);
+      topClip.setRight(fs.h1);
+
+      clip -= topClip;
+    }
+
+    p->save();
+    p->setClipRegion(clip, Qt::IntersectClip);
+  }
+
+
   if ( dir == Qt::RightToLeft ) {
     p->save();
     if ( orn == Horizontal ) {
@@ -5004,6 +5192,8 @@ void QSvgThemableStyle::renderFrame(QPainter *p,
   if ( usePalette && (b.style() != Qt::NoBrush) ) {
     QBrush lightBrush(b), darkBrush(b);
     QColor lightColor, darkColor;
+    // Clipping region for accurate colorization
+    QRegion region;
 
     if ( use3dFrame ) {
       lightColor = b.color().lighter();
@@ -5075,6 +5265,10 @@ void QSvgThemableStyle::renderFrame(QPainter *p,
   }
 
   if ( dir == Qt::RightToLeft ) {
+    p->restore();
+  }
+
+  if ( fs.hasCuts ) {
     p->restore();
   }
 
@@ -5336,7 +5530,7 @@ void QSvgThemableStyle::renderLabel(QPainter* p,
                             const frame_spec_t& fs,
                             const interior_spec_t& is,
                             const label_spec_t& ls,
-                            int talign,
+                            unsigned int talign,
                             const QString& text,
                             const QPixmap& icon,
                             const Qt::ToolButtonStyle tialign) const
@@ -5464,7 +5658,7 @@ inline QVariant QSvgThemableStyle::getStyleTweak(const QString &key) const
 QLayout * QSvgThemableStyle::layoutForWidget(const QWidget* widget, QLayout *l) const
 {
   if ( !widget )
-    return NULL;
+    return nullptr;
 
   QLayout *pLayout = l; /* parent layout */
 
@@ -5472,7 +5666,7 @@ QLayout * QSvgThemableStyle::layoutForWidget(const QWidget* widget, QLayout *l) 
     pLayout = widget->parentWidget()->layout();
 
   if ( !pLayout )
-    return NULL;
+    return nullptr;
 
   for (int i = 0; i < pLayout->count(); ++i) {
     // item is a widget -> compare
@@ -5487,7 +5681,7 @@ QLayout * QSvgThemableStyle::layoutForWidget(const QWidget* widget, QLayout *l) 
     }
   }
 
-  return NULL;
+  return nullptr;
 }
 
 void QSvgThemableStyle::computeButtonCapsule(const QWidget *widget, bool &capsule, int &h, int &v) const
@@ -5530,27 +5724,29 @@ void QSvgThemableStyle::computeButtonCapsule(const QWidget *widget, bool &capsul
   const QVBoxLayout *vbox = qobject_cast<const QVBoxLayout *>(myLayout);
   const QGridLayout *grid = qobject_cast<const QGridLayout *>(myLayout);
 
-  QWidget *myLeftWidget = 0, *myRightWidget = 0;
-  QWidget *myTopWidget = 0, *myBottomWidget = 0;
+  QWidget *myLeftWidget = nullptr, *myRightWidget = nullptr;
+  QWidget *myTopWidget = nullptr, *myBottomWidget = nullptr;
 
   // QHBoxLayout
   if ( hbox ) {
-    if ( myIdx > 0 )
+    if ( myIdx > 0 ) {
       myLeftWidget = myLayout->itemAt(myIdx-1) ?
-        myLayout->itemAt(myIdx-1)->widget() : 0;
+            myLayout->itemAt(myIdx-1)->widget() : nullptr;
+    }
     if ( myIdx < cnt-1 )
       myRightWidget = myLayout->itemAt(myIdx+1) ?
-        myLayout->itemAt(myIdx+1)->widget() : 0;
+        myLayout->itemAt(myIdx+1)->widget() : nullptr;
   }
 
   // QVBoxLayout
   if ( vbox ) {
     if ( myIdx > 0 )
       myTopWidget = myLayout->itemAt(myIdx-1) ?
-        myLayout->itemAt(myIdx-1)->widget() : 0;
-    if ( myIdx < cnt-1 )
+        myLayout->itemAt(myIdx-1)->widget() : nullptr;
+    if ( myIdx < cnt-1 ) {
       myBottomWidget = myLayout->itemAt(myIdx+1) ?
-        myLayout->itemAt(myIdx+1)->widget() : 0;
+            myLayout->itemAt(myIdx+1)->widget() : nullptr;
+    }
   }
 
   // QGridLayout
@@ -5668,7 +5864,7 @@ QBrush QSvgThemableStyle::bgBrush(const palette_spec_t &ps,
 
   QBrush r;
 
-  QPalette pal = widget ? widget->palette() : opt->palette;
+  QPalette pal = widget ? widget->palette() : opt ? opt->palette : QGuiApplication::palette();
   const QPalette::ColorGroup cg = widget ?
         widget->isEnabled() ? QPalette::Normal : QPalette::Disabled
                             : (opt->state & State_Enabled) ?
@@ -5729,6 +5925,7 @@ QBrush QSvgThemableStyle::fgBrush(const palette_spec_t &ps,
         widget->isEnabled() ? QPalette::Normal : QPalette::Disabled
                             : (opt->state & State_Enabled) ?
                                 QPalette::Normal : QPalette::Disabled;
+
   pal.setCurrentColorGroup(cg);
   const QPalette::ColorRole fgrole = widget ? widget->foregroundRole() : QPalette::NoRole;
   QString val;

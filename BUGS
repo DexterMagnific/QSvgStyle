@@ -17,17 +17,7 @@ QSvgStyle
 
 -- Progressbar
 * overdraw in busy progress bar in vertical mode
-* glitch for FULL and WRAP busy progressbar type
-
-
--- Dock
-* dock widget buttons overlap with frame
-  -> when docked, frame is for title
-  -> when floating, frame is for whole dock
-  -> set title margin to 0 and apply standard qsvgstyle rendering for labels
-  -> title rect should be reduced by the size of the visible buttons
-  -> buttons should be moved inside frame
-  -> PE_FrameDockWidget is never called
+* glitch for WRAP busy progressbar type
 
 -- Scroll
 * use own indicators instead of generic arrows that
@@ -50,7 +40,9 @@ will overlap the title
 * When using QSvgThemeBuilder to adjust some indicator sizes, the widget
 may not apply the new size. This is because this indicator is used as an icon
 and that the widget caches it. Example: size of "clear" button in line edits
-
+* Text color of LineEdits cannot be changed used QSvgStyle's palette settings,
+because QSvgStyle does not paint the text (QLineEdit does it). The same goes
+for the text color of SpinBoxes and editable ComboBoxes
 
 QSvgThemeBuilder
 ----------------

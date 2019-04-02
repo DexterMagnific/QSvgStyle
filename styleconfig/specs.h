@@ -90,6 +90,11 @@ public:
 #define VA_SCROLLBAR_CURSOR_INSIDE_GROOVE 0
 #define VA_SCROLLBAR_CURSOR_OVERLAPS_GROOVE 1
 
+/* Tabs */
+#define VA_TAB_INDIVIDUAL 0
+#define VA_TAB_GROUP_ALL 1
+#define VA_TAB_GROUP_NON_SELECTED 2
+
 /** Generic information about a theme */
 typedef struct {
   value_t<QString> name;
@@ -107,7 +112,9 @@ typedef struct {
 typedef struct frame_spec_t {
   frame_spec_t () {
     hasCapsule = false;
+    hasCuts = false;
     capsuleH = capsuleV = 2;
+    h0 = h1 = v0 = v1 = -1;
     top = bottom = left = right = 0;
     hasFrame = false;
     width = 0;
@@ -124,10 +131,14 @@ typedef struct frame_spec_t {
 
   /* Allow capsule grouping, used internally */
   bool hasCapsule;
+  /* Frame has cuts, used internally */
+  bool hasCuts;
   /* filled with width when read from config file, used internally */
   int top,bottom,left,right;
   /* widget position in a capsule, used internally */
   int capsuleH,capsuleV; // 0 : middle, -1 : left,top, 1 : right,bottom, 2 : left+right,top+bottom
+  /* frame cuts, used internally */
+  int h0, h1, v0, v1; /* -1: no cuts */
   /* widget in pressed state, used internally */
   bool pressed;
 } frame_spec_t;

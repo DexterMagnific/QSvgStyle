@@ -7,7 +7,6 @@ QSvgStyle
   dynamic widget properties. e.g. qsvgstyle.frame.width=3
 * replace dir,orn pair by a rot/flip variable
 * renderElement: should take into account dir,orn
-* Palette: add fg/bg configuration ability for each state
 
 * use environment variable QSVGSTYLE_THEME to override active theme stored
   in qsvgstyle.cfg

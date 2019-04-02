@@ -557,6 +557,12 @@ Widgets for which QSvgStyle engine has multiple variants are:
   ``Thin``. The latter shows a thin progress bar whose height is
   adjusted by the theme with the text above it.
 
++------------------------------------------------+---------------------------------------------------+
+| .. figure:: images/progress-variant-normal.png |  .. figure:: images/progress-variant-thin.png     |
+|                                                |                                                   |
+|            ``Classic`` variant                 |            ``Thin`` variant                       |
++------------------------------------------------+---------------------------------------------------+
+
 - **Busy Progress Bars**: The engine supplies the variants ``Wrap``,
   ``Back and Forth`` and ``Full length``. The difference is how the
   busy cursor is drawn and its run length. For the ``Full length``
@@ -569,6 +575,24 @@ Widgets for which QSvgStyle engine has multiple variants are:
   addition, the engine offers the ability to draw the scroll bar
   cursor either inside the groove (``Inside groove``) or on top of it
   (``Overlaps groove``).
+
++------------------------------------------------+---------------------------------------------------+
+| .. figure:: images/scroll-variant-classic.png  |  .. figure:: images/scroll-variant-nobtn.png      |
+|                                                |                                                   |
+|            ``Classic`` variant                 |            ``No buttons`` variant                 |
++------------------------------------------------+---------------------------------------------------+
+
+- **Tabs**: The engine supplies the variants ``Individual``, ``Group all`` and
+  ``Group non selected``. The difference is how the tabs are drawn. This
+  affects both the select tab and the others.
+  When the ``Individual`` or ``Group non selected`` is active, the selected
+  tab is drawn higher than the others.
+
++------------------------------------------------+---------------------------------------------------+-----------------------------------------------------+
+| .. figure:: images/tab-variant-individual.png  |  .. figure:: images/tab-variant-group-all.png     |  .. figure:: images/tab-variant-group-non-sel.png   |
+|                                                |                                                   |                                                     |
+|            ``Individual`` variant              |            ``Group all`` variant                  |            ``Group non selected`` variant           |
++------------------------------------------------+---------------------------------------------------+-----------------------------------------------------+
 
 .. note:: The variants QSvgStyle should use are part of the theme settings
 
