@@ -40,6 +40,7 @@
 #include <QtMath>
 #include <QStyleHints>
 #include <QMetaObject>
+#include <QMetaEnum>
 
 #include <QSpinBox>
 #include <QToolButton>
@@ -249,8 +250,10 @@ void QSvgThemableStyle::setUseShapeCache(bool val)
 
 bool QSvgThemableStyle::isContainerWidget(const QWidget * widget) const
 {
-  return !widget || (widget && (
-    (widget->inherits("QFrame") &&
+  if ( !widget )
+    return false;
+
+  return (widget->inherits("QFrame") &&
       !(
         widget->inherits("QTreeWidget") ||
         widget->inherits("QHeaderView") ||
@@ -268,8 +271,7 @@ bool QSvgThemableStyle::isContainerWidget(const QWidget * widget) const
     widget->inherits("QStatusBar") ||
     // Ok this one is not a container widget but we want to treat it as such
     // because it has its own groove
-    widget->inherits("QProgressBar")
-  ));
+    widget->inherits("QProgressBar");
 }
 
 bool QSvgThemableStyle::isAnimatableWidget(const QWidget * widget) const
@@ -347,8 +349,12 @@ void QSvgThemableStyle::polish(QWidget * widget)
   }
 
   // QHeader: set background role to Button
-  if ( QHeaderView *s = qobject_cast< QHeaderView * >(widget) ) {
-    s->setBackgroundRole(QPalette::Button);
+  if ( QHeaderView *h = qobject_cast< QHeaderView * >(widget) ) {
+    h->setBackgroundRole(QPalette::Button);
+  }
+
+  if ( QPushButton *s = qobject_cast< QPushButton * >(widget) ) {
+    s->installEventFilter(this);
   }
 }
 
@@ -379,6 +385,34 @@ void QSvgThemableStyle::slot_animateProgressBars()
       it.value() += 2;
       widget->update();
     }
+  }
+}
+
+void QSvgThemableStyle::dumpOption(const QStyleOption *option)
+{
+  if ( !option )
+    return;
+
+  qDebug() << "================";
+
+  const QWidget *w = qobject_cast<const QWidget *>(option->styleObject);
+
+  // widget
+  if ( w ) {
+    const QMetaObject *m = w->metaObject();
+    qDebug() << "Class" << m->className() << "Object" << w->objectName();
+    qDebug() << "Size" << w->size() << "Pos" << w->pos();
+  }
+
+  // option
+  {
+    const QMetaObject *m = qt_getEnumMetaObject(QStyle::StateFlag());
+    const QMetaEnum me = m->enumerator(m->indexOfEnumerator(qt_getEnumName(QStyle::StateFlag())));
+
+    qDebug() << "Type" << option->type;
+    qDebug() << me.valueToKeys(option->state);
+    qDebug() << "Rect" << option->rect;
+    qDebug() << "LayoutDirection" << option->direction;
   }
 }
 
@@ -470,7 +504,7 @@ void QSvgThemableStyle::drawPrimitive(PrimitiveElement e, const QStyleOption * o
   }
 
   // Draw
-  switch(static_cast<int>(e)) {
+  switch(static_cast<unsigned int>(e)) {
     case PE_Widget : {
       // nothing
       break;
@@ -689,7 +723,7 @@ void QSvgThemableStyle::drawPrimitive(PrimitiveElement e, const QStyleOption * o
     case PE_IndicatorTabClose : {
       // tab close buttons. used when icon theme does not supply one
       int variant = getThemeTweak("specific.tab.variant").toInt();
-      if ( option->state & State_Selected ) {
+      if ( !(option->state & State_Selected) ) {
         if ( (variant == VA_TAB_GROUP_NON_SELECTED) ||
              (variant == VA_TAB_INDIVIDUAL )
              ) {
@@ -1069,7 +1103,7 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
   setupPainterFromFontSpec(p,ts, st);
   fs.pressed = option->state & State_Sunken;
 
-  switch (static_cast<int>(e)) {
+  switch (static_cast<unsigned int>(e)) {
     case CE_FocusFrame : {
       //qDebug() << "CE_FocusFrame" << (widget ? widget->objectName() : "???");
       break;
@@ -2407,9 +2441,12 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
         renderFrame(p,bg,r,fs,fs.element+"-"+st,dir,orn);
         renderInterior(p,bg,r,fs,is,is.element+"-"+st,dir,orn);
 
+        r = subElementRect(SE_DockWidgetTitleBarText,option,widget);
+
         if ( opt->verticalTitleBar ) {
           p->save();
-          r = transposedRect(r);
+          // horizontalize
+          r = r.transposed();
           p->translate(r.left(), r.top() + r.width());
           p->rotate(-90);
           p->translate(-r.left(), -r.top());
@@ -2474,7 +2511,7 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
 
         // FIXME obey QTreeWidgetItem's foreground()
         p->setFont(opt->font);
-        fg = opt->palette.foreground();
+        fg = opt->palette.brush(QPalette::Text);
         renderLabel(p,fg,
                     dir,rlabel,fs,is,ls,
                     opt->displayAlignment,
@@ -3457,8 +3494,9 @@ int QSvgThemableStyle::pixelMetric(PixelMetric metric, const QStyleOption * opti
 int QSvgThemableStyle::styleHint(StyleHint hint, const QStyleOption * option, const QWidget * widget, QStyleHintReturn * returnData) const
 {
   switch (hint) {
+    case SH_ScrollBar_Transient:
     case SH_ComboBox_ListMouseTracking :
-    case QStyle::SH_Menu_SupportsSections :
+    case SH_Menu_SupportsSections :
     case SH_Menu_MouseTracking :
     case SH_MenuBar_MouseTracking : return true;
 
@@ -4020,6 +4058,10 @@ QRect QSvgThemableStyle::subElementRect(SubElement e, const QStyleOption * optio
       ret = r;
       break;
     }
+    case SE_FrameContents: {
+      ret = interiorRect(r, fs,is);
+      break;
+    }
     case SE_ProgressBarGroove :
     case SE_ProgressBarContents : {
       if ( orn != Horizontal ) {
@@ -4147,6 +4189,48 @@ QRect QSvgThemableStyle::subElementRect(SubElement e, const QStyleOption * optio
         //ret = r.adjusted(ls.hmargin,0,0,0);
         if ( opt->features & QStyleOptionViewItem::HasCheckIndicator )
           ret = ret.adjusted(pixelMetric(PM_CheckBoxLabelSpacing)+qMin(ret.height(),static_cast<int>(ds.size)),0,0,0);
+      }
+      break;
+    }
+
+    case SE_DockWidgetTitleBarText : {
+      if ( const QStyleOptionDockWidget *opt =
+           qstyleoption_cast<const QStyleOptionDockWidget *>(option) ) {
+        // remove room for buttons and text-icon spacing
+        if ( opt->verticalTitleBar ) {
+          ret = r.adjusted(0,2*pixelMetric(PM_TitleBarButtonSize)+ls.tispace,0,0);
+        } else {
+          ret = r.adjusted(0,0,-2*pixelMetric(PM_TitleBarButtonSize)-ls.tispace,0);
+        }
+      }
+      break;
+    }
+
+    case SE_DockWidgetFloatButton : {
+      ret = interiorRect(r,fs,is);
+      if ( const QStyleOptionDockWidget *opt =
+           qstyleoption_cast<const QStyleOptionDockWidget *>(option) ) {
+        if ( opt->verticalTitleBar ) {
+          ret = alignedRect(Qt::LeftToRight,Qt::AlignTop | Qt::AlignHCenter,QSize(pixelMetric(PM_TitleBarButtonSize),pixelMetric(PM_TitleBarButtonSize)),ret);
+          // shift by close button
+          ret.adjust(0,pixelMetric(PM_TitleBarButtonSize),0,pixelMetric(PM_TitleBarButtonSize));
+        } else {
+          ret = alignedRect(Qt::LeftToRight,Qt::AlignRight | Qt::AlignVCenter,QSize(pixelMetric(PM_TitleBarButtonSize),pixelMetric(PM_TitleBarButtonSize)),ret);
+          // shift by close button
+          ret.adjust(-pixelMetric(PM_TitleBarButtonSize),0,-pixelMetric(PM_TitleBarButtonSize),0);
+        }
+      }
+      break;
+    }
+    case SE_DockWidgetCloseButton : {
+      ret = interiorRect(r,fs,is);
+      if ( const QStyleOptionDockWidget *opt =
+           qstyleoption_cast<const QStyleOptionDockWidget *>(option) ) {
+        if ( opt->verticalTitleBar ) {
+          ret = alignedRect(Qt::LeftToRight,Qt::AlignTop | Qt::AlignHCenter,QSize(pixelMetric(PM_TitleBarButtonSize),pixelMetric(PM_TitleBarButtonSize)),ret);
+        } else {
+          ret = alignedRect(Qt::LeftToRight,Qt::AlignRight | Qt::AlignVCenter,QSize(pixelMetric(PM_TitleBarButtonSize),pixelMetric(PM_TitleBarButtonSize)),ret);
+        }
       }
       break;
     }

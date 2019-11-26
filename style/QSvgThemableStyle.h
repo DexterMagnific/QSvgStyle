@@ -55,7 +55,7 @@ class QSvgThemableStyle : public QCommonStyle {
     };
 
     enum QSvgStyleControlElement {
-      CE_QSvgStyleBase = CE_CustomBase + 100,
+      CE_QSvgStyleBase = CE_CustomBase + 1,
 
       CE_ScrollBarGroove,
 
@@ -452,6 +452,11 @@ class QSvgThemableStyle : public QCommonStyle {
      */
     void setupPainterFromFontSpec(QPainter *p, const font_spec_t &ts,
                                   const QString &status) const;
+
+    /**
+     * Dumps the given option
+     */
+    void dumpOption(const QStyleOption *option);
 
     friend class ThemeBuilderUI;
 

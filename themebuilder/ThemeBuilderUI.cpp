@@ -2183,6 +2183,7 @@ void ThemeBuilderUI::setupPreviewForWidget(const QTreeWidgetItem *current)
     variants = 4;
 
     QSlider *widget = new QSlider();
+    widget->setMaximum(1000);
 
     switch (currentPreviewVariant % variants) {
       case 0:

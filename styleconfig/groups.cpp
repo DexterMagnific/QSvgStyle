@@ -90,7 +90,7 @@ QString PE_group(QStyle::PrimitiveElement element)
 
 QString CE_group(QStyle::ControlElement element)
 {
-  switch (static_cast<int>(element)) {
+  switch (static_cast<unsigned int>(element)) {
     case QStyle::CE_PushButton : return "PushButton";
     case QStyle::CE_PushButtonBevel : return "PushButton";
     case QStyle::CE_PushButtonLabel : return "PushButton";
