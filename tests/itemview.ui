@@ -1,0 +1,514 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Form</class>
+ <widget class="QWidget" name="Form">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1738</width>
+    <height>1170</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <layout class="QGridLayout" name="gridLayout_3">
+   <item row="0" column="1">
+    <layout class="QGridLayout" name="gridLayout_2">
+     <item row="1" column="0">
+      <widget class="QListWidget" name="listWidget_2">
+       <property name="iconSize">
+        <size>
+         <width>64</width>
+         <height>64</height>
+        </size>
+       </property>
+       <item>
+        <property name="text">
+         <string>New Item</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>green bg</string>
+        </property>
+        <property name="background">
+         <brush brushstyle="SolidPattern">
+          <color alpha="255">
+           <red>85</red>
+           <green>255</green>
+           <blue>127</blue>
+          </color>
+         </brush>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Big font, right</string>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>28</pointsize>
+         </font>
+        </property>
+        <property name="textAlignment">
+         <set>AlignTrailing|AlignVCenter</set>
+        </property>
+        <property name="icon">
+         <iconset theme="document-save">
+          <normaloff>.</normaloff>.</iconset>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Disabled, centered</string>
+        </property>
+        <property name="textAlignment">
+         <set>AlignCenter</set>
+        </property>
+        <property name="background">
+         <brush brushstyle="BDiagPattern">
+          <color alpha="255">
+           <red>221</red>
+           <green>255</green>
+           <blue>51</blue>
+          </color>
+         </brush>
+        </property>
+        <property name="checkState">
+         <enum>Checked</enum>
+        </property>
+        <property name="flags">
+         <set>ItemIsSelectable|ItemIsDragEnabled|ItemIsUserCheckable</set>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item row="2" column="0">
+      <widget class="QLabel" name="label_3">
+       <property name="text">
+        <string>Icon view</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="0">
+      <widget class="QLabel" name="label_2">
+       <property name="text">
+        <string>List view</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="0">
+      <widget class="QListWidget" name="listWidget_3">
+       <property name="viewMode">
+        <enum>QListView::IconMode</enum>
+       </property>
+       <item>
+        <property name="text">
+         <string>New Item</string>
+        </property>
+        <property name="textAlignment">
+         <set>AlignLeading|AlignTop</set>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>green bg</string>
+        </property>
+        <property name="background">
+         <brush brushstyle="SolidPattern">
+          <color alpha="255">
+           <red>85</red>
+           <green>255</green>
+           <blue>127</blue>
+          </color>
+         </brush>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Big font, bottom text</string>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>28</pointsize>
+         </font>
+        </property>
+        <property name="textAlignment">
+         <set>AlignLeading|AlignBottom</set>
+        </property>
+        <property name="background">
+         <brush brushstyle="DiagCrossPattern">
+          <color alpha="255">
+           <red>85</red>
+           <green>255</green>
+           <blue>255</blue>
+          </color>
+         </brush>
+        </property>
+        <property name="foreground">
+         <brush brushstyle="NoBrush">
+          <color alpha="255">
+           <red>255</red>
+           <green>85</green>
+           <blue>127</blue>
+          </color>
+         </brush>
+        </property>
+        <property name="icon">
+         <iconset theme="document-save">
+          <normaloff>.</normaloff>.</iconset>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Disabled</string>
+        </property>
+        <property name="checkState">
+         <enum>Checked</enum>
+        </property>
+        <property name="flags">
+         <set>ItemIsSelectable|ItemIsDragEnabled|ItemIsUserCheckable</set>
+        </property>
+       </item>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item row="0" column="0">
+    <layout class="QGridLayout" name="gridLayout">
+     <item row="0" column="1" rowspan="2">
+      <spacer name="horizontalSpacer">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeType">
+        <enum>QSizePolicy::Fixed</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>20</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item row="3" column="0">
+      <widget class="QTableWidget" name="tableWidget">
+       <property name="showGrid">
+        <bool>true</bool>
+       </property>
+       <property name="gridStyle">
+        <enum>Qt::DashDotLine</enum>
+       </property>
+       <row>
+        <property name="text">
+         <string>R1, hleft, vtop</string>
+        </property>
+        <property name="textAlignment">
+         <set>AlignLeading|AlignTop</set>
+        </property>
+       </row>
+       <row>
+        <property name="text">
+         <string>R2, hleft, vcenter</string>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>20</pointsize>
+         </font>
+        </property>
+        <property name="background">
+         <color>
+          <red>0</red>
+          <green>85</green>
+          <blue>255</blue>
+         </color>
+        </property>
+        <property name="icon">
+         <iconset theme="document-save">
+          <normaloff>.</normaloff>.</iconset>
+        </property>
+       </row>
+       <row>
+        <property name="text">
+         <string>R3, vright, vcenter</string>
+        </property>
+        <property name="textAlignment">
+         <set>AlignTrailing|AlignVCenter</set>
+        </property>
+       </row>
+       <row>
+        <property name="text">
+         <string>R4, hcenter,vbottom</string>
+        </property>
+        <property name="textAlignment">
+         <set>AlignHCenter|AlignBottom</set>
+        </property>
+        <property name="foreground">
+         <brush brushstyle="NoBrush">
+          <color alpha="255">
+           <red>85</red>
+           <green>170</green>
+           <blue>255</blue>
+          </color>
+         </brush>
+        </property>
+       </row>
+       <column>
+        <property name="text">
+         <string>New Column</string>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>20</pointsize>
+         </font>
+        </property>
+        <property name="textAlignment">
+         <set>AlignLeading|AlignTop</set>
+        </property>
+        <property name="icon">
+         <iconset theme="document-new">
+          <normaloff>.</normaloff>.</iconset>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>C1</string>
+        </property>
+        <property name="background">
+         <color>
+          <red>255</red>
+          <green>170</green>
+          <blue>255</blue>
+         </color>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>C2</string>
+        </property>
+        <property name="textAlignment">
+         <set>AlignTrailing|AlignVCenter</set>
+        </property>
+        <property name="background">
+         <color>
+          <red>85</red>
+          <green>255</green>
+          <blue>127</blue>
+         </color>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>C4</string>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>21</pointsize>
+         </font>
+        </property>
+        <property name="textAlignment">
+         <set>AlignCenter</set>
+        </property>
+        <property name="foreground">
+         <brush brushstyle="NoBrush">
+          <color alpha="255">
+           <red>255</red>
+           <green>85</green>
+           <blue>127</blue>
+          </color>
+         </brush>
+        </property>
+       </column>
+       <item row="1" column="1">
+        <property name="text">
+         <string>test</string>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>33</pointsize>
+          <underline>true</underline>
+         </font>
+        </property>
+        <property name="textAlignment">
+         <set>AlignTrailing|AlignBottom</set>
+        </property>
+        <property name="background">
+         <brush brushstyle="FDiagPattern">
+          <color alpha="255">
+           <red>85</red>
+           <green>85</green>
+           <blue>255</blue>
+          </color>
+         </brush>
+        </property>
+        <property name="foreground">
+         <brush brushstyle="NoBrush">
+          <color alpha="255">
+           <red>0</red>
+           <green>143</green>
+           <blue>143</blue>
+          </color>
+         </brush>
+        </property>
+        <property name="icon">
+         <iconset theme="document-new"/>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item row="1" column="0">
+      <widget class="QTreeWidget" name="treeWidget">
+       <property name="alternatingRowColors">
+        <bool>true</bool>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>64</width>
+         <height>64</height>
+        </size>
+       </property>
+       <column>
+        <property name="text">
+         <string>1</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>test</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>test</string>
+        </property>
+       </column>
+       <item>
+        <property name="text">
+         <string>test</string>
+        </property>
+        <item>
+         <property name="text">
+          <string>Big font</string>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>20</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>orange</string>
+         </property>
+         <property name="background">
+          <brush brushstyle="SolidPattern">
+           <color alpha="255">
+            <red>255</red>
+            <green>170</green>
+            <blue>127</blue>
+           </color>
+          </brush>
+         </property>
+         <item>
+          <property name="text">
+           <string>align center, pink bg</string>
+          </property>
+          <property name="textAlignment">
+           <set>AlignCenter</set>
+          </property>
+          <property name="background">
+           <brush brushstyle="SolidPattern">
+            <color alpha="255">
+             <red>255</red>
+             <green>170</green>
+             <blue>255</blue>
+            </color>
+           </brush>
+          </property>
+          <property name="icon">
+           <iconset theme="document-save">
+            <normaloff>.</normaloff>.</iconset>
+          </property>
+          <property name="text">
+           <string/>
+          </property>
+         </item>
+        </item>
+       </item>
+       <item>
+        <property name="text">
+         <string>align right, green bg</string>
+        </property>
+        <property name="textAlignment">
+         <set>AlignTrailing|AlignVCenter</set>
+        </property>
+        <property name="background">
+         <brush brushstyle="Dense6Pattern">
+          <color alpha="255">
+           <red>85</red>
+           <green>255</green>
+           <blue>127</blue>
+          </color>
+         </brush>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>New Item, red fg</string>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>18</pointsize>
+          <weight>75</weight>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="foreground">
+         <brush brushstyle="NoBrush">
+          <color alpha="255">
+           <red>255</red>
+           <green>0</green>
+           <blue>0</blue>
+          </color>
+         </brush>
+        </property>
+        <property name="icon">
+         <iconset theme="document-save">
+          <normaloff>.</normaloff>.</iconset>
+        </property>
+        <item>
+         <property name="text">
+          <string>checkable, disabled</string>
+         </property>
+         <property name="checkState">
+          <enum>Checked</enum>
+         </property>
+         <property name="flags">
+          <set>ItemIsSelectable|ItemIsDragEnabled|ItemIsDropEnabled|ItemIsUserCheckable</set>
+         </property>
+        </item>
+       </item>
+      </widget>
+     </item>
+     <item row="2" column="0">
+      <widget class="QLabel" name="label_4">
+       <property name="text">
+        <string>Table view</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="0">
+      <widget class="QLabel" name="label">
+       <property name="text">
+        <string>Tree view</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

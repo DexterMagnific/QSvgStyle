@@ -7,10 +7,9 @@ TARGET = qsvgthemebuilder
 DESTDIR = bin
 TEMPLATE = app
 
-QT += core gui xml
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+QT += core gui xml widgets
 
-INCLUDEPATH += . ../styleconfig ../thirdparty/svgcleaner
+INCLUDEPATH += . ../styleconfig ../thirdparty/svgcleaner ../thirdparty/quazip
 
 PRE_TARGETDEPS += \
   ../styleconfig/lib/libQSvgStyleConfig.a \
@@ -18,25 +17,30 @@ PRE_TARGETDEPS += \
 
 LIBS += \
   ../styleconfig/lib/libQSvgStyleConfig.a \
-  ../thirdparty/svgcleaner/lib/libsvgcleaner-cli.a
+  ../thirdparty/svgcleaner/lib/libsvgcleaner-cli.a \
+  ../thirdparty/quazip/lib/libquazip.a \
+  -lz
 
 HEADERS += \
   SvgGen.h \
   ThemeBuilderUI.h \
   NewThemeUI.h \
-    GenSubFramePropUI.h
+  GenSubFramePropUI.h \
+  ThemeScreenshotUI.h
 
 SOURCES += \
   main.cpp \
   SvgGen.cpp \
   ThemeBuilderUI.cpp \
   NewThemeUI.cpp \
-    GenSubFramePropUI.cpp
+  GenSubFramePropUI.cpp \
+  ThemeScreenshotUI.cpp
 
 FORMS += \
   ThemeBuilderUIBase.ui \
   NewThemeUIBase.ui \
-  GenSubFramePropUIBase.ui
+  GenSubFramePropUIBase.ui \
+  ThemeScreenshotUIBase.ui
 
 RESOURCES += \
   ThemeBuilderUIBase.qrc

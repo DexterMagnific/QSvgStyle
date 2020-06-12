@@ -54,10 +54,10 @@ It comes with the style engine (QSvgStyle), a theme builder (QSvgThemeBuilder),
 Binary builds are provided for few distributions. If you want to contribute,
 please send me an email.
 
-## Ubuntu Artful/Bionic
+## Ubuntu Bionic/Eoan/Focal
 
-Binary packages are provided on PPA for both i386 and xx86_64
-architectures for Ubuntu Artful and Bionic
+Binary packages are provided on PPA for both i386 and x86_64
+architectures for Ubuntu
 
 ```
   sudo add-apt-repository ppa:dextermagnific/ppa
@@ -76,7 +76,7 @@ You need the Qt5 development files of the following modules to compile QSvgStyle
 - Qt XML
 
 ```
-$ qmake -qt=5
+$ qmake
 $ make
 ```
 

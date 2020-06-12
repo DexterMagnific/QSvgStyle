@@ -49,6 +49,7 @@
 #include <QPixmap>
 #include <QGraphicsScene>
 #include <QFontDatabase>
+#include <QImage>
 
 // Includes for preview
 #include <QPushButton>
@@ -71,19 +72,25 @@
 #include <QStatusBar>
 #include <QMdiArea>
 #include <QMdiSubWindow>
+#include <QTableWidget>
 
 #include "NewThemeUI.h"
+#include "ThemeScreenshotUI.h"
 #include "ThemeConfig.h"
 #include "StyleConfig.h"
 #include "SvgGen.h"
 #include "../style/QSvgThemableStyle.h"
 #include "groups.h"
 
-// optimizer
+// SVG cleaner
 #include "keys.h"
 #include "basecleaner.h"
 #include "remover.h"
 #include "replacer.h"
+
+// QuaZIP
+#include "quazip.h"
+#include "quazipfile.h"
 
 // Specific tree Item Delegate
 // name is stored in SpecificSettingName
@@ -490,11 +497,13 @@ ThemeBuilderUI::ThemeBuilderUI(QWidget* parent)
 //  containerList->resizeColumnToContents(0);
 
   int maxW = 0;
-  maxW = qMax(maxW,buttonList->header()->sectionSize(0));
-  maxW = qMax(maxW,inputList->header()->sectionSize(0));
-  maxW = qMax(maxW,displayList->header()->sectionSize(0));
-  maxW = qMax(maxW,containerList->header()->sectionSize(0));
-  maxW += 30; // be comfortable
+  maxW = qMax(maxW,buttonList->header()->sectionSize(0)+buttonList->indentation());
+  maxW = qMax(maxW,inputList->header()->sectionSize(0)+inputList->indentation());
+  maxW = qMax(maxW,displayList->header()->sectionSize(0)+displayList->indentation());
+  maxW = qMax(maxW,containerList->header()->sectionSize(0)+containerList->indentation());
+
+  maxW += buttonList->contentsMargins().left()+buttonList->contentsMargins().right();
+  maxW += 10;
 
   buttonList->setFixedWidth(maxW);
   inputList->setFixedWidth(maxW);
@@ -558,7 +567,7 @@ ThemeBuilderUI::ThemeBuilderUI(QWidget* parent)
   inheritCombo->insertSeparator(999);
   foreach(QTreeWidgetItem *i, containerList->findItems("*",Qt::MatchWildcard)) {
     if ( !i->text(3).isEmpty() )
-      inheritCombo->addItem(i->icon(0),i->text(0),i->text(3));
+     inheritCombo->addItem(i->icon(0),i->text(0),i->text(3));
     else {
       for (int j=0; j<i->childCount(); j++) {
         QTreeWidgetItem *c = i->child(j);
@@ -984,7 +993,7 @@ void ThemeBuilderUI::closeEvent(QCloseEvent* e)
 bool ThemeBuilderUI::eventFilter(QObject* o, QEvent* e)
 {
   // previewArea
-  if ( (o == tabWidget3) && previewWidget && (e->type() == QEvent::Resize) ) {
+  if ( (o == tabWidget3) && (e->type() == QEvent::Resize) ) {
     // save detached preview area geometry
     if ( tabWidget3->isTopLevel() ) {
       detachedPeviewGeometry = tabWidget3->geometry();
@@ -994,6 +1003,8 @@ bool ThemeBuilderUI::eventFilter(QObject* o, QEvent* e)
   if ( (o == tabWidget3) && (e->type() == QEvent::Close) ) {
     // detached preview area closed -> re-attach to main window
     slot_detachBtnClicked(false);
+    e->ignore();
+    return true; // do not propagate
   }
 
   if ( (o == previewWidget) && previewWidget &&
@@ -1022,15 +1033,12 @@ bool ThemeBuilderUI::eventFilter(QObject* o, QEvent* e)
     timeLbl->setText(QString("Time: %1ms").arg(t));
   }
 
-  // always process the event
+  // propagate
   return QObject::eventFilter(o, e);
 }
 
 void ThemeBuilderUI::clearDrawStackTree()
 {
-  // foreach(QTreeWidgetItem *i, drawStackTree->findItems("*",Qt::MatchWildcard)) {
-  //   delete i;
-  // }
   drawStackTree->clear();
   currentDrawStackItem = 0;
 }
@@ -1047,17 +1055,16 @@ void ThemeBuilderUI::setStyleForWidgetAndChildren(QStyle* style, QWidget* w)
     // lookup for immediate children
     QWidget *c = qobject_cast< QWidget* >(o);
     if ( c ) {
-      c->setStyle(style);
+      setStyleForWidgetAndChildren(style, c);
     }
 
     // layout of level 1: iterate through layout items and set style
-    // NOTE we don't go beyond level 1 layouts
     QLayout *l = qobject_cast< QLayout* >(o);
     if ( l ) {
       for (int i=0; i<l->count(); ++i) {
         QWidget *lc = l->itemAt(i)->widget(); // child widget inside layout
         if ( lc )
-          lc->setStyle(style);
+          setStyleForWidgetAndChildren(style, lc);
       }
     }
   }
@@ -1501,16 +1508,67 @@ void ThemeBuilderUI::slot_saveTheme()
   config->commitWriteCache();
 
   if ( !QFile::remove(cfgFile) ) {
-    qWarning() << "[QSvgThemeBuilder]" << "Could not remove" + cfgFile;
+    qWarning() << "[QSvgThemeBuilder]" << "Could not remove" << cfgFile;
     return;
   }
 
   if ( !QFile::copy(tempCfgFile,cfgFile) ) {
-    qWarning() << "[QSvgThemeBuilder]" << "Could not save" + cfgFile;
+    qWarning() << "[QSvgThemeBuilder]" << "Could not save" << cfgFile;
     return;
   }
 
-  qDebug() << "[QSvgThemeBuilder]" << cfgFile << "saved";
+  qDebug() << "[QSvgThemeBuilder]" << "Theme config" << cfgFile << "saved";
+
+  // Generate screenshot
+  QString imgFile = QFileInfo(cfgFile).absoluteDir().path()+"/"+QFileInfo(cfgFile).baseName()+".png";
+  ThemeScreenshotUI w(nullptr);
+  w.setAttribute(Qt::WA_NoSystemBackground, true);
+  setStyleForWidgetAndChildren(style, &w);
+  w.themeGroup->setTitle(themeNameEdit->text());
+  w.authorLbl->setText(authorEdit->text());
+  w.descrLbl->setText(descrEdit->text());
+  w.checkBox_3->setCheckState(Qt::PartiallyChecked); // Can't get this using Qt designer
+  w.resize(w.minimumSizeHint());
+  QImage img(w.size(), QImage::Format_ARGB32);
+  img.fill(Qt::transparent);
+  w.render(&img);
+  if ( !img.save(imgFile, "PNG") ) {
+    qWarning() << "[QSvgThemeBuilder]" << "Count not save screenshot" << imgFile;
+  } else {
+      qDebug() << "[QSvgThemeBuilder]" << "Theme screenshot" << imgFile << "saved";
+  }
+
+  // Generate ZIP package, with CFG, SVG and Screenshot
+  QString zipFile = QFileInfo(cfgFile).absoluteDir().path()+"/"+QFileInfo(cfgFile).baseName()+".zip";
+  QuaZip zip(zipFile);
+  if ( zip.open(QuaZip::mdCreate,nullptr) ) {
+    zip.setUtf8Enabled(true);
+    zip.setComment("This is '" + themeNameEdit->text() + "', a theme for Qt5 QSvgStyle engine made by "
+                   + authorEdit->text() +". Created using QSvgThemeBuilder.");
+
+    QStringList l;
+    l << cfgFile << svgFile << imgFile;
+
+    foreach(const QString &file, l) {
+      // read file into byte array
+      QFile f(file);
+      if ( f.open(QIODevice::ReadOnly) ) {
+        QByteArray data = f.readAll();
+        f.close();
+
+        // write to ZIP archive
+        QuaZipFile entry(&zip);
+        entry.open(QIODevice::WriteOnly, QuaZipNewInfo(QFileInfo(file).absoluteDir().dirName()+"/"+QFileInfo(file).fileName(), file));
+        entry.write(data);
+        entry.close();
+      }
+    }
+
+    zip.close();
+    qDebug() << "[QSvgThemeBuilder]" << "Theme package" << zipFile << "saved";
+  } else {
+    qDebug() << "[QSvgThemeBuilder]" << "Could not create theme package" << zipFile;
+  }
 
   cfgModified = false;
   saveBtn->setEnabled(false);
@@ -1567,6 +1625,9 @@ void ThemeBuilderUI::slot_optimizeSvg()
   qDebug() << "[QSvgThemeBuilder]" << "Optimized" << svgFile
     << QString("(%1 -> %2 bytes)").arg(oldsize).arg(newsize);
 
+  cfgModified = true;
+  setWindowModified(true);
+  saveBtn->setEnabled(true);
   slot_svgFileChanged(svgFile);
 }
 
@@ -2448,34 +2509,49 @@ void ThemeBuilderUI::setupPreviewForWidget(const QTreeWidgetItem *current)
   }
 
   if ( widget_str == CE_str(QStyle::CE_ItemViewItem) ) {
-    variants = 1;
+    variants = 2;
 
-    QTreeWidget *widget = new QTreeWidget();
+    switch (currentPreviewVariant % variants) {
+      case 0: {
+        QTreeWidget *widget = new QTreeWidget();
 
-    QTreeWidgetItem *item1 = new QTreeWidgetItem(widget);
-    item1->setText(0,"item1");
-    item1->setCheckState(0,Qt::Checked);
-    item1->setIcon(0,icon);
+        QTreeWidgetItem *item1 = new QTreeWidgetItem(widget);
+        item1->setText(0,"item1");
+        item1->setCheckState(0,Qt::Checked);
+        item1->setIcon(0,icon);
 
-    QTreeWidgetItem *subitem1 = new QTreeWidgetItem(item1);
-    subitem1->setText(0,"subitem 1");
-    QTreeWidgetItem *subitem2 = new QTreeWidgetItem(item1);
-    subitem2->setText(0,"subitem 2");
-    QTreeWidgetItem *subitem3 = new QTreeWidgetItem(item1);
-    subitem3->setText(0,"subitem 3");
+        QTreeWidgetItem *subitem1 = new QTreeWidgetItem(item1);
+        subitem1->setText(0,"subitem 1");
+        QTreeWidgetItem *subitem2 = new QTreeWidgetItem(item1);
+        subitem2->setText(0,"subitem 2");
+        QTreeWidgetItem *subitem3 = new QTreeWidgetItem(item1);
+        subitem3->setText(0,"subitem 3");
 
-    QTreeWidgetItem *item2 = new QTreeWidgetItem(widget);
-    item2->setText(0,"item2");
-    item2->setIcon(0,icon);
+        QTreeWidgetItem *item2 = new QTreeWidgetItem(widget);
+        item2->setText(0,"item2");
+        item2->setIcon(0,icon);
 
-    QTreeWidgetItem *item3 = new QTreeWidgetItem(widget);
-    item3->setText(0,"item3");
-    item3->setCheckState(0,Qt::Unchecked);
+        QTreeWidgetItem *item3 = new QTreeWidgetItem(widget);
+        item3->setText(0,"item3");
+        item3->setCheckState(0,Qt::Unchecked);
 
-    widget->setAlternatingRowColors(true);
-    widget->setHeaderHidden(true);
+        widget->setAlternatingRowColors(true);
+        widget->setHeaderHidden(true);
 
-    previewWidget = widget;
+        previewWidget = widget;
+        break;
+      }
+      case 1: {
+        QTableWidget *widget = new QTableWidget(4,4);
+
+        for (int row=0; row<widget->rowCount(); row++)
+          for (int col=0; col<widget->columnCount(); col++)
+            widget->setItem(row, col, new QTableWidgetItem(QString("L%1C%2").arg(row).arg(col)));
+
+        previewWidget = widget;
+        break;
+      }
+    }
   }
 
   if ( widget_str == PE_str(QStyle::PE_PanelStatusBar) ) {
@@ -2762,12 +2838,12 @@ void ThemeBuilderUI::slot_detachBtnClicked(bool checked)
     icon.addFile(QString::fromUtf8(":/icon/pixmaps/dockwidget.png"), QSize(), QIcon::Normal, QIcon::Off);
     detachBtn->setIcon(icon);
     detachBtn->setText("Attach");
-    //previewArea->setParent(NULL);
     tabWidget3->setParent(NULL);
     tabWidget3->show();
     if ( detachedPeviewGeometry.isValid() )
       tabWidget3->setGeometry(detachedPeviewGeometry);
     tabWidget3->window()->setWindowTitle("QSvgThemeBuilder preview");
+    tabWidget3->setAttribute(Qt::WA_DeleteOnClose,false);
   } else {
     icon.addFile(QString::fromUtf8(":/icon/pixmaps/widget.png"), QSize(), QIcon::Normal, QIcon::Off);
     detachBtn->setIcon(icon);
@@ -3499,7 +3575,7 @@ void ThemeBuilderUI::slot_frameIdCbChanged(int state)
   } else {
     frameIdCombo->setEnabled(false);
   }
-  if ( state == Qt::Checked ) {        
+  if ( state == Qt::Checked ) {
     if ( raw_es.frame.element.present ) {
       int idx = frameIdCombo->findText(raw_es.frame.element);
       if ( idx == -1 )

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1139</width>
-    <height>717</height>
+    <width>1467</width>
+    <height>948</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -61,7 +61,7 @@
          <x>0</x>
          <y>0</y>
          <width>256</width>
-         <height>489</height>
+         <height>660</height>
         </rect>
        </property>
        <property name="palette">
@@ -227,7 +227,7 @@
          <x>0</x>
          <y>0</y>
          <width>256</width>
-         <height>489</height>
+         <height>646</height>
         </rect>
        </property>
        <property name="palette">
@@ -450,7 +450,7 @@
          <x>0</x>
          <y>0</y>
          <width>256</width>
-         <height>489</height>
+         <height>646</height>
         </rect>
        </property>
        <property name="palette">
@@ -652,7 +652,7 @@
          <x>0</x>
          <y>0</y>
          <width>256</width>
-         <height>489</height>
+         <height>646</height>
         </rect>
        </property>
        <property name="palette">
@@ -1250,7 +1250,7 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>521</width>
+             <width>749</width>
              <height>50</height>
             </rect>
            </property>
@@ -2527,8 +2527,8 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>186</width>
-               <height>261</height>
+               <width>307</width>
+               <height>390</height>
               </rect>
              </property>
              <attribute name="label">
@@ -2821,8 +2821,8 @@
                   <rect>
                    <x>0</x>
                    <y>0</y>
-                   <width>172</width>
-                   <height>183</height>
+                   <width>293</width>
+                   <height>294</height>
                   </rect>
                  </property>
                  <layout class="QGridLayout" name="gridLayout_27">
@@ -2849,8 +2849,8 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>169</width>
-               <height>44</height>
+               <width>196</width>
+               <height>52</height>
               </rect>
              </property>
              <attribute name="label">
@@ -3044,8 +3044,8 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>172</width>
-               <height>78</height>
+               <width>200</width>
+               <height>96</height>
               </rect>
              </property>
              <attribute name="label">
@@ -3675,7 +3675,7 @@
            <item row="0" column="0">
             <widget class="QLabel" name="label_3">
              <property name="text">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:18pt; font-weight:600;&quot;&gt;QSvgStyle Theme Builder&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;Copyright (C) 2014 Said Lankri, under the GNU GPL License version 2+&lt;br/&gt;&lt;a href=&quot;http://github.com/QSvgStyle&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0057ae;&quot;&gt;http://github.com/QSvgStyle&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;&lt;br/&gt;Uses icons from Qt Designer,&lt;br/&gt;(C) 2017 The Qt Company Ltd.&lt;br/&gt;&lt;a href=&quot;http://qt.digia.com&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0057ae;&quot;&gt;http://qt.io&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;Built-in SVG cleaner courtesy of SVGCleaner team,&lt;br/&gt;Copyright (C) 2012-2014 Evgeniy Reizner,&lt;br/&gt;under the GNU GPL Licence version 2+&lt;br/&gt;&lt;a href=&quot;svgcleanerteam@gmail.com&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0057ae;&quot;&gt;svgcleanerteam@gmail.com&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:18pt; font-weight:600;&quot;&gt;QSvgStyle Theme Builder&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;Copyright (C) 2014 Said Lankri, under the GNU GPL License version 2+&lt;br/&gt;&lt;a href=&quot;http://github.com/QSvgStyle&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0057ae;&quot;&gt;http://github.com/QSvgStyle&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;&lt;br/&gt;Uses icons from Qt Designer,&lt;br/&gt;(C) 2017 The Qt Company Ltd.&lt;br/&gt;&lt;a href=&quot;http://qt.digia.com&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0057ae;&quot;&gt;http://qt.io&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;Built-in SVG cleaner courtesy of SVGCleaner team,&lt;br/&gt;Copyright (C) 2012-2014 Evgeniy Reizner,&lt;br/&gt;under the GNU GPL Licence version 2+&lt;br/&gt;&lt;a href=&quot;svgcleanerteam@gmail.com&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0057ae;&quot;&gt;svgcleanerteam@gmail.com&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;Uses libQuaZip,&lt;br/&gt;Copyright (C) 2005-2018 Sergey A. Tachenov,&lt;br/&gt;Distributed under LGPL&lt;br/&gt;&lt;a href=&quot;https://github.com/stachenov/quazip&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0057ae;&quot;&gt;https://github.com/stachenov/quazip&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
              </property>
              <property name="alignment">
               <set>Qt::AlignCenter</set>

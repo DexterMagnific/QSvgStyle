@@ -2,7 +2,6 @@ QSvgStyle
 ---------
 * Rework animation framework
 
-* add ability to animate non busy progress bars
 * add ability for widgets to alter qsvgstyle theme config by using
   dynamic widget properties. e.g. qsvgstyle.frame.width=3
 * replace dir,orn pair by a rot/flip variable
@@ -10,12 +9,6 @@ QSvgStyle
 
 * use environment variable QSVGSTYLE_THEME to override active theme stored
   in qsvgstyle.cfg
-
--- Toolbar
-* use different settings for toolbuttons located on a toolbar
-
--- Frame
-* Allow frames to have focus
 
 -- Menu items
 * add option to merge menu bar item with its menu (like a tab and its contents)
@@ -31,22 +24,8 @@ QSvgThemeBuilder
 * add 'clear menu' action in recent files menu
 * SVG generator: when colorizing the interior, add option to include first
   frame
-* SVG generator: implement gradient export (e.g. by adding a ::toSvgDefs() function)
 * move global specific tree widget to indivudial per widget settings in
   separate tab
-
--- Extras
-* Add ability to capture menu bar items into a single toolbar button
-  -> button will be a drop down button that grabs all menu bar items
-  -> OR a special button that reacts to mouse wheel to change menu, and when
-     pressed opens corresponding menu bar item menu
-  -> TODO: how to proceed if there is no toolbar (dialog boxes) ?
-
-* Add ability to make frameless top level windows
-  -> In this case, the standard close|restore|minize will be put in a separate
-     toolbar
-  -> TODO: where to put window title ?
-  -> TODO: how to proceed if there is no toolbar (dialog boxes) ?
 
 QSvgThemeManager
 ----------------

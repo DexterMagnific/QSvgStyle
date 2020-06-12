@@ -7,9 +7,8 @@ TARGET = qsvgthememanager
 DESTDIR = bin
 TEMPLATE = app
 
-QT += core gui
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
-greaterThan(QT_MAJOR_VERSION, 4):unix:!macx: QT += x11extras
+QT += core gui widgets
+unix:!macx: QT += x11extras
 
 INCLUDEPATH += . ../styleconfig
 

@@ -11,6 +11,8 @@ QSvgStyle
 -- Tab
 * tab bar close button overlaps frame (thick frames)
 * implement PE_IndicatorTabTear*
+* invert top and bottom frame parts when tabs are at bottom
+  (needs implementation of rot/flip. see TODO)
 
 -- Toolbar
 * rtl separators/handles
@@ -19,15 +21,19 @@ QSvgStyle
 * overdraw in busy progress bar in vertical mode
 * glitch for WRAP busy progressbar type
 
--- Scroll
-* use own indicators instead of generic arrows that
-  have the pushbutton specs
-
 -- Radio/Check
 * add "pressed" state
 
--- Radio
-* add "focused" state
+-- Group box
+* wrong group box contents width (too large) at first show. subsequent shows
+  are ok
+
+-- QML (all)
+* Icon-less buttons have correct size but text aligned (and truncated) as if
+  icon is present
+* wrong button size (too small, have drop down arrow)
+* buttons have down arrows and no icons
+* ComboBoxes too small
 
 Qt limitations
 --------------

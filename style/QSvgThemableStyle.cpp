@@ -817,7 +817,7 @@ void QSvgThemableStyle::drawPrimitive(PrimitiveElement e, const QStyleOption * o
           orn = Vertical;
 
         QRect selectedRect = tb->tabRect(tb->currentIndex());
-        fs.hasCuts = true;
+        fs.hasCuts = false; /* enable to 'cut' the frame at current tab pos */
         fs.h0 = tb->mapToParent(selectedRect.topLeft()).x();
         fs.h1 = tb->mapToParent(selectedRect.topRight()).x();
       } else
@@ -1029,7 +1029,7 @@ void QSvgThemableStyle::drawPrimitive(PrimitiveElement e, const QStyleOption * o
           p->setPen(pn);
 
           if ( st != "normal" ) {
-            // only paint when state in not normal, otherwise keep
+            // only paint when state is not normal, otherwise keep
             // container widget background
             renderFrame(p,bg,r,fs,fs.element+"-"+st,dir);
             renderInterior(p,bg,r,fs,is,is.element+"-"+st,dir);
@@ -1562,6 +1562,7 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
 
         // In order to colorize tabs, look up the tab widget contents
         // and apply its palette to the tab
+        // The used color role for tabs is QPalette::Button
         // That's the way Qt Designer applies palettes to individual tabs
         if ( const QTabBar *tb = qobject_cast<const QTabBar *>(widget) ) {
           // From tab tar
@@ -1575,13 +1576,17 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
                 // which is a good heuristic in real apps
                 QWidget *contents = tw->widget(i);
                 if ( contents ) {
-                  // FIXME dirty hack
+                  o.palette = contents->palette();
+                  o.styleObject = contents;
+                  // FIXME dirty hack: temporarily change the background role to Button for tabs
                   QPalette::ColorRole oldrole = contents->backgroundRole();
                   contents->setBackgroundRole(QPalette::Button);
-                  bg = bgBrush(ps,option,contents, st);
+                  bg = bgBrush(ps,&o,contents, st);
                   contents->setBackgroundRole(oldrole);
-                } else
+                } else {
+                  // no contents -> don't colorize
                   bg.setStyle(Qt::NoBrush);
+                }
 
                 break;
               }
@@ -1690,10 +1695,13 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
                 // does not suppy it. Assume that tabs have different names
                 // which is a good heuristic in real apps
                 QWidget *contents = tw->widget(i);
-                if ( contents )
-                  fg = fgBrush(ps,option,contents, st);
-                else
+                if ( contents ) {
+                  o.palette = contents->palette();
+                  o.styleObject = contents;
+                  fg = fgBrush(ps,&o,contents, st);
+                } else {
                   fg.setStyle(Qt::NoBrush);
+                }
                 break;
               }
             }
@@ -1742,6 +1750,8 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
       if ( const QStyleOptionToolBox *opt =
            qstyleoption_cast<const QStyleOptionToolBox *>(option) ) {
 
+        QStyleOptionToolBox o(*opt);
+
         if ( const QToolBox *tb = qobject_cast<const QToolBox *>(widget) ) {
           int i;
           for (i=0; i<tb->count(); i++) {
@@ -1751,13 +1761,17 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
               // which is a good heuristic in real apps
               QWidget *contents = tb->widget(i);
               if ( contents ) {
-                // FIXME dirty hack
+                o.palette = contents->palette();
+                o.styleObject = contents;
+                // FIXME dirty hack: temporarily change the background role to Button for tabs
                 QPalette::ColorRole oldrole = contents->backgroundRole();
                 contents->setBackgroundRole(QPalette::Button);
-                bg = bgBrush(ps,option,contents, st);
+                bg = bgBrush(ps,&o,contents, st);
                 contents->setBackgroundRole(oldrole);
-              } else
+              } else {
+                // no contents -> don't colorize
                 bg.setStyle(Qt::NoBrush);
+              }
               break;
             }
           }
@@ -2184,6 +2198,7 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
 
       QStyleOptionRubberBand o(*opt);
       o.state &= ~State_MouseOver;
+      o.state |= State_Enabled;
       st = state_str(o.state,widget);
 
       renderFrame(p,bg,option->rect,fs,fs.element+"-"+st,dir,orn);
@@ -2206,11 +2221,10 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
         st = state_str(o.state,widget);
         renderFrame(p,bg,option->rect,fs,fs.element+"-"+st,dir,orn);
         renderInterior(p,bg,option->rect,fs,is,is.element+"-"+st,dir,orn);
-        // FIXME use own indicators
-        if (option->state & State_Horizontal) {
-            drawPrimitive(PE_IndicatorArrowRight,option,p,widget);
-        } else
-          drawPrimitive(PE_IndicatorArrowDown,option,p,widget);
+        if (option->state & State_Horizontal)
+            renderIndicator(p,r,fs,is,ds,ds.element+"-right-"+st,dir);
+        else
+            renderIndicator(p,r,fs,is,ds,ds.element+"-down-"+st,dir);
       }
       break;
     }
@@ -2226,10 +2240,10 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
         st = state_str(o.state,widget);
         renderFrame(p,bg,option->rect,fs,fs.element+"-"+st,dir,orn);
         renderInterior(p,bg,option->rect,fs,is,is.element+"-"+st,dir,orn);
-        if (option->state & State_Horizontal) {
-            drawPrimitive(PE_IndicatorArrowLeft,option,p,widget);
-        } else
-          drawPrimitive(PE_IndicatorArrowUp,option,p,widget);
+        if (option->state & State_Horizontal)
+            renderIndicator(p,r,fs,is,ds,ds.element+"-left-"+st,dir);
+        else
+            renderIndicator(p,r,fs,is,ds,ds.element+"-up-"+st,dir);
       }
       break;
     }
@@ -2269,8 +2283,11 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
         if ( opt->position == QStyleOptionHeader::Middle )
           fs.capsuleH = 0;
 
-        renderFrame(p,bg,r,fs,fs.element+"-"+st,dir);
-        renderInterior(p,bg,r,fs,is,is.element+"-"+st,dir);
+        if ( (qAbs(fs.capsuleH) == 1) && (dir == Qt::RightToLeft) )
+          fs.capsuleH = -fs.capsuleH;
+
+        renderFrame(p,bg,r,fs,fs.element+"-"+st,dir,orn);
+        renderInterior(p,bg,r,fs,is,is.element+"-"+st,dir,orn);
       }
       break;
     }
@@ -2509,14 +2526,19 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
           drawPrimitive(PE_IndicatorViewItemCheck,&o,p,widget);
         }
 
-        // FIXME obey QTreeWidgetItem's foreground()
+        p->save();
         p->setFont(opt->font);
         fg = opt->palette.brush(QPalette::Text);
+        const Qt::ToolButtonStyle tialign =
+          opt->decorationPosition == QStyleOptionViewItem::Top ? Qt::ToolButtonTextUnderIcon :
+          Qt::ToolButtonTextBesideIcon;
         renderLabel(p,fg,
                     dir,rlabel,fs,is,ls,
                     opt->displayAlignment,
                     opt->text,
-                    opt->icon.pixmap(opt->decorationSize));
+                    opt->icon.pixmap(opt->decorationSize),
+                    tialign);
+        p->restore();
       }
 
       break;
@@ -2829,20 +2851,23 @@ void QSvgThemableStyle::drawComplexControl(ComplexControl control, const QStyleO
         renderFrame(p,bg,o.rect,fs,fs.element+"-"+st,dir,orn);
         renderInterior(p,bg,o.rect,fs,is,is.element+"-"+st,dir,orn);
 
-        // 'Next' arrow
-        o.state = opt->state;
-        o.rect = subControlRect(CC_ScrollBar,opt,SC_ScrollBarAddLine,widget);
-        drawControl(CE_ScrollBarAddLine,&o,p,widget);
-
-        // 'Previous' arrow
-        o.state = opt->state;
-        o.rect = subControlRect(CC_ScrollBar,opt,SC_ScrollBarSubLine,widget);
-        drawControl(CE_ScrollBarSubLine,&o,p,widget);
-
         // Cursor
         o.state = opt->state;
         o.rect = subControlRect(CC_ScrollBar,opt,SC_ScrollBarSlider,widget);
         drawControl(CE_ScrollBarSlider,&o,p,widget);
+
+        // Buttons
+        if ( getThemeTweak("specific.scrollbar.variant").toInt() == VA_SCROLLBAR_BUTTONS ) {
+          // 'Next' arrow
+          o.state = opt->state;
+          o.rect = subControlRect(CC_ScrollBar,opt,SC_ScrollBarAddLine,widget);
+          drawControl(CE_ScrollBarAddLine,&o,p,widget);
+          
+          // 'Previous' arrow
+          o.state = opt->state;
+          o.rect = subControlRect(CC_ScrollBar,opt,SC_ScrollBarSubLine,widget);
+          drawControl(CE_ScrollBarSubLine,&o,p,widget);
+        }
       }
 
       break;
@@ -3086,7 +3111,7 @@ void QSvgThemableStyle::drawComplexControl(ComplexControl control, const QStyleO
         // Draw frame and interior around contents
         // remove toggled for checkable group boxes
         o.state &= ~State_On;
-        if ( !(opt->features && QStyleOptionFrame::Flat) ) {
+        if ( !(opt->features & QStyleOptionFrame::Flat) ) {
           if ( (opt->subControls & SC_GroupBoxCheckBox) && !(opt->state & State_On) ) {
             // not checked -> draw contents frame with disabled state
             //st = "disabled";
@@ -3288,7 +3313,7 @@ int QSvgThemableStyle::pixelMetric(PixelMetric metric, const QStyleOption * opti
       return getFrameSpec(PE_group(PE_PanelMenuBar)).width;
 
     case PM_ComboBoxFrameWidth :
-      return getFrameSpec(PE_group(PE_Frame)).width;
+      return getFrameSpec(PE_group(PE_PanelButtonBevel)).width;
 
     // These are the 'interior' margins of the menu bar
     case PM_MenuBarVMargin : return 0;
@@ -3902,7 +3927,7 @@ QSize QSvgThemableStyle::sizeFromContents ( ContentsType type, const QStyleOptio
         is = getInteriorSpec(g);
         ls = getLabelSpec(g);
 
-        scontents = csz+QSize(fs.left+fs.right,fs.top+fs.bottom);
+        scontents = QSize(fs.left+fs.right,fs.top+fs.bottom);
 
         // unite
         s = QSize(qMax(stitle.width(),scontents.width()),
@@ -3928,11 +3953,16 @@ QSize QSvgThemableStyle::sizeFromContents ( ContentsType type, const QStyleOptio
       if ( const QStyleOptionViewItem *opt =
            qstyleoption_cast<const QStyleOptionViewItem *>(option) ) {
 
+        const Qt::ToolButtonStyle tialign =
+          opt->decorationPosition == QStyleOptionViewItem::Top ? Qt::ToolButtonTextUnderIcon :
+          Qt::ToolButtonTextBesideIcon;
+
         // use item's own font
         fm = opt->fontMetrics;
         s = sizeFromContents(fm,fs,is,ls,
                              opt->text,
-                             opt->icon.isNull() ? 0 : pixelMetric(PM_ListViewIconSize));
+                             opt->icon.isNull() ? 0 : opt->decorationSize.width(),
+                             tialign);
 
         if ( opt->features & QStyleOptionViewItem::HasCheckIndicator ) {
           s.rwidth() += pixelMetric(PM_CheckBoxLabelSpacing)+qMin(s.height(),(int)ds.size);
@@ -5616,11 +5646,11 @@ void QSvgThemableStyle::renderLabel(QPainter* p,
                             const label_spec_t& ls,
                             unsigned int talign,
                             const QString& text,
-                            const QPixmap& icon,
+                            const QPixmap& pixmap,
                             const Qt::ToolButtonStyle tialign) const
 {
   emit(sig_renderLabel_begin("text:"+(text.isEmpty() ? "<none>" : "\""+text+"\"")+
-                             "/icon:"+(icon.isNull() ? "no" : "yes")));
+                             "/icon:"+(pixmap.isNull() ? "no" : "yes")));
 
   // compute text and icon rect
   QRect r(labelRect(bounds,fs,is,ls));
@@ -5629,18 +5659,18 @@ void QSvgThemableStyle::renderLabel(QPainter* p,
   QRect rtext = r;
 
   if (tialign == Qt::ToolButtonTextBesideIcon) {
-    ricon = alignedRect(Qt::LeftToRight,Qt::AlignVCenter | Qt::AlignLeft, QSize(icon.width(),icon.height()),r);
-    rtext = QRect(r.x()+icon.width()+(icon.isNull() ? 0 : ls.tispace),r.y(),r.width()-ricon.width()-(icon.isNull() ? 0 : ls.tispace),r.height());
+    ricon = alignedRect(Qt::LeftToRight,Qt::AlignVCenter | Qt::AlignLeft, QSize(pixmap.width(),pixmap.height()),r);
+    rtext = QRect(r.x()+pixmap.width()+(pixmap.isNull() ? 0 : ls.tispace),r.y(),r.width()-ricon.width()-(pixmap.isNull() ? 0 : ls.tispace),r.height());
   } else if (tialign == Qt::ToolButtonTextUnderIcon) {
-    ricon = alignedRect(Qt::LeftToRight,Qt::AlignTop | Qt::AlignHCenter, QSize(icon.width(),icon.height()),r);
-    rtext = QRect(r.x(),r.y()+icon.height()+(icon.isNull() ? 0 : ls.tispace),r.width(),r.height()-ricon.height()-(icon.isNull() ? 0 : ls.tispace));
+    ricon = alignedRect(Qt::LeftToRight,Qt::AlignTop | Qt::AlignHCenter, QSize(pixmap.width(),pixmap.height()),r);
+    rtext = QRect(r.x(),r.y()+pixmap.height()+(pixmap.isNull() ? 0 : ls.tispace),r.width(),r.height()-ricon.height()-(pixmap.isNull() ? 0 : ls.tispace));
   } else if (tialign == Qt::ToolButtonIconOnly) {
-    ricon = alignedRect(Qt::LeftToRight,Qt::AlignCenter, QSize(icon.width(),icon.height()),r);
+    ricon = alignedRect(Qt::LeftToRight,Qt::AlignCenter, QSize(pixmap.width(),pixmap.height()),r);
   }
 
   if ( text.isEmpty() ) {
     // When we have no text, center icon
-    ricon = alignedRect(Qt::LeftToRight,Qt::AlignCenter, QSize(icon.width(),icon.height()),r);
+    ricon = alignedRect(Qt::LeftToRight,Qt::AlignCenter, QSize(pixmap.width(),pixmap.height()),r);
   }
 
   rtext = visualRect(dir,bounds,rtext);
@@ -5657,16 +5687,14 @@ void QSvgThemableStyle::renderLabel(QPainter* p,
 //       }
       if ( curPalette != "<none>" ) {
         p->setPen(b.color());
-      } else {
-        p->setPen(Qt::black);
       }
       p->drawText(rtext,visualAlignment(dir,static_cast<Qt::Alignment>(talign)),text);
     }
   }
 
   if (tialign != Qt::ToolButtonTextOnly) {
-    if (!icon.isNull()) {
-      p->drawPixmap(ricon,icon);
+    if (!pixmap.isNull()) {
+      p->drawPixmap(ricon,pixmap);
     }
   }
 
@@ -5683,7 +5711,7 @@ void QSvgThemableStyle::renderLabel(QPainter* p,
         }
       }
       if (tialign != Qt::ToolButtonTextOnly) {
-        if (!icon.isNull()) {
+        if (!pixmap.isNull()) {
           p->setPen(QPen(QColor(255,0,255)));
           drawRealRect(p, ricon);
         }
@@ -5696,7 +5724,7 @@ void QSvgThemableStyle::renderLabel(QPainter* p,
     p->restore();
   }
 
-  emit(sig_renderLabel_end("text:"+text+"/icon:"+(icon.isNull() ? "yes":"no")));
+  emit(sig_renderLabel_end("text:"+text+"/icon:"+(pixmap.isNull() ? "yes":"no")));
 }
 
 inline frame_spec_t QSvgThemableStyle::getFrameSpec(const QString& group) const
@@ -5948,14 +5976,11 @@ QBrush QSvgThemableStyle::bgBrush(const palette_spec_t &ps,
 
   QBrush r;
 
-  QPalette pal = widget ? widget->palette() : opt ? opt->palette : QGuiApplication::palette();
-  const QPalette::ColorGroup cg = widget ?
-        widget->isEnabled() ? QPalette::Normal : QPalette::Disabled
-                            : (opt->state & State_Enabled) ?
-                                QPalette::Normal : QPalette::Disabled;
+  const QPalette pal = opt->palette;
+  QPalette::ColorRole bgrole = QPalette::Background;
 
-  const QPalette::ColorRole bgrole =
-      widget ? widget->backgroundRole() : QPalette::NoRole;
+  if ( const QWidget *w = qobject_cast<const QWidget *>(opt->styleObject) )
+    bgrole = w->backgroundRole();
 
   QString val;
 
@@ -5981,7 +6006,7 @@ QBrush QSvgThemableStyle::bgBrush(const palette_spec_t &ps,
     return r; // no brush
   else if ( val == "<system>" ) {
     // use widget's palette
-    r = pal.color(cg,bgrole);
+    r = pal.color(bgrole);
   } else {
     // r,g,b,a color -> parse
     QStringList l = val.split(',');
@@ -6004,14 +6029,12 @@ QBrush QSvgThemableStyle::fgBrush(const palette_spec_t &ps,
   Q_UNUSED(widget);
   QBrush r;
 
-  QPalette pal = widget ? widget->palette() : opt->palette;
-  const QPalette::ColorGroup cg = widget ?
-        widget->isEnabled() ? QPalette::Normal : QPalette::Disabled
-                            : (opt->state & State_Enabled) ?
-                                QPalette::Normal : QPalette::Disabled;
+  QPalette pal = opt->palette;
+  QPalette::ColorRole fgrole = QPalette::Text;
 
-  pal.setCurrentColorGroup(cg);
-  const QPalette::ColorRole fgrole = widget ? widget->foregroundRole() : QPalette::NoRole;
+  if ( const QWidget *w = qobject_cast<const QWidget *>(opt->styleObject) )
+    fgrole = w->foregroundRole();
+
   QString val;
 
   if ( status == "normal" ) {
@@ -6036,7 +6059,7 @@ QBrush QSvgThemableStyle::fgBrush(const palette_spec_t &ps,
     return r; // no brush
   else if ( val == "<system>" ) {
     // use widget's palette
-    r = pal.color(cg,fgrole);
+    r = pal.color(fgrole);
   } else {
     // r,g,b,a color -> parse
     QStringList l = val.split(',');
@@ -6119,7 +6142,7 @@ QString QSvgThemableStyle::state_str(State st, const QWidget* w) const
     : (st & State_On) ? "disabled-toggled" :
       (st & State_Selected) ? "disabled-toggled" : "disabled";
   } else {
-      // no pressed/hovered state for containers
+    // no pressed/hovered state for containers
     status = (st & State_Enabled) ?
       (st & State_Selected) ? "toggled" :
       (st & State_On) ? "toggled" : "normal"

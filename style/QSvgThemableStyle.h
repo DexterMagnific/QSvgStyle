@@ -352,7 +352,7 @@ class QSvgThemableStyle : public QCommonStyle {
                      /* label spec */ const label_spec_t &ls,
                      /* text alignment */ unsigned int talign,
                      /* text */ const QString &text,
-                     /* icon */ const QPixmap &icon = QPixmap(),
+                     /* icon */ const QPixmap &pixmap = QPixmap(),
                      /* text-icon alignment */ const Qt::ToolButtonStyle tialign = Qt::ToolButtonTextBesideIcon) const;
 
     void colorizeIndicator(QPainter *p,

@@ -9,8 +9,7 @@ TARGET = qsvgstyle
 DESTDIR = plugins
 TEMPLATE = lib
 
-QT += core gui svg
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+QT += core gui widgets svg
 
 INCLUDEPATH += ../styleconfig
 
@@ -39,6 +38,6 @@ unix {
   }
 
   #MAKE INSTALL
-  target.path = $$[QT_INSTALL_PLUGINS]/styles
-  INSTALLS += target
+  themes.path = $$[QT_INSTALL_PLUGINS]/styles
+  INSTALLS += themes
 }
