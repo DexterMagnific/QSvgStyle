@@ -63,6 +63,12 @@ bool QSvgCachedRenderer::load(const QString &file)
 
 void QSvgCachedRenderer::render(QPainter *painter, const QString &elementId, const QRect &bounds)
 {
+  if ( (bounds.width() > 250) || (bounds.height() > 250) ) {
+    // direct render, don't cache big items
+    renderer->render(painter,elementId,bounds);
+    return;
+  }
+  
   // key = elementId @ width x height
   const QString e = QString("%1@%2x%3")
       .arg(elementId)
