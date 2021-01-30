@@ -1,0 +1,13 @@
+Document: qt5-style-qsvgtheme
+Title: QSvgTheme Style Engine for Qt5 Manual
+Author: Saïd Lankri <said.lankri@gmail.com>
+Abstract: This document describes the methods used by the style engine to modify
+ elements of the user interface and how to use the theme manager app to preview
+ and activate them. Also included is information on how to use the theme builder
+ to create new themes or modify existing ones, and the function of the bundled
+ SVG cleaner app.
+Section: Screen
+
+Format: HTML
+Index: /usr/share/doc/qt5-style-qsvgstyle/html/index.html
+Files: /usr/share/doc/qt5-style-qsvgstyle/html/*.html

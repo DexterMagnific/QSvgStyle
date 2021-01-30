@@ -1,0 +1,46 @@
+Source: qt5-style-qsvgstyle
+Section: x11
+Priority: optional
+Maintainer: Peter J. Mello <admin@petermello.net>
+Build-Depends: debhelper-compat (= 12), dh-sequence-sphinxdoc <!nodoc>,
+ lsb-release (>= 9.20160110ubuntu0.2), qtbase5-dev (>= 5.5.1~),
+ libqt5svg5-dev (>= 5.5.1~), libqt5x11extras5-dev (>= 5.5.1~),
+ sphinx-common <!nodoc>, zlib1g-dev (>= 1:1.2.8~)
+Build-Depends-Indep: python3-sphinx <!nodoc>
+Standards-Version: 4.5.1
+Homepage: https://www.pling.com/p/1162948/
+Vcs-Git: https://git.launchpad.net/~roguescholar/qsvgstyle/+git/trunk -b packaging
+Vcs-Browser: https://git.launchpad.net/~roguescholar/qsvgstyle/+git/trunk?h=packaging
+Rules-Requires-Root: no
+
+Package: qt5-style-qsvgstyle
+Architecture: any
+Depends: libqt5core5a, libqt5gui5 | libqt5gui5-gles, libqt5svg5, libqt5widgets5,
+ libqt5x11extras5, libqt5xml5, zlib1g, ${shlibs:Depends}, ${misc:Depends}
+Recommends: inkscape | inkscape-trunk
+Provides: qt-style-qsvgstyle-qt5 (= 2.0-200)
+Replaces: qt-style-qsvgstyle-qt5 (<= 2.0-100)
+Breaks: qt-style-qsvgstyle-qt5 (<= 2.0-100)
+Description: Qt5 SVG style engine and theme builder tools
+ QSvgStyle is a style engine that tunes the appearance of Qt applications using
+ the power of Scalable Vector Graphics  to produce themes that look crisp and
+ elegant on any monitor set to any display resolution.
+ .
+ This package contains the QSvgStyle engine, its theme manager, and a theme
+ builder with built-in SVG cleaner, in addition to ten themes with which to use
+ it.
+
+Package: qt5-style-qsvgstyle-doc
+Architecture: all
+Multi-Arch: foreign
+Section: doc
+Depends: ${sphinxdoc:Depends}, ${misc:Depends}
+Recommends: qt5-style-qsvgstyle
+Built-Using: ${sphinxdoc:Built-Using}
+Description: Qt5 SVG style engine and theme builder tools - documentation
+ QSvgStyle is a style engine that tunes the appearance of Qt applications using
+ the power of Scalable Vector Graphics  to produce themes that look crisp and
+ elegant on any monitor set to any display resolution.
+ .
+ This package contains the documentation for the QSvgStyle theme engine, theme
+ manager, and theme builder with built-in SVG cleaner.

@@ -1,0 +1,6 @@
+usr/bin/qsvgthemebuilder
+usr/bin/qsvgthememanager
+usr/lib/*/qt5/plugins/styles/*
+usr/share/QSvgStyle
+usr/share/applications/qsvgthemebuilder.desktop
+usr/share/applications/qsvgthememanager.desktop

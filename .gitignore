@@ -29,6 +29,12 @@ ui_*
 # doc generated files
 doc/build
 
+# Debian package build artifacts
+.pc/
+*/.debhelper/
+debhelper-build-stamp
+debian/tmp/
+
 # Misc
 *~
 *.backup

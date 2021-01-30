@@ -1,5 +1,4 @@
-sudo: required
-dist: trusty
+dist: focal
 
 language: c++
 os: linux
@@ -26,15 +25,13 @@ addons:
 
 before_install:
   - echo -n | openssl s_client -connect https://scan.coverity.com:443 | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' | sudo tee -a /etc/ssl/certs/ca-
-  - sudo add-apt-repository --yes ppa:beineri/opt-qt593-trusty
   - sudo apt-get update -qq
 
 install:
-  - sudo apt-get -y install qt59svg qt59x11extras
-  - source /opt/qt59/bin/qt59-env.sh
+  - sudo apt -y install qtbase5-dev libqt5svg5-dev libqt5x11extras5-dev python3-sphinx sphinx-common zlib1g-dev
 
 before_script:
   - qmake
-  
+
 script:
   - make
