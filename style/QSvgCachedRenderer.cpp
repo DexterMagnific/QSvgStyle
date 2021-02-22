@@ -22,7 +22,7 @@
 
 #include <QDebug>
 #include <QPainter>
-#include <QTime>
+#include <QElapsedTimer>
 
 QSvgCachedRenderer::QSvgCachedRenderer()
   : renderer(NULL),
@@ -68,14 +68,14 @@ void QSvgCachedRenderer::render(QPainter *painter, const QString &elementId, con
     renderer->render(painter,elementId,bounds);
     return;
   }
-  
+
   // key = elementId @ width x height
   const QString e = QString("%1@%2x%3")
       .arg(elementId)
       .arg(bounds.width())
       .arg(bounds.height());
 
-  QTime t;
+  QElapsedTimer t;
   int elapsed = 0;
 
   if ( svgCache.contains(e) ) {
@@ -156,8 +156,6 @@ QRegion QSvgCachedRenderer::elementRegion(const QString &elementId, const QRect 
 
 void QSvgCachedRenderer::dumpStats()
 {
-  QHash<QString,svgCacheEntry>::const_iterator it;
-
   qWarning() << "[QSvgCacheRenderer] Stats:";
   qWarning() << "Hits:" << totalCacheHits << "Misses:" << totalCacheMisses
              << "Ratio:" << totalCacheHits*100.0/(totalCacheHits+totalCacheMisses);

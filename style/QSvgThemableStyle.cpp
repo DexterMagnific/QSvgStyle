@@ -2862,7 +2862,7 @@ void QSvgThemableStyle::drawComplexControl(ComplexControl control, const QStyleO
           o.state = opt->state;
           o.rect = subControlRect(CC_ScrollBar,opt,SC_ScrollBarAddLine,widget);
           drawControl(CE_ScrollBarAddLine,&o,p,widget);
-          
+
           // 'Previous' arrow
           o.state = opt->state;
           o.rect = subControlRect(CC_ScrollBar,opt,SC_ScrollBarSubLine,widget);
@@ -3765,7 +3765,7 @@ QSize QSvgThemableStyle::sizeFromContents ( ContentsType type, const QStyleOptio
 
         if ( getThemeTweak("specific.progressbar.variant").toInt() == VA_PROGRESSBAR_THIN ) {
           // thin progressbar : text above bar
-          QSize barSz = sizeFromContents(fm,fs,is,ls, QString::null);
+          QSize barSz = sizeFromContents(fm,fs,is,ls, QString());
           fs.hasFrame = false;
           is.hasInterior = false;
           QSize textSz;
@@ -3774,7 +3774,7 @@ QSize QSvgThemableStyle::sizeFromContents ( ContentsType type, const QStyleOptio
             textSz = sizeFromContents(fm,fs,is,ls,
                                       opt->textVisible ?
                                         opt->text.isEmpty() ? "W" : opt->text
-                                                            : QString::null);
+                                                            : QString());
           barSz = barSz.expandedTo(
                 QSize(textSz.width(),
                       getThemeTweak("specific.progressbar.thin.minheight").toInt()));
@@ -3783,7 +3783,7 @@ QSize QSvgThemableStyle::sizeFromContents ( ContentsType type, const QStyleOptio
           s = sizeFromContents(fm,fs,is,ls,
                                opt->textVisible ?
                                opt->text.isEmpty() ? "W" : opt->text
-                               : QString::null);
+                               : QString());
         }
 
         if ( opt->orientation == Qt::Vertical )
@@ -4101,7 +4101,7 @@ QRect QSvgThemableStyle::subElementRect(SubElement e, const QStyleOption * optio
         qSwap(w,h);
       }
       if ( getThemeTweak("specific.progressbar.variant").toInt() == VA_PROGRESSBAR_THIN ) {
-        QSize barSz = sizeFromContents(fm,fs,is,ls, QString::null);
+        QSize barSz = sizeFromContents(fm,fs,is,ls, QString());
         ret.setTop(ret.bottom()-
                    qMax(barSz.height(),
                          getThemeTweak("specific.progressbar.thin.minheight").toInt()));
@@ -4876,7 +4876,7 @@ QRect QSvgThemableStyle::subControlRect(ComplexControl control, const QStyleOpti
 
 QIcon QSvgThemableStyle::standardIcon(StandardPixmap standardIcon, const QStyleOption * option, const QWidget * widget) const
 {
-  int sz;
+  int sz = pixelMetric(PM_SmallIconSize);
   QString base;
   QIcon icon;
 
@@ -5287,7 +5287,7 @@ void QSvgThemableStyle::renderFrame(QPainter *p,
     p->save();
     p->scale(-1.0,1.0);
     p->translate(-2*x0-w,0);
-    p->setMatrix(QMatrix(0,1,1,0,0,0),true);
+    p->setWorldTransform(QTransform(QMatrix(0,1,1,0,0,0)),true);
   }
 
   // Render !
@@ -5468,7 +5468,7 @@ void QSvgThemableStyle::renderInterior(QPainter *p,
     p->save();
     p->scale(-1.0,1.0);
     p->translate(-2*x0-w,0);
-    p->setMatrix(QMatrix(0,1,1,0,0,0),true);
+    p->setWorldTransform(QTransform(QMatrix(0,1,1,0,0,0)),true);
   }
 
   // Render !

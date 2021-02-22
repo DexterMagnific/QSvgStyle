@@ -310,17 +310,21 @@ void XMLUtil::ConvertUTF32ToUTF8( unsigned long input, char* output, int* length
             --output;
             *output = (char)((input | BYTE_MARK) & BYTE_MASK);
             input >>= 6;
+            // FALLTHROUGH
         case 3:
             --output;
             *output = (char)((input | BYTE_MARK) & BYTE_MASK);
             input >>= 6;
+            // FALLTHROUGH
         case 2:
             --output;
             *output = (char)((input | BYTE_MARK) & BYTE_MASK);
             input >>= 6;
+            // FALLTHROUGH
         case 1:
             --output;
             *output = (char)(input | FIRST_BYTE_MARK[*length]);
+            // FALLTHROUGH
         default:
             break;
     }
@@ -423,8 +427,8 @@ void XMLUtil::ToStr( bool v, char* buffer, int bufferSize )
 }
 
 /*
-	ToStr() of a number is a very tricky topic.
-	https://github.com/leethomason/tinyxml2/issues/106
+  ToStr() of a number is a very tricky topic.
+  https://github.com/leethomason/tinyxml2/issues/106
 */
 void XMLUtil::ToStr( float v, char* buffer, int bufferSize )
 {
@@ -500,7 +504,7 @@ char* XMLDocument::Identify( char* p, XMLNode** node )
     }
 
     // What is this thing?
-	// These strings define the matching patters:
+  // These strings define the matching patters:
     static const char* xmlHeader		= { "<?" };
     static const char* commentHeader	= { "<!--" };
     static const char* dtdHeader		= { "<!" };
@@ -593,7 +597,7 @@ XMLNode::~XMLNode()
     }
 }
 
-const char* XMLNode::Value() const 
+const char* XMLNode::Value() const
 {
     return _value.GetStr();
 }
@@ -636,7 +640,7 @@ void XMLNode::Unlink( XMLNode* child )
     if ( child->_next ) {
         child->_next->_prev = child->_prev;
     }
-	child->_parent = 0;
+  child->_parent = 0;
 }
 
 
@@ -649,13 +653,13 @@ void XMLNode::DeleteChild( XMLNode* node )
 
 XMLNode* XMLNode::InsertEndChild( XMLNode* addThis )
 {
-	if (addThis->_document != _document)
-		return 0;
+  if (addThis->_document != _document)
+    return 0;
 
-	if (addThis->_parent)
-		addThis->_parent->Unlink( addThis );
-	else
-	   addThis->_memPool->SetTracked();
+  if (addThis->_parent)
+    addThis->_parent->Unlink( addThis );
+  else
+     addThis->_memPool->SetTracked();
 
     if ( _lastChild ) {
         TIXMLASSERT( _firstChild );
@@ -680,13 +684,13 @@ XMLNode* XMLNode::InsertEndChild( XMLNode* addThis )
 
 XMLNode* XMLNode::InsertFirstChild( XMLNode* addThis )
 {
-	if (addThis->_document != _document)
-		return 0;
+  if (addThis->_document != _document)
+    return 0;
 
-	if (addThis->_parent)
-		addThis->_parent->Unlink( addThis );
-	else
-	   addThis->_memPool->SetTracked();
+  if (addThis->_parent)
+    addThis->_parent->Unlink( addThis );
+  else
+     addThis->_memPool->SetTracked();
 
     if ( _firstChild ) {
         TIXMLASSERT( _lastChild );
@@ -712,8 +716,8 @@ XMLNode* XMLNode::InsertFirstChild( XMLNode* addThis )
 
 XMLNode* XMLNode::InsertAfterChild( XMLNode* afterThis, XMLNode* addThis )
 {
-	if (addThis->_document != _document)
-		return 0;
+  if (addThis->_document != _document)
+    return 0;
 
     TIXMLASSERT( afterThis->_parent == this );
 
@@ -725,10 +729,10 @@ XMLNode* XMLNode::InsertAfterChild( XMLNode* afterThis, XMLNode* addThis )
         // The last node or the only node.
         return InsertEndChild( addThis );
     }
-	if (addThis->_parent)
-		addThis->_parent->Unlink( addThis );
-	else
-	   addThis->_memPool->SetTracked();
+  if (addThis->_parent)
+    addThis->_parent->Unlink( addThis );
+  else
+     addThis->_memPool->SetTracked();
     addThis->_prev = afterThis;
     addThis->_next = afterThis->_next;
     afterThis->_next->_prev = addThis;
@@ -835,7 +839,7 @@ char* XMLNode::ParseDeep( char* p, StrPair* parentEnd )
             if ( parentEnd ) {
                 *parentEnd = static_cast<XMLElement*>(node)->_value;
             }
-			node->_memPool->SetTracked();	// created and then immediately deleted.
+      node->_memPool->SetTracked();	// created and then immediately deleted.
             DELETE_NODE( node );
             return p;
         }
@@ -1063,12 +1067,12 @@ bool XMLUnknown::Accept( XMLVisitor* visitor ) const
 
 // --------- XMLAttribute ---------- //
 
-const char* XMLAttribute::Name() const 
+const char* XMLAttribute::Name() const
 {
     return _name.GetStr();
 }
 
-const char* XMLAttribute::Value() const 
+const char* XMLAttribute::Value() const
 {
     return _value.GetStr();
 }
@@ -1389,7 +1393,7 @@ char* XMLElement::ParseAttributes( char* p )
         if (XMLUtil::IsNameStartChar( *p ) ) {
             XMLAttribute* attrib = new (_document->_attributePool.Alloc() ) XMLAttribute();
             attrib->_memPool = &_document->_attributePool;
-			attrib->_memPool->SetTracked();
+      attrib->_memPool->SetTracked();
 
             p = attrib->ParseDeep( p, _document->ProcessEntities() );
             if ( !p || Attribute( attrib->Name() ) ) {
@@ -1544,12 +1548,12 @@ XMLDocument::~XMLDocument()
 #endif
 
 #ifdef DEBUG
-	if ( Error() == false ) {
-		TIXMLASSERT( _elementPool.CurrentAllocs()   == _elementPool.Untracked() );
-		TIXMLASSERT( _attributePool.CurrentAllocs() == _attributePool.Untracked() );
-		TIXMLASSERT( _textPool.CurrentAllocs()      == _textPool.Untracked() );
-		TIXMLASSERT( _commentPool.CurrentAllocs()   == _commentPool.Untracked() );
-	}
+  if ( Error() == false ) {
+    TIXMLASSERT( _elementPool.CurrentAllocs()   == _elementPool.Untracked() );
+    TIXMLASSERT( _attributePool.CurrentAllocs() == _attributePool.Untracked() );
+    TIXMLASSERT( _textPool.CurrentAllocs()      == _textPool.Untracked() );
+    TIXMLASSERT( _commentPool.CurrentAllocs()   == _commentPool.Untracked() );
+  }
 #endif
 }
 
@@ -1704,7 +1708,7 @@ XMLError XMLDocument::SaveFile( FILE* fp, bool compact )
 
 XMLError XMLDocument::Parse( const char* p, size_t len )
 {
-	const char* start = p;
+  const char* start = p;
     Clear();
 
     if ( len == 0 ) {
