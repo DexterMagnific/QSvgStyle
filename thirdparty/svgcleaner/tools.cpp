@@ -630,7 +630,7 @@ StringHash Tools::splitStyle(const QString &style)
     StringHash hash;
     if (style.isEmpty())
         return hash;
-    QStringList list = removeEdgeSpaces(style).split(";", QString::SkipEmptyParts);
+    QStringList list = removeEdgeSpaces(style).split(";", Qt::SkipEmptyParts);
     for (int i = 0; i < list.count(); ++i) {
         QString attr = list.at(i);
         int pos = attr.indexOf(QLatin1Char(':'));

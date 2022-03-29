@@ -23,17 +23,17 @@
 #include <QDir>
 #include <QFileDialog>
 #include <QCompleter>
-#include <QDirModel>
+#include <QFileSystemModel>
 
 #include "StyleConfig.h"
 
-NewThemeUI::NewThemeUI(QWidget* parent, Qt::WindowFlags f)
-  : QDialog(parent, f)
+NewThemeUI::NewThemeUI(QWidget* parent)
+  : QDialog(parent)
 {
   setupUi(this);
 
   QCompleter *c = new QCompleter(this);
-  c->setModel(new QDirModel(c));
+  c->setModel(new QFileSystemModel(c));
   dirEdit->setCompleter(c);
 
   slot_dirResetBtnClicked(false);

@@ -338,12 +338,12 @@ void Replacer::moveStyleFromUsedElemToUse()
     QStringList useAttrs;
     useAttrs << "x" << "y" << "width" << "height";
 
-    QHash<QString,SvgElement> elemXLink;
+    QMultiHash<QString,SvgElement> elemXLink;
     QList<SvgElement> list = svgElement().childElemList();
     while (!list.isEmpty()) {
         SvgElement elem = list.takeFirst();
         if (elem.isTagName("use"))
-            elemXLink.insertMulti(elem.xlinkId(), elem);
+            elemXLink.insert(elem.xlinkId(), elem);
         if (elem.hasChildren())
             list << elem.childElemList();
     }
@@ -530,7 +530,7 @@ void Replacer::convertCDATAStyle()
         text.remove(QRegExp("[^\\*]\\/(?!\\*)"));
         text.remove(QRegExp("[^\\/]\\*(?!\\/)"));
         text.remove(QRegExp("\\/\\*[^\\/\\*]*\\*\\/"));
-        QStringList classList = text.split(QRegExp(" +(\\.|@)"), QString::SkipEmptyParts);
+        QStringList classList = text.split(QRegExp(" +(\\.|@)"), Qt::SkipEmptyParts);
         foreach (const QString &currClass, classList) {
             QStringList tmpList = currClass.split(QRegExp("( +|)\\{"));
             if (tmpList.size() == 2)
@@ -543,7 +543,7 @@ void Replacer::convertCDATAStyle()
         SvgElement currElem = list.takeFirst();
         if (currElem.hasAttribute("class")) {
             StringHash newHash;
-            QStringList classList = currElem.attribute("class").split(" ", QString::SkipEmptyParts);
+            QStringList classList = currElem.attribute("class").split(" ", Qt::SkipEmptyParts);
             for (int i = 0; i < classList.count(); ++i) {
                 if (classHash.contains(classList.at(i))) {
                     StringHash tempHash = Tools::splitStyle(classHash.value(classList.at(i)));
@@ -839,7 +839,7 @@ void Replacer::sortDefs()
             list2 << elem;
     }
     if (!list2.isEmpty()) {
-        qSort(list2.begin(), list2.end(), &Replacer::nodeByTagNameSort);
+        std::sort(list2.begin(), list2.end(), &Replacer::nodeByTagNameSort);
         for (int i = 0; i < list2.count(); ++i)
             defsElement().appendChild(list2.at(i));
     }
@@ -864,7 +864,7 @@ void Replacer::roundNumericAttributes()
                 // process list based attributes
                 if (listBasedAttrList.contains(attr)) {
                     // TODO: get rid of regex
-                    QStringList tmpList = value.split(QRegExp("(,|) |,"), QString::SkipEmptyParts);
+                    QStringList tmpList = value.split(QRegExp("(,|) |,"), Qt::SkipEmptyParts);
                     QString tmpStr;
                     foreach (const QString &text, tmpList) {
                         bool ok;

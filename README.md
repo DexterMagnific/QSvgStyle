@@ -49,22 +49,6 @@ It comes with the style engine (QSvgStyle), a theme builder (QSvgThemeBuilder),
 - Download online themes
 - Live preview of themes
 
-# Binary builds
-
-Binary builds are provided for few distributions. If you want to contribute,
-please send me an email.
-
-## Ubuntu Bionic/Eoan/Focal
-
-Binary packages are provided on PPA for both i386 and x86_64
-architectures for Ubuntu
-
-```
-  sudo add-apt-repository ppa:dextermagnific/ppa
-  sudo apt update
-  sudo apt install qt-style-qsvgstyle-qt5
-```
-
 # Build the source
 
 ## Compile
@@ -74,6 +58,14 @@ You need the Qt5 development files of the following modules to compile QSvgStyle
 - Qt GUI
 - Qt SVG
 - Qt XML
+
+For debian based systems:
+
+```
+sudo apt install qtbase5-dev libqt5x11extras5-dev libqt5svg5-dev libqt5xml5
+```
+
+Then you build it:
 
 ```
 $ qmake
@@ -88,14 +80,14 @@ $ sudo make install
 
 ## Use
 
-You can locally make any Qt5 application use QSvgStyle by adding a `-style` option:
+You can launch any Qt5 application with QSvgStyle styling by adding a `-style` option:
 
 ```
 $ dolphin -style qsvgstyle
 ```
 
 To globally set QSvgStyle as your default style engine, use your favorite
-desktop's configuration tool. For example, use the systemsettings5 in KDE.
+desktop's configuration tool. For example, use the System Settings in KDE.
 
 # QSvgThemeManager: chose theme and tweak the engine
 

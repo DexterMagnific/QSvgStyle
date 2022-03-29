@@ -380,7 +380,7 @@ void ThemeManagerUI::setupUiFromCfg()
   // get theme at startup
   QString startupTheme = config->getStyleSpec().theme;
 
-  const QList<QTreeWidgetItem*> l = themeList->findItems(startupTheme, 0);
+  const QList<QTreeWidgetItem*> l = themeList->findItems(startupTheme, Qt::MatchExactly);
   if ( l.size() > 0 )
     themeList->setCurrentItem(l.at(0));
   else

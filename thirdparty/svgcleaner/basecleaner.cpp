@@ -194,7 +194,7 @@ QRectF BaseCleaner::viewBoxRect()
 {
     QRectF rect;
     if (svgElement().hasAttribute("viewBox")) {
-        QStringList list = svgElement().attribute("viewBox").split(" ", QString::SkipEmptyParts);
+        QStringList list = svgElement().attribute("viewBox").split(" ", Qt::SkipEmptyParts);
         rect.setRect(list.at(0).toDouble(), list.at(1).toDouble(),
                      list.at(2).toDouble(), list.at(3).toDouble());
     } else if (svgElement().hasAttribute("width") && svgElement().hasAttribute("height")) {

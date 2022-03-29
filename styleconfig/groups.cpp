@@ -61,7 +61,7 @@ QString PE_group(QStyle::PrimitiveElement element)
     case QStyle::PE_IndicatorArrowUp : return "PushButton";
     case QStyle::PE_IndicatorBranch : return "ViewItem";
     case QStyle::PE_IndicatorButtonDropDown : return "PushButton";
-    case QStyle::PE_IndicatorViewItemCheck : return "ViewItem";
+    case QStyle::PE_IndicatorItemViewItemCheck : return "ViewItem";
     case QStyle::PE_IndicatorCheckBox : return "CheckBox";
     case QStyle::PE_IndicatorDockWidgetResizeHandle : return "DockWidgetContents";
     case QStyle::PE_IndicatorHeaderArrow : return "Header";

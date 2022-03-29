@@ -24,6 +24,7 @@
 #include <QGraphicsScene>
 #include <QGraphicsSceneMouseEvent>
 #include <QLinearGradient>
+#include <QPainterPath>
 
 /*
  * Converts a QPainterPath to an SVG d="..." attribute of a <path> element

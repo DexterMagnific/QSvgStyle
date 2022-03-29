@@ -23,6 +23,7 @@
 #include <QApplication>
 #include <QWidget>
 #include <QPainter>
+#include <QPainterPath>
 #include <QRect>
 #include <QStyleOption>
 #include <QSettings>
@@ -602,7 +603,7 @@ void QSvgThemableStyle::drawPrimitive(PrimitiveElement e, const QStyleOption * o
       renderIndicator(p,r,fs,is,ds,ds.element+"-"+st,dir);
       break;
     }
-    case PE_IndicatorViewItemCheck : {
+    case PE_IndicatorItemViewItemCheck : {
       // a check box inside view items
       st = (option->state & State_Enabled) ?
           (option->state & State_Selected) ? "toggled" : "normal"
@@ -2524,7 +2525,7 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
             o.state |= State_NoChange;
           if ( opt->checkState == Qt::Checked )
             o.state |= State_On;
-          drawPrimitive(PE_IndicatorViewItemCheck,&o,p,widget);
+          drawPrimitive(PE_IndicatorItemViewItemCheck,&o,p,widget);
         }
 
         p->save();
@@ -2885,72 +2886,75 @@ void QSvgThemableStyle::drawComplexControl(ComplexControl control, const QStyleO
         st = state_str(o.state,widget);
 
         QRect groove = subControlRect(CC_Slider,opt,SC_SliderGroove,widget);
-        QRect empty = groove;
-        QRect full = empty;
-        QRect slider = subControlRect(CC_Slider,opt,SC_SliderHandle,widget);
+        // groove
+        if ( opt->subControls & QStyle::SC_SliderGroove ) {
+          QRect empty = groove;
+          QRect full = empty;
+          QRect slider = subControlRect(CC_Slider,opt,SC_SliderHandle,widget);
 
-        // compute elapsed and empty part of groove
-        if (opt->orientation == Qt::Horizontal) {
-          if (!opt->upsideDown) {
-            full.setWidth(slider.x());
-            empty.adjust(slider.x(),0,0,0);
+          // compute elapsed and empty part of groove
+          if (opt->orientation == Qt::Horizontal) {
+            if (!opt->upsideDown) {
+              full.setWidth(slider.x());
+              empty.adjust(slider.x(),0,0,0);
+            } else {
+              empty.setWidth(slider.x());
+              full.adjust(slider.x(),0,0,0);
+            }
           } else {
-            empty.setWidth(slider.x());
-            full.adjust(slider.x(),0,0,0);
+            if (!opt->upsideDown) {
+              full.setHeight(slider.y());
+              empty.adjust(0,slider.y(),0,0);
+            } else {
+              empty.setHeight(slider.y());
+              full.adjust(0,slider.y(),0,0);
+            }
           }
-        } else {
-          if (!opt->upsideDown) {
-            full.setHeight(slider.y());
-            empty.adjust(0,slider.y(),0,0);
+
+          // draw empty part
+          fs.hasCapsule = true;
+          if (opt->orientation == Qt::Horizontal)
+            fs.capsuleV = 2;
+          else
+            fs.capsuleH = 2;
+
+          if (opt->orientation == Qt::Horizontal) {
+            if (!opt->upsideDown) {
+              fs.capsuleH = 1;
+            } else {
+              fs.capsuleH = -1;
+            }
           } else {
-            empty.setHeight(slider.y());
-            full.adjust(0,slider.y(),0,0);
+            if (!opt->upsideDown) {
+              fs.capsuleV = 1;
+            } else {
+              fs.capsuleV = -1;
+            }
           }
+
+          // FIXME should we clip the rect instead ?
+          renderFrame(p,bg,empty,fs,fs.element+"-"+st,dir,orn);
+          renderInterior(p,bg,empty,fs,is,is.element+"-"+st,dir,orn);
+
+          // draw elapsed part
+          if (option->state & State_Horizontal) {
+            if (!opt->upsideDown) {
+              fs.capsuleH = -1;
+            } else {
+              fs.capsuleH = 1;
+            }
+          } else {
+            if (!opt->upsideDown) {
+              fs.capsuleV = -1;
+            } else {
+              fs.capsuleV = 1;
+            }
+          }
+
+          // FIXME should we clip the rect instead ?
+          renderFrame(p,bg,full,fs,fs.element+"-elapsed-"+st,dir,orn);
+          renderInterior(p,bg,full,fs,is,is.element+"-elapsed-"+st,dir,orn);
         }
-
-        // draw empty part
-        fs.hasCapsule = true;
-        if (opt->orientation == Qt::Horizontal)
-          fs.capsuleV = 2;
-        else
-          fs.capsuleH = 2;
-
-        if (opt->orientation == Qt::Horizontal) {
-          if (!opt->upsideDown) {
-            fs.capsuleH = 1;
-          } else {
-            fs.capsuleH = -1;
-          }
-        } else {
-          if (!opt->upsideDown) {
-            fs.capsuleV = 1;
-          } else {
-            fs.capsuleV = -1;
-          }
-        }
-
-        // FIXME should we clip the rect instead ?
-        renderFrame(p,bg,empty,fs,fs.element+"-"+st,dir,orn);
-        renderInterior(p,bg,empty,fs,is,is.element+"-"+st,dir,orn);
-
-        // draw elapsed part
-        if (option->state & State_Horizontal) {
-          if (!opt->upsideDown) {
-            fs.capsuleH = -1;
-          } else {
-            fs.capsuleH = 1;
-          }
-        } else {
-          if (!opt->upsideDown) {
-            fs.capsuleV = -1;
-          } else {
-            fs.capsuleV = 1;
-          }
-        }
-
-        // FIXME should we clip the rect instead ?
-        renderFrame(p,bg,full,fs,fs.element+"-elapsed-"+st,dir,orn);
-        renderInterior(p,bg,full,fs,is,is.element+"-elapsed-"+st,dir,orn);
 
         // ticks
         o.state &= ~(State_MouseOver | State_Sunken);
@@ -3011,23 +3015,24 @@ void QSvgThemableStyle::drawComplexControl(ComplexControl control, const QStyleO
         }
 
         // cursor
-        o.state = option->state;
-        st = state_str(o.state,widget);
-        fs.hasFrame = false;
-        fs.hasCapsule = false;
-        o.rect = subControlRect(CC_Slider,opt,SC_SliderHandle,widget);
-        if ( opt->tickPosition == QSlider::NoTicks )
-          renderInterior(p,bg,o.rect,fs,is,is.element+"-cursor-tickless-"+st,dir,orn);
-        else
-          renderInterior(p,bg,o.rect,fs,is,is.element+"-cursor-"+st,dir,orn);
-        if ( focus ) {
+        if ( opt->subControls & QStyle::SC_SliderHandle ) {
+          o.state = option->state;
+          st = state_str(o.state,widget);
+          fs.hasFrame = false;
+          fs.hasCapsule = false;
+          o.rect = subControlRect(CC_Slider,opt,SC_SliderHandle,widget);
           if ( opt->tickPosition == QSlider::NoTicks )
-            renderInterior(p,QBrush(),o.rect,fs,is,is.element+"-cursor-tickless-focused",dir,orn);
+            renderInterior(p,bg,o.rect,fs,is,is.element+"-cursor-tickless-"+st,dir,orn);
           else
-            renderInterior(p,QBrush(),o.rect,fs,is,is.element+"-cursor-focused",dir,orn);
+            renderInterior(p,bg,o.rect,fs,is,is.element+"-cursor-"+st,dir,orn);
+          if ( focus ) {
+            if ( opt->tickPosition == QSlider::NoTicks )
+              renderInterior(p,QBrush(),o.rect,fs,is,is.element+"-cursor-tickless-focused",dir,orn);
+            else
+              renderInterior(p,QBrush(),o.rect,fs,is,is.element+"-cursor-focused",dir,orn);
+          }
         }
       }
-
       break;
     }
 
@@ -5978,7 +5983,7 @@ QBrush QSvgThemableStyle::bgBrush(const palette_spec_t &ps,
   QBrush r;
 
   const QPalette pal = opt->palette;
-  QPalette::ColorRole bgrole = QPalette::Background;
+  QPalette::ColorRole bgrole = QPalette::Window;
 
   if ( const QWidget *w = qobject_cast<const QWidget *>(opt->styleObject) )
     bgrole = w->backgroundRole();

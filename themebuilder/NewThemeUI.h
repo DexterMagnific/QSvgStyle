@@ -28,7 +28,7 @@ class NewThemeUI : public QDialog, private Ui::NewThemeUIBase {
   Q_OBJECT
 
   public:
-    NewThemeUI(QWidget *parent = 0,Qt::WindowFlags f = 0);
+    NewThemeUI(QWidget *parent = 0);
     virtual ~NewThemeUI();
 
     QString themeBaseFilename() const { return mThemeBaseFilename; }

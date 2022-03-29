@@ -1392,7 +1392,7 @@ void ThemeBuilderUI::loadRecentFiles()
 
   f.beginGroup("General");
 
-  QStringList sl = f.value("recentFiles").toString().split(":",QString::SkipEmptyParts);
+  QStringList sl = f.value("recentFiles").toString().split(":",Qt::SkipEmptyParts);
 
   Q_FOREACH(QString s, sl) {
     QAction *a = new QAction(recentFiles);
