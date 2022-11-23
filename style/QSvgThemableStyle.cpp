@@ -586,6 +586,9 @@ void QSvgThemableStyle::drawPrimitive(PrimitiveElement e, const QStyleOption * o
     }
     case PE_PanelTipLabel : {
       // frame and interior for tool tips
+      QStyleOption opt(*option);
+      opt.state &= ~ (State_Selected | State_On);
+      st = state_str(opt.state, widget);
       renderFrame(p,bg,r,fs,fs.element+"-"+st,dir);
       renderInterior(p,bg,r,fs,is,is.element+"-"+st,dir);
       break;
@@ -3379,11 +3382,12 @@ int QSvgThemableStyle::pixelMetric(PixelMetric metric, const QStyleOption * opti
       return getIndicatorSpec(PE_group(PE_FrameWindow)).size;
 
     // Button related
-    case PM_ButtonMargin :
     case PM_FocusFrameHMargin :
     case PM_FocusFrameVMargin :
     case PM_ButtonShiftHorizontal :
     case PM_ButtonShiftVertical : return 0;
+    case PM_ButtonMargin :
+      return getFrameSpec(CE_group(CE_PushButton)).width+getLabelSpec(CE_group(CE_PushButton)).hmargin;
 
     case PM_CheckBoxLabelSpacing :
     case PM_RadioButtonLabelSpacing :
