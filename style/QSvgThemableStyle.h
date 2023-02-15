@@ -413,6 +413,9 @@ class QSvgThemableStyle : public QCommonStyle {
                     frame_spec_t f,
                     interior_spec_t i,
                     label_spec_t t) const {
+      // we don't want augmented interior rect because of capsule
+      // have effect on label rect. So disable capsule if any.
+      f.hasCapsule = false;
       QRect r = interiorRect(bounds,f,i).adjusted(t.hmargin,t.vmargin,-t.hmargin,-t.vmargin);
       if ( r.width() < 0 )
         r.setWidth(0);

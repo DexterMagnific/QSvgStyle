@@ -453,7 +453,7 @@ bool QSvgThemableStyle::eventFilter(QObject* o, QEvent* e)
 
 void QSvgThemableStyle::drawPrimitive(PrimitiveElement e, const QStyleOption * option, QPainter * p, const QWidget * widget) const
 {
-  emit(sig_drawPrimitive_begin(PE_str(e)));
+  emit sig_drawPrimitive_begin(PE_str(e));
 
   // Copy some values into shorter variable names
   int x,y,w,h;
@@ -726,21 +726,15 @@ void QSvgThemableStyle::drawPrimitive(PrimitiveElement e, const QStyleOption * o
       break;
     }
     case PE_IndicatorTabClose : {
-      // tab close buttons. used when icon theme does not supply one
-      int variant = getThemeTweak("specific.tab.variant").toInt();
-      if ( !(option->state & State_Selected) ) {
-        if ( (variant == VA_TAB_GROUP_NON_SELECTED) ||
-             (variant == VA_TAB_INDIVIDUAL )
-             ) {
-          r.adjust(0,5,0,0);
-        }
-      }
-
+      // FIXME
+      // QTabWidget renders the close button as a QAbstractButton.
+      // because of this, all frames/margins apply
       fs.hasFrame = false;
+      ls.hmargin = ls.vmargin = ls.tispace = 0;
       // do not set toggled
-      st = state_str(option->state & ~(State_On | State_Selected), widget);
+      //st = state_str(option->state & ~(State_On | State_Selected), widget);
       ds.size = pixelMetric(PM_TabCloseIndicatorWidth);
-      renderIndicator(p,r,fs,is,ds,ds.element+"-tabclose-"+st, dir);
+      renderIndicator(p,r,fs,is,ds,ds.element+"-tabclose-"+st, dir, Qt::AlignRight);
       break;
     }
     case PE_PanelScrollAreaCorner : {
@@ -765,8 +759,39 @@ void QSvgThemableStyle::drawPrimitive(PrimitiveElement e, const QStyleOption * o
       break;
     }
     case PE_FrameTabBarBase : {
-      // FIXME
+      // Frame for tab bar when in document mode
+      if ( const QStyleOptionTabBarBase *opt =
+           qstyleoption_cast<const QStyleOptionTabBarBase *>(option) ) {
+        QStyleOptionTabBarBase o(*opt);
+        // NOTE remove hovered, toggled and pressed states
+        o.state &= ~(State_MouseOver | State_Sunken | State_On);
+        st = state_str(o.state,widget);
+
+        fs.hasCapsule = true;
+        fs.capsuleH = 2;
+        fs.capsuleV = 2;
+
+        if ( opt->shape == QTabBar::RoundedNorth ||
+             opt->shape == QTabBar::TriangularNorth ) {
+          fs.capsuleV = -1;
+        }
+        if ( opt->shape == QTabBar::RoundedSouth ||
+             opt->shape == QTabBar::TriangularSouth ) {
+          fs.capsuleV = 1;
+        }
+      }
+
+      QRect top, bottom, left, right, topleft, topright, bottomleft, bottomright;
+
+      computeFrameRects(r,fs,orn,
+                        top,bottom,left,right,
+                        topleft,topright,bottomleft,bottomright);
+
+      qDebug() << bottom;
+      qDebug() << left;
+
       renderFrame(p,bg,r,fs,fs.element+"-"+st,dir);
+      renderInterior(p,bg,r,fs,is,is.element+"-"+st,dir,orn);
       break;
     }
     case PE_Frame : {
@@ -1058,12 +1083,12 @@ void QSvgThemableStyle::drawPrimitive(PrimitiveElement e, const QStyleOption * o
   }
 
 end:
-  emit(sig_drawPrimitive_end(PE_str(e)));
+  emit sig_drawPrimitive_end(PE_str(e));
 }
 
 void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * option, QPainter * p, const QWidget * widget) const
 {
-  emit(sig_drawControl_begin(CE_str(e)));
+  emit sig_drawControl_begin(CE_str(e));
 
   // Copy some values into shorter variable names
   int x,y,w,h;
@@ -1459,21 +1484,21 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
         if ( (opt->shape == QTabBar::RoundedNorth) ||
              (opt->shape == QTabBar::TriangularNorth) ||
              (opt->shape == QTabBar::RoundedSouth) ||
-             (opt->shape == QTabBar::TriangularSouth) )
+             (opt->shape == QTabBar::TriangularSouth) ) {
           orn = Horizontal;
-        else
+        } else {
           orn = Vertical;
+        }
+
+        if ( orn == Vertical ) {
+          r = transposedRect(r);
+        }
 
         int variant = getThemeTweak("specific.tab.variant").toInt();
         int capsule = 2;
-        int adjust = 0;
         fs.hasCapsule = true;
 
-        if ( (variant == VA_TAB_INDIVIDUAL) ||
-             (variant == VA_TAB_GROUP_NON_SELECTED) ) {
-          adjust = 5;  // selected tab is higher than others
-        }
-
+        // capsule compute
         if ( variant == VA_TAB_GROUP_ALL ) {
           if (opt->position == QStyleOptionTab::Beginning)
             capsule = -1;
@@ -1484,7 +1509,6 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
           else if (opt->position == QStyleOptionTab::OnlyOneTab)
             capsule = 2;
         }
-
         if ( variant == VA_TAB_GROUP_NON_SELECTED ) {
           if ( o.state & State_On || o.state & State_Selected )
             // selected
@@ -1531,38 +1555,69 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
 
         if ( (opt->shape == QTabBar::RoundedNorth) ||
              (opt->shape == QTabBar::TriangularNorth)
-        ) {
-          fs.capsuleV = -1;
-          if ( !(o.state & State_Selected) && !(o.state & State_On) ) {
-            r.adjust(0,adjust,0,0);
-          }
+             ) {
+          capsule = -1;
         }
 
         if ( (opt->shape == QTabBar::RoundedSouth) ||
              (opt->shape == QTabBar::TriangularSouth)
-        ) {
-          fs.capsuleV = 1;
-          if ( !(o.state & State_Selected) && !(o.state & State_On) ) {
-            r.adjust(0,0,0,-adjust);
-          }
+             ) {
+          capsule = 1;
         }
 
         if ( (opt->shape == QTabBar::RoundedWest) ||
              (opt->shape == QTabBar::TriangularWest)
-        ) {
-          fs.capsuleV = 1;
-          if ( !(o.state & State_Selected) && !(o.state & State_On) ) {
-            r.adjust(adjust,0,0,0);
-          }
+             ) {
+          capsule = 1;
         }
 
         if ( (opt->shape == QTabBar::RoundedEast) ||
              (opt->shape == QTabBar::TriangularEast)
-        ) {
-          fs.capsuleV = -1;
-          if ( !(o.state & State_Selected) && !(o.state & State_On) ) {
-            r.adjust(0,0,-adjust,0);
+             ) {
+          capsule = -1;
+        }
+
+        fs.capsuleV = capsule;
+
+        // width and height
+        // remove extra spaces introduced by CT_TabBarTab so that
+        // selected tab looks higher and separated from others
+        // when matching variant is set
+        if ( variant == VA_TAB_INDIVIDUAL  ||
+             variant == VA_TAB_GROUP_NON_SELECTED ) {
+          if ( !(opt->state & State_On) && !(opt->state & State_Selected) ) {
+            // lower height of non selected tabs
+            if ( (opt->shape == QTabBar::RoundedNorth) ||
+                 (opt->shape == QTabBar::TriangularNorth) ||
+                 (opt->shape == QTabBar::RoundedWest) ||
+                 (opt->shape == QTabBar::TriangularWest)
+                 ) {
+              r.adjust(0,pixelMetric(PM_TabBarTabVSpace,opt,widget),0,0);
+            }
+            if ( (opt->shape == QTabBar::RoundedSouth) ||
+                 (opt->shape == QTabBar::TriangularSouth) ||
+                 (opt->shape == QTabBar::RoundedEast) ||
+                 (opt->shape == QTabBar::TriangularEast)
+                 ) {
+              r.adjust(0,0,0,-pixelMetric(PM_TabBarTabVSpace,opt,widget));
+            }
           }
+        }
+
+        if ( variant == VA_TAB_INDIVIDUAL ) {
+          // separation for all
+          r.adjust(0,0,-pixelMetric(PM_TabBarTabHSpace,opt,widget), 0);
+        }
+
+        if ( variant == VA_TAB_GROUP_NON_SELECTED ) {
+          // separation for selected only
+          if ( opt->state & State_On || opt->state & State_Selected || opt->selectedPosition == QStyleOptionTab::NextIsSelected) {
+            r.adjust(0,0,-pixelMetric(PM_TabBarTabHSpace,opt,widget), 0);
+          }
+        }
+
+        if ( orn == Vertical ) {
+          r = transposedRect(r);
         }
 
         // In order to colorize tabs, look up the tab widget contents
@@ -1627,39 +1682,143 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
           ics = state_iconstate(o.state);
         }
 
-        int variant = getThemeTweak("specific.tab.variant").toInt();
-        int adjust = 0;
-
-        if ( (variant == VA_TAB_INDIVIDUAL) ||
-             (variant == VA_TAB_GROUP_NON_SELECTED) ) {
-          adjust = 5;  // selected tab is higher than others
+        if ( (opt->shape == QTabBar::RoundedNorth) ||
+             (opt->shape == QTabBar::TriangularNorth) ||
+             (opt->shape == QTabBar::RoundedSouth) ||
+             (opt->shape == QTabBar::TriangularSouth) ) {
+          orn = Horizontal;
+        } else {
+          orn = Vertical;
         }
 
-        if ( !(o.state & State_Selected) && !(o.state & State_On) ) {
+        if ( orn == Vertical ) {
+          r = transposedRect(r);
+        }
 
-          if ( (opt->shape == QTabBar::RoundedNorth) ||
-               (opt->shape == QTabBar::TriangularNorth)
-               ) {
-            r.adjust(0,adjust,0,0);
-          }
+        int variant = getThemeTweak("specific.tab.variant").toInt();
+        int capsule = 2;
+        fs.hasCapsule = true;
 
-          if ( (opt->shape == QTabBar::RoundedSouth) ||
-               (opt->shape == QTabBar::TriangularSouth)
-               ) {
-            r.adjust(0,0,0,-adjust);
+        // capsule compute
+        if ( variant == VA_TAB_GROUP_ALL ) {
+          if (opt->position == QStyleOptionTab::Beginning)
+            capsule = -1;
+          else if (opt->position == QStyleOptionTab::Middle)
+            capsule = 0;
+          else if (opt->position == QStyleOptionTab::End)
+            capsule = 1;
+          else if (opt->position == QStyleOptionTab::OnlyOneTab)
+            capsule = 2;
+        }
+        if ( variant == VA_TAB_GROUP_NON_SELECTED ) {
+          if ( o.state & State_On || o.state & State_Selected )
+            // selected
+            capsule = 2;
+          else {
+            if (opt->position == QStyleOptionTab::Beginning) {
+              if (opt->selectedPosition == QStyleOptionTab::NextIsSelected)
+                capsule = 2;
+              else
+                capsule = -1;
+            }
+            else if (opt->position == QStyleOptionTab::End) {
+              if (opt->selectedPosition == QStyleOptionTab::PreviousIsSelected)
+                capsule = 2;
+              else
+                capsule = 1;
+            }
+            else if (opt->position == QStyleOptionTab::Middle) {
+              if (opt->selectedPosition == QStyleOptionTab::PreviousIsSelected)
+                capsule = -1;
+              else if (opt->selectedPosition == QStyleOptionTab::NextIsSelected)
+                capsule = 1;
+              else if (opt->selectedPosition == QStyleOptionTab::NotAdjacent)
+                capsule = 0;
+              else
+                capsule = 2;
+            }
           }
+        }
 
-          if ( (opt->shape == QTabBar::RoundedWest) ||
-               (opt->shape == QTabBar::TriangularWest)
-               ) {
-            r.adjust(-adjust,0,0,0);
-          }
+        if ( (orn == Vertical) && (dir == Qt::RightToLeft) ) {
+          // TabWidget bug :
+          // In vertical position with RTL layout, the tabs do not
+          // swap positions (first is always at top, last always at
+          // bottom), contrary to horizontal RTL
+          // given the flip done by render* functions, this won't give
+          // the expected result
+          // so cheat on the capsule
+          if ( (capsule == -1) || (capsule == 1) )
+            capsule = -capsule;
+        }
 
-          if ( (opt->shape == QTabBar::RoundedEast) ||
-               (opt->shape == QTabBar::TriangularEast)
-               ) {
-            r.adjust(0,0,adjust,0);
+        fs.capsuleH = capsule;
+
+        if ( (opt->shape == QTabBar::RoundedNorth) ||
+             (opt->shape == QTabBar::TriangularNorth)
+             ) {
+          capsule = -1;
+        }
+
+        if ( (opt->shape == QTabBar::RoundedSouth) ||
+             (opt->shape == QTabBar::TriangularSouth)
+             ) {
+          capsule = 1;
+        }
+
+        if ( (opt->shape == QTabBar::RoundedWest) ||
+             (opt->shape == QTabBar::TriangularWest)
+             ) {
+          capsule = 1;
+        }
+
+        if ( (opt->shape == QTabBar::RoundedEast) ||
+             (opt->shape == QTabBar::TriangularEast)
+             ) {
+          capsule = -1;
+        }
+
+        fs.capsuleV = capsule;
+
+        // width and height
+        // remove extra spaces introduced by CT_TabBarTab so that
+        // selected tab looks higher and separated from others
+        // when matching variant is set
+        if ( variant == VA_TAB_INDIVIDUAL  ||
+             variant == VA_TAB_GROUP_NON_SELECTED ) {
+          if ( !(opt->state & State_On) && !(opt->state & State_Selected) ) {
+            // lower height of non selected tabs
+            if ( (opt->shape == QTabBar::RoundedNorth) ||
+                 (opt->shape == QTabBar::TriangularNorth) ||
+                 (opt->shape == QTabBar::RoundedWest) ||
+                 (opt->shape == QTabBar::TriangularWest)
+                 ) {
+              r.adjust(0,pixelMetric(PM_TabBarTabVSpace,opt,widget),0,0);
+            }
+            if ( (opt->shape == QTabBar::RoundedSouth) ||
+                 (opt->shape == QTabBar::TriangularSouth) ||
+                 (opt->shape == QTabBar::RoundedEast) ||
+                 (opt->shape == QTabBar::TriangularEast)
+                 ) {
+              r.adjust(0,0,0,-pixelMetric(PM_TabBarTabVSpace,opt,widget));
+            }
           }
+        }
+
+        if ( variant == VA_TAB_INDIVIDUAL ) {
+          // separation for all
+          r.adjust(0,0,-pixelMetric(PM_TabBarTabHSpace,opt,widget), 0);
+        }
+
+        if ( variant == VA_TAB_GROUP_NON_SELECTED ) {
+          // separation for selected only
+          if ( opt->state & State_On || opt->state & State_Selected || opt->selectedPosition == QStyleOptionTab::NextIsSelected) {
+            r.adjust(0,0,-pixelMetric(PM_TabBarTabHSpace,opt,widget), 0);
+          }
+        }
+
+        if ( orn == Vertical ) {
+          r = transposedRect(r);
         }
 
         if ( opt->shape == QTabBar::TriangularEast ||
@@ -2610,12 +2769,12 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
   }
 
 end:
-  emit(sig_drawControl_end(CE_str(e)));
+  emit sig_drawControl_end(CE_str(e));
 }
 
 void QSvgThemableStyle::drawComplexControl(ComplexControl control, const QStyleOptionComplex * option, QPainter * p, const QWidget * widget) const
 {
-  emit(sig_drawComplexControl_begin(CC_str(control)));
+  emit sig_drawComplexControl_begin(CC_str(control));
 
   // Copy some values into shorter variable names
   int x,y,w,h;
@@ -3269,7 +3428,7 @@ void QSvgThemableStyle::drawComplexControl(ComplexControl control, const QStyleO
   }
 
 end:
-  emit(sig_drawComplexControl_end(CC_str(control)));
+  emit sig_drawComplexControl_end(CC_str(control));
 }
 
 int QSvgThemableStyle::pixelMetric(PixelMetric metric, const QStyleOption * option, const QWidget * widget) const
@@ -3304,6 +3463,10 @@ int QSvgThemableStyle::pixelMetric(PixelMetric metric, const QStyleOption * opti
       return getThemeTweak("specific.layoutmargins.hspace").toInt();
     case PM_LayoutVerticalSpacing :
       return getThemeTweak("specific.layoutmargins.vspace").toInt();
+
+    QT_WARNING_PUSH
+    QT_WARNING_DISABLE_DEPRECATED
+
     // These two are obsolete but still used by many apps
     case PM_DefaultLayoutSpacing :
       return qMax(
@@ -3317,6 +3480,7 @@ int QSvgThemableStyle::pixelMetric(PixelMetric metric, const QStyleOption * opti
             qMax(getThemeTweak("specific.layoutmargins.top").toInt(),
                  getThemeTweak("specific.layoutmargins.bottom").toInt())
             );
+     QT_WARNING_POP
 
     case PM_MenuBarPanelWidth :
       return getFrameSpec(PE_group(PE_PanelMenuBar)).width;
@@ -3356,12 +3520,14 @@ int QSvgThemableStyle::pixelMetric(PixelMetric metric, const QStyleOption * opti
     case PM_ToolBarIconSize :
       return getThemeTweak("specific.toolbar.icon.size").toInt();
 
-    case PM_TabBarTabHSpace : return 0;
-    case PM_TabBarTabVSpace : return 0;
+    case PM_TabBarTabHSpace :  // interpreted as space between tabs
+      return getThemeTweak("specific.tab.spacing").toInt();
+    case PM_TabBarTabVSpace : // interpreted as selected tab extra height
+    return getThemeTweak("specific.tab.extraheight").toInt();
     case PM_TabBarScrollButtonWidth : return 20;
     case PM_TabBarBaseHeight : return 0;
-    case PM_TabBarBaseOverlap : return 00;
-    case PM_TabBarTabOverlap : return 0;
+    case PM_TabBarBaseOverlap : return 0; // how much tabs "enter" the contents frame
+    case PM_TabBarTabOverlap : return 0; // ??
     case PM_TabBarTabShiftHorizontal : return 0;
     case PM_TabBarTabShiftVertical : return 0;
     case PM_TabBarIconSize : return 16;
@@ -3550,7 +3716,7 @@ QSize QSvgThemableStyle::sizeFromContents ( ContentsType type, const QStyleOptio
   if (!option)
     return csz;
 
-  emit(sig_sizeFromContents_begin(CT_str(type)));
+  emit sig_sizeFromContents_begin(CT_str(type));
 
   // result
   QSize s;
@@ -3861,21 +4027,39 @@ QSize QSvgThemableStyle::sizeFromContents ( ContentsType type, const QStyleOptio
       if ( const QStyleOptionTab *opt =
            qstyleoption_cast<const QStyleOptionTab *>(option) ) {
 
+        QStyleOptionTab o(*opt);
+
+        if ( o.state & State_Sunken ) {
+          // Remove "selected" state and replace it by "toggled" state
+          o.state &= ~State_Sunken;
+          o.state |= State_On;
+        }
+
         // Size of this tab
         s = sizeFromContents(fm,fs,is,ls,
-                             opt->text,
-                             opt->icon.isNull() ? 0 : opt->iconSize.width());
+                             o.text,
+                             o.icon.isNull() ? 0 : o.iconSize.width());
 
         if ( const QTabBar *w = qobject_cast< const QTabBar* >(widget) ) {
             if ( w->tabsClosable() )
               s.rwidth() += ls.tispace+pixelMetric(PM_TabCloseIndicatorWidth);
         }
 
-        if ( getThemeTweak("specific.tab.variant") == VA_TAB_INDIVIDUAL ||
-             getThemeTweak("specific.tab.variant") == VA_TAB_GROUP_NON_SELECTED ) {
+        int variant = getThemeTweak("specific.tab.variant").toInt();
+
+        // NOTE QTabWidget does not recompute tab sizes every time
+        // the selected one changes. So we need to unconditionnally add
+        // extra space for all tabs and remove it when drawing later
+        // This is needed to simulate:
+        //    * selected tab higher than others
+        //    * selected tab has side spaces with others
+
+        if ( variant == VA_TAB_INDIVIDUAL ||
+             variant == VA_TAB_GROUP_NON_SELECTED ) {
           // allow active tab to be higher than others
-          // this is substracted from non toggled tabs when drawing
-          s.rheight() += 5;
+          s.rheight() += pixelMetric(PM_TabBarTabVSpace,opt,widget);
+          // separate tabs by spaces
+          s.rwidth() += pixelMetric(PM_TabBarTabHSpace,opt,widget);
         }
 
         if ( opt->shape == QTabBar::TriangularEast ||
@@ -3993,7 +4177,7 @@ QSize QSvgThemableStyle::sizeFromContents ( ContentsType type, const QStyleOptio
 #endif
 
 end:
-  emit(sig_sizeFromContents_end(CT_str(type)));
+  emit sig_sizeFromContents_end(CT_str(type));
   return s;
 }
 
@@ -4068,7 +4252,7 @@ QRect QSvgThemableStyle::subElementRect(SubElement e, const QStyleOption * optio
   r.getRect(&x,&y,&w,&h);
   const QFontMetrics fm = option->fontMetrics;
   const Qt::LayoutDirection dir = option->direction;
-  const Orientation orn = option->state & State_Horizontal ? Horizontal : Vertical;
+  Orientation orn = option->state & State_Horizontal ? Horizontal : Vertical;
 
   // Get QSvgStyle configuration group used to render this element
   const QString g = SE_group(e);
@@ -4196,11 +4380,19 @@ QRect QSvgThemableStyle::subElementRect(SubElement e, const QStyleOption * optio
             ret.setRight(x+w-fs.right );
         }
       }
+
+
       break;
     }
 
     case SE_TabBarTabText : {
       ret = labelRect(r,fs,is,ls);
+      if ( const QTabWidget *w = qobject_cast< const QTabWidget* >(widget) ) {
+          if ( w->tabsClosable() ) {
+            ret.adjust(0,0,-pixelMetric(PM_TabCloseIndicatorWidth,option,widget),0);
+          }
+      }
+
       break;
     }
 
@@ -4208,6 +4400,78 @@ QRect QSvgThemableStyle::subElementRect(SubElement e, const QStyleOption * optio
       // already a visual rect
       ret = subElementRect(SE_TabWidgetTabPane,option,widget);
       return interiorRect(ret,fs,is);
+      break;
+    }
+
+    case SE_TabBarTabRightButton :
+    case SE_TabBarTabLeftButton : {
+    // FIXME RTL
+    // FIXME Vertical
+      if ( const QStyleOptionTab *opt =
+           qstyleoption_cast<const QStyleOptionTab *>(option) ) {
+
+        if ( (opt->shape == QTabBar::RoundedNorth) ||
+             (opt->shape == QTabBar::TriangularNorth) ||
+             (opt->shape == QTabBar::RoundedSouth) ||
+             (opt->shape == QTabBar::TriangularSouth) ) {
+          orn = Horizontal;
+        } else {
+          orn = Vertical;
+        }
+
+        if ( orn == Vertical ) {
+          r = transposedRect(r);
+        }
+
+        int variant = getThemeTweak("specific.tab.variant").toInt();
+        // width and height
+        // remove extra spaces introduced by CT_TabBarTab so that
+        // selected tab looks higher and separated from others
+        // when matching variant is set
+        if ( variant == VA_TAB_INDIVIDUAL  ||
+             variant == VA_TAB_GROUP_NON_SELECTED ) {
+          if ( !(opt->state & State_On) && !(opt->state & State_Selected) ) {
+            // lower height of non selected tabs
+            if ( (opt->shape == QTabBar::RoundedNorth) ||
+                 (opt->shape == QTabBar::TriangularNorth) ||
+                 (opt->shape == QTabBar::RoundedWest) ||
+                 (opt->shape == QTabBar::TriangularWest)
+                 ) {
+              r.adjust(0,pixelMetric(PM_TabBarTabVSpace,opt,widget),0,0);
+            }
+            if ( (opt->shape == QTabBar::RoundedSouth) ||
+                 (opt->shape == QTabBar::TriangularSouth) ||
+                 (opt->shape == QTabBar::RoundedEast) ||
+                 (opt->shape == QTabBar::TriangularEast)
+                 ) {
+              r.adjust(0,0,0,-pixelMetric(PM_TabBarTabVSpace,opt,widget));
+            }
+          }
+        }
+
+        if ( variant == VA_TAB_INDIVIDUAL ) {
+          // separation for all
+          r.adjust(0,0,-pixelMetric(PM_TabBarTabHSpace,opt,widget), 0);
+        }
+
+        if ( variant == VA_TAB_GROUP_NON_SELECTED ) {
+          // separation for selected only
+          if ( opt->state & State_On || opt->state & State_Selected || opt->selectedPosition == QStyleOptionTab::NextIsSelected) {
+            r.adjust(0,0,-pixelMetric(PM_TabBarTabHSpace,opt,widget), 0);
+          }
+
+          if ( orn == Vertical ) {
+            r = transposedRect(r);
+          }
+        }
+      }
+      ret = squaredRect(interiorRect(r,fs,is));
+
+      int s = (ret.width() > ds.size) ? ds.size : ret.width();
+      if ( e == SE_TabBarTabRightButton )
+        ret = alignedRect(Qt::LeftToRight,Qt::AlignRight | Qt::AlignVCenter,QSize(s,s),interiorRect(r,fs,is));
+      else
+        ret = alignedRect(Qt::LeftToRight,Qt::AlignLeft | Qt::AlignVCenter,QSize(s,s),interiorRect(r,fs,is));
       break;
     }
 
@@ -5181,7 +5445,7 @@ void QSvgThemableStyle::renderFrame(QPainter *p,
   if (!fs.hasFrame)
     return;
 
-  emit(sig_renderFrame_begin(e));
+  emit sig_renderFrame_begin(e);
 
   int x0,y0,w,h;
   int intensity;
@@ -5190,7 +5454,7 @@ void QSvgThemableStyle::renderFrame(QPainter *p,
   bounds.getRect(&x0,&y0,&w,&h);
   intensity = getThemeTweak("specific.palette.intensity").toInt();
   use3dFrame = getThemeTweak("specific.palette.3dframes").toBool();
-  usePalette = getThemeTweak("specific.palette.usepalette").toBool();
+  //usePalette = getThemeTweak("specific.palette.usepalette").toBool();
   usePalette = true;
 
   // rects to draw frame parts
@@ -5396,7 +5660,7 @@ void QSvgThemableStyle::renderFrame(QPainter *p,
     p->restore();
   }
 
-  emit(sig_renderFrame_end(e));
+  emit sig_renderFrame_end(e);
 }
 
 void QSvgThemableStyle::computeInteriorRect(const QRect& bounds,
@@ -5444,7 +5708,7 @@ void QSvgThemableStyle::renderInterior(QPainter *p,
   if (!is.hasInterior)
     return;
 
-  emit(sig_renderInterior_begin(e));
+  emit sig_renderInterior_begin(e);
 
   int x0,y0,w,h;
   int intensity;
@@ -5524,7 +5788,7 @@ void QSvgThemableStyle::renderInterior(QPainter *p,
     p->restore();
   }
 
-  emit(sig_renderInterior_end(e));
+  emit sig_renderInterior_end(e);
 }
 
 void QSvgThemableStyle::renderIndicator(QPainter *p,
@@ -5536,7 +5800,7 @@ void QSvgThemableStyle::renderIndicator(QPainter *p,
                        /* direction */ Qt::LayoutDirection dir,
                        Qt::Alignment alignment) const
 {
-  emit(sig_renderIndicator_begin(e));
+  emit sig_renderIndicator_begin(e);
 
   // drawing rect
   QRect r = squaredRect(interiorRect(bounds,fs,is));
@@ -5571,7 +5835,7 @@ void QSvgThemableStyle::renderIndicator(QPainter *p,
     p->restore();
   }
 
-  emit(sig_renderIndicator_end(e));
+  emit sig_renderIndicator_end(e);
 }
 
 void QSvgThemableStyle::colorizeIndicator(QPainter *p,
@@ -5659,8 +5923,8 @@ void QSvgThemableStyle::renderLabel(QPainter* p,
                             const QPixmap& pixmap,
                             const Qt::ToolButtonStyle tialign) const
 {
-  emit(sig_renderLabel_begin("text:"+(text.isEmpty() ? "<none>" : "\""+text+"\"")+
-                             "/icon:"+(pixmap.isNull() ? "no" : "yes")));
+  emit sig_renderLabel_begin("text:"+(text.isEmpty() ? "<none>" : "\""+text+"\"")+
+                             "/icon:"+(pixmap.isNull() ? "no" : "yes"));
 
   // compute text and icon rect
   QRect r(labelRect(bounds,fs,is,ls));
@@ -5734,7 +5998,7 @@ void QSvgThemableStyle::renderLabel(QPainter* p,
     p->restore();
   }
 
-  emit(sig_renderLabel_end("text:"+text+"/icon:"+(pixmap.isNull() ? "yes":"no")));
+  emit sig_renderLabel_end("text:"+text+"/icon:"+(pixmap.isNull() ? "yes":"no"));
 }
 
 inline frame_spec_t QSvgThemableStyle::getFrameSpec(const QString& group) const

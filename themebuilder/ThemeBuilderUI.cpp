@@ -2368,7 +2368,9 @@ void ThemeBuilderUI::setupPreviewForWidget(const QTreeWidgetItem *current)
 
     widget->addTab(new QLabel("content 1"),icon,"1st");
     widget->addTab(new QLabel("content 2"),icon,"Middle Tab");
-    widget->addTab(new QLabel("content 3"),"Last Tab");
+    widget->addTab(new QLabel("content 3"),icon,"Middle Tab");
+    widget->addTab(new QLabel("content 4"),icon,"Middle Tab");
+    widget->addTab(new QLabel("content 5"),"Last Tab");
     widget->setTabsClosable(true);
 
     QToolButton *cornerWidget = new QToolButton();

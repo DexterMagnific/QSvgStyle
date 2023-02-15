@@ -209,8 +209,8 @@ QString SE_group(QStyle::SubElement element)
     case QStyle::SE_ItemViewItemDecoration : return "ViewItem";
     case QStyle::SE_ItemViewItemText : return "ViewItem";
     case QStyle::SE_ItemViewItemFocusRect : return "Frame";
-    case QStyle::SE_TabBarTabLeftButton : return "TabBarBase";
-    case QStyle::SE_TabBarTabRightButton : return "TabBarBase";
+    case QStyle::SE_TabBarTabLeftButton : return "TabBarTab";
+    case QStyle::SE_TabBarTabRightButton : return "TabBarTab";
     case QStyle::SE_TabBarTabText : return "TabBarTab";
     case QStyle::SE_ShapedFrameContents : return "Frame";
     case QStyle::SE_ToolBarHandle : return "ToolBar";

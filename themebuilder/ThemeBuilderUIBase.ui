@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1467</width>
-    <height>948</height>
+    <width>1130</width>
+    <height>740</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -61,7 +61,7 @@
          <x>0</x>
          <y>0</y>
          <width>256</width>
-         <height>660</height>
+         <height>514</height>
         </rect>
        </property>
        <property name="palette">
@@ -227,7 +227,7 @@
          <x>0</x>
          <y>0</y>
          <width>256</width>
-         <height>646</height>
+         <height>514</height>
         </rect>
        </property>
        <property name="palette">
@@ -450,7 +450,7 @@
          <x>0</x>
          <y>0</y>
          <width>256</width>
-         <height>646</height>
+         <height>514</height>
         </rect>
        </property>
        <property name="palette">
@@ -652,7 +652,7 @@
          <x>0</x>
          <y>0</y>
          <width>256</width>
-         <height>646</height>
+         <height>514</height>
         </rect>
        </property>
        <property name="palette">
@@ -1250,7 +1250,7 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>749</width>
+             <width>499</width>
              <height>50</height>
             </rect>
            </property>
@@ -2047,6 +2047,34 @@
              <string>Individual,Group all,Group non selected</string>
             </property>
            </item>
+           <item>
+            <property name="text">
+             <string>Tab spacing</string>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+            <property name="text">
+             <string>specific.tab.spacing</string>
+            </property>
+            <property name="text">
+             <string>int</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Active tab extra height</string>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+            <property name="text">
+             <string>specific.tab.extraheight</string>
+            </property>
+            <property name="text">
+             <string>int</string>
+            </property>
+           </item>
           </item>
           <item>
            <property name="text">
@@ -2527,8 +2555,8 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>307</width>
-               <height>390</height>
+               <width>183</width>
+               <height>280</height>
               </rect>
              </property>
              <attribute name="label">
@@ -2821,8 +2849,8 @@
                   <rect>
                    <x>0</x>
                    <y>0</y>
-                   <width>293</width>
-                   <height>294</height>
+                   <width>169</width>
+                   <height>209</height>
                   </rect>
                  </property>
                  <layout class="QGridLayout" name="gridLayout_27">
@@ -2849,8 +2877,8 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>196</width>
-               <height>52</height>
+               <width>174</width>
+               <height>40</height>
               </rect>
              </property>
              <attribute name="label">
@@ -3044,8 +3072,8 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>200</width>
-               <height>96</height>
+               <width>176</width>
+               <height>71</height>
               </rect>
              </property>
              <attribute name="label">
