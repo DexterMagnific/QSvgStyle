@@ -483,6 +483,9 @@ class QSvgThemableStyle : public QCommonStyle {
     void slot_animateProgressBars();
 
   private:
+    // Helper for computing an effective tab rect
+    QRect tabRect(const QStyleOption * option, const QWidget * widget) const;
+
     QString cls;
     QSvgCachedRenderer *themeRndr;
     ThemeConfig *themeSettings;

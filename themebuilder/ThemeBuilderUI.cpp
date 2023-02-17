@@ -2610,6 +2610,7 @@ void ThemeBuilderUI::setupPreviewForWidget(const QTreeWidgetItem *current)
 
 end:
   if ( previewWidget ) {
+    //previewWidget->setPalette(qApp->palette());
     previewWidget->setBackgroundRole(previewArea->backgroundRole());
     repaintBtn->setEnabled(true);
     rtlBtn->setEnabled(true);

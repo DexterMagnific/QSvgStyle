@@ -164,43 +164,6 @@
         </property>
         <item row="0" column="0">
          <widget class="QPushButton" name="pushButton">
-          <property name="palette">
-           <palette>
-            <active>
-             <colorrole role="Button">
-              <brush brushstyle="SolidPattern">
-               <color alpha="255">
-                <red>85</red>
-                <green>255</green>
-                <blue>127</blue>
-               </color>
-              </brush>
-             </colorrole>
-            </active>
-            <inactive>
-             <colorrole role="Button">
-              <brush brushstyle="SolidPattern">
-               <color alpha="255">
-                <red>85</red>
-                <green>255</green>
-                <blue>127</blue>
-               </color>
-              </brush>
-             </colorrole>
-            </inactive>
-            <disabled>
-             <colorrole role="Button">
-              <brush brushstyle="SolidPattern">
-               <color alpha="255">
-                <red>85</red>
-                <green>255</green>
-                <blue>127</blue>
-               </color>
-              </brush>
-             </colorrole>
-            </disabled>
-           </palette>
-          </property>
           <property name="text">
            <string>PushButton</string>
           </property>

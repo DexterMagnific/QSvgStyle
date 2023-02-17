@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1130</width>
-    <height>740</height>
+    <width>1123</width>
+    <height>734</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -61,7 +61,7 @@
          <x>0</x>
          <y>0</y>
          <width>256</width>
-         <height>514</height>
+         <height>508</height>
         </rect>
        </property>
        <property name="palette">
@@ -226,8 +226,8 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>256</width>
-         <height>514</height>
+         <width>84</width>
+         <height>50</height>
         </rect>
        </property>
        <property name="palette">
@@ -449,8 +449,8 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>256</width>
-         <height>514</height>
+         <width>84</width>
+         <height>50</height>
         </rect>
        </property>
        <property name="palette">
@@ -651,8 +651,8 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>256</width>
-         <height>514</height>
+         <width>84</width>
+         <height>50</height>
         </rect>
        </property>
        <property name="palette">
@@ -1250,7 +1250,7 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>499</width>
+             <width>492</width>
              <height>50</height>
             </rect>
            </property>
@@ -2075,6 +2075,20 @@
              <string>int</string>
             </property>
            </item>
+           <item>
+            <property name="text">
+             <string>Tab base extra height</string>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+            <property name="text">
+             <string>specific.tab.extrabaseheight</string>
+            </property>
+            <property name="text">
+             <string>int</string>
+            </property>
+           </item>
           </item>
           <item>
            <property name="text">
@@ -2555,8 +2569,8 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>183</width>
-               <height>280</height>
+               <width>143</width>
+               <height>121</height>
               </rect>
              </property>
              <attribute name="label">
@@ -2849,8 +2863,8 @@
                   <rect>
                    <x>0</x>
                    <y>0</y>
-                   <width>169</width>
-                   <height>209</height>
+                   <width>94</width>
+                   <height>30</height>
                   </rect>
                  </property>
                  <layout class="QGridLayout" name="gridLayout_27">
