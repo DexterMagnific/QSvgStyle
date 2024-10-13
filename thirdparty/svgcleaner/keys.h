@@ -25,10 +25,11 @@
 #include <QStringList>
 #include <QHash>
 #include <QMap>
+#include <QMultiMap>
 #include <QSet>
 #include <QObject>
 
-typedef QMap<QString, QString> StringMap;
+typedef QMultiMap<QString, QString> StringMap;
 typedef QHash<QString, QString> StringHash;
 typedef QSet<QString> StringSet;
 typedef QSet<const char *> CharSet;

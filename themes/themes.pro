@@ -11,7 +11,11 @@ unix {
     QMAKE_INSTALL_DIR = cp -f -R --no-preserve=mode
 
     target.path = $$DATADIR
-    target.files += ./flat
+    target.files += \
+        $$PWD/Arrongin \
+        $$PWD/Telinkrin \
+        $$PWD/FlatShadowed
+
     INSTALLS += target
   }
 }

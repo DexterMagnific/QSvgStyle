@@ -55,7 +55,7 @@ public:
 private:
     QList<StringMap> styleHashList;
     StringMap parentHash;
-    StringSet parentAttrs;
+    QStringList parentAttrs;
 
     void cleanStyle(const SvgElement &elem, StringMap &hash);
     void removeDefaultValue(StringMap &hash, const QString &name);

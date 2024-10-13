@@ -1,2 +1,0 @@
-# Lintian fails to correctly parse well-formed YAML nested mappings
-upstream-metadata-missing-bug-tracking

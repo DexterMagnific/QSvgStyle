@@ -8,7 +8,7 @@ DESTDIR = bin
 TEMPLATE = app
 
 QT += core gui widgets
-unix:!macx: QT += x11extras
+#unix:!macx: QT += x11extras
 
 INCLUDEPATH += . ../styleconfig
 

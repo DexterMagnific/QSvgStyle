@@ -1,20 +1,20 @@
 /*
 Copyright (C) 2005-2014 Sergey A. Tachenov
 
-This file is part of QuaZIP.
+This file is part of QuaZip.
 
-QuaZIP is free software: you can redistribute it and/or modify
+QuaZip is free software: you can redistribute it and/or modify
 it under the terms of the GNU Lesser General Public License as published by
 the Free Software Foundation, either version 2.1 of the License, or
 (at your option) any later version.
 
-QuaZIP is distributed in the hope that it will be useful,
+QuaZip is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU Lesser General Public License for more details.
 
 You should have received a copy of the GNU Lesser General Public License
-along with QuaZIP.  If not, see <http://www.gnu.org/licenses/>.
+along with QuaZip.  If not, see <http://www.gnu.org/licenses/>.
 
 See COPYING file for the full LGPL text.
 
@@ -59,6 +59,12 @@ QFile::Permissions QuaZipFileInfo::getPermissions() const
 QFile::Permissions QuaZipFileInfo64::getPermissions() const
 {
     return permissionsFromExternalAttr(externalAttr);
+}
+
+bool QuaZipFileInfo64::isSymbolicLink() const
+{
+    quint32 uPerm = (externalAttr & 0xFFFF0000u) >> 16;
+    return (uPerm & 0170000) == 0120000;
 }
 
 bool QuaZipFileInfo64::toQuaZipFileInfo(QuaZipFileInfo &info) const
@@ -119,7 +125,7 @@ static QDateTime getNTFSTime(const QByteArray &extra, int position,
         return dateTime;
     QDateTime base(QDate(1601, 1, 1), QTime(0, 0), Qt::UTC);
     dateTime = base.addMSecs(time / 10000);
-    if (fineTicks != NULL) {
+    if (fineTicks != nullptr) {
         *fineTicks = static_cast<int>(time % 10000);
     }
     return dateTime;

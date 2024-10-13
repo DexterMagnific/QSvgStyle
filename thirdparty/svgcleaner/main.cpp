@@ -216,7 +216,7 @@ void processFile(const QString &inPath, const QString &outPath)
     if (!outFile.open(QIODevice::WriteOnly | QIODevice::Text))
         qFatal("Error: could not write output file");
 
-    SVGPrinter printer(0, Keys.flag(Key::CompactOutput));
+    XMLPrinter printer(0, Keys.flag(Key::CompactOutput));
     doc.Print(&printer);
     outFile.write(printer.CStr());
     outFile.close();

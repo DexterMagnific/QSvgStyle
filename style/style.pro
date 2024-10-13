@@ -38,6 +38,6 @@ unix {
   }
 
   #MAKE INSTALL
-  themes.path = $$[QT_INSTALL_PLUGINS]/styles
-  INSTALLS += themes
+  target.path = $$[QT_INSTALL_PLUGINS]/styles
+  INSTALLS += target
 }

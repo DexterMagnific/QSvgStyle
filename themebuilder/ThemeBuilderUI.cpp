@@ -26,6 +26,7 @@
 #include <QDir>
 #include <QMimeData>
 #include <QClipboard>
+#include <QStandardPaths>
 
 // UI
 #include <QFileDialog>
@@ -635,7 +636,7 @@ ThemeBuilderUI::ThemeBuilderUI(QWidget* parent)
                            "Maybe it is not installed in the right directory.\n"
                            "The Qt plugin library is\n"
                            "%1\n"
-                           "Preview will not be available.").arg(QLibraryInfo::location(QLibraryInfo::PluginsPath)));
+                           "Preview will not be available.").arg(QLibraryInfo::path(QLibraryInfo::PluginsPath)));
     }
     // Check that the style version is the same as the one we were compiled against
     if ( style->Version /* dynamic load */ != QSvgThemableStyle::Version /* compiled .h */) {
@@ -995,7 +996,7 @@ bool ThemeBuilderUI::eventFilter(QObject* o, QEvent* e)
   // previewArea
   if ( (o == tabWidget3) && (e->type() == QEvent::Resize) ) {
     // save detached preview area geometry
-    if ( tabWidget3->isTopLevel() ) {
+    if ( tabWidget3->isWindow() ) {
       detachedPeviewGeometry = tabWidget3->geometry();
     }
   }
@@ -1738,7 +1739,7 @@ void ThemeBuilderUI::optimizeSvg(const QString& inPath, const QString& outPath)
   if (!outFile.open(QIODevice::WriteOnly | QIODevice::Text))
     qFatal("Error: could not write output file");
 
-  SVGPrinter printer(0, Keys.flag(Key::CompactOutput));
+  XMLPrinter printer(0, Keys.flag(Key::CompactOutput));
   doc.Print(&printer);
   outFile.write(printer.CStr());
   outFile.close();
@@ -2475,7 +2476,7 @@ void ThemeBuilderUI::setupPreviewForWidget(const QTreeWidgetItem *current)
     widget->addAction("Menu item 1");
     widget->addAction(icon,"Menu item 2");
     widget->addSeparator();
-    widget->addAction(icon,"Menu item 3", NULL,NULL,QKeySequence("ALT+F1"));
+    widget->addAction(icon,"Menu item 3", QKeySequence("ALT+F1"), NULL,NULL);
     widget->actions()[3]->setCheckable(true);
     widget->addAction("Menu item 4");
     widget->actions()[4]->setEnabled(false);
@@ -2837,7 +2838,7 @@ void ThemeBuilderUI::slot_detachBtnClicked(bool checked)
 
   QIcon icon;
 
-  if ( !tabWidget3->isTopLevel() ) {
+  if ( !tabWidget3->isWindow() ) {
     icon.addFile(QString::fromUtf8(":/icon/pixmaps/dockwidget.png"), QSize(), QIcon::Normal, QIcon::Off);
     detachBtn->setIcon(icon);
     detachBtn->setText("Attach");

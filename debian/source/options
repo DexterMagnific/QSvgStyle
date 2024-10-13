@@ -1,1 +1,0 @@
-extend-diff-ignore = "(^|/)(\.reuse/|LICENSES/|thirdparty/svgcleaner)?(\.travis\.yml|dep5|.+?\.txt|tinyxml2\.(cpp|h))$"

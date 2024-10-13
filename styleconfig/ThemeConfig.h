@@ -26,7 +26,6 @@
 class QString;
 class QVariant;
 class QSettings;
-class QStringList;
 
 /**
  * Class that loads, saves (and in the future caches) theme settings

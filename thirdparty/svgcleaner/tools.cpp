@@ -133,7 +133,14 @@ namespace CleanerAttr {
 }
 
 
-Q_CORE_EXPORT double qstrtod(const char *s00, char const **se, bool *ok);
+[[nodiscard]] Q_CORE_EXPORT double qstrntod(const char *s00, qsizetype len,
+                                            char const **se, bool *ok);
+[[nodiscard]] inline double qstrtod(const char *s00, char const **se, bool *ok)
+{
+    qsizetype len = qsizetype(strlen(s00));
+    return qstrntod(s00, len, se, ok);
+}
+
 Q_CORE_EXPORT char *qdtoa(double d, int mode, int ndigits, int *decpt,
                           int *sign, char **rve, char **digits_str);
 

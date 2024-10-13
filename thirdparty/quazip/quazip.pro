@@ -4,7 +4,7 @@ CONFIG += \
   qt \
   staticlib
 
-QT      += core
+QT      += core core5compat
 QT      -= gui
 
 TARGET   = quazip
@@ -14,12 +14,13 @@ TEMPLATE = lib
 DEFINES += QUAZIP_BUILD
 DEFINES += QT_NO_CAST_FROM_ASCII
 DEFINES += QT_NO_CAST_TO_ASCII
+DEFINES += QUAZIP_QT_MAJOR_VERSION=6
 CONFIG(staticlib): DEFINES += QUAZIP_STATIC
 
 HEADERS += \
-    $$PWD/minizip_crypt.h \
     $$PWD/ioapi.h \
     $$PWD/JlCompress.h \
+    $$PWD/minizip_crypt.h \
     $$PWD/quaadler32.h \
     $$PWD/quachecksum32.h \
     $$PWD/quacrc32.h \
@@ -31,11 +32,15 @@ HEADERS += \
     $$PWD/quazip_global.h \
     $$PWD/quazip.h \
     $$PWD/quazipnewinfo.h \
+    $$PWD/quazip_qt_compat.h \
     $$PWD/unzip.h \
-    $$PWD/zip.h
+    $$PWD/zip.h \
 
-SOURCES += $$PWD/qioapi.cpp \
+SOURCES += \
+    $$PWD/unzip.c \
+    $$PWD/zip.c \
     $$PWD/JlCompress.cpp \
+    $$PWD/qioapi.cpp \
     $$PWD/quaadler32.cpp \
     $$PWD/quachecksum32.cpp \
     $$PWD/quacrc32.cpp \
@@ -46,5 +51,3 @@ SOURCES += $$PWD/qioapi.cpp \
     $$PWD/quazipfile.cpp \
     $$PWD/quazipfileinfo.cpp \
     $$PWD/quazipnewinfo.cpp \
-    $$PWD/unzip.c \
-    $$PWD/zip.c

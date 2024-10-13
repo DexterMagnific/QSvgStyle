@@ -22,6 +22,8 @@
 #include "paths.h"
 #include "replacer.h"
 
+#include <QRegularExpression>
+
 // TODO: remove spaces at end of line in text elem
 // TODO: replace equal 'fill', 'stroke', 'stop-color', 'flood-color' and 'lighting-color' attr
 //       with 'color' attr
@@ -225,10 +227,12 @@ public:
     QString tagName;
     StringHash attrHash;
     SvgElement elem;
-    bool operator ==(const EqElement &elem) {
-        return elem.elem.xmlElement() == this->elem.xmlElement();
-    }
+
 };
+
+bool operator ==(const EqElement &elem1, const EqElement &elem2) {
+    return elem1.elem.xmlElement() == elem2.elem.xmlElement();
+}
 
 // FIXME: parent styles should be set to elem before moving to defs
 //        address-book-new.svg
@@ -309,7 +313,7 @@ void Replacer::replaceEqualElementsByUse()
                 tr.divide(mainElem.attribute("transform"));
                 eqElem.setAttribute("transform", tr.simplified());
             }
-            elemList.removeOne(equalElems.first());
+            elemList.removeOne(equalElems.constFirst());
         } else if (equalElems.size() > 1) {
             SvgElement newElem = document()->NewElement(ToChar(mainEqElem.tagName));
             newElem.setAttribute("id", "SVGCleanerId_" + QString::number(newAttrId++));
@@ -527,14 +531,14 @@ void Replacer::convertCDATAStyle()
             continue;
         // remove comments
         // better to use positive lookbehind, but qt4 didn't support it
-        text.remove(QRegExp("[^\\*]\\/(?!\\*)"));
-        text.remove(QRegExp("[^\\/]\\*(?!\\/)"));
-        text.remove(QRegExp("\\/\\*[^\\/\\*]*\\*\\/"));
-        QStringList classList = text.split(QRegExp(" +(\\.|@)"), Qt::SkipEmptyParts);
+        text.remove(QRegularExpression("[^\\*]\\/(?!\\*)"));
+        text.remove(QRegularExpression("[^\\/]\\*(?!\\/)"));
+        text.remove(QRegularExpression("\\/\\*[^\\/\\*]*\\*\\/"));
+        QStringList classList = text.split(QRegularExpression(" +(\\.|@)"), Qt::SkipEmptyParts);
         foreach (const QString &currClass, classList) {
-            QStringList tmpList = currClass.split(QRegExp("( +|)\\{"));
+            QStringList tmpList = currClass.split(QRegularExpression("( +|)\\{"));
             if (tmpList.size() == 2)
-                classHash.insert(tmpList.at(0), QString(tmpList.at(1)).remove(QRegExp("\\}.*")));
+                classHash.insert(tmpList.at(0), QString(tmpList.at(1)).remove(QRegularExpression("\\}.*")));
         }
     }
 
@@ -641,7 +645,7 @@ void Replacer::fixWrongAttr()
             // fix wrong 'rx', 'ry' attributes in 'rect' elem
             // remove, if one of 'r' is null
             if ((elem.hasAttribute("rx") && elem.hasAttribute("ry"))
-                && (elem.attribute("rx") == 0 || elem.attribute("ry") == 0)) {
+                && (elem.attribute("rx").toInt() == 0 || elem.attribute("ry").toInt() == 0)) {
                 elem.removeAttribute("rx");
                 elem.removeAttribute("ry");
             }
@@ -864,7 +868,7 @@ void Replacer::roundNumericAttributes()
                 // process list based attributes
                 if (listBasedAttrList.contains(attr)) {
                     // TODO: get rid of regex
-                    QStringList tmpList = value.split(QRegExp("(,|) |,"), Qt::SkipEmptyParts);
+                    QStringList tmpList = value.split(QRegularExpression("(,|) |,"), Qt::SkipEmptyParts);
                     QString tmpStr;
                     foreach (const QString &text, tmpList) {
                         bool ok;

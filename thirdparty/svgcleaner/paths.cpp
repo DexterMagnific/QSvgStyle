@@ -296,7 +296,7 @@ void Path::processPath(SvgElement elem, bool canApplyTransform, bool *isPathAppl
     m_elem = elem;
 
     QList<Segment> segList;
-    splitToSegments(inPath.midRef(0), segList);
+    splitToSegments(QStringView(inPath).mid(0), segList);
     // paths without segments or with first segment not 'moveto' are invalid
     if (segList.isEmpty() || segList.first().command != Command::MoveTo) {
         if (Keys.flag(Key::RemoveInvisibleElements))
@@ -347,7 +347,7 @@ void Path::processPath(SvgElement elem, bool canApplyTransform, bool *isPathAppl
     }
 }
 
-void Path::splitToSegments(const QStringRef &path, QList<Segment> &segList)
+void Path::splitToSegments(const QStringView &path, QList<Segment> &segList)
 {
     const QChar *str = path.constData();
     const QChar *end = str + path.size();

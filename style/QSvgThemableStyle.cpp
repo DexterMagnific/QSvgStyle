@@ -37,7 +37,7 @@
 #include <QList>
 #include <QMap>
 #include <QDebug>
-#include <QMatrix>
+#include <QTransform>
 #include <QtAlgorithms>
 #include <QtMath>
 #include <QStyleHints>
@@ -3400,23 +3400,6 @@ int QSvgThemableStyle::pixelMetric(PixelMetric metric, const QStyleOption * opti
     case PM_LayoutVerticalSpacing :
       return getThemeTweak("specific.layoutmargins.vspace").toInt();
 
-    QT_WARNING_PUSH
-    QT_WARNING_DISABLE_DEPRECATED
-    // These two are obsolete but still used by many apps
-    case PM_DefaultLayoutSpacing :
-      return qMax(
-            getThemeTweak("specific.layoutmargins.hspace").toInt(),
-            getThemeTweak("specific.layoutmargins.vspace").toInt()
-            );
-    case PM_DefaultChildMargin :
-      return qMax(
-            qMax(getThemeTweak("specific.layoutmargins.left").toInt(),
-                 getThemeTweak("specific.layoutmargins.right").toInt()),
-            qMax(getThemeTweak("specific.layoutmargins.top").toInt(),
-                 getThemeTweak("specific.layoutmargins.bottom").toInt())
-            );
-     QT_WARNING_POP
-
     case PM_MenuBarPanelWidth :
       return getFrameSpec(PE_group(PE_PanelMenuBar)).width;
 
@@ -3897,7 +3880,7 @@ QSize QSvgThemableStyle::sizeFromContents ( ContentsType type, const QStyleOptio
                                : QString());
         }
 
-        if ( opt->orientation == Qt::Vertical )
+        if ( opt->bottomToTop )
           s.transpose();
       }
 
@@ -5475,7 +5458,7 @@ void QSvgThemableStyle::renderFrame(QPainter *p,
     p->save();
     p->scale(-1.0,1.0);
     p->translate(-2*x0-w,0);
-    p->setWorldTransform(QTransform(QMatrix(0,1,1,0,0,0)),true);
+    p->setWorldTransform(QTransform(0,1,1,0,0,0),true);
   }
 
   // Render !
@@ -5654,7 +5637,7 @@ void QSvgThemableStyle::renderInterior(QPainter *p,
     p->save();
     p->scale(-1.0,1.0);
     p->translate(-2*x0-w,0);
-    p->setWorldTransform(QTransform(QMatrix(0,1,1,0,0,0)),true);
+    p->setWorldTransform(QTransform(0,1,1,0,0,0),true);
   }
 
   // Render !

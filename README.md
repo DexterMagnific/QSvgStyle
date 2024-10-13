@@ -1,10 +1,6 @@
-|Linux Build Status|Documentation Build Status|Coverity Scan Build Status|
-|:--:|:--:|:--:|
-|[![Build Status](https://travis-ci.org/DexterMagnific/QSvgStyle.svg?branch=master)](https://travis-ci.org/DexterMagnific/QSvgStyle)|[![Documentation Status](https://readthedocs.org/projects/qsvgstyle/badge/?version=latest)](http://qsvgstyle.readthedocs.io/en/latest/?badge=latest)|[![Coverity Scan Build Status](https://img.shields.io/coverity/scan/15379.svg)](https://scan.coverity.com/projects/15379)|
-
 # QSvgStyle distribution
 
-QSvgStyle is a themeable SVG style for Qt 5 desktop applications
+QSvgStyle is a themeable SVG style for Qt 6 desktop applications
 (C) Said LANKRI, under the GNU GPL License version 2+
 
 It comes with the style engine (QSvgStyle), a theme builder (QSvgThemeBuilder),
@@ -53,23 +49,22 @@ It comes with the style engine (QSvgStyle), a theme builder (QSvgThemeBuilder),
 
 ## Compile
 
-You need the Qt5 development files of the following modules to compile QSvgStyle:
-- Qt Core
-- Qt GUI
+You need the Qt6 development files of the following modules to compile QSvgStyle:
+- Qt Base
 - Qt SVG
-- Qt XML
+- Qt5 Compatibility module
 
 For debian based systems:
 
 ```
-sudo apt install qtbase5-dev libqt5x11extras5-dev libqt5svg5-dev libqt5xml5
+sudo apt install qt6-base-dev qt6-svg-dev qt6-5compat-dev
 ```
 
 Then you build it:
 
 ```
-$ qmake
-$ make
+$ qmake6
+$ make -j
 ```
 
 ## Install
@@ -80,7 +75,7 @@ $ sudo make install
 
 ## Use
 
-You can launch any Qt5 application with QSvgStyle styling by adding a `-style` option:
+You can launch any Qt6 application with QSvgStyle styling by adding a `-style` option:
 
 ```
 $ dolphin -style qsvgstyle

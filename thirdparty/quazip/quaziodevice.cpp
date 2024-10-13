@@ -1,20 +1,20 @@
 /*
 Copyright (C) 2005-2014 Sergey A. Tachenov
 
-This file is part of QuaZIP.
+This file is part of QuaZip.
 
-QuaZIP is free software: you can redistribute it and/or modify
+QuaZip is free software: you can redistribute it and/or modify
 it under the terms of the GNU Lesser General Public License as published by
 the Free Software Foundation, either version 2.1 of the License, or
 (at your option) any later version.
 
-QuaZIP is distributed in the hope that it will be useful,
+QuaZip is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU Lesser General Public License for more details.
 
 You should have received a copy of the GNU Lesser General Public License
-along with QuaZIP.  If not, see <http://www.gnu.org/licenses/>.
+along with QuaZip.  If not, see <http://www.gnu.org/licenses/>.
 
 See COPYING file for the full LGPL text.
 
@@ -36,36 +36,28 @@ class QuaZIODevicePrivate {
     QuaZIODevice *q;
     z_stream zins;
     z_stream zouts;
-    char *inBuf;
-    int inBufPos;
-    int inBufSize;
-    char *outBuf;
-    int outBufPos;
-    int outBufSize;
-    bool zBufError;
-    bool atEnd;
+    char *inBuf{nullptr};
+    int inBufPos{0};
+    int inBufSize{0};
+    char *outBuf{nullptr};
+    int outBufPos{0};
+    int outBufSize{0};
+    bool zBufError{false};
+    bool atEnd{false};
     bool flush(int sync);
     int doFlush(QString &error);
 };
 
 QuaZIODevicePrivate::QuaZIODevicePrivate(QIODevice *io, QuaZIODevice *q):
   io(io),
-  q(q),
-  inBuf(NULL),
-  inBufPos(0),
-  inBufSize(0),
-  outBuf(NULL),
-  outBufPos(0),
-  outBufSize(0),
-  zBufError(false),
-  atEnd(false)
+  q(q)
 {
-  zins.zalloc = (alloc_func) NULL;
-  zins.zfree = (free_func) NULL;
-  zins.opaque = NULL;
-  zouts.zalloc = (alloc_func) NULL;
-  zouts.zfree = (free_func) NULL;
-  zouts.opaque = NULL;
+  zins.zalloc = (alloc_func) nullptr;
+  zins.zfree = (free_func) nullptr;
+  zins.opaque = nullptr;
+  zouts.zalloc = (alloc_func) nullptr;
+  zouts.zfree = (free_func) nullptr;
+  zouts.opaque = nullptr;
   inBuf = new char[QUAZIO_INBUFSIZE];
   outBuf = new char[QUAZIO_OUTBUFSIZE];
 #ifdef QUAZIP_ZIODEVICE_DEBUG_OUTPUT
@@ -86,10 +78,8 @@ QuaZIODevicePrivate::~QuaZIODevicePrivate()
 #ifdef QUAZIP_ZIODEVICE_DEBUG_INPUT
   indebug.close();
 #endif
-  if (inBuf != NULL)
-    delete[] inBuf;
-  if (outBuf != NULL)
-      delete[] outBuf;
+  delete[] inBuf;
+  delete[] outBuf;
 }
 
 bool QuaZIODevicePrivate::flush(int sync)
@@ -106,13 +96,13 @@ bool QuaZIODevicePrivate::flush(int sync)
     zouts.next_in = &c; // fake input buffer
     zouts.avail_in = 0; // of zero size
     do {
-        zouts.next_out = (Bytef *) outBuf;
+        zouts.next_out = reinterpret_cast<Bytef *>(outBuf);
         zouts.avail_out = QUAZIO_OUTBUFSIZE;
         int result = deflate(&zouts, sync);
         switch (result) {
         case Z_OK:
         case Z_STREAM_END:
-          outBufSize = (char *) zouts.next_out - outBuf;
+          outBufSize = reinterpret_cast<char *>(zouts.next_out) - outBuf;
           if (doFlush(error) < 0) {
               q->setErrorString(error);
               return false;
@@ -241,19 +231,19 @@ qint64 QuaZIODevice::readData(char *data, qint64 maxSize)
         break;
     }
     while (read < maxSize && d->inBufPos < d->inBufSize) {
-      d->zins.next_in = (Bytef *) (d->inBuf + d->inBufPos);
+      d->zins.next_in = reinterpret_cast<Bytef *>(d->inBuf + d->inBufPos);
       d->zins.avail_in = d->inBufSize - d->inBufPos;
-      d->zins.next_out = (Bytef *) (data + read);
-      d->zins.avail_out = (uInt) (maxSize - read); // hope it's less than 2GB
+      d->zins.next_out = reinterpret_cast<Bytef *>(data + read);
+      d->zins.avail_out = static_cast<uInt>(maxSize - read); // hope it's less than 2GB
       int more = 0;
       switch (inflate(&d->zins, Z_SYNC_FLUSH)) {
       case Z_OK:
-        read = (char *) d->zins.next_out - data;
-        d->inBufPos = (char *) d->zins.next_in - d->inBuf;
+        read = reinterpret_cast<char *>(d->zins.next_out) - data;
+        d->inBufPos = reinterpret_cast<z_const char *>(d->zins.next_in) - d->inBuf;
         break;
       case Z_STREAM_END:
-        read = (char *) d->zins.next_out - data;
-        d->inBufPos = (char *) d->zins.next_in - d->inBuf;
+        read = reinterpret_cast<char *>(d->zins.next_out) - data;
+        d->inBufPos = reinterpret_cast<z_const char *>(d->zins.next_in) - d->inBuf;
         d->atEnd = true;
         return read;
       case Z_BUF_ERROR: // this should never happen, but just in case
@@ -299,13 +289,13 @@ qint64 QuaZIODevice::writeData(const char *data, qint64 maxSize)
     if (d->outBufPos < d->outBufSize)
       return written;
     d->zouts.next_in = (Bytef *) (data + written);
-    d->zouts.avail_in = (uInt) (maxSize - written); // hope it's less than 2GB
-    d->zouts.next_out = (Bytef *) d->outBuf;
+    d->zouts.avail_in = static_cast<uInt>(maxSize - written); // hope it's less than 2GB
+    d->zouts.next_out = reinterpret_cast<Bytef *>(d->outBuf);
     d->zouts.avail_out = QUAZIO_OUTBUFSIZE;
     switch (deflate(&d->zouts, Z_NO_FLUSH)) {
     case Z_OK:
-      written = (char *) d->zouts.next_in - data;
-      d->outBufSize = (char *) d->zouts.next_out - d->outBuf;
+      written = reinterpret_cast<z_const char *>(d->zouts.next_in) - data;
+      d->outBufSize = reinterpret_cast<char *>(d->zouts.next_out) - d->outBuf;
       break;
     default:
       setErrorString(QString::fromLocal8Bit(d->zouts.msg));

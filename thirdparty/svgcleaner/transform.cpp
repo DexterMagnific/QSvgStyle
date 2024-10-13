@@ -157,7 +157,7 @@ void Transform::divide(const QString &text)
         divide("translate(0,0)");
         return;
     }
-    QList<TransformMatrix> transMatrixList = parseTransform(text.midRef(0));
+    QList<TransformMatrix> transMatrixList = parseTransform(QStringView{text}.mid(0));
 
     TransformMatrix newMatrix = transMatrixList.at(0);
     for (int i = 1; i < transMatrixList.count(); ++i)
@@ -219,7 +219,7 @@ qreal Transform::newY() const
     return b*oldX + d*oldY + f;
 }
 
-QList<TransformMatrix> Transform::parseTransform(const QStringRef &text)
+QList<TransformMatrix> Transform::parseTransform(const QStringView &text)
 {
     QList<TransformMatrix> list;
     const QChar *str = text.constData();
@@ -305,7 +305,7 @@ QList<TransformMatrix> Transform::parseTransform(const QStringRef &text)
 
 void Transform::calcMatrixes(const QString &text)
 {
-    QList<TransformMatrix> transMatrixList = parseTransform(text.midRef(0));
+    QList<TransformMatrix> transMatrixList = parseTransform(QStringView{text}.mid(0));
 
     TransformMatrix newMatrix = transMatrixList.at(0);
     for (int i = 1; i < transMatrixList.count(); ++i)

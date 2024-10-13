@@ -20,6 +20,7 @@
 ****************************************************************************/
 
 #include "remover.h"
+#include <QRegularExpression>
 
 // TODO: remove elements not included in selected spec, like flow* elements
 // TODO: remove "tspan" without attributes
@@ -452,7 +453,7 @@ void Remover::removeUnreferencedIds()
     if (Keys.flag(Key::KeepNamedIds)) {
         // skip id's whithout digits
         foreach (const QString &text, m_allIdList) {
-            if (!text.contains(QRegExp("\\d")))
+            if (!text.contains(QRegularExpression("\\d")))
                 m_allIdList.remove(text);
         }
     }
@@ -957,7 +958,7 @@ void Remover::cleanPresentationAttributes(SvgElement elem)
 
     styleHashList << elem.styleMap();
     parentHash.unite(styleHashList.last());
-    parentAttrs = parentHash.keys().toSet();
+    parentAttrs = parentHash.keys();
 
     QList<SvgElement> list = elem.childElemList();
     while (!list.isEmpty()) {
@@ -1133,7 +1134,7 @@ void Remover::removeDefaultValue(StringMap &hash, const QString &name)
             hash.remove(name);
     } else if (Props::defaultStyleValues.contains(name)) {
         const QVariant value = Props::defaultStyleValues.value(name);
-        if (value.type() == QVariant::String) {
+        if (value.typeId() == QMetaType::QString) {
             if (value == hash.value(name))
                 hash.remove(name);
         } else if (!hash.value(name).isEmpty()

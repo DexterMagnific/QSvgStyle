@@ -7,7 +7,7 @@ TARGET = qsvgthemebuilder
 DESTDIR = bin
 TEMPLATE = app
 
-QT += core gui xml widgets
+QT += core gui xml widgets core5compat
 
 INCLUDEPATH += . ../styleconfig ../thirdparty/svgcleaner ../thirdparty/quazip
 
