@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1123</width>
-    <height>734</height>
+    <width>1109</width>
+    <height>709</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -61,7 +61,7 @@
          <x>0</x>
          <y>0</y>
          <width>256</width>
-         <height>508</height>
+         <height>493</height>
         </rect>
        </property>
        <property name="palette">
@@ -226,8 +226,8 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>84</width>
-         <height>50</height>
+         <width>256</width>
+         <height>493</height>
         </rect>
        </property>
        <property name="palette">
@@ -449,8 +449,8 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>84</width>
-         <height>50</height>
+         <width>256</width>
+         <height>493</height>
         </rect>
        </property>
        <property name="palette">
@@ -651,8 +651,8 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>84</width>
-         <height>50</height>
+         <width>256</width>
+         <height>493</height>
         </rect>
        </property>
        <property name="palette">
@@ -1107,7 +1107,17 @@
        </attribute>
        <layout class="QGridLayout" name="gridLayout_22">
         <item row="0" column="0">
-         <layout class="QGridLayout" name="gridLayout_8">
+         <layout class="QGridLayout" name="debugLayout_2">
+          <item row="0" column="4">
+           <widget class="QSpinBox" name="fontSizeSpin">
+            <property name="toolTip">
+             <string>Font size</string>
+            </property>
+            <property name="minimum">
+             <number>1</number>
+            </property>
+           </widget>
+          </item>
           <item row="0" column="0">
            <widget class="QToolButton" name="repaintBtn">
             <property name="toolTip">
@@ -1142,26 +1152,6 @@
             </property>
            </widget>
           </item>
-          <item row="0" column="2">
-           <widget class="QToolButton" name="enableBtn">
-            <property name="toolTip">
-             <string>Enable/Disable</string>
-            </property>
-            <property name="icon">
-             <iconset resource="ThemeBuilderUIBase.qrc">
-              <normaloff>:/icon/pixmaps/checkbox.png</normaloff>:/icon/pixmaps/checkbox.png</iconset>
-            </property>
-            <property name="checkable">
-             <bool>true</bool>
-            </property>
-            <property name="checked">
-             <bool>true</bool>
-            </property>
-            <property name="toolButtonStyle">
-             <enum>Qt::ToolButtonTextBesideIcon</enum>
-            </property>
-           </widget>
-          </item>
           <item row="0" column="5">
            <spacer name="horizontalSpacer_14">
             <property name="orientation">
@@ -1177,33 +1167,6 @@
              </size>
             </property>
            </spacer>
-          </item>
-          <item row="0" column="3">
-           <widget class="QToolButton" name="previewVariantBtn">
-            <property name="toolTip">
-             <string>Preview variant</string>
-            </property>
-            <property name="text">
-             <string>1/1</string>
-            </property>
-            <property name="icon">
-             <iconset resource="ThemeBuilderUIBase.qrc">
-              <normaloff>:/icon/pixmaps/widgetstack.png</normaloff>:/icon/pixmaps/widgetstack.png</iconset>
-            </property>
-            <property name="toolButtonStyle">
-             <enum>Qt::ToolButtonTextBesideIcon</enum>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="4">
-           <widget class="QSpinBox" name="fontSizeSpin">
-            <property name="toolTip">
-             <string>Font size</string>
-            </property>
-            <property name="minimum">
-             <number>1</number>
-            </property>
-           </widget>
           </item>
           <item row="0" column="6">
            <spacer name="horizontalSpacer_12">
@@ -1232,6 +1195,43 @@
             </property>
            </widget>
           </item>
+          <item row="0" column="3">
+           <widget class="QToolButton" name="previewVariantBtn">
+            <property name="toolTip">
+             <string>Preview variant</string>
+            </property>
+            <property name="text">
+             <string>1/1</string>
+            </property>
+            <property name="icon">
+             <iconset resource="ThemeBuilderUIBase.qrc">
+              <normaloff>:/icon/pixmaps/widgetstack.png</normaloff>:/icon/pixmaps/widgetstack.png</iconset>
+            </property>
+            <property name="toolButtonStyle">
+             <enum>Qt::ToolButtonTextBesideIcon</enum>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="2">
+           <widget class="QToolButton" name="enableBtn">
+            <property name="toolTip">
+             <string>Enable/Disable</string>
+            </property>
+            <property name="icon">
+             <iconset resource="ThemeBuilderUIBase.qrc">
+              <normaloff>:/icon/pixmaps/checkbox.png</normaloff>:/icon/pixmaps/checkbox.png</iconset>
+            </property>
+            <property name="checkable">
+             <bool>true</bool>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+            <property name="toolButtonStyle">
+             <enum>Qt::ToolButtonTextBesideIcon</enum>
+            </property>
+           </widget>
+          </item>
          </layout>
         </item>
         <item row="1" column="0">
@@ -1250,8 +1250,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>492</width>
-             <height>50</height>
+             <width>507</width>
+             <height>56</height>
             </rect>
            </property>
           </widget>
@@ -1294,1087 +1294,1108 @@
         <string>Theme properties</string>
        </attribute>
        <layout class="QGridLayout" name="gridLayout_6">
-        <item row="1" column="3">
-         <widget class="QLineEdit" name="authorEdit">
-          <property name="placeholderText">
-           <string>Your name</string>
+        <item row="0" column="0" colspan="4">
+         <widget class="QFrame" name="frame_2">
+          <property name="frameShape">
+           <enum>QFrame::StyledPanel</enum>
           </property>
-         </widget>
-        </item>
-        <item row="0" column="0">
-         <widget class="QLabel" name="label_13">
-          <property name="text">
-           <string>Name</string>
+          <property name="frameShadow">
+           <enum>QFrame::Raised</enum>
           </property>
-         </widget>
-        </item>
-        <item row="5" column="0" colspan="3">
-         <widget class="QLabel" name="label_23">
-          <property name="text">
-           <string>Tweaks</string>
-          </property>
-         </widget>
-        </item>
-        <item row="3" column="3">
-         <widget class="QLabel" name="label_25">
-          <property name="text">
-           <string>Keywords</string>
-          </property>
-         </widget>
-        </item>
-        <item row="3" column="0" colspan="3">
-         <widget class="QLabel" name="label_21">
-          <property name="text">
-           <string>Description</string>
-          </property>
-         </widget>
-        </item>
-        <item row="4" column="3">
-         <widget class="QLineEdit" name="keywordsEdit">
-          <property name="placeholderText">
-           <string>Short description of the theme</string>
-          </property>
-         </widget>
-        </item>
-        <item row="6" column="0" colspan="4">
-         <widget class="QTreeWidget" name="specificTree">
-          <property name="editTriggers">
-           <set>QAbstractItemView::CurrentChanged|QAbstractItemView::EditKeyPressed</set>
-          </property>
-          <property name="alternatingRowColors">
-           <bool>true</bool>
-          </property>
-          <attribute name="headerVisible">
-           <bool>false</bool>
-          </attribute>
-          <column>
-           <property name="text">
-            <string>Display name</string>
-           </property>
-          </column>
-          <column>
-           <property name="text">
-            <string>Value</string>
-           </property>
-          </column>
-          <column>
-           <property name="text">
-            <string>Key</string>
-           </property>
-          </column>
-          <column>
-           <property name="text">
-            <string>Type</string>
-           </property>
-          </column>
-          <column>
-           <property name="text">
-            <string>Range</string>
-           </property>
-          </column>
-          <item>
-           <property name="text">
-            <string>Palette</string>
-           </property>
-           <property name="text">
-            <string/>
-           </property>
-           <property name="text">
-            <string/>
-           </property>
-           <property name="text">
-            <string/>
-           </property>
-           <property name="text">
-            <string/>
-           </property>
-           <item>
-            <property name="text">
-             <string>Colorization amount</string>
-            </property>
-            <property name="text">
-             <string/>
-            </property>
-            <property name="text">
-             <string>specific.palette.intensity</string>
-            </property>
-            <property name="text">
-             <string>int</string>
-            </property>
-            <property name="text">
-             <string>0-255</string>
-            </property>
-            <property name="flags">
-             <set>ItemIsSelectable|ItemIsEditable|ItemIsUserCheckable|ItemIsEnabled</set>
-            </property>
+          <layout class="QGridLayout" name="gridLayout_44">
+           <item row="0" column="0">
+            <widget class="QLabel" name="label_13">
+             <property name="text">
+              <string>Name</string>
+             </property>
+            </widget>
            </item>
-           <item>
-            <property name="text">
-             <string>3D effect</string>
-            </property>
-            <property name="text">
-             <string/>
-            </property>
-            <property name="text">
-             <string>specific.palette.3dframes</string>
-            </property>
-            <property name="text">
-             <string>bool</string>
-            </property>
-            <property name="text">
-             <string>enabled,disabled</string>
-            </property>
-            <property name="flags">
-             <set>ItemIsSelectable|ItemIsEditable|ItemIsUserCheckable|ItemIsEnabled</set>
-            </property>
+           <item row="4" column="0">
+            <widget class="QLabel" name="label_21">
+             <property name="text">
+              <string>Description</string>
+             </property>
+            </widget>
            </item>
-          </item>
-          <item>
-           <property name="text">
-            <string>Push and Tool Buttons</string>
-           </property>
-           <item>
-            <property name="text">
-             <string>Use capsule grouping</string>
-            </property>
-            <property name="text">
-             <string/>
-            </property>
-            <property name="text">
-             <string>specific.button.usecapsule</string>
-            </property>
-            <property name="text">
-             <string>bool</string>
-            </property>
-            <property name="text">
-             <string>yes,no</string>
-            </property>
+           <item row="3" column="1">
+            <widget class="QLineEdit" name="keywordsEdit">
+             <property name="placeholderText">
+              <string>Short description of the theme</string>
+             </property>
+            </widget>
            </item>
-          </item>
-          <item>
-           <property name="text">
-            <string>Radio buttons/Check boxes</string>
-           </property>
-           <property name="text">
-            <string/>
-           </property>
-           <property name="text">
-            <string/>
-           </property>
-           <property name="text">
-            <string/>
-           </property>
-           <property name="text">
-            <string/>
-           </property>
-           <item>
-            <property name="text">
-             <string>Button--Label space</string>
-            </property>
-            <property name="text">
-             <string/>
-            </property>
-            <property name="text">
-             <string>specific.radiocheckbox.label.tispace</string>
-            </property>
-            <property name="text">
-             <string>int</string>
-            </property>
-            <property name="text">
-             <string>0-99</string>
-            </property>
-            <property name="flags">
-             <set>ItemIsSelectable|ItemIsEditable|ItemIsUserCheckable|ItemIsEnabled</set>
-            </property>
+           <item row="1" column="0">
+            <widget class="QLineEdit" name="themeNameEdit">
+             <property name="placeholderText">
+              <string>Give a short name to this theme</string>
+             </property>
+            </widget>
            </item>
-          </item>
-          <item>
-           <property name="text">
-            <string>Spin Boxes</string>
-           </property>
-           <property name="text">
-            <string/>
-           </property>
-           <property name="text">
-            <string/>
-           </property>
-           <property name="text">
-            <string/>
-           </property>
-           <property name="text">
-            <string/>
-           </property>
-           <item>
-            <property name="text">
-             <string>Buttons variant</string>
-            </property>
-            <property name="text">
-             <string/>
-            </property>
-            <property name="text">
-             <string>specific.spinbox.variant</string>
-            </property>
-            <property name="text">
-             <string>int_enum</string>
-            </property>
-            <property name="text">
-             <string>Side by side,Opposite,Stacked</string>
-            </property>
+           <item row="7" column="0" colspan="2">
+            <widget class="QLineEdit" name="descrEdit">
+             <property name="placeholderText">
+              <string>Short description of the theme</string>
+             </property>
+            </widget>
            </item>
-          </item>
-          <item>
-           <property name="text">
-            <string>Progress Bars</string>
-           </property>
-           <property name="text">
-            <string/>
-           </property>
-           <property name="text">
-            <string/>
-           </property>
-           <property name="text">
-            <string/>
-           </property>
-           <property name="text">
-            <string/>
-           </property>
-           <item>
-            <property name="text">
-             <string>Chunk width</string>
-            </property>
-            <property name="text">
-             <string/>
-            </property>
-            <property name="text">
-             <string>specific.progressbar.chunk.width</string>
-            </property>
-            <property name="text">
-             <string>int</string>
-            </property>
-            <property name="text">
-             <string>1-99</string>
-            </property>
-            <property name="flags">
-             <set>ItemIsSelectable|ItemIsEditable|ItemIsUserCheckable|ItemIsEnabled</set>
-            </property>
+           <item row="3" column="0">
+            <widget class="QLineEdit" name="variantEdit">
+             <property name="placeholderText">
+              <string>Variant</string>
+             </property>
+            </widget>
            </item>
-           <item>
-            <property name="text">
-             <string>Bar variant</string>
-            </property>
-            <property name="text">
-             <string/>
-            </property>
-            <property name="text">
-             <string>specific.progressbar.variant</string>
-            </property>
-            <property name="text">
-             <string>int_enum</string>
-            </property>
-            <property name="text">
-             <string>Classic,Thin</string>
-            </property>
+           <item row="2" column="1">
+            <widget class="QLabel" name="label_25">
+             <property name="text">
+              <string>Keywords</string>
+             </property>
+            </widget>
            </item>
-           <item>
-            <property name="text">
-             <string>Thin bar variant min height</string>
-            </property>
-            <property name="text">
-             <string/>
-            </property>
-            <property name="text">
-             <string>specific.progressbar.thin.minheight</string>
-            </property>
-            <property name="text">
-             <string>int</string>
-            </property>
-            <property name="text">
-             <string>1-99</string>
-            </property>
+           <item row="2" column="0">
+            <widget class="QLabel" name="label_24">
+             <property name="text">
+              <string>Variant</string>
+             </property>
+            </widget>
            </item>
-           <item>
-            <property name="text">
-             <string>Busy indicator variant</string>
-            </property>
-            <property name="text">
-             <string/>
-            </property>
-            <property name="text">
-             <string>specific.progressbar.busy.variant</string>
-            </property>
-            <property name="text">
-             <string>int_enum</string>
-            </property>
-            <property name="text">
-             <string>Wrap,Back and forth,Full length</string>
-            </property>
+           <item row="9" column="0" colspan="2">
+            <widget class="QTreeWidget" name="specificTree">
+             <property name="editTriggers">
+              <set>QAbstractItemView::CurrentChanged|QAbstractItemView::EditKeyPressed</set>
+             </property>
+             <property name="alternatingRowColors">
+              <bool>true</bool>
+             </property>
+             <attribute name="headerVisible">
+              <bool>false</bool>
+             </attribute>
+             <column>
+              <property name="text">
+               <string>Display name</string>
+              </property>
+             </column>
+             <column>
+              <property name="text">
+               <string>Value</string>
+              </property>
+             </column>
+             <column>
+              <property name="text">
+               <string>Key</string>
+              </property>
+             </column>
+             <column>
+              <property name="text">
+               <string>Type</string>
+              </property>
+             </column>
+             <column>
+              <property name="text">
+               <string>Range</string>
+              </property>
+             </column>
+             <item>
+              <property name="text">
+               <string>Palette</string>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+              <item>
+               <property name="text">
+                <string>Colorization amount</string>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+               <property name="text">
+                <string>specific.palette.intensity</string>
+               </property>
+               <property name="text">
+                <string>int</string>
+               </property>
+               <property name="text">
+                <string>0-255</string>
+               </property>
+               <property name="flags">
+                <set>ItemIsSelectable|ItemIsEditable|ItemIsUserCheckable|ItemIsEnabled</set>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>3D effect</string>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+               <property name="text">
+                <string>specific.palette.3dframes</string>
+               </property>
+               <property name="text">
+                <string>bool</string>
+               </property>
+               <property name="text">
+                <string>enabled,disabled</string>
+               </property>
+               <property name="flags">
+                <set>ItemIsSelectable|ItemIsEditable|ItemIsUserCheckable|ItemIsEnabled</set>
+               </property>
+              </item>
+             </item>
+             <item>
+              <property name="text">
+               <string>Push and Tool Buttons</string>
+              </property>
+              <item>
+               <property name="text">
+                <string>Use capsule grouping</string>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+               <property name="text">
+                <string>specific.button.usecapsule</string>
+               </property>
+               <property name="text">
+                <string>bool</string>
+               </property>
+               <property name="text">
+                <string>yes,no</string>
+               </property>
+              </item>
+             </item>
+             <item>
+              <property name="text">
+               <string>Radio buttons/Check boxes</string>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+              <item>
+               <property name="text">
+                <string>Button--Label space</string>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+               <property name="text">
+                <string>specific.radiocheckbox.label.tispace</string>
+               </property>
+               <property name="text">
+                <string>int</string>
+               </property>
+               <property name="text">
+                <string>0-99</string>
+               </property>
+               <property name="flags">
+                <set>ItemIsSelectable|ItemIsEditable|ItemIsUserCheckable|ItemIsEnabled</set>
+               </property>
+              </item>
+             </item>
+             <item>
+              <property name="text">
+               <string>Spin Boxes</string>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+              <item>
+               <property name="text">
+                <string>Buttons variant</string>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+               <property name="text">
+                <string>specific.spinbox.variant</string>
+               </property>
+               <property name="text">
+                <string>int_enum</string>
+               </property>
+               <property name="text">
+                <string>Side by side,Opposite,Stacked</string>
+               </property>
+              </item>
+             </item>
+             <item>
+              <property name="text">
+               <string>Progress Bars</string>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+              <item>
+               <property name="text">
+                <string>Chunk width</string>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+               <property name="text">
+                <string>specific.progressbar.chunk.width</string>
+               </property>
+               <property name="text">
+                <string>int</string>
+               </property>
+               <property name="text">
+                <string>1-99</string>
+               </property>
+               <property name="flags">
+                <set>ItemIsSelectable|ItemIsEditable|ItemIsUserCheckable|ItemIsEnabled</set>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Bar variant</string>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+               <property name="text">
+                <string>specific.progressbar.variant</string>
+               </property>
+               <property name="text">
+                <string>int_enum</string>
+               </property>
+               <property name="text">
+                <string>Classic,Thin</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Thin bar variant min height</string>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+               <property name="text">
+                <string>specific.progressbar.thin.minheight</string>
+               </property>
+               <property name="text">
+                <string>int</string>
+               </property>
+               <property name="text">
+                <string>1-99</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Busy indicator variant</string>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+               <property name="text">
+                <string>specific.progressbar.busy.variant</string>
+               </property>
+               <property name="text">
+                <string>int_enum</string>
+               </property>
+               <property name="text">
+                <string>Wrap,Back and forth,Full length</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Full length busy indicator direction</string>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+               <property name="text">
+                <string>specific.progressbar.busy.full.variant</string>
+               </property>
+               <property name="text">
+                <string>int_enum</string>
+               </property>
+               <property name="text">
+                <string>Forward,Backward</string>
+               </property>
+              </item>
+             </item>
+             <item>
+              <property name="text">
+               <string>Layout default margins</string>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+              <item>
+               <property name="text">
+                <string>Left</string>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+               <property name="text">
+                <string>specific.layoutmargins.left</string>
+               </property>
+               <property name="text">
+                <string>int</string>
+               </property>
+               <property name="text">
+                <string>0-99</string>
+               </property>
+               <property name="flags">
+                <set>ItemIsSelectable|ItemIsEditable|ItemIsUserCheckable|ItemIsEnabled</set>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Right</string>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+               <property name="text">
+                <string>specific.layoutmargins.right</string>
+               </property>
+               <property name="text">
+                <string>int</string>
+               </property>
+               <property name="text">
+                <string>0-99</string>
+               </property>
+               <property name="flags">
+                <set>ItemIsSelectable|ItemIsEditable|ItemIsUserCheckable|ItemIsEnabled</set>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Top</string>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+               <property name="text">
+                <string>specific.layoutmargins.top</string>
+               </property>
+               <property name="text">
+                <string>int</string>
+               </property>
+               <property name="text">
+                <string>0-99</string>
+               </property>
+               <property name="flags">
+                <set>ItemIsSelectable|ItemIsEditable|ItemIsUserCheckable|ItemIsEnabled</set>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Bottom</string>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+               <property name="text">
+                <string>specific.layoutmargins.bottom</string>
+               </property>
+               <property name="text">
+                <string>int</string>
+               </property>
+               <property name="text">
+                <string>0-99</string>
+               </property>
+               <property name="flags">
+                <set>ItemIsSelectable|ItemIsEditable|ItemIsUserCheckable|ItemIsEnabled</set>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>H spacing</string>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+               <property name="text">
+                <string>specific.layoutmargins.hspace</string>
+               </property>
+               <property name="text">
+                <string>int</string>
+               </property>
+               <property name="text">
+                <string>0-99</string>
+               </property>
+               <property name="flags">
+                <set>ItemIsSelectable|ItemIsEditable|ItemIsUserCheckable|ItemIsEnabled</set>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>V Spacing</string>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+               <property name="text">
+                <string>specific.layoutmargins.vspace</string>
+               </property>
+               <property name="text">
+                <string>int</string>
+               </property>
+               <property name="text">
+                <string>0-99</string>
+               </property>
+               <property name="flags">
+                <set>ItemIsSelectable|ItemIsEditable|ItemIsUserCheckable|ItemIsEnabled</set>
+               </property>
+              </item>
+             </item>
+             <item>
+              <property name="text">
+               <string>Menu Items &amp; Menu bars</string>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+              <item>
+               <property name="text">
+                <string>Menu bar item spacing</string>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+               <property name="text">
+                <string>specific.menubar.space</string>
+               </property>
+               <property name="text">
+                <string>int</string>
+               </property>
+               <property name="text">
+                <string>0-99</string>
+               </property>
+               <property name="flags">
+                <set>ItemIsSelectable|ItemIsEditable|ItemIsUserCheckable|ItemIsEnabled</set>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Menu bar H margin</string>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+               <property name="text">
+                <string>specific.menubar.hspace</string>
+               </property>
+               <property name="text">
+                <string>int</string>
+               </property>
+               <property name="text">
+                <string>0-99</string>
+               </property>
+               <property name="flags">
+                <set>ItemIsSelectable|ItemIsEditable|ItemIsUserCheckable|ItemIsEnabled</set>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Menu tearoff height</string>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+               <property name="text">
+                <string>specific.menu.tearoff.height</string>
+               </property>
+               <property name="text">
+                <string>int</string>
+               </property>
+               <property name="text">
+                <string>1-99</string>
+               </property>
+               <property name="flags">
+                <set>ItemIsSelectable|ItemIsEditable|ItemIsUserCheckable|ItemIsEnabled</set>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Menu separator height</string>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+               <property name="text">
+                <string>specific.menu.separator.height</string>
+               </property>
+               <property name="text">
+                <string>int</string>
+               </property>
+               <property name="text">
+                <string>1-99</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Force menu tearoff</string>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+               <property name="text">
+                <string>specific.menu.forcetearoff</string>
+               </property>
+               <property name="text">
+                <string>bool</string>
+               </property>
+               <property name="text">
+                <string>yes,no</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Menu items in capsule</string>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+               <property name="text">
+                <string>specific.menu.usecapsule</string>
+               </property>
+               <property name="text">
+                <string>bool</string>
+               </property>
+               <property name="text">
+                <string>yes,no</string>
+               </property>
+              </item>
+             </item>
+             <item>
+              <property name="text">
+               <string>Toolbars</string>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+              <item>
+               <property name="text">
+                <string>Item spacing</string>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+               <property name="text">
+                <string>specific.toolbar.space</string>
+               </property>
+               <property name="text">
+                <string>int</string>
+               </property>
+               <property name="text">
+                <string>0-99</string>
+               </property>
+               <property name="flags">
+                <set>ItemIsSelectable|ItemIsEditable|ItemIsUserCheckable|ItemIsEnabled</set>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Handle width</string>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+               <property name="text">
+                <string>specific.toolbar.handle.width</string>
+               </property>
+               <property name="text">
+                <string>int</string>
+               </property>
+               <property name="text">
+                <string>1-99</string>
+               </property>
+               <property name="flags">
+                <set>ItemIsSelectable|ItemIsEditable|ItemIsUserCheckable|ItemIsEnabled</set>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Separator width</string>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+               <property name="text">
+                <string>specific.toolbar.separator.width</string>
+               </property>
+               <property name="text">
+                <string>int</string>
+               </property>
+               <property name="text">
+                <string>1-99</string>
+               </property>
+               <property name="flags">
+                <set>ItemIsSelectable|ItemIsEditable|ItemIsUserCheckable|ItemIsEnabled</set>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Extension button width</string>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+               <property name="text">
+                <string>specific.toolbar.extension.width</string>
+               </property>
+               <property name="text">
+                <string>int</string>
+               </property>
+               <property name="text">
+                <string>1-99</string>
+               </property>
+               <property name="flags">
+                <set>ItemIsSelectable|ItemIsEditable|ItemIsUserCheckable|ItemIsEnabled</set>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Icon size (hint)</string>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+               <property name="text">
+                <string>specific.toolbar.icon.size</string>
+               </property>
+               <property name="text">
+                <string>int</string>
+               </property>
+               <property name="text">
+                <string>1-99</string>
+               </property>
+               <property name="flags">
+                <set>ItemIsSelectable|ItemIsEditable|ItemIsUserCheckable|ItemIsEnabled</set>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Item Margin</string>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+               <property name="text">
+                <string>specific.toolbar.itemmargin</string>
+               </property>
+               <property name="text">
+                <string>int</string>
+               </property>
+               <property name="text">
+                <string>0-99</string>
+               </property>
+              </item>
+             </item>
+             <item>
+              <property name="text">
+               <string>Tabs</string>
+              </property>
+              <item>
+               <property name="text">
+                <string>Variant</string>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+               <property name="text">
+                <string>specific.tab.variant</string>
+               </property>
+               <property name="text">
+                <string>int_enum</string>
+               </property>
+               <property name="text">
+                <string>Individual,Group all,Group non selected</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Tab spacing</string>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+               <property name="text">
+                <string>specific.tab.spacing</string>
+               </property>
+               <property name="text">
+                <string>int</string>
+               </property>
+               <property name="text">
+                <string>0-99</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Active tab extra height</string>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+               <property name="text">
+                <string>specific.tab.extraheight</string>
+               </property>
+               <property name="text">
+                <string>int</string>
+               </property>
+               <property name="text">
+                <string>0-99</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Tab base extra height</string>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+               <property name="text">
+                <string>specific.tab.extrabaseheight</string>
+               </property>
+               <property name="text">
+                <string>int</string>
+               </property>
+               <property name="text">
+                <string>0-99</string>
+               </property>
+              </item>
+             </item>
+             <item>
+              <property name="text">
+               <string>Scroll bars</string>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+              <item>
+               <property name="text">
+                <string>Variant</string>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+               <property name="text">
+                <string>specific.scrollbar.variant</string>
+               </property>
+               <property name="text">
+                <string>int_enum</string>
+               </property>
+               <property name="text">
+                <string>Classic,No buttons</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Thickness</string>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+               <property name="text">
+                <string>specific.scrollbar.thickness</string>
+               </property>
+               <property name="text">
+                <string>int</string>
+               </property>
+               <property name="text">
+                <string>1-99</string>
+               </property>
+               <property name="flags">
+                <set>ItemIsSelectable|ItemIsEditable|ItemIsUserCheckable|ItemIsEnabled</set>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Slider area</string>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+               <property name="text">
+                <string>specific.scrollbar.slider.area</string>
+               </property>
+               <property name="text">
+                <string>int_enum</string>
+               </property>
+               <property name="text">
+                <string>Inside groove,Overlaps groove</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Slider minimum size</string>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+               <property name="text">
+                <string>specific.scrollbar.slider.minsize</string>
+               </property>
+               <property name="text">
+                <string>int</string>
+               </property>
+               <property name="text">
+                <string>1-99</string>
+               </property>
+               <property name="flags">
+                <set>ItemIsSelectable|ItemIsEditable|ItemIsUserCheckable|ItemIsEnabled</set>
+               </property>
+              </item>
+             </item>
+             <item>
+              <property name="text">
+               <string>Sliders</string>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+              <item>
+               <property name="text">
+                <string>Thickness</string>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+               <property name="text">
+                <string>specific.slider.thickness</string>
+               </property>
+               <property name="text">
+                <string>int</string>
+               </property>
+               <property name="text">
+                <string>1-99</string>
+               </property>
+               <property name="flags">
+                <set>ItemIsSelectable|ItemIsEditable|ItemIsUserCheckable|ItemIsEnabled</set>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Cursor size</string>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+               <property name="text">
+                <string>specific.slider.cursor.size</string>
+               </property>
+               <property name="text">
+                <string>int</string>
+               </property>
+               <property name="text">
+                <string>1-99</string>
+               </property>
+               <property name="flags">
+                <set>ItemIsSelectable|ItemIsEditable|ItemIsUserCheckable|ItemIsEnabled</set>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Ticks offset</string>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+               <property name="text">
+                <string>specific.slider.ticks.offset</string>
+               </property>
+               <property name="text">
+                <string>int</string>
+               </property>
+               <property name="text">
+                <string>1-99</string>
+               </property>
+              </item>
+             </item>
+             <item>
+              <property name="text">
+               <string>Drop down buttons</string>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+              <item>
+               <property name="text">
+                <string>Button size</string>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+               <property name="text">
+                <string>specific.dropdown.size</string>
+               </property>
+               <property name="text">
+                <string>int</string>
+               </property>
+               <property name="text">
+                <string>1-99</string>
+               </property>
+              </item>
+             </item>
+             <item>
+              <property name="text">
+               <string>Docks</string>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+              <item>
+               <property name="text">
+                <string>Separator width</string>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+               <property name="text">
+                <string>specific.dock.separator.size</string>
+               </property>
+               <property name="text">
+                <string>int</string>
+               </property>
+               <property name="text">
+                <string>1-99</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Handle width</string>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+               <property name="text">
+                <string>specific.dock.handle.width</string>
+               </property>
+               <property name="text">
+                <string>int</string>
+               </property>
+               <property name="text">
+                <string>1-99</string>
+               </property>
+              </item>
+             </item>
+            </widget>
            </item>
-           <item>
-            <property name="text">
-             <string>Full length busy indicator direction</string>
-            </property>
-            <property name="text">
-             <string/>
-            </property>
-            <property name="text">
-             <string>specific.progressbar.busy.full.variant</string>
-            </property>
-            <property name="text">
-             <string>int_enum</string>
-            </property>
-            <property name="text">
-             <string>Forward,Backward</string>
-            </property>
+           <item row="1" column="1">
+            <widget class="QLineEdit" name="authorEdit">
+             <property name="placeholderText">
+              <string>Your name</string>
+             </property>
+            </widget>
            </item>
-          </item>
-          <item>
-           <property name="text">
-            <string>Layout default margins</string>
-           </property>
-           <property name="text">
-            <string/>
-           </property>
-           <property name="text">
-            <string/>
-           </property>
-           <property name="text">
-            <string/>
-           </property>
-           <property name="text">
-            <string/>
-           </property>
-           <item>
-            <property name="text">
-             <string>Left</string>
-            </property>
-            <property name="text">
-             <string/>
-            </property>
-            <property name="text">
-             <string>specific.layoutmargins.left</string>
-            </property>
-            <property name="text">
-             <string>int</string>
-            </property>
-            <property name="text">
-             <string>0-99</string>
-            </property>
-            <property name="flags">
-             <set>ItemIsSelectable|ItemIsEditable|ItemIsUserCheckable|ItemIsEnabled</set>
-            </property>
+           <item row="0" column="1">
+            <widget class="QLabel" name="label_22">
+             <property name="text">
+              <string>Author</string>
+             </property>
+            </widget>
            </item>
-           <item>
-            <property name="text">
-             <string>Right</string>
-            </property>
-            <property name="text">
-             <string/>
-            </property>
-            <property name="text">
-             <string>specific.layoutmargins.right</string>
-            </property>
-            <property name="text">
-             <string>int</string>
-            </property>
-            <property name="text">
-             <string>0-99</string>
-            </property>
-            <property name="flags">
-             <set>ItemIsSelectable|ItemIsEditable|ItemIsUserCheckable|ItemIsEnabled</set>
-            </property>
+           <item row="8" column="0" colspan="2">
+            <widget class="QLabel" name="label_23">
+             <property name="text">
+              <string>Tweaks</string>
+             </property>
+            </widget>
            </item>
-           <item>
-            <property name="text">
-             <string>Top</string>
-            </property>
-            <property name="text">
-             <string/>
-            </property>
-            <property name="text">
-             <string>specific.layoutmargins.top</string>
-            </property>
-            <property name="text">
-             <string>int</string>
-            </property>
-            <property name="text">
-             <string>0-99</string>
-            </property>
-            <property name="flags">
-             <set>ItemIsSelectable|ItemIsEditable|ItemIsUserCheckable|ItemIsEnabled</set>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>Bottom</string>
-            </property>
-            <property name="text">
-             <string/>
-            </property>
-            <property name="text">
-             <string>specific.layoutmargins.bottom</string>
-            </property>
-            <property name="text">
-             <string>int</string>
-            </property>
-            <property name="text">
-             <string>0-99</string>
-            </property>
-            <property name="flags">
-             <set>ItemIsSelectable|ItemIsEditable|ItemIsUserCheckable|ItemIsEnabled</set>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>H spacing</string>
-            </property>
-            <property name="text">
-             <string/>
-            </property>
-            <property name="text">
-             <string>specific.layoutmargins.hspace</string>
-            </property>
-            <property name="text">
-             <string>int</string>
-            </property>
-            <property name="text">
-             <string>0-99</string>
-            </property>
-            <property name="flags">
-             <set>ItemIsSelectable|ItemIsEditable|ItemIsUserCheckable|ItemIsEnabled</set>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>V Spacing</string>
-            </property>
-            <property name="text">
-             <string/>
-            </property>
-            <property name="text">
-             <string>specific.layoutmargins.vspace</string>
-            </property>
-            <property name="text">
-             <string>int</string>
-            </property>
-            <property name="text">
-             <string>0-99</string>
-            </property>
-            <property name="flags">
-             <set>ItemIsSelectable|ItemIsEditable|ItemIsUserCheckable|ItemIsEnabled</set>
-            </property>
-           </item>
-          </item>
-          <item>
-           <property name="text">
-            <string>Menu Items &amp; Menu bars</string>
-           </property>
-           <property name="text">
-            <string/>
-           </property>
-           <property name="text">
-            <string/>
-           </property>
-           <property name="text">
-            <string/>
-           </property>
-           <property name="text">
-            <string/>
-           </property>
-           <item>
-            <property name="text">
-             <string>Menu bar item spacing</string>
-            </property>
-            <property name="text">
-             <string/>
-            </property>
-            <property name="text">
-             <string>specific.menubar.space</string>
-            </property>
-            <property name="text">
-             <string>int</string>
-            </property>
-            <property name="text">
-             <string>0-99</string>
-            </property>
-            <property name="flags">
-             <set>ItemIsSelectable|ItemIsEditable|ItemIsUserCheckable|ItemIsEnabled</set>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>Menu bar H margin</string>
-            </property>
-            <property name="text">
-             <string/>
-            </property>
-            <property name="text">
-             <string>specific.menubar.hspace</string>
-            </property>
-            <property name="text">
-             <string>int</string>
-            </property>
-            <property name="text">
-             <string>0-99</string>
-            </property>
-            <property name="flags">
-             <set>ItemIsSelectable|ItemIsEditable|ItemIsUserCheckable|ItemIsEnabled</set>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>Menu tearoff height</string>
-            </property>
-            <property name="text">
-             <string/>
-            </property>
-            <property name="text">
-             <string>specific.menu.tearoff.height</string>
-            </property>
-            <property name="text">
-             <string>int</string>
-            </property>
-            <property name="text">
-             <string>1-99</string>
-            </property>
-            <property name="flags">
-             <set>ItemIsSelectable|ItemIsEditable|ItemIsUserCheckable|ItemIsEnabled</set>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>Menu separator height</string>
-            </property>
-            <property name="text">
-             <string/>
-            </property>
-            <property name="text">
-             <string>specific.menu.separator.height</string>
-            </property>
-            <property name="text">
-             <string>int</string>
-            </property>
-            <property name="text">
-             <string>1-99</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>Force menu tearoff</string>
-            </property>
-            <property name="text">
-             <string/>
-            </property>
-            <property name="text">
-             <string>specific.menu.forcetearoff</string>
-            </property>
-            <property name="text">
-             <string>bool</string>
-            </property>
-            <property name="text">
-             <string>yes,no</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>Menu items in capsule</string>
-            </property>
-            <property name="text">
-             <string/>
-            </property>
-            <property name="text">
-             <string>specific.menu.usecapsule</string>
-            </property>
-            <property name="text">
-             <string>bool</string>
-            </property>
-            <property name="text">
-             <string>yes,no</string>
-            </property>
-           </item>
-          </item>
-          <item>
-           <property name="text">
-            <string>Toolbars</string>
-           </property>
-           <property name="text">
-            <string/>
-           </property>
-           <property name="text">
-            <string/>
-           </property>
-           <property name="text">
-            <string/>
-           </property>
-           <property name="text">
-            <string/>
-           </property>
-           <item>
-            <property name="text">
-             <string>Item spacing</string>
-            </property>
-            <property name="text">
-             <string/>
-            </property>
-            <property name="text">
-             <string>specific.toolbar.space</string>
-            </property>
-            <property name="text">
-             <string>int</string>
-            </property>
-            <property name="text">
-             <string>0-99</string>
-            </property>
-            <property name="flags">
-             <set>ItemIsSelectable|ItemIsEditable|ItemIsUserCheckable|ItemIsEnabled</set>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>Handle width</string>
-            </property>
-            <property name="text">
-             <string/>
-            </property>
-            <property name="text">
-             <string>specific.toolbar.handle.width</string>
-            </property>
-            <property name="text">
-             <string>int</string>
-            </property>
-            <property name="text">
-             <string>1-99</string>
-            </property>
-            <property name="flags">
-             <set>ItemIsSelectable|ItemIsEditable|ItemIsUserCheckable|ItemIsEnabled</set>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>Separator width</string>
-            </property>
-            <property name="text">
-             <string/>
-            </property>
-            <property name="text">
-             <string>specific.toolbar.separator.width</string>
-            </property>
-            <property name="text">
-             <string>int</string>
-            </property>
-            <property name="text">
-             <string>1-99</string>
-            </property>
-            <property name="flags">
-             <set>ItemIsSelectable|ItemIsEditable|ItemIsUserCheckable|ItemIsEnabled</set>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>Extension button width</string>
-            </property>
-            <property name="text">
-             <string/>
-            </property>
-            <property name="text">
-             <string>specific.toolbar.extension.width</string>
-            </property>
-            <property name="text">
-             <string>int</string>
-            </property>
-            <property name="text">
-             <string>1-99</string>
-            </property>
-            <property name="flags">
-             <set>ItemIsSelectable|ItemIsEditable|ItemIsUserCheckable|ItemIsEnabled</set>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>Icon size (hint)</string>
-            </property>
-            <property name="text">
-             <string/>
-            </property>
-            <property name="text">
-             <string>specific.toolbar.icon.size</string>
-            </property>
-            <property name="text">
-             <string>int</string>
-            </property>
-            <property name="text">
-             <string>1-99</string>
-            </property>
-            <property name="flags">
-             <set>ItemIsSelectable|ItemIsEditable|ItemIsUserCheckable|ItemIsEnabled</set>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>Item Margin</string>
-            </property>
-            <property name="text">
-             <string/>
-            </property>
-            <property name="text">
-             <string>specific.toolbar.itemmargin</string>
-            </property>
-            <property name="text">
-             <string>int</string>
-            </property>
-            <property name="text">
-             <string>0-99</string>
-            </property>
-           </item>
-          </item>
-          <item>
-           <property name="text">
-            <string>Tabs</string>
-           </property>
-           <item>
-            <property name="text">
-             <string>Variant</string>
-            </property>
-            <property name="text">
-             <string/>
-            </property>
-            <property name="text">
-             <string>specific.tab.variant</string>
-            </property>
-            <property name="text">
-             <string>int_enum</string>
-            </property>
-            <property name="text">
-             <string>Individual,Group all,Group non selected</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>Tab spacing</string>
-            </property>
-            <property name="text">
-             <string/>
-            </property>
-            <property name="text">
-             <string>specific.tab.spacing</string>
-            </property>
-            <property name="text">
-             <string>int</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>Active tab extra height</string>
-            </property>
-            <property name="text">
-             <string/>
-            </property>
-            <property name="text">
-             <string>specific.tab.extraheight</string>
-            </property>
-            <property name="text">
-             <string>int</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>Tab base extra height</string>
-            </property>
-            <property name="text">
-             <string/>
-            </property>
-            <property name="text">
-             <string>specific.tab.extrabaseheight</string>
-            </property>
-            <property name="text">
-             <string>int</string>
-            </property>
-           </item>
-          </item>
-          <item>
-           <property name="text">
-            <string>Scroll bars</string>
-           </property>
-           <property name="text">
-            <string/>
-           </property>
-           <property name="text">
-            <string/>
-           </property>
-           <property name="text">
-            <string/>
-           </property>
-           <property name="text">
-            <string/>
-           </property>
-           <item>
-            <property name="text">
-             <string>Variant</string>
-            </property>
-            <property name="text">
-             <string/>
-            </property>
-            <property name="text">
-             <string>specific.scrollbar.variant</string>
-            </property>
-            <property name="text">
-             <string>int_enum</string>
-            </property>
-            <property name="text">
-             <string>Classic,No buttons</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>Thickness</string>
-            </property>
-            <property name="text">
-             <string/>
-            </property>
-            <property name="text">
-             <string>specific.scrollbar.thickness</string>
-            </property>
-            <property name="text">
-             <string>int</string>
-            </property>
-            <property name="text">
-             <string>1-99</string>
-            </property>
-            <property name="flags">
-             <set>ItemIsSelectable|ItemIsEditable|ItemIsUserCheckable|ItemIsEnabled</set>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>Slider area</string>
-            </property>
-            <property name="text">
-             <string/>
-            </property>
-            <property name="text">
-             <string>specific.scrollbar.slider.area</string>
-            </property>
-            <property name="text">
-             <string>int_enum</string>
-            </property>
-            <property name="text">
-             <string>Inside groove,Overlaps groove</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>Slider minimum size</string>
-            </property>
-            <property name="text">
-             <string/>
-            </property>
-            <property name="text">
-             <string>specific.scrollbar.slider.minsize</string>
-            </property>
-            <property name="text">
-             <string>int</string>
-            </property>
-            <property name="text">
-             <string>1-99</string>
-            </property>
-            <property name="flags">
-             <set>ItemIsSelectable|ItemIsEditable|ItemIsUserCheckable|ItemIsEnabled</set>
-            </property>
-           </item>
-          </item>
-          <item>
-           <property name="text">
-            <string>Sliders</string>
-           </property>
-           <property name="text">
-            <string/>
-           </property>
-           <property name="text">
-            <string/>
-           </property>
-           <property name="text">
-            <string/>
-           </property>
-           <property name="text">
-            <string/>
-           </property>
-           <item>
-            <property name="text">
-             <string>Thickness</string>
-            </property>
-            <property name="text">
-             <string/>
-            </property>
-            <property name="text">
-             <string>specific.slider.thickness</string>
-            </property>
-            <property name="text">
-             <string>int</string>
-            </property>
-            <property name="text">
-             <string>1-99</string>
-            </property>
-            <property name="flags">
-             <set>ItemIsSelectable|ItemIsEditable|ItemIsUserCheckable|ItemIsEnabled</set>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>Cursor size</string>
-            </property>
-            <property name="text">
-             <string/>
-            </property>
-            <property name="text">
-             <string>specific.slider.cursor.size</string>
-            </property>
-            <property name="text">
-             <string>int</string>
-            </property>
-            <property name="text">
-             <string>1-99</string>
-            </property>
-            <property name="flags">
-             <set>ItemIsSelectable|ItemIsEditable|ItemIsUserCheckable|ItemIsEnabled</set>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>Ticks offset</string>
-            </property>
-            <property name="text">
-             <string/>
-            </property>
-            <property name="text">
-             <string>specific.slider.ticks.offset</string>
-            </property>
-            <property name="text">
-             <string>int</string>
-            </property>
-            <property name="text">
-             <string>1-99</string>
-            </property>
-           </item>
-          </item>
-          <item>
-           <property name="text">
-            <string>Drop down buttons</string>
-           </property>
-           <property name="text">
-            <string/>
-           </property>
-           <property name="text">
-            <string/>
-           </property>
-           <property name="text">
-            <string/>
-           </property>
-           <property name="text">
-            <string/>
-           </property>
-           <item>
-            <property name="text">
-             <string>Button size</string>
-            </property>
-            <property name="text">
-             <string/>
-            </property>
-            <property name="text">
-             <string>specific.dropdown.size</string>
-            </property>
-            <property name="text">
-             <string>int</string>
-            </property>
-            <property name="text">
-             <string>1-99</string>
-            </property>
-           </item>
-          </item>
-          <item>
-           <property name="text">
-            <string>Docks</string>
-           </property>
-           <property name="text">
-            <string/>
-           </property>
-           <property name="text">
-            <string/>
-           </property>
-           <property name="text">
-            <string/>
-           </property>
-           <property name="text">
-            <string/>
-           </property>
-           <item>
-            <property name="text">
-             <string>Separator width</string>
-            </property>
-            <property name="text">
-             <string/>
-            </property>
-            <property name="text">
-             <string>specific.dock.separator.size</string>
-            </property>
-            <property name="text">
-             <string>int</string>
-            </property>
-            <property name="text">
-             <string>1-99</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>Handle width</string>
-            </property>
-            <property name="text">
-             <string/>
-            </property>
-            <property name="text">
-             <string>specific.dock.handle.width</string>
-            </property>
-            <property name="text">
-             <string>int</string>
-            </property>
-            <property name="text">
-             <string>1-99</string>
-            </property>
-           </item>
-          </item>
-         </widget>
-        </item>
-        <item row="1" column="0">
-         <widget class="QLineEdit" name="themeNameEdit">
-          <property name="placeholderText">
-           <string>Give a short name to this theme</string>
-          </property>
-         </widget>
-        </item>
-        <item row="4" column="0" colspan="3">
-         <widget class="QLineEdit" name="descrEdit">
-          <property name="placeholderText">
-           <string>Short description of the theme</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="1">
-         <widget class="QLineEdit" name="variantEdit">
-          <property name="placeholderText">
-           <string>Variant</string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="3">
-         <widget class="QLabel" name="label_22">
-          <property name="text">
-           <string>Author</string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="1">
-         <widget class="QLabel" name="label_24">
-          <property name="text">
-           <string>Variant</string>
-          </property>
+          </layout>
          </widget>
         </item>
        </layout>
@@ -2427,7 +2448,57 @@
        <attribute name="title">
         <string>Debug</string>
        </attribute>
-       <layout class="QGridLayout" name="debugLayout">
+       <layout class="QGridLayout" name="layout">
+        <item row="1" column="0">
+         <widget class="QFrame" name="frame_3">
+          <property name="frameShape">
+           <enum>QFrame::StyledPanel</enum>
+          </property>
+          <property name="frameShadow">
+           <enum>QFrame::Raised</enum>
+          </property>
+          <layout class="QGridLayout" name="debugLayout">
+           <item row="0" column="0">
+            <layout class="QGridLayout" name="gridLayout_14">
+             <item row="0" column="1">
+              <widget class="QLabel" name="timeLbl">
+               <property name="text">
+                <string>Time:</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="2">
+              <widget class="QLabel" name="sizeLbl">
+               <property name="text">
+                <string>Size:</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="0">
+              <widget class="QLabel" name="drawStackLbl">
+               <property name="text">
+                <string>Drawing call stack</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="placeholder1">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="text">
+              <string>Placeholder for drawStackTree (do not remove)</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
         <item row="0" column="0">
          <layout class="QGridLayout" name="gridLayout_15">
           <item row="0" column="0">
@@ -2464,44 +2535,6 @@
            </spacer>
           </item>
          </layout>
-        </item>
-        <item row="1" column="0">
-         <layout class="QGridLayout" name="gridLayout_14">
-          <item row="0" column="1">
-           <widget class="QLabel" name="timeLbl">
-            <property name="text">
-             <string>Time:</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="0">
-           <widget class="QLabel" name="drawStackLbl">
-            <property name="text">
-             <string>Drawing call stack</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="2">
-           <widget class="QLabel" name="sizeLbl">
-            <property name="text">
-             <string>Size:</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </item>
-        <item row="2" column="0">
-         <widget class="QLabel" name="placeholder1">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="text">
-           <string>Placeholder for drawStackTree (do not remove)</string>
-          </property>
-         </widget>
         </item>
        </layout>
       </widget>
@@ -2569,8 +2602,8 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>143</width>
-               <height>121</height>
+               <width>192</width>
+               <height>307</height>
               </rect>
              </property>
              <attribute name="label">
@@ -2863,8 +2896,8 @@
                   <rect>
                    <x>0</x>
                    <y>0</y>
-                   <width>94</width>
-                   <height>30</height>
+                   <width>180</width>
+                   <height>241</height>
                   </rect>
                  </property>
                  <layout class="QGridLayout" name="gridLayout_27">
@@ -2891,8 +2924,8 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>174</width>
-               <height>40</height>
+               <width>147</width>
+               <height>36</height>
               </rect>
              </property>
              <attribute name="label">
@@ -3086,8 +3119,8 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>176</width>
-               <height>71</height>
+               <width>150</width>
+               <height>66</height>
               </rect>
              </property>
              <attribute name="label">
@@ -3655,6 +3688,22 @@
           </property>
          </spacer>
         </item>
+        <item row="0" column="1">
+         <spacer name="verticalSpacer_5">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeType">
+           <enum>QSizePolicy::Fixed</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
         <item row="2" column="1">
          <spacer name="verticalSpacer_6">
           <property name="orientation">
@@ -3726,22 +3775,6 @@
            </item>
           </layout>
          </widget>
-        </item>
-        <item row="0" column="1">
-         <spacer name="verticalSpacer_5">
-          <property name="orientation">
-           <enum>Qt::Vertical</enum>
-          </property>
-          <property name="sizeType">
-           <enum>QSizePolicy::Fixed</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>20</width>
-            <height>20</height>
-           </size>
-          </property>
-         </spacer>
         </item>
        </layout>
       </widget>
@@ -3936,7 +3969,6 @@
         <property name="font">
          <font>
           <pointsize>14</pointsize>
-          <weight>75</weight>
           <bold>true</bold>
          </font>
         </property>
@@ -3974,6 +4006,9 @@
     </item>
     <item row="2" column="1" rowspan="3">
      <widget class="QTabWidget" name="tabWidget">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
       <property name="sizePolicy">
        <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
         <horstretch>0</horstretch>
@@ -4029,283 +4064,6 @@
         <string>Shape</string>
        </attribute>
        <layout class="QGridLayout" name="gridLayout_7">
-        <item row="4" column="2">
-         <widget class="QComboBox" name="frameIdCombo">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="editable">
-           <bool>true</bool>
-          </property>
-          <property name="insertPolicy">
-           <enum>QComboBox::InsertAlphabetically</enum>
-          </property>
-         </widget>
-        </item>
-        <item row="22" column="0">
-         <widget class="QCheckBox" name="labelSpacingCb">
-          <property name="text">
-           <string>Text-icon
-spacing</string>
-          </property>
-          <property name="tristate">
-           <bool>true</bool>
-          </property>
-         </widget>
-        </item>
-        <item row="23" column="1">
-         <widget class="QLabel" name="label">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="text">
-           <string>H</string>
-          </property>
-         </widget>
-        </item>
-        <item row="3" column="0">
-         <widget class="QCheckBox" name="frameCb">
-          <property name="text">
-           <string>Draw</string>
-          </property>
-          <property name="tristate">
-           <bool>true</bool>
-          </property>
-         </widget>
-        </item>
-        <item row="5" column="0">
-         <widget class="QCheckBox" name="frameWidthCb">
-          <property name="text">
-           <string>Width</string>
-          </property>
-          <property name="tristate">
-           <bool>true</bool>
-          </property>
-         </widget>
-        </item>
-        <item row="8" column="0">
-         <widget class="QCheckBox" name="interiorIdCb">
-          <property name="text">
-           <string>SVG id</string>
-          </property>
-          <property name="tristate">
-           <bool>true</bool>
-          </property>
-         </widget>
-        </item>
-        <item row="8" column="2">
-         <widget class="QComboBox" name="interiorIdCombo">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="editable">
-           <bool>true</bool>
-          </property>
-          <property name="insertPolicy">
-           <enum>QComboBox::InsertAlphabetically</enum>
-          </property>
-         </widget>
-        </item>
-        <item row="22" column="2">
-         <widget class="QSpinBox" name="labelSpacingSpin">
-          <property name="specialValueText">
-           <string>&lt;inherit&gt;</string>
-          </property>
-          <property name="minimum">
-           <number>-1</number>
-          </property>
-          <property name="value">
-           <number>-1</number>
-          </property>
-         </widget>
-        </item>
-        <item row="19" column="0">
-         <widget class="QCheckBox" name="indicatorIdCb">
-          <property name="text">
-           <string>SVG id</string>
-          </property>
-          <property name="tristate">
-           <bool>true</bool>
-          </property>
-         </widget>
-        </item>
-        <item row="24" column="2">
-         <widget class="QSpinBox" name="labelMarginVSpin">
-          <property name="specialValueText">
-           <string>&lt;inherit&gt;</string>
-          </property>
-          <property name="minimum">
-           <number>-1</number>
-          </property>
-          <property name="value">
-           <number>-1</number>
-          </property>
-         </widget>
-        </item>
-        <item row="4" column="0">
-         <widget class="QCheckBox" name="frameIdCb">
-          <property name="text">
-           <string>SVG id</string>
-          </property>
-          <property name="tristate">
-           <bool>true</bool>
-          </property>
-         </widget>
-        </item>
-        <item row="23" column="2">
-         <widget class="QSpinBox" name="labelMarginHSpin">
-          <property name="specialValueText">
-           <string>&lt;inherit&gt;</string>
-          </property>
-          <property name="minimum">
-           <number>-1</number>
-          </property>
-          <property name="value">
-           <number>-1</number>
-          </property>
-         </widget>
-        </item>
-        <item row="24" column="1">
-         <widget class="QLabel" name="label_2">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="text">
-           <string>V</string>
-          </property>
-         </widget>
-        </item>
-        <item row="15" column="2">
-         <widget class="QSpinBox" name="interiorRepeatYSpin">
-          <property name="specialValueText">
-           <string>&lt;inherit&gt;</string>
-          </property>
-          <property name="minimum">
-           <number>-1</number>
-          </property>
-          <property name="value">
-           <number>-1</number>
-          </property>
-         </widget>
-        </item>
-        <item row="12" column="2">
-         <widget class="QSpinBox" name="interiorRepeatXSpin">
-          <property name="specialValueText">
-           <string>&lt;inherit&gt;</string>
-          </property>
-          <property name="minimum">
-           <number>-1</number>
-          </property>
-          <property name="value">
-           <number>-1</number>
-          </property>
-         </widget>
-        </item>
-        <item row="19" column="2">
-         <widget class="QComboBox" name="indicatorIdCombo">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="editable">
-           <bool>true</bool>
-          </property>
-          <property name="insertPolicy">
-           <enum>QComboBox::InsertAlphabetically</enum>
-          </property>
-         </widget>
-        </item>
-        <item row="7" column="0">
-         <widget class="QCheckBox" name="interiorCb">
-          <property name="text">
-           <string>Draw</string>
-          </property>
-          <property name="tristate">
-           <bool>true</bool>
-          </property>
-         </widget>
-        </item>
-        <item row="3" column="2">
-         <widget class="QLineEdit" name="frameEdit">
-          <property name="readOnly">
-           <bool>true</bool>
-          </property>
-         </widget>
-        </item>
-        <item row="23" column="0">
-         <widget class="QCheckBox" name="labelMarginCb">
-          <property name="text">
-           <string>Margins</string>
-          </property>
-          <property name="tristate">
-           <bool>true</bool>
-          </property>
-         </widget>
-        </item>
-        <item row="20" column="0">
-         <widget class="QCheckBox" name="indicatorSizeCb">
-          <property name="text">
-           <string>Size</string>
-          </property>
-          <property name="tristate">
-           <bool>true</bool>
-          </property>
-         </widget>
-        </item>
-        <item row="20" column="2">
-         <widget class="QSpinBox" name="indicatorSizeSpin">
-          <property name="specialValueText">
-           <string>&lt;inherit&gt;</string>
-          </property>
-          <property name="minimum">
-           <number>-1</number>
-          </property>
-          <property name="value">
-           <number>-1</number>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="0">
-         <widget class="QCheckBox" name="inheritCb">
-          <property name="text">
-           <string>Inherit</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="2">
-         <widget class="QComboBox" name="inheritCombo">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-         </widget>
-        </item>
-        <item row="12" column="0">
-         <widget class="QCheckBox" name="interiorRepeatCb">
-          <property name="text">
-           <string>Repeat</string>
-          </property>
-          <property name="tristate">
-           <bool>true</bool>
-          </property>
-         </widget>
-        </item>
         <item row="26" column="0" colspan="3">
          <spacer name="verticalSpacer_4">
           <property name="orientation">
@@ -4319,275 +4077,564 @@ spacing</string>
           </property>
          </spacer>
         </item>
-        <item row="7" column="2">
-         <widget class="QLineEdit" name="interiorEdit">
-          <property name="readOnly">
-           <bool>true</bool>
+        <item row="25" column="0" colspan="3">
+         <widget class="QFrame" name="frame">
+          <property name="frameShape">
+           <enum>QFrame::StyledPanel</enum>
           </property>
+          <property name="frameShadow">
+           <enum>QFrame::Raised</enum>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_43">
+           <item row="10" column="0" colspan="3">
+            <layout class="QGridLayout" name="gridLayout_20">
+             <item row="0" column="1">
+              <widget class="QLabel" name="label_15">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="pixmap">
+                <pixmap resource="ThemeBuilderUIBase.qrc">:/icon/pixmaps/hslider.png</pixmap>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="2">
+              <widget class="QLabel" name="label_16">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="text">
+                <string>Indicator</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="3">
+              <widget class="Line" name="line_6">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="0">
+              <widget class="Line" name="line_7">
+               <property name="minimumSize">
+                <size>
+                 <width>20</width>
+                 <height>0</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>20</width>
+                 <height>16777215</height>
+                </size>
+               </property>
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item row="15" column="2">
+            <widget class="QSpinBox" name="labelMarginHSpin">
+             <property name="specialValueText">
+              <string>&lt;inherit&gt;</string>
+             </property>
+             <property name="minimum">
+              <number>-1</number>
+             </property>
+             <property name="value">
+              <number>-1</number>
+             </property>
+            </widget>
+           </item>
+           <item row="6" column="2">
+            <widget class="QLineEdit" name="interiorEdit">
+             <property name="readOnly">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="5" column="0" colspan="3">
+            <layout class="QGridLayout" name="gridLayout_17">
+             <item row="0" column="1">
+              <widget class="QLabel" name="label_9">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="pixmap">
+                <pixmap resource="ThemeBuilderUIBase.qrc">:/icon/pixmaps/hslider.png</pixmap>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="2">
+              <widget class="QLabel" name="label_10">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="text">
+                <string>Interior</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="3">
+              <widget class="Line" name="line_2">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="0">
+              <widget class="Line" name="line_5">
+               <property name="minimumSize">
+                <size>
+                 <width>20</width>
+                 <height>0</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>20</width>
+                 <height>16777215</height>
+                </size>
+               </property>
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item row="6" column="0">
+            <widget class="QCheckBox" name="interiorCb">
+             <property name="text">
+              <string>Draw</string>
+             </property>
+             <property name="tristate">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="9" column="1">
+            <widget class="QLabel" name="label_12">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="text">
+              <string>Y</string>
+             </property>
+            </widget>
+           </item>
+           <item row="13" column="0" colspan="3">
+            <layout class="QGridLayout" name="gridLayout_21">
+             <item row="0" column="1">
+              <widget class="QLabel" name="label_17">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="pixmap">
+                <pixmap resource="ThemeBuilderUIBase.qrc">:/icon/pixmaps/hslider.png</pixmap>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="2">
+              <widget class="QLabel" name="label_18">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="text">
+                <string>Label</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="3">
+              <widget class="Line" name="line_8">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="0">
+              <widget class="Line" name="line_9">
+               <property name="minimumSize">
+                <size>
+                 <width>20</width>
+                 <height>0</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>20</width>
+                 <height>16777215</height>
+                </size>
+               </property>
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item row="4" column="0">
+            <widget class="QCheckBox" name="frameWidthCb">
+             <property name="text">
+              <string>Width</string>
+             </property>
+             <property name="tristate">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="0">
+            <widget class="QCheckBox" name="inheritCb">
+             <property name="text">
+              <string>Inherit</string>
+             </property>
+            </widget>
+           </item>
+           <item row="12" column="2">
+            <widget class="QSpinBox" name="indicatorSizeSpin">
+             <property name="specialValueText">
+              <string>&lt;inherit&gt;</string>
+             </property>
+             <property name="minimum">
+              <number>-1</number>
+             </property>
+             <property name="value">
+              <number>-1</number>
+             </property>
+            </widget>
+           </item>
+           <item row="14" column="2">
+            <widget class="QSpinBox" name="labelSpacingSpin">
+             <property name="specialValueText">
+              <string>&lt;inherit&gt;</string>
+             </property>
+             <property name="minimum">
+              <number>-1</number>
+             </property>
+             <property name="value">
+              <number>-1</number>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="2">
+            <widget class="QComboBox" name="frameIdCombo">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="editable">
+              <bool>true</bool>
+             </property>
+             <property name="insertPolicy">
+              <enum>QComboBox::InsertAlphabetically</enum>
+             </property>
+            </widget>
+           </item>
+           <item row="7" column="0">
+            <widget class="QCheckBox" name="interiorIdCb">
+             <property name="text">
+              <string>SVG id</string>
+             </property>
+             <property name="tristate">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="2">
+            <widget class="QComboBox" name="inheritCombo">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+            </widget>
+           </item>
+           <item row="8" column="0">
+            <widget class="QCheckBox" name="interiorRepeatCb">
+             <property name="text">
+              <string>Repeat</string>
+             </property>
+             <property name="tristate">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="8" column="2">
+            <widget class="QSpinBox" name="interiorRepeatXSpin">
+             <property name="specialValueText">
+              <string>&lt;inherit&gt;</string>
+             </property>
+             <property name="minimum">
+              <number>-1</number>
+             </property>
+             <property name="value">
+              <number>-1</number>
+             </property>
+            </widget>
+           </item>
+           <item row="9" column="2">
+            <widget class="QSpinBox" name="interiorRepeatYSpin">
+             <property name="specialValueText">
+              <string>&lt;inherit&gt;</string>
+             </property>
+             <property name="minimum">
+              <number>-1</number>
+             </property>
+             <property name="value">
+              <number>-1</number>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="2">
+            <widget class="QLineEdit" name="frameEdit">
+             <property name="readOnly">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="12" column="0">
+            <widget class="QCheckBox" name="indicatorSizeCb">
+             <property name="text">
+              <string>Size</string>
+             </property>
+             <property name="tristate">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="7" column="2">
+            <widget class="QComboBox" name="interiorIdCombo">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="editable">
+              <bool>true</bool>
+             </property>
+             <property name="insertPolicy">
+              <enum>QComboBox::InsertAlphabetically</enum>
+             </property>
+            </widget>
+           </item>
+           <item row="8" column="1">
+            <widget class="QLabel" name="label_6">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="text">
+              <string>X</string>
+             </property>
+            </widget>
+           </item>
+           <item row="11" column="0">
+            <widget class="QCheckBox" name="indicatorIdCb">
+             <property name="text">
+              <string>SVG id</string>
+             </property>
+             <property name="tristate">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="15" column="1">
+            <widget class="QLabel" name="label">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="text">
+              <string>H</string>
+             </property>
+            </widget>
+           </item>
+           <item row="15" column="0">
+            <widget class="QCheckBox" name="labelMarginCb">
+             <property name="text">
+              <string>Margins</string>
+             </property>
+             <property name="tristate">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="2">
+            <widget class="QSpinBox" name="frameWidthSpin">
+             <property name="specialValueText">
+              <string>&lt;inherit&gt;</string>
+             </property>
+             <property name="minimum">
+              <number>-1</number>
+             </property>
+             <property name="value">
+              <number>-1</number>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0" colspan="3">
+            <layout class="QGridLayout" name="gridLayout_16">
+             <item row="0" column="1">
+              <widget class="QLabel" name="label_7">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="pixmap">
+                <pixmap resource="ThemeBuilderUIBase.qrc">:/icon/pixmaps/hslider.png</pixmap>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="2">
+              <widget class="QLabel" name="label_8">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="text">
+                <string>Frame</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="3">
+              <widget class="Line" name="line">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="0">
+              <widget class="Line" name="line_3">
+               <property name="minimumSize">
+                <size>
+                 <width>20</width>
+                 <height>0</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>20</width>
+                 <height>16777215</height>
+                </size>
+               </property>
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item row="11" column="2">
+            <widget class="QComboBox" name="indicatorIdCombo">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="editable">
+              <bool>true</bool>
+             </property>
+             <property name="insertPolicy">
+              <enum>QComboBox::InsertAlphabetically</enum>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QCheckBox" name="frameCb">
+             <property name="text">
+              <string>Draw</string>
+             </property>
+             <property name="tristate">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="0">
+            <widget class="QCheckBox" name="frameIdCb">
+             <property name="text">
+              <string>SVG id</string>
+             </property>
+             <property name="tristate">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="14" column="0">
+            <widget class="QCheckBox" name="labelSpacingCb">
+             <property name="text">
+              <string>Text-icon
+spacing</string>
+             </property>
+             <property name="tristate">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="16" column="1">
+            <widget class="QLabel" name="label_2">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="text">
+              <string>V</string>
+             </property>
+            </widget>
+           </item>
+           <item row="16" column="2">
+            <widget class="QSpinBox" name="labelMarginVSpin">
+             <property name="specialValueText">
+              <string>&lt;inherit&gt;</string>
+             </property>
+             <property name="minimum">
+              <number>-1</number>
+             </property>
+             <property name="value">
+              <number>-1</number>
+             </property>
+            </widget>
+           </item>
+          </layout>
          </widget>
-        </item>
-        <item row="15" column="1">
-         <widget class="QLabel" name="label_12">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="text">
-           <string>Y</string>
-          </property>
-         </widget>
-        </item>
-        <item row="12" column="1">
-         <widget class="QLabel" name="label_6">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="text">
-           <string>X</string>
-          </property>
-         </widget>
-        </item>
-        <item row="21" column="0" colspan="3">
-         <layout class="QGridLayout" name="gridLayout_21">
-          <item row="0" column="1">
-           <widget class="QLabel" name="label_17">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="pixmap">
-             <pixmap resource="ThemeBuilderUIBase.qrc">:/icon/pixmaps/hslider.png</pixmap>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="2">
-           <widget class="QLabel" name="label_18">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="text">
-             <string>Label</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="3">
-           <widget class="Line" name="line_8">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="0">
-           <widget class="Line" name="line_9">
-            <property name="minimumSize">
-             <size>
-              <width>20</width>
-              <height>0</height>
-             </size>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>20</width>
-              <height>16777215</height>
-             </size>
-            </property>
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </item>
-        <item row="18" column="0" colspan="3">
-         <layout class="QGridLayout" name="gridLayout_20">
-          <item row="0" column="1">
-           <widget class="QLabel" name="label_15">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="pixmap">
-             <pixmap resource="ThemeBuilderUIBase.qrc">:/icon/pixmaps/hslider.png</pixmap>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="2">
-           <widget class="QLabel" name="label_16">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="text">
-             <string>Indicator</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="3">
-           <widget class="Line" name="line_6">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="0">
-           <widget class="Line" name="line_7">
-            <property name="minimumSize">
-             <size>
-              <width>20</width>
-              <height>0</height>
-             </size>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>20</width>
-              <height>16777215</height>
-             </size>
-            </property>
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </item>
-        <item row="6" column="0" colspan="3">
-         <layout class="QGridLayout" name="gridLayout_17">
-          <item row="0" column="1">
-           <widget class="QLabel" name="label_9">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="pixmap">
-             <pixmap resource="ThemeBuilderUIBase.qrc">:/icon/pixmaps/hslider.png</pixmap>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="2">
-           <widget class="QLabel" name="label_10">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="text">
-             <string>Interior</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="3">
-           <widget class="Line" name="line_2">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="0">
-           <widget class="Line" name="line_5">
-            <property name="minimumSize">
-             <size>
-              <width>20</width>
-              <height>0</height>
-             </size>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>20</width>
-              <height>16777215</height>
-             </size>
-            </property>
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </item>
-        <item row="5" column="2">
-         <widget class="QSpinBox" name="frameWidthSpin">
-          <property name="specialValueText">
-           <string>&lt;inherit&gt;</string>
-          </property>
-          <property name="minimum">
-           <number>-1</number>
-          </property>
-          <property name="value">
-           <number>-1</number>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="0" colspan="3">
-         <layout class="QGridLayout" name="gridLayout_16">
-          <item row="0" column="1">
-           <widget class="QLabel" name="label_7">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="pixmap">
-             <pixmap resource="ThemeBuilderUIBase.qrc">:/icon/pixmaps/hslider.png</pixmap>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="2">
-           <widget class="QLabel" name="label_8">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="text">
-             <string>Frame</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="3">
-           <widget class="Line" name="line">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="0">
-           <widget class="Line" name="line_3">
-            <property name="minimumSize">
-             <size>
-              <width>20</width>
-              <height>0</height>
-             </size>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>20</width>
-              <height>16777215</height>
-             </size>
-            </property>
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-           </widget>
-          </item>
-         </layout>
         </item>
        </layout>
       </widget>
@@ -4637,22 +4684,6 @@ spacing</string>
         <string>Colors &amp;&amp; font</string>
        </attribute>
        <layout class="QGridLayout" name="gridLayout_40">
-        <item row="6" column="0" colspan="2">
-         <spacer name="verticalSpacer_19">
-          <property name="orientation">
-           <enum>Qt::Vertical</enum>
-          </property>
-          <property name="sizeType">
-           <enum>QSizePolicy::Fixed</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>13</width>
-            <height>17</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
         <item row="4" column="1">
          <widget class="QWidget" name="widget_2" native="true">
           <layout class="QGridLayout" name="gridLayout_35">
@@ -4670,35 +4701,6 @@ spacing</string>
            </property>
           </layout>
          </widget>
-        </item>
-        <item row="11" column="0" colspan="2">
-         <spacer name="verticalSpacer_8">
-          <property name="orientation">
-           <enum>Qt::Vertical</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>20</width>
-            <height>0</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-        <item row="1" column="0" rowspan="2" colspan="2">
-         <spacer name="verticalSpacer_18">
-          <property name="orientation">
-           <enum>Qt::Vertical</enum>
-          </property>
-          <property name="sizeType">
-           <enum>QSizePolicy::Fixed</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>13</width>
-            <height>20</height>
-           </size>
-          </property>
-         </spacer>
         </item>
         <item row="2" column="1">
          <widget class="QWidget" name="widget" native="true">
@@ -4718,561 +4720,618 @@ spacing</string>
           </layout>
          </widget>
         </item>
-        <item row="7" column="0" colspan="2">
-         <layout class="QGridLayout" name="gridLayout_37">
-          <item row="0" column="1">
-           <widget class="QLabel" name="label_20">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="pixmap">
-             <pixmap resource="ThemeBuilderUIBase.qrc">:/icon/pixmaps/hslider.png</pixmap>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="2">
-           <widget class="QLabel" name="label_26">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="text">
-             <string>Font</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="3">
-           <widget class="Line" name="line_11">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="0">
-           <widget class="Line" name="line_12">
-            <property name="minimumSize">
-             <size>
-              <width>20</width>
-              <height>0</height>
-             </size>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>20</width>
-              <height>16777215</height>
-             </size>
-            </property>
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </item>
-        <item row="3" column="0" colspan="2">
-         <layout class="QGridLayout" name="gridLayout_36">
-          <item row="0" column="1">
-           <widget class="QLabel" name="label_11">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="pixmap">
-             <pixmap resource="ThemeBuilderUIBase.qrc">:/icon/pixmaps/hslider.png</pixmap>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="2">
-           <widget class="QLabel" name="label_14">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="text">
-             <string>Colors</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="3">
-           <widget class="Line" name="line_4">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="0">
-           <widget class="Line" name="line_10">
-            <property name="minimumSize">
-             <size>
-              <width>20</width>
-              <height>0</height>
-             </size>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>20</width>
-              <height>16777215</height>
-             </size>
-            </property>
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </item>
-        <item row="5" column="0" colspan="2">
-         <layout class="QGridLayout" name="gridLayout_38">
-          <item row="2" column="2" colspan="2">
-           <widget class="QWidget" name="widget_4" native="true">
-            <layout class="QGridLayout" name="gridLayout_42">
-             <property name="leftMargin">
-              <number>0</number>
-             </property>
-             <property name="topMargin">
-              <number>0</number>
-             </property>
-             <property name="rightMargin">
-              <number>0</number>
-             </property>
-             <property name="bottomMargin">
-              <number>0</number>
-             </property>
-             <item row="0" column="0">
-              <widget class="QRadioButton" name="bgSystemRadio">
-               <property name="text">
-                <string>s&amp;ystem</string>
-               </property>
-              </widget>
-             </item>
-             <item row="0" column="1">
-              <spacer name="horizontalSpacer_17">
-               <property name="orientation">
-                <enum>Qt::Horizontal</enum>
-               </property>
-               <property name="sizeType">
-                <enum>QSizePolicy::Fixed</enum>
-               </property>
-               <property name="sizeHint" stdset="0">
-                <size>
-                 <width>20</width>
-                 <height>20</height>
-                </size>
-               </property>
-              </spacer>
-             </item>
-             <item row="0" column="2">
-              <widget class="QRadioButton" name="bgColorRadio">
-               <property name="text">
-                <string>&amp;color</string>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </widget>
-          </item>
-          <item row="3" column="0">
-           <widget class="QLineEdit" name="bgEdit">
-            <property name="readOnly">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="3">
-           <widget class="QToolButton" name="fgColorBtn">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="minimumSize">
-             <size>
-              <width>30</width>
-              <height>0</height>
-             </size>
-            </property>
-            <property name="text">
-             <string>...</string>
-            </property>
-           </widget>
-          </item>
-          <item row="3" column="3">
-           <widget class="QToolButton" name="bgColorBtn">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="minimumSize">
-             <size>
-              <width>30</width>
-              <height>0</height>
-             </size>
-            </property>
-            <property name="text">
-             <string>...</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="1" rowspan="4">
-           <spacer name="horizontalSpacer_5">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeType">
-             <enum>QSizePolicy::Fixed</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>17</width>
-              <height>25</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-          <item row="1" column="0">
-           <widget class="QLineEdit" name="fgEdit">
-            <property name="readOnly">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="0">
-           <widget class="QCheckBox" name="bgCb">
-            <property name="text">
-             <string>Background</string>
-            </property>
-            <property name="tristate">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="0">
-           <widget class="QCheckBox" name="fgCb">
-            <property name="text">
-             <string>Foreground</string>
-            </property>
-            <property name="tristate">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="2" colspan="2">
-           <widget class="QWidget" name="widget_3" native="true">
-            <layout class="QGridLayout" name="gridLayout_41">
-             <property name="leftMargin">
-              <number>0</number>
-             </property>
-             <property name="topMargin">
-              <number>0</number>
-             </property>
-             <property name="rightMargin">
-              <number>0</number>
-             </property>
-             <item row="0" column="0">
-              <widget class="QRadioButton" name="fgSystemRadio">
-               <property name="text">
-                <string>s&amp;ystem</string>
-               </property>
-              </widget>
-             </item>
-             <item row="0" column="1">
-              <spacer name="horizontalSpacer_16">
-               <property name="orientation">
-                <enum>Qt::Horizontal</enum>
-               </property>
-               <property name="sizeType">
-                <enum>QSizePolicy::Fixed</enum>
-               </property>
-               <property name="sizeHint" stdset="0">
-                <size>
-                 <width>20</width>
-                 <height>20</height>
-                </size>
-               </property>
-              </spacer>
-             </item>
-             <item row="0" column="2">
-              <widget class="QRadioButton" name="fgColorRadio">
-               <property name="text">
-                <string>&amp;color</string>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </widget>
-          </item>
-         </layout>
-        </item>
-        <item row="8" column="0" colspan="2">
-         <layout class="QGridLayout" name="gridLayout_39">
-          <item row="2" column="3">
-           <widget class="QLineEdit" name="underlineEdit">
-            <property name="readOnly">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="0">
-           <widget class="QCheckBox" name="italicCb">
-            <property name="text">
-             <string>Italic</string>
-            </property>
-            <property name="tristate">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="4" column="0">
-           <widget class="QCheckBox" name="shadowCb">
-            <property name="enabled">
-             <bool>false</bool>
-            </property>
-            <property name="text">
-             <string>Shadow</string>
-            </property>
-            <property name="tristate">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="6" column="2">
-           <widget class="QLabel" name="label_28">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="text">
-             <string>SY</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="0">
-           <widget class="QCheckBox" name="boldCb">
-            <property name="text">
-             <string>Bold</string>
-            </property>
-            <property name="tristate">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="4" column="3">
-           <widget class="QSpinBox" name="shadowDepthSpin">
-            <property name="enabled">
-             <bool>false</bool>
-            </property>
-            <property name="minimum">
-             <number>1</number>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="3">
-           <widget class="QLineEdit" name="italicEdit">
-            <property name="readOnly">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="6" column="3">
-           <widget class="QSpinBox" name="shadowYShiftSpin">
-            <property name="enabled">
-             <bool>false</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="4" column="2">
-           <widget class="QLabel" name="label_5">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="text">
-             <string>D</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="3">
-           <widget class="QLineEdit" name="boldEdit">
-            <property name="readOnly">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="5" column="3">
-           <widget class="QSpinBox" name="shadowXShiftSpin">
-            <property name="enabled">
-             <bool>false</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="5" column="2">
-           <widget class="QLabel" name="label_27">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="text">
-             <string>SX</string>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="0">
-           <widget class="QCheckBox" name="underlineCb">
-            <property name="text">
-             <string>Underline</string>
-            </property>
-            <property name="tristate">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="1" rowspan="3">
-           <spacer name="horizontalSpacer_23">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeType">
-             <enum>QSizePolicy::Fixed</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>17</width>
-              <height>25</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-          <item row="3" column="0" colspan="4">
-           <spacer name="verticalSpacer_20">
-            <property name="orientation">
-             <enum>Qt::Vertical</enum>
-            </property>
-            <property name="sizeType">
-             <enum>QSizePolicy::Fixed</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>13</width>
-              <height>17</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-          <item row="5" column="0" rowspan="2">
-           <widget class="QToolButton" name="shadowColorBtn">
-            <property name="enabled">
-             <bool>false</bool>
-            </property>
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="minimumSize">
-             <size>
-              <width>30</width>
-              <height>0</height>
-             </size>
-            </property>
-            <property name="text">
-             <string>...</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </item>
         <item row="0" column="0" colspan="2">
-         <layout class="QGridLayout" name="gridLayout_12">
-          <item row="0" column="0">
-           <widget class="QLabel" name="label_4">
-            <property name="text">
-             <string>State</string>
-            </property>
-            <property name="alignment">
-             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="2">
-           <widget class="QComboBox" name="paletteStatusCombo">
-            <item>
-             <property name="text">
-              <string>normal</string>
+         <widget class="QFrame" name="frame_4">
+          <property name="frameShape">
+           <enum>QFrame::StyledPanel</enum>
+          </property>
+          <property name="frameShadow">
+           <enum>QFrame::Raised</enum>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_8">
+           <item row="5" column="0">
+            <layout class="QGridLayout" name="gridLayout_37">
+             <item row="0" column="1">
+              <widget class="QLabel" name="label_20">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="pixmap">
+                <pixmap resource="ThemeBuilderUIBase.qrc">:/icon/pixmaps/hslider.png</pixmap>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="2">
+              <widget class="QLabel" name="label_26">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="text">
+                <string>Font</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="3">
+              <widget class="Line" name="line_11">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="0">
+              <widget class="Line" name="line_12">
+               <property name="minimumSize">
+                <size>
+                 <width>20</width>
+                 <height>0</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>20</width>
+                 <height>16777215</height>
+                </size>
+               </property>
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item row="2" column="0">
+            <layout class="QGridLayout" name="gridLayout_36">
+             <item row="0" column="1">
+              <widget class="QLabel" name="label_11">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="pixmap">
+                <pixmap resource="ThemeBuilderUIBase.qrc">:/icon/pixmaps/hslider.png</pixmap>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="2">
+              <widget class="QLabel" name="label_14">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="text">
+                <string>Colors</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="3">
+              <widget class="Line" name="line_4">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="0">
+              <widget class="Line" name="line_10">
+               <property name="minimumSize">
+                <size>
+                 <width>20</width>
+                 <height>0</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>20</width>
+                 <height>16777215</height>
+                </size>
+               </property>
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item row="6" column="0">
+            <layout class="QGridLayout" name="gridLayout_39">
+             <item row="2" column="3">
+              <widget class="QLineEdit" name="underlineEdit">
+               <property name="readOnly">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="0">
+              <widget class="QCheckBox" name="italicCb">
+               <property name="text">
+                <string>Italic</string>
+               </property>
+               <property name="tristate">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+             <item row="4" column="0">
+              <widget class="QCheckBox" name="shadowCb">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
+               <property name="text">
+                <string>Shadow</string>
+               </property>
+               <property name="tristate">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+             <item row="6" column="2">
+              <widget class="QLabel" name="label_28">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="text">
+                <string>SY</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="0">
+              <widget class="QCheckBox" name="boldCb">
+               <property name="text">
+                <string>Bold</string>
+               </property>
+               <property name="tristate">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+             <item row="4" column="3">
+              <widget class="QSpinBox" name="shadowDepthSpin">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
+               <property name="minimum">
+                <number>1</number>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="3">
+              <widget class="QLineEdit" name="italicEdit">
+               <property name="readOnly">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+             <item row="6" column="3">
+              <widget class="QSpinBox" name="shadowYShiftSpin">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
+              </widget>
+             </item>
+             <item row="4" column="2">
+              <widget class="QLabel" name="label_5">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="text">
+                <string>D</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="3">
+              <widget class="QLineEdit" name="boldEdit">
+               <property name="readOnly">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+             <item row="5" column="3">
+              <widget class="QSpinBox" name="shadowXShiftSpin">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
+              </widget>
+             </item>
+             <item row="5" column="2">
+              <widget class="QLabel" name="label_27">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="text">
+                <string>SX</string>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="0">
+              <widget class="QCheckBox" name="underlineCb">
+               <property name="text">
+                <string>Underline</string>
+               </property>
+               <property name="tristate">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="1" rowspan="3">
+              <spacer name="horizontalSpacer_23">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeType">
+                <enum>QSizePolicy::Fixed</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>17</width>
+                 <height>25</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item row="3" column="0" colspan="4">
+              <spacer name="verticalSpacer_20">
+               <property name="orientation">
+                <enum>Qt::Vertical</enum>
+               </property>
+               <property name="sizeType">
+                <enum>QSizePolicy::Fixed</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>13</width>
+                 <height>17</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item row="5" column="0" rowspan="2">
+              <widget class="QToolButton" name="shadowColorBtn">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="minimumSize">
+                <size>
+                 <width>30</width>
+                 <height>0</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>...</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item row="4" column="0">
+            <spacer name="verticalSpacer_19">
+             <property name="orientation">
+              <enum>Qt::Vertical</enum>
              </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>hovered</string>
+             <property name="sizeType">
+              <enum>QSizePolicy::Fixed</enum>
              </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>pressed</string>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>13</width>
+               <height>17</height>
+              </size>
              </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>toggled</string>
+            </spacer>
+           </item>
+           <item row="0" column="0">
+            <layout class="QGridLayout" name="gridLayout_12">
+             <item row="0" column="0">
+              <widget class="QLabel" name="label_4">
+               <property name="text">
+                <string>State</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="2">
+              <widget class="QComboBox" name="paletteStatusCombo">
+               <item>
+                <property name="text">
+                 <string>normal</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>hovered</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>pressed</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>toggled</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>disabled</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>disabled-toggled</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>focused</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>default</string>
+                </property>
+               </item>
+              </widget>
+             </item>
+             <item row="0" column="1">
+              <spacer name="horizontalSpacer_18">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeType">
+                <enum>QSizePolicy::Fixed</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>17</width>
+                 <height>25</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+            </layout>
+           </item>
+           <item row="3" column="0">
+            <layout class="QGridLayout" name="gridLayout_38">
+             <item row="2" column="2" colspan="2">
+              <widget class="QWidget" name="widget_4" native="true">
+               <layout class="QGridLayout" name="gridLayout_42">
+                <property name="leftMargin">
+                 <number>0</number>
+                </property>
+                <property name="topMargin">
+                 <number>0</number>
+                </property>
+                <property name="rightMargin">
+                 <number>0</number>
+                </property>
+                <property name="bottomMargin">
+                 <number>0</number>
+                </property>
+                <item row="0" column="0">
+                 <widget class="QRadioButton" name="bgSystemRadio">
+                  <property name="text">
+                   <string>s&amp;ystem</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="1">
+                 <spacer name="horizontalSpacer_17">
+                  <property name="orientation">
+                   <enum>Qt::Horizontal</enum>
+                  </property>
+                  <property name="sizeType">
+                   <enum>QSizePolicy::Fixed</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>20</width>
+                    <height>20</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+                <item row="0" column="2">
+                 <widget class="QRadioButton" name="bgColorRadio">
+                  <property name="text">
+                   <string>&amp;color</string>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+             </item>
+             <item row="3" column="0">
+              <widget class="QLineEdit" name="bgEdit">
+               <property name="readOnly">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="3">
+              <widget class="QToolButton" name="fgColorBtn">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="minimumSize">
+                <size>
+                 <width>30</width>
+                 <height>0</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>...</string>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="3">
+              <widget class="QToolButton" name="bgColorBtn">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="minimumSize">
+                <size>
+                 <width>30</width>
+                 <height>0</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>...</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="1" rowspan="4">
+              <spacer name="horizontalSpacer_5">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeType">
+                <enum>QSizePolicy::Fixed</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>17</width>
+                 <height>25</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item row="1" column="0">
+              <widget class="QLineEdit" name="fgEdit">
+               <property name="readOnly">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="0">
+              <widget class="QCheckBox" name="bgCb">
+               <property name="text">
+                <string>Background</string>
+               </property>
+               <property name="tristate">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="0">
+              <widget class="QCheckBox" name="fgCb">
+               <property name="text">
+                <string>Foreground</string>
+               </property>
+               <property name="tristate">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="2" colspan="2">
+              <widget class="QWidget" name="widget_3" native="true">
+               <layout class="QGridLayout" name="gridLayout_41">
+                <property name="leftMargin">
+                 <number>0</number>
+                </property>
+                <property name="topMargin">
+                 <number>0</number>
+                </property>
+                <property name="rightMargin">
+                 <number>0</number>
+                </property>
+                <item row="0" column="0">
+                 <widget class="QRadioButton" name="fgSystemRadio">
+                  <property name="text">
+                   <string>s&amp;ystem</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="1">
+                 <spacer name="horizontalSpacer_16">
+                  <property name="orientation">
+                   <enum>Qt::Horizontal</enum>
+                  </property>
+                  <property name="sizeType">
+                   <enum>QSizePolicy::Fixed</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>20</width>
+                    <height>20</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+                <item row="0" column="2">
+                 <widget class="QRadioButton" name="fgColorRadio">
+                  <property name="text">
+                   <string>&amp;color</string>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item row="1" column="0">
+            <spacer name="verticalSpacer_18">
+             <property name="orientation">
+              <enum>Qt::Vertical</enum>
              </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>disabled</string>
+             <property name="sizeType">
+              <enum>QSizePolicy::Fixed</enum>
              </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>disabled-toggled</string>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>13</width>
+               <height>20</height>
+              </size>
              </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>focused</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>default</string>
-             </property>
-            </item>
-           </widget>
-          </item>
-          <item row="0" column="1">
-           <spacer name="horizontalSpacer_18">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeType">
-             <enum>QSizePolicy::Fixed</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>17</width>
-              <height>25</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-         </layout>
+            </spacer>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item row="11" column="0" colspan="2">
+         <spacer name="verticalSpacer_8">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>0</height>
+           </size>
+          </property>
+         </spacer>
         </item>
        </layout>
       </widget>

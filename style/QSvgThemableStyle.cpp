@@ -3464,6 +3464,10 @@ int QSvgThemableStyle::pixelMetric(PixelMetric metric, const QStyleOption * opti
     case PM_TitleBarButtonIconSize : return 32;
     case PM_TitleBarButtonSize :
       return getIndicatorSpec(PE_group(PE_FrameWindow)).size;
+    case PM_LineEditIconSize :
+      return getIndicatorSpec(PE_group(PE_FrameLineEdit)).size;
+    case PM_LineEditIconMargin :
+      return getLabelSpec(PE_group(PE_FrameLineEdit)).tispace;
 
     // Button related
     case PM_FocusFrameHMargin :

@@ -613,7 +613,7 @@ ThemeBuilderUI::ThemeBuilderUI(QWidget* parent)
   drawStackTree->setAlternatingRowColors(true);
   drawStackTree->headerItem()->setText(0,"Function");
   drawStackTree->headerItem()->setText(1,"Args");
-  debugLayout->addWidget(drawStackTree, 2, 0, 1, 1);
+  debugLayout->addWidget(drawStackTree, 1, 0, 1, 1);
 
   drawStackTree->header()->setSectionResizeMode(0,QHeaderView::ResizeToContents);
 
@@ -1544,7 +1544,7 @@ void ThemeBuilderUI::slot_saveTheme()
   QuaZip zip(zipFile);
   if ( zip.open(QuaZip::mdCreate,nullptr) ) {
     zip.setUtf8Enabled(true);
-    zip.setComment("This is '" + themeNameEdit->text() + "', a theme for Qt5 QSvgStyle engine made by "
+    zip.setComment("This is '" + themeNameEdit->text() + "', a theme for Qt6 QSvgStyle engine made by "
                    + authorEdit->text() +". Created using QSvgThemeBuilder.");
 
     QStringList l;
