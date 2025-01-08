@@ -60,7 +60,7 @@ void QSvgCachedSettings::load(const QString &filename)
   if (!QFile::exists(filename))
     return;
 
-  settings = new QSettings(filename,QSettings::NativeFormat);
+  settings = new QSettings(filename,QSettings::IniFormat);
   file = filename;
 }
 

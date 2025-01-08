@@ -604,7 +604,7 @@ void QSvgThemableStyle::drawPrimitive(PrimitiveElement e, const QStyleOption * o
 
   if ( g.isEmpty() ) {
     // element not currently supported by QSvgStyle
-    qWarning() << "[QSvgStyle] No group for" << e;
+    // //qWarning() << "[QSvgStyle] No group for" << e;
     QCommonStyle::drawPrimitive(e,option,p,widget);
     goto end;
   }
@@ -1235,7 +1235,7 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
 
   if ( g.isEmpty() ) {
     // element not currently supported by QSvgStyle
-    qWarning() << "[QSvgStyle] No group for" << e;
+    //qWarning() << "[QSvgStyle] No group for" << e;
     QCommonStyle::drawControl(e,option,p,widget);
     goto end;
   }
@@ -2735,7 +2735,7 @@ void QSvgThemableStyle::drawComplexControl(ComplexControl control, const QStyleO
 
   if ( g.isEmpty() ) {
     // element not currently supported by QSvgStyle
-    qWarning() << "[QSvgStyle] No group for" << control;
+    //qWarning() << "[QSvgStyle] No group for" << control;
     QCommonStyle::drawComplexControl(control,option,p,widget);
     goto end;
   }

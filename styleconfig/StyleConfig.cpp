@@ -60,7 +60,7 @@ style_spec_t StyleConfig::getStyleSpec() const
 
 void StyleConfig::setStyleSpec(const style_spec_t& ss)
 {
-  removeAllWithPrefix("Ganaral","");
+  removeAllWithPrefix("General","");
 
   setValue("General","theme", ss.theme);
 }
