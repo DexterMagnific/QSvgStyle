@@ -6,9 +6,23 @@ QSvgStyle is a themeable SVG style for Qt 6 desktop applications
 It comes with the style engine (QSvgStyle), a theme builder (QSvgThemeBuilder),
  a theme manager (QSvgThemeManager) and a built-in svg cleaner courtesy of
  SVGCleaner team.
+ 
+Some themes are also included.
+
+- FlatShadowed: our best light theme with outstanding support for color palettes
+![FlatDark](themes/FlatShadowed/FlatShadowed.png)
+
+- Godot2: a port for the dark Godot game engine theme
+![Godot2](themes/godot2/godot2.png)
+
+- Godot2 Catppuccin Latte: Godot2 with Catppuccin's Latte color scheme
+![Godot2CatppuccinLatte](themes/godot-catppuccin-latte/godot-catppuccin-latte.png)
+
+- Windows11 Light Seafoam
+![Win11Seafoam](themes/win11-light-seafoam/win11-light-seafoam.png)
 
 ## QSvgStyle
-- Themeable Qt5 style engine using standard SVG documents as themes
+- Themeable Qt6 style engine using standard SVG documents as themes
 - Fast rendering. QSvgStyle renders at the speed of a raster engine, which
   is at least twice faster than the Qt SVG renderer
 - Support for color schemes. The theme can be configured to apply the current
@@ -42,7 +56,6 @@ It comes with the style engine (QSvgStyle), a theme builder (QSvgThemeBuilder),
 
 ## QSvgThemeManager
 - Select the active QSvgStyle theme to apply
-- Download online themes
 - Live preview of themes
 
 # Build the source
@@ -102,19 +115,15 @@ QSvgStyle comes with a nice GUI that helps building themes.
 It can generate both an initial SVG file based on the default theme and its
 companion config file.
 
-
 ```
 $ qsvgthemebuilder
 ```
 
-- QSvgThemeBuilder at startup
+- Editing configuration
 ![QSvgThemeBuilder](screenshots/themebuilder1.jpg)
 
-- Editing configuration for a flat theme
+- Debugging
 ![QSvgThemeBuilder](screenshots/themebuilder2.jpg)
-
-- Showing effective values of inherited settings
-![QSvgThemeBuilder](screenshots/themebuilder3.jpg)
 
 - Quick SVG generator to generate SVG items with frames, interiors and shadows
   with many generation options

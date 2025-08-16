@@ -474,7 +474,6 @@ QRect QSvgThemableStyle::tabRect(const QStyleOption *option, const QWidget *widg
       }
       if ( variant == VA_TAB_GROUP_NON_SELECTED ) {
         // separation for selected only
-        qDebug() << opt->text << "next is selected" << (opt->selectedPosition == QStyleOptionTab::NextIsSelected);
         if ( opt->state & State_On || opt->state & State_Selected || opt->selectedPosition == QStyleOptionTab::NextIsSelected) {
             r.adjust(0,0,-pixelMetric(PM_TabBarTabHSpace,opt,widget), 0);
         }
@@ -713,7 +712,7 @@ void QSvgThemableStyle::drawPrimitive(PrimitiveElement e, const QStyleOption * o
     case PE_PanelTipLabel : {
       // frame and interior for tool tips
       QStyleOption opt(*option);
-      opt.state &= ~ (State_Selected | State_On);
+      opt.state &= ~ (State_Selected | State_On | State_MouseOver);
       st = state_str(opt.state, widget);
       renderFrame(p,bg,r,fs,fs.element+"-"+st,dir);
       renderInterior(p,bg,r,fs,is,is.element+"-"+st,dir);
@@ -3371,7 +3370,7 @@ int QSvgThemableStyle::pixelMetric(PixelMetric metric, const QStyleOption * opti
 {
   const QFontMetrics fm = widget ? widget->fontMetrics() :
                              option ? option->fontMetrics :
-                                      qApp->fontMetrics();
+                                      QFontMetrics(qApp->font());
 
   switch (metric) {
     // Indicator width (checkboxes, radios)
@@ -4559,10 +4558,11 @@ QRect QSvgThemableStyle::subControlRect(ComplexControl control, const QStyleOpti
               case VA_SPINBOX_BUTTONS_OPPOSITE :
                 ret = QRect(x,y,pixelMetric(PM_MenuButtonIndicator),h);
                 break;
-              case VA_SPINBOX_BUTTONS_STACKED :
+              case VA_SPINBOX_BUTTONS_STACKED : {
                 ret = QRect(x+w-pixelMetric(PM_MenuButtonIndicator),
-                        y+h/2,pixelMetric(PM_MenuButtonIndicator),h/2);
+                        y+h/2,pixelMetric(PM_MenuButtonIndicator),h/2+h%2);
                 break;
+              }
               default:
                 break;
             }
@@ -5381,8 +5381,6 @@ void QSvgThemableStyle::renderFrame(QPainter *p,
   if ( !left.isNull() )
     lightPath.addRect(left);
   if ( !bottomleft.isNull() ) {
-    // make corners wider by +1 because the QPolygon fill is missing one pixel
-    bottomleft.adjust(0,0,1,1);
     lightPath.addPolygon(QPolygon(
                            QVector<QPoint>() <<
                            bottomleft.topLeft() <<
@@ -5390,7 +5388,6 @@ void QSvgThemableStyle::renderFrame(QPainter *p,
                            bottomleft.topRight() <<
                            bottomleft.topLeft()
                            ));
-    bottomleft.adjust(0,0,-1,-1);
   }
   if ( !topright.isNull() )
     lightPath.addPolygon(QPolygon(

@@ -14,7 +14,9 @@ unix {
     target.files += \
         $$PWD/Arrongin \
         $$PWD/Telinkrin \
-        $$PWD/FlatShadowed
+        $$PWD/FlatShadowed \
+        $$PWD/godot2 \
+        $$PWD/godot-catppuccin-latte
 
     INSTALLS += target
   }
