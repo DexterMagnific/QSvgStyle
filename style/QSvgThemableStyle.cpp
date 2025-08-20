@@ -2037,11 +2037,16 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
           if ( orn == Horizontal ) {
             r = visualRect(dir,orig,r);
             cr = visualRect(dir,orig,cr);
-          }
 
-          if ( !opt->invertedAppearance ) {
-            r = visualRect(Qt::RightToLeft,orig,r);
-            cr = visualRect(Qt::RightToLeft,orig,cr);
+            if ( opt->invertedAppearance ) {
+              r = visualRect(Qt::RightToLeft,orig,r);
+              cr = visualRect(Qt::RightToLeft,orig,cr);
+            }
+          } else {
+            if ( !opt->invertedAppearance ) {
+              r = visualRect(Qt::RightToLeft,orig,r);
+              cr = visualRect(Qt::RightToLeft,orig,cr);
+            }
           }
 
           if ( orn != Horizontal )
