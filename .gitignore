@@ -42,3 +42,6 @@ debian/tmp/
 *.aux
 *.dvi
 *.toc
+
+# Theme packages
+themes/*/*.zip

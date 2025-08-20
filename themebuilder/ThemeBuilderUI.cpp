@@ -1508,6 +1508,7 @@ void ThemeBuilderUI::slot_saveTheme()
 
   config->commitWriteCache();
 
+  QFileDevice::Permissions p = QFile::permissions(cfgFile);
   if ( !QFile::remove(cfgFile) ) {
     qWarning() << "[QSvgThemeBuilder]" << "Could not remove" << cfgFile;
     return;
@@ -1517,6 +1518,7 @@ void ThemeBuilderUI::slot_saveTheme()
     qWarning() << "[QSvgThemeBuilder]" << "Could not save" << cfgFile;
     return;
   }
+  QFile(cfgFile).setPermissions(p);
 
   qDebug() << "[QSvgThemeBuilder]" << "Theme config" << cfgFile << "saved";
 

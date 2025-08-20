@@ -799,7 +799,6 @@ void QSvgThemableStyle::drawPrimitive(PrimitiveElement e, const QStyleOption * o
       break;
     }
     case PE_IndicatorBranch : {
-      // FIXME branches overlap expand/collapse indicators
       if ( const QStyleOptionViewItem *opt =
         qstyleoption_cast<const QStyleOptionViewItem *>(option) ) {
 
@@ -1176,6 +1175,10 @@ void QSvgThemableStyle::drawPrimitive(PrimitiveElement e, const QStyleOption * o
           p->drawRect(r);
           p->setBrush(br);
           p->setPen(pn);
+
+          if ( st == "toggled" ) {
+            bg = opt->palette.brush(QPalette::Highlight);
+          }
 
           if ( st != "normal" ) {
             // only paint when state is not normal, otherwise keep
@@ -1565,6 +1568,9 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
         if ( focus )
           setupPainterFromFontSpec(p,ts, "focused");
 
+        if ( !opt->frame )
+          fs.hasFrame = false;
+
         if ( !opt->editable ) {
           // NOTE Editable label is rendered by an embedded QLineEdit
           // inside the QComboBox object, except icon
@@ -1761,6 +1767,9 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
              opt->shape == QTabBar::TriangularWest ||
              opt->shape == QTabBar::RoundedWest ) {
 
+          // East/West: QTabWidget draws the close button
+          // at the same position independently of RTL/LTR
+          dir = Qt::LeftToRight;
           p->save();
           int newX = w+x;
           int newY = y;
@@ -1808,8 +1817,6 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
         if ( focus )
           setupPainterFromFontSpec(p,ts, "focused");
 
-        // FIXME East tabs: align of text origin should be "close" button,
-        // not x of tab
         renderLabel(p,fg,
                     dir,
                     r,
@@ -2032,7 +2039,7 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
             cr = visualRect(dir,orig,cr);
           }
 
-          if ( opt->invertedAppearance ) {
+          if ( !opt->invertedAppearance ) {
             r = visualRect(Qt::RightToLeft,orig,r);
             cr = visualRect(Qt::RightToLeft,orig,cr);
           }
@@ -2487,7 +2494,7 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
         if ( focus )
           setupPainterFromFontSpec(p,ts, "focused");
 
-        if (opt->arrowType == Qt::NoArrow)
+        if ( !(opt->features & QStyleOptionToolButton::Arrow) || (opt->arrowType == Qt::NoArrow) )
           renderLabel(p,fg,
                       dir,r,fs,is,ls,
                       Qt::AlignCenter | Qt::TextShowMnemonic,
@@ -2511,34 +2518,36 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
                         opt->toolButtonStyle);
         }
 
-        // alignement of arrow
-        Qt::Alignment hAlign = visualAlignment(dir,Qt::AlignLeft);
-        if ( opt->text.isEmpty() && opt->icon.isNull() )
-          hAlign = Qt::AlignCenter;
+        if ( opt->features & QStyleOptionToolButton::Arrow ) {
+          // alignement of arrow
+          Qt::Alignment hAlign = visualAlignment(dir,Qt::AlignLeft);
+          if ( opt->text.isEmpty() && opt->icon.isNull() )
+            hAlign = Qt::AlignCenter;
 
-        switch (opt->arrowType) {
-          case Qt::NoArrow :
-            break;
-          case Qt::UpArrow :
-            renderIndicator(p,r,fs,is,ds,ds.element+"-up-"+st,
-                            dir,
-                            hAlign | Qt::AlignVCenter);
-            break;
-          case Qt::DownArrow :
-            renderIndicator(p,r,fs,is,ds,ds.element+"-down-"+st,
-                            dir,
-                            hAlign | Qt::AlignVCenter);
-            break;
-          case Qt::LeftArrow :
-            renderIndicator(p,option->rect,fs,is,ds,ds.element+"-left-"+st,
-                            dir,
-                            hAlign | Qt::AlignVCenter);
-            break;
-          case Qt::RightArrow :
-            renderIndicator(p,option->rect,fs,is,ds,ds.element+"-right-"+st,
-                            dir,
-                            hAlign | Qt::AlignVCenter);
-            break;
+          switch (opt->arrowType) {
+            case Qt::NoArrow :
+              break;
+            case Qt::UpArrow :
+              renderIndicator(p,r,fs,is,ds,ds.element+"-up-"+st,
+                              dir,
+                              hAlign | Qt::AlignVCenter);
+              break;
+            case Qt::DownArrow :
+              renderIndicator(p,r,fs,is,ds,ds.element+"-down-"+st,
+                              dir,
+                              hAlign | Qt::AlignVCenter);
+              break;
+            case Qt::LeftArrow :
+              renderIndicator(p,option->rect,fs,is,ds,ds.element+"-left-"+st,
+                              dir,
+                              hAlign | Qt::AlignVCenter);
+              break;
+            case Qt::RightArrow :
+              renderIndicator(p,option->rect,fs,is,ds,ds.element+"-right-"+st,
+                              dir,
+                              hAlign | Qt::AlignVCenter);
+              break;
+          }
         }
       }
 
@@ -2627,7 +2636,10 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
 
         p->save();
         p->setFont(opt->font);
-        fg = opt->palette.brush(QPalette::Text);
+        if ( st == "toggled" )
+          fg = opt->palette.brush(QPalette::HighlightedText);
+        else
+          fg = opt->palette.brush(QPalette::Text);
         const Qt::ToolButtonStyle tialign =
           opt->decorationPosition == QStyleOptionViewItem::Top ? Qt::ToolButtonTextUnderIcon :
           Qt::ToolButtonTextBesideIcon;
@@ -3181,7 +3193,7 @@ void QSvgThemableStyle::drawComplexControl(ComplexControl control, const QStyleO
         qreal pos = sliderPositionFromValue(opt->minimum,opt->maximum,
                                             opt->sliderValue, range,
                                             !opt->upsideDown);
-        qreal angle = startAngle+pos;
+        qreal angle;
          if ( dir == Qt::LeftToRight )
            angle = 180+startAngle+pos; // 0° at 9 o'clock
          else
@@ -3883,7 +3895,7 @@ QSize QSvgThemableStyle::sizeFromContents ( ContentsType type, const QStyleOptio
                                : QString());
         }
 
-        if ( opt->bottomToTop )
+        if ( !(opt->state & State_Horizontal) )
           s.transpose();
       }
 
@@ -3920,7 +3932,7 @@ QSize QSvgThemableStyle::sizeFromContents ( ContentsType type, const QStyleOptio
                              opt->iconSize.width(),
                              opt->toolButtonStyle).expandedTo(ms);
 
-        if (opt->arrowType != Qt::NoArrow) {
+        if ( (opt->features & QStyleOptionToolButton::Arrow) && (opt->arrowType != Qt::NoArrow) ) {
           // add room for arrow
           s.rwidth() += ds.size;
           // add spacing between arrow and label if necessary
@@ -4313,8 +4325,8 @@ QRect QSvgThemableStyle::subElementRect(SubElement e, const QStyleOption * optio
 
     case SE_TabBarTabText : {
       ret = labelRect(r,fs,is,ls);
-      if ( const QTabWidget *w = qobject_cast< const QTabWidget* >(widget) ) {
-          if ( w->tabsClosable() ) {
+      if ( const QTabWidget *tw = qobject_cast< const QTabWidget* >(widget) ) {
+          if ( tw->tabsClosable() ) {
             ret.adjust(0,0,-pixelMetric(PM_TabCloseIndicatorWidth,option,widget),0);
           }
       }

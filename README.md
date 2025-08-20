@@ -10,15 +10,21 @@ It comes with the style engine (QSvgStyle), a theme builder (QSvgThemeBuilder),
 Some themes are also included.
 
 - FlatShadowed: our best light theme with outstanding support for color palettes
+
 ![FlatDark](themes/FlatShadowed/FlatShadowed.png)
 
+
 - Godot2: a port for the dark Godot game engine theme
+
 ![Godot2](themes/godot2/godot2.png)
 
+
 - Godot2 Catppuccin Latte: Godot2 with Catppuccin's Latte color scheme
+
 ![Godot2CatppuccinLatte](themes/godot-catppuccin-latte/godot-catppuccin-latte.png)
 
 - Windows11 Light Seafoam
+
 ![Win11Seafoam](themes/win11-light-seafoam/win11-light-seafoam.png)
 
 ## QSvgStyle
