@@ -32,7 +32,6 @@ QSvgStyle
 * Icon-less buttons have correct size but text aligned (and truncated) as if
   icon is present
 * wrong button size (too small, have drop down arrow)
-* buttons have down arrows and no icons
 * ComboBoxes too small
 
 Qt limitations
