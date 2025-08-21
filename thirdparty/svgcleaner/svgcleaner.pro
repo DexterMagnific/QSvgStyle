@@ -13,7 +13,6 @@ TEMPLATE = lib
 DEFINES *= QT_USE_QSTRINGBUILDER
 
 SOURCES += \
-    main.cpp \
     basecleaner.cpp \
     keys.cpp \
     paths.cpp \

@@ -263,9 +263,9 @@ void ThemeManagerUI::slot_resetBtnClicked()
   setupUiFromCfg();
 }
 
-#if HAVE_X11
 void ThemeManagerUI::notifyConfigurationChange()
 {
+#if HAVE_X11
   using namespace QNativeInterface;
   QX11Application *native = qApp->nativeInterface<QX11Application>();
 
@@ -290,8 +290,8 @@ void ThemeManagerUI::notifyConfigurationChange()
   //XChangeProperty(QX11Info::display(), QX11Info::appRootWindow(0),
                   //ATOM(_QT_SETTINGS_TIMESTAMP), ATOM(_QT_SETTINGS_TIMESTAMP), 8,
                   //PropModeReplace, (unsigned char *)stamp.data(), stamp.size());
-}
 #endif
+}
 
 void ThemeManagerUI::resetConfiguration()
 {

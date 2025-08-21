@@ -21,6 +21,8 @@ LIBS += \
   ../thirdparty/quazip/lib/libquazip.a \
   -lz
 
+DEFINES += QUAZIP_STATIC
+
 HEADERS += \
   SvgGen.h \
   ThemeBuilderUI.h \
@@ -45,18 +47,19 @@ FORMS += \
 RESOURCES += \
   ThemeBuilderUIBase.qrc
 
+isEmpty(PREFIX) {
+  PREFIX = /usr
+}
+BINDIR  = $$PREFIX/bin
+DATADIR = $$PREFIX/share
+
+#MAKE INSTALL
+target.path = $$BINDIR
+INSTALLS += target
+
 unix {
-  isEmpty(PREFIX) {
-    PREFIX = /usr
-  }
-  BINDIR  = $$PREFIX/bin
-  DATADIR = $$PREFIX/share
-
-  #MAKE INSTALL
-  target.path = $$BINDIR
-
   desktop.path = $$DATADIR/applications
   desktop.files = ./desktop/qsvgthemebuilder.desktop
 
-  INSTALLS += target desktop
+  INSTALLS += desktop
 }

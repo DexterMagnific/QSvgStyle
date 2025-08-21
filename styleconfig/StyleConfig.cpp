@@ -73,7 +73,7 @@ QDir StyleConfig::getSystemConfigDir()
 QDir StyleConfig::getUserConfigDir()
 {
   // get cfg dir
-  QDir cfgDir = QDir(QStandardPaths::locate(QStandardPaths::ConfigLocation,"",QStandardPaths::LocateDirectory).append("QSvgStyle"));
+  QDir cfgDir = QDir(QStandardPaths::locate(QStandardPaths::GenericConfigLocation,"",QStandardPaths::LocateDirectory).append("QSvgStyle"));
 
   return cfgDir;
 }
@@ -128,7 +128,6 @@ QList<theme_spec_t> StyleConfig::getThemeList()
       theme_spec_t ts = t.getThemeSpec();
       ts.path = QString(basename).append(".cfg");
       ts.system = true;
-
       result.append(ts);
     }
   }

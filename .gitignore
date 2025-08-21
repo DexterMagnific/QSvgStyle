@@ -3,6 +3,7 @@
 *.lo
 *.o
 bin/
+build/
 
 # Compiled Dynamic libraries
 *.so
