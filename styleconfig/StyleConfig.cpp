@@ -29,6 +29,9 @@
 #include <QFile>
 #include <QStringList>
 #include <QList>
+#ifdef WIN32
+#include <QProcessEnvironment>
+#endif
 #if QT_VERSION >= 0x050000
 #include <QStandardPaths>
 #endif
@@ -67,7 +70,12 @@ void StyleConfig::setStyleSpec(const style_spec_t& ss)
 
 QDir StyleConfig::getSystemConfigDir()
 {
+#ifdef WIN32
+  QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
+  return QDir(env.value("MSYSTEM_PREFIX").append("/share/QSvgStyle"), "C:/usr/share/QSvgStyle");
+#else
   return QDir("/usr/share/QSvgStyle");
+#endif
 }
 
 QDir StyleConfig::getUserConfigDir()
@@ -113,10 +121,12 @@ QList<theme_spec_t> StyleConfig::getThemeList()
 
   // get system themes
   cfgDir = getSystemConfigDir();
+  qWarning() << "cfg dir" << cfgDir;
   themeDirs = cfgDir.entryList(QStringList() << "*",
                                QDir::Dirs | QDir::NoDotAndDotDot |
                                QDir::Readable | QDir::Executable);
 
+  qWarning() << themeDirs;
   Q_FOREACH(QString d, themeDirs) {
     QString basename = cfgDir.absolutePath().append("/%1/%1").arg(d);
     if ( QFile::exists(QString(basename).append(".svg")) &&

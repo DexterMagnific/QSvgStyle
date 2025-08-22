@@ -1,7 +1,11 @@
 TEMPLATE = aux
 
-isEmpty(PREFIX) {
+unix:isEmpty(PREFIX) {
   PREFIX = /usr
+}
+
+windows:isEmpty(PREFIX) {
+  PREFIX = $$(MSYSTEM_PREFIX)
 }
 
 DATADIR = $$PREFIX/share/QSvgStyle
@@ -9,12 +13,12 @@ DATADIR = $$PREFIX/share/QSvgStyle
 #MAKE INSTALL
 QMAKE_INSTALL_DIR = cp -f -R --no-preserve=mode
 
-target.path = $$DATADIR
-target.files += \
+themes.path = $$DATADIR
+themes.files += \
   $$PWD/Arrongin \
   $$PWD/Telinkrin \
   $$PWD/FlatShadowed \
   $$PWD/godot2 \
   $$PWD/godot-catppuccin-latte
 
-INSTALLS += target
+INSTALLS += themes

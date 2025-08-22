@@ -47,9 +47,14 @@ FORMS += \
 RESOURCES += \
   ThemeBuilderUIBase.qrc
 
-isEmpty(PREFIX) {
+unix:isEmpty(PREFIX) {
   PREFIX = /usr
 }
+
+windows:isEmpty(PREFIX) {
+  PREFIX = $$(MSYSTEM_PREFIX)
+}
+
 BINDIR  = $$PREFIX/bin
 DATADIR = $$PREFIX/share
 

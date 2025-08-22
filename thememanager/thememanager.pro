@@ -8,7 +8,6 @@ DESTDIR = bin
 TEMPLATE = app
 
 QT += core gui widgets
-#unix:!macx: QT += x11extras
 
 INCLUDEPATH += . ../styleconfig
 
@@ -17,11 +16,6 @@ PRE_TARGETDEPS += \
 
 LIBS += \
   ../styleconfig/lib/libQSvgStyleConfig.a
-
-unix:!macx: {
-  DEFINES += HAVE_X11
-  LIBS += -lX11 -lxcb
-}
 
 HEADERS += \
   ThemeManagerUI.h
@@ -36,9 +30,14 @@ FORMS += \
 RESOURCES += \
   ThemeManagerUIBase.qrc
 
-isEmpty(PREFIX) {
+unix:isEmpty(PREFIX) {
   PREFIX = /usr
 }
+
+windows:isEmpty(PREFIX) {
+  PREFIX = $$(MSYSTEM_PREFIX)
+}
+
 BINDIR  = $$PREFIX/bin
 DATADIR = $$PREFIX/share
 
