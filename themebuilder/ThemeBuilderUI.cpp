@@ -492,19 +492,23 @@ ThemeBuilderUI::ThemeBuilderUI(QWidget* parent)
   displayList->header()->setSectionResizeMode(0,QHeaderView::ResizeToContents);
   containerList->header()->setSectionResizeMode(0,QHeaderView::ResizeToContents);
 
-//  buttonList->resizeColumnToContents(0);
-//  inputList->resizeColumnToContents(0);
-//  displayList->resizeColumnToContents(0);
-//  containerList->resizeColumnToContents(0);
+  buttonList->resizeColumnToContents(0);
+  inputList->resizeColumnToContents(0);
+  displayList->resizeColumnToContents(0);
+  containerList->resizeColumnToContents(0);
+
+  //qWarning() << buttonList->header()->sectionSize(0);
+  //qWarning() << inputList->header()->sectionSize(0);
+  //qWarning() << displayList->header()->sectionSize(0);
+  //qWarning() << containerList->header()->sectionSize(0);
 
   int maxW = 0;
-  maxW = qMax(maxW,buttonList->header()->sectionSize(0)+buttonList->indentation());
-  maxW = qMax(maxW,inputList->header()->sectionSize(0)+inputList->indentation());
-  maxW = qMax(maxW,displayList->header()->sectionSize(0)+displayList->indentation());
-  maxW = qMax(maxW,containerList->header()->sectionSize(0)+containerList->indentation());
+  maxW = qMax(maxW,buttonList->header()->sectionSize(0));
+  maxW = qMax(maxW,inputList->header()->sectionSize(0));
+  maxW = qMax(maxW,displayList->header()->sectionSize(0));
+  maxW = qMax(maxW,containerList->header()->sectionSize(0));
 
   maxW += buttonList->contentsMargins().left()+buttonList->contentsMargins().right();
-  maxW += 10;
 
   buttonList->setFixedWidth(maxW);
   inputList->setFixedWidth(maxW);
@@ -517,11 +521,11 @@ ThemeBuilderUI::ThemeBuilderUI(QWidget* parent)
   maxW = 0;
   int j;
   for (j=0; j<genToolbox->count(); j++) {
+    //qWarning() << genToolbox->widget(j)->sizeHint().width();
     maxW = qMax(maxW,genToolbox->widget(j)->sizeHint().width());
   }
-  maxW += 10;
 
-  genToolbox->setFixedWidth(maxW);
+  genToolbox->setFixedWidth(maxW+10);
 
   // also populate inherit combo box
   foreach(QTreeWidgetItem *i, buttonList->findItems("*",Qt::MatchWildcard)) {

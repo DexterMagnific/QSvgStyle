@@ -4,17 +4,18 @@ QSvgStyle is a themeable SVG style for Qt 6 desktop applications
 (C) Said LANKRI, under the GNU GPL License version 2+
 
 It comes with the style engine (QSvgStyle), a theme builder (QSvgThemeBuilder),
- a theme manager (QSvgThemeManager) and a built-in svg cleaner courtesy of
- SVGCleaner team.
+ a theme manager (QSvgThemeManager), a built-in svg cleaner courtesy of
+ SVGCleaner team and a set of themes.
  
-Some themes are also included.
+Works on Linux and Windows with MSYS2.
 
-- FlatShadowed: our best light theme with outstanding support for color palettes
+- FlatShadowed: Official QSvgStyle theme and our best light theme with 
+outstanding support for widget color palettes.
 
 ![FlatDark](themes/FlatShadowed/FlatShadowed.png)
 
 
-- Godot2: a port for the dark Godot game engine theme
+- Godot2: a port of the Godot2 game engine dark theme
 
 ![Godot2](themes/godot2/godot2.png)
 
@@ -66,30 +67,54 @@ Some themes are also included.
 
 # Build the source
 
-## Compile
+## Prerequisites
 
 You need the Qt6 development files of the following modules to compile QSvgStyle:
 - Qt Base
 - Qt SVG
 - Qt5 Compatibility module
 
+On Windows, you also need the MSYS2 distribution which you can get using its
+installer [HERE](https://www.msys2.org/)
+
 For debian based systems:
 
-```
+```bash
 sudo apt install qt6-base-dev qt6-svg-dev qt6-5compat-dev
 ```
 
-Then you build it:
+For Windows MSYS2, open an UCRT64 terminal:
 
+```bash
+pacman -S \
+  mingw-w64-ucrt-x86_64-make \
+  mingw-w64-ucrt-x86_64-gcc \
+  mingw-w64-ucrt-x86_64-qt6-base \
+  mingw-w64-ucrt-x86_64-qt6-svg \
+  mingw-w64-ucrt-x86_64-qt6-5compat
 ```
-$ qmake6
+
+## Build
+
+```bash
+mkdir -p build/release
+cd build/release
+qmake6 ../..
 $ make -j
 ```
 
 ## Install
 
+Linux:
+
+```bash
+sudo make install
 ```
-$ sudo make install
+
+Windows:
+
+```bash
+make install
 ```
 
 ## Use
@@ -97,7 +122,7 @@ $ sudo make install
 You can launch any Qt6 application with QSvgStyle styling by adding a `-style` option:
 
 ```
-$ dolphin -style qsvgstyle
+dolphin -style qsvgstyle
 ```
 
 To globally set QSvgStyle as your default style engine, use your favorite
@@ -143,3 +168,8 @@ $ qsvgthemebuilder
 # Documentation
 
 The latest documentation is always available at [Read The Docs](http://qsvgstyle.readthedocs.io/en/latest)
+
+# Credits
+
+QSvgStyle uses software from [QuaZip](https://github.com/stachenov/quazip) and [SVGCleaner](https://github.com/RazrFalcon/svgcleaner/tree/b827305).
+

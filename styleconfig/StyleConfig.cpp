@@ -121,12 +121,12 @@ QList<theme_spec_t> StyleConfig::getThemeList()
 
   // get system themes
   cfgDir = getSystemConfigDir();
-  qWarning() << "cfg dir" << cfgDir;
+  //qWarning() << "cfg dir" << cfgDir;
   themeDirs = cfgDir.entryList(QStringList() << "*",
                                QDir::Dirs | QDir::NoDotAndDotDot |
                                QDir::Readable | QDir::Executable);
 
-  qWarning() << themeDirs;
+  //qWarning() << themeDirs;
   Q_FOREACH(QString d, themeDirs) {
     QString basename = cfgDir.absolutePath().append("/%1/%1").arg(d);
     if ( QFile::exists(QString(basename).append(".svg")) &&

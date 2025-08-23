@@ -870,7 +870,6 @@ void QSvgThemableStyle::drawPrimitive(PrimitiveElement e, const QStyleOption * o
       o.state |= State_Enabled;
 
       st = state_str(o.state,widget);
-
       renderFrame(p,bg,r,fs,fs.element+"-"+st,dir);
       break;
     }
@@ -921,11 +920,19 @@ void QSvgThemableStyle::drawPrimitive(PrimitiveElement e, const QStyleOption * o
         o.state &= ~(State_MouseOver | State_Sunken | State_On);
         st = state_str(o.state,widget);
 
-        if ( opt->state & State_Sunken )
-          renderFrame(p,bg,r,fs,fs.element+"-sunken-"+st,dir);
-        else
-          renderFrame(p,bg,r,fs,fs.element+"-raised-"+st,dir);
+        fs.hasFrame = opt->frameShape != QFrame::NoFrame;
 
+        // frame
+        if ( opt->frameShape == QFrame::Box ) {
+          renderFrame(p,bg,r,fs,fs.element+"-box-"+st,dir);
+        } else {
+          if ( opt->state & State_Sunken )
+            renderFrame(p,bg,r,fs,fs.element+"-sunken-"+st,dir);
+          else
+            renderFrame(p,bg,r,fs,fs.element+"-raised-"+st,dir);
+        }
+
+        // interior
         if ( !qobject_cast< const QTreeWidget* >(widget) ) {
           if ( opt->state & State_Sunken )
             renderInterior(p,bg,r,fs,is,is.element+"-sunken-"+st,dir);
@@ -2611,7 +2618,7 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
                         fs.element+"-vsep-"+st,
                         option->rect,
                         0,0);
-        } else if (opt && (opt->frameShape != QFrame::NoFrame) ) {
+        } else {
           drawPrimitive(PE_Frame,opt,p,widget);
         }
       }
@@ -4226,6 +4233,18 @@ QRect QSvgThemableStyle::subElementRect(SubElement e, const QStyleOption * optio
       ret = r;
       break;
     }
+
+    case SE_ShapedFrameContents: {
+        if ( const QStyleOptionFrame *opt =
+             qstyleoption_cast<const QStyleOptionFrame *>(option) ) {
+          if ( opt->frameShape == QFrame::NoFrame ) {
+            fs.hasFrame = false;
+          }
+        }
+        ret = interiorRect(r, fs,is);
+        break;
+    }
+
     case SE_FrameContents: {
       ret = interiorRect(r, fs,is);
       break;
