@@ -4242,6 +4242,11 @@ QRect QSvgThemableStyle::subElementRect(SubElement e, const QStyleOption * optio
           }
         }
         ret = interiorRect(r, fs,is);
+        // Fix some strange queries in which w/h is zero
+        if ( ret.width() == 0 )
+          ret.setWidth(w);
+        if ( ret.height() == 0 )
+          ret.setHeight(h);
         break;
     }
 
