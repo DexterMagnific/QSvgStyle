@@ -5692,7 +5692,7 @@ void QSvgThemableStyle::renderInterior(QPainter *p,
 
     QColor interiorColor = b.color();
     interiorColor.setAlpha(intensity);
-    interiorBrush.setColor(interiorColor);
+    interiorBrush.setColor(interiorColor.darker());
 
     if ( !dbgWireframe && (curPalette != "<none>") ) {
       p->save();
@@ -5700,6 +5700,8 @@ void QSvgThemableStyle::renderInterior(QPainter *p,
       //qWarning() << "Region for" << e << "is" << region;
       p->setClipRegion(region, Qt::IntersectClip);
       p->fillRect(r,interiorColor);
+      if ( interiorBrush.style() != Qt::SolidPattern )
+        p->fillRect(r,interiorBrush);
       p->restore();
     }
   }
@@ -6217,15 +6219,15 @@ QBrush QSvgThemableStyle::bgBrush(const palette_spec_t &ps,
     return r; // no brush
   else if ( val == "<system>" ) {
     // use widget's palette
-    r = pal.color(bgrole);
+    r = pal.brush(bgrole);
   } else {
     // r,g,b,a color -> parse
     QStringList l = val.split(',');
     if ( l.size() == 4 ) {
       QColor c(l[0].toInt(),l[1].toInt(),l[2].toInt(),l[3].toInt());
 
+      r = pal.brush(bgrole);
       r.setColor(c);
-      r.setStyle(Qt::SolidPattern);
     }
   }
 
