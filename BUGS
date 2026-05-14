@@ -9,7 +9,6 @@ QSvgStyle
   (groove seems 1 pixel wider than expected)
 
 -- Tab
-* tab bar close button overlaps frame (thick frames)
 * implement PE_IndicatorTabTear*
 * invert top and bottom frame parts when tabs are at bottom
   (needs implementation of rot/flip. see TODO)
@@ -18,21 +17,11 @@ QSvgStyle
 * rtl separators/handles
 
 -- Progressbar
-* overdraw in busy progress bar in vertical mode
 * glitch for WRAP busy progressbar type
-
--- Radio/Check
-* add "pressed" state
-
--- Group box
-* wrong group box contents width (too large) at first show. subsequent shows
-  are ok
 
 -- QML (all)
 * Icon-less buttons have correct size but text aligned (and truncated) as if
   icon is present
-* wrong button size (too small, have drop down arrow)
-* ComboBoxes too small
 
 Qt limitations
 --------------

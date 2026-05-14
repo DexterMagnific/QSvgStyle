@@ -317,6 +317,13 @@ void QSvgThemableStyle::polish(QWidget * widget)
     m->setAttribute(Qt::WA_TranslucentBackground, true);
   }
 
+  // Tooltip: enable translucency
+  if ( widget->windowFlags() & Qt::ToolTip &&
+       widget->foregroundRole() == QPalette::ToolTipText &&
+       widget->backgroundRole() == QPalette::ToolTipBase ) {
+    widget->setAttribute(Qt::WA_TranslucentBackground);
+  }
+
 #if 0
   // Enable menu tear off, enable translucency
   if ( QMenuBar *b = qobject_cast< QMenuBar* >(widget) ) {
@@ -353,10 +360,6 @@ void QSvgThemableStyle::polish(QWidget * widget)
   // QHeader: set background role to Button
   if ( QHeaderView *h = qobject_cast< QHeaderView * >(widget) ) {
     h->setBackgroundRole(QPalette::Button);
-  }
-
-  if ( QPushButton *s = qobject_cast< QPushButton * >(widget) ) {
-    s->installEventFilter(this);
   }
 }
 
@@ -401,7 +404,10 @@ QRect QSvgThemableStyle::tabRect(const QStyleOption *option, const QWidget *widg
        qstyleoption_cast<const QStyleOptionTab *>(option) ) {
 
     int variant = getThemeTweak("specific.tab.variant").toInt();
-    int baseextra = getThemeTweak("specific.tab.extrabaseheight").toInt();
+    if ( opt->documentMode && variant == VA_TAB_GROUP_NON_SELECTED ) {
+      // group non selected looks ugly in document mode
+      variant = VA_TAB_GROUP_ALL;
+    }
     Orientation orn;
 
     if ( (opt->shape == QTabBar::RoundedNorth) ||
@@ -420,24 +426,6 @@ QRect QSvgThemableStyle::tabRect(const QStyleOption *option, const QWidget *widg
     // remove extra spaces introduced by CT_TabBarTab so that
     // selected tab looks higher and separated from others
     // when matching variant is set
-
-    if ( opt->documentMode ) {
-      // document mode, remove tab base extra height
-      if ( (opt->shape == QTabBar::RoundedNorth) ||
-           (opt->shape == QTabBar::TriangularNorth) ||
-           (opt->shape == QTabBar::RoundedWest) ||
-           (opt->shape == QTabBar::TriangularWest)
-           ) {
-        r.adjust(0,baseextra,0,0);
-      }
-      if ( (opt->shape == QTabBar::RoundedSouth) ||
-           (opt->shape == QTabBar::TriangularSouth) ||
-           (opt->shape == QTabBar::RoundedEast) ||
-           (opt->shape == QTabBar::TriangularEast)
-           ) {
-        r.adjust(0,0,0,-baseextra);
-      }
-    }
 
     // Selected tab: lower height depending on variant
     if ( variant == VA_TAB_INDIVIDUAL  ||
@@ -474,9 +462,19 @@ QRect QSvgThemableStyle::tabRect(const QStyleOption *option, const QWidget *widg
       }
       if ( variant == VA_TAB_GROUP_NON_SELECTED ) {
         // separation for selected only
-        if ( opt->state & State_On || opt->state & State_Selected || opt->selectedPosition == QStyleOptionTab::NextIsSelected) {
+        if ( opt->state & State_On || opt->state & State_Selected || opt->selectedPosition == QStyleOptionTab::NextIsSelected || opt->position == QStyleOptionTab::End ) {
             r.adjust(0,0,-pixelMetric(PM_TabBarTabHSpace,opt,widget), 0);
         }
+      }
+    }
+
+    // document mode: remove tab base frame
+    if ( opt->documentMode ) {
+      int w = getFrameSpec(PE_group(PE_FrameTabBarBase)).width;
+      if ( orn == Horizontal ) {
+        r.adjust(0,w,0,-w);
+      } else {
+        r.adjust(w,0,-w,0);
       }
     }
 
@@ -487,7 +485,7 @@ QRect QSvgThemableStyle::tabRect(const QStyleOption *option, const QWidget *widg
       }
       if ( variant == VA_TAB_GROUP_NON_SELECTED ) {
         // separation for selected only
-        if ( opt->state & State_On || opt->state & State_Selected || opt->selectedPosition == QStyleOptionTab::NextIsSelected) {
+        if ( opt->state & State_On || opt->state & State_Selected || opt->selectedPosition == QStyleOptionTab::NextIsSelected || opt->position == QStyleOptionTab::End ) {
             r.adjust(0,0,-pixelMetric(PM_TabBarTabHSpace,opt,widget), 0);
         }
       }
@@ -500,7 +498,7 @@ QRect QSvgThemableStyle::tabRect(const QStyleOption *option, const QWidget *widg
       }
       if ( variant == VA_TAB_GROUP_NON_SELECTED ) {
         // separation for selected only
-        if ( opt->state & State_On || opt->state & State_Selected || opt->selectedPosition == QStyleOptionTab::NextIsSelected) {
+        if ( opt->state & State_On || opt->state & State_Selected || opt->selectedPosition == QStyleOptionTab::NextIsSelected || opt->position == QStyleOptionTab::End ) {
             r.adjust(pixelMetric(PM_TabBarTabHSpace,opt,widget),0,0,0);
         }
       }
@@ -887,18 +885,11 @@ void QSvgThemableStyle::drawPrimitive(PrimitiveElement e, const QStyleOption * o
         o.state &= ~(State_MouseOver | State_Sunken | State_On);
         st = state_str(o.state,widget);
 
-        fs.hasCapsule = true;
-        fs.capsuleH = 2;
-        fs.capsuleV = 2;
-
-        if ( opt->shape == QTabBar::RoundedNorth ||
-             opt->shape == QTabBar::TriangularNorth ) {
-          fs.capsuleV = -1;
-        }
-        if ( opt->shape == QTabBar::RoundedSouth ||
-             opt->shape == QTabBar::TriangularSouth ) {
-          fs.capsuleV = 1;
-        }
+        if ( !opt->documentMode )
+          // Non document mode -> no frame
+          // we consider that the tab widget contents has a frame
+          // so the tab bar is only a background for tabs
+          fs.hasFrame = false;
       }
 
       QRect top, bottom, left, right, topleft, topright, bottomleft, bottomright;
@@ -1626,6 +1617,10 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
         }
 
         int variant = getThemeTweak("specific.tab.variant").toInt();
+        if ( opt->documentMode && variant == VA_TAB_GROUP_NON_SELECTED ) {
+          // group non selected looks ugly in document mode
+          variant = VA_TAB_GROUP_ALL;
+        }
 
         // tab rect, minus all extra spaces
         r = tabRect(option,widget);
@@ -1676,32 +1671,34 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
         }
 
         fs.capsuleH = capsule;
+        fs.capsuleV = 2;
 
-        if ( (opt->shape == QTabBar::RoundedNorth) ||
-             (opt->shape == QTabBar::TriangularNorth)
-             ) {
-          capsule = -1;
+        if ( !opt->documentMode ) {
+          if ( (opt->shape == QTabBar::RoundedNorth) ||
+               (opt->shape == QTabBar::TriangularNorth)
+               ) {
+            capsule = -1;
+          }
+
+          if ( (opt->shape == QTabBar::RoundedSouth) ||
+               (opt->shape == QTabBar::TriangularSouth)
+               ) {
+            capsule = 1;
+          }
+
+          if ( (opt->shape == QTabBar::RoundedWest) ||
+               (opt->shape == QTabBar::TriangularWest)
+               ) {
+            capsule = 1;
+          }
+
+          if ( (opt->shape == QTabBar::RoundedEast) ||
+               (opt->shape == QTabBar::TriangularEast)
+               ) {
+            capsule = -1;
+          }
+          fs.capsuleV = capsule;
         }
-
-        if ( (opt->shape == QTabBar::RoundedSouth) ||
-             (opt->shape == QTabBar::TriangularSouth)
-             ) {
-          capsule = 1;
-        }
-
-        if ( (opt->shape == QTabBar::RoundedWest) ||
-             (opt->shape == QTabBar::TriangularWest)
-             ) {
-          capsule = 1;
-        }
-
-        if ( (opt->shape == QTabBar::RoundedEast) ||
-             (opt->shape == QTabBar::TriangularEast)
-             ) {
-          capsule = -1;
-        }
-
-        fs.capsuleV = capsule;
 
         // In order to colorize tabs, look up the tab widget contents
         // and apply its palette to the tab
@@ -1769,6 +1766,21 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
         r = tabRect(&o,widget);
         r.getRect(&x,&y,&w,&h);
 
+        const QTabBar *tb = qobject_cast<const QTabBar *>(widget);
+        const QTabWidget *tw = tb ? qobject_cast<const QTabWidget *>(tb->parent()) : nullptr;
+
+        // remove close button width
+        if ( tw && tw->tabsClosable() ) {
+          if ( opt->shape == QTabBar::TriangularEast ||
+               opt->shape == QTabBar::RoundedEast ||
+               opt->shape == QTabBar::TriangularWest ||
+               opt->shape == QTabBar::RoundedWest ) {
+            r.adjust(0,0,0,-ls.tispace-pixelMetric(PM_TabCloseIndicatorWidth));
+          } else {
+            r.adjust(0,0,-ls.tispace-pixelMetric(PM_TabCloseIndicatorWidth),0);
+          }
+        }
+
         if ( opt->shape == QTabBar::TriangularEast ||
              opt->shape == QTabBar::RoundedEast ||
              opt->shape == QTabBar::TriangularWest ||
@@ -1797,32 +1809,31 @@ void QSvgThemableStyle::drawControl(ControlElement e, const QStyleOption * optio
         // In order to colorize tabs, look up the tab widget contents
         // and apply its palette to the tab
         // That's the way Qt Designer applies palettes to individual tabs
-        if ( const QTabBar *tb = qobject_cast<const QTabBar *>(widget) ) {
-          // From tab tar
-          if ( const QTabWidget *tw = qobject_cast<const QTabWidget *>(tb->parent()) ) {
-            // to parent tab widget
-            int i;
-            for (i=0; i<tb->count(); i++) {
-              if ( tb->tabText(i) == opt->text ) {
-                // compare tab texts to determine tab index as QStyleOptionTab
-                // does not suppy it. Assume that tabs have different names
-                // which is a good heuristic in real apps
-                QWidget *contents = tw->widget(i);
-                if ( contents ) {
-                  o.palette = contents->palette();
-                  o.styleObject = contents;
-                  fg = fgBrush(ps,&o,contents, st);
-                } else {
-                  fg.setStyle(Qt::NoBrush);
-                }
-                break;
+        if ( tw ) {
+          // to parent tab widget
+          int i;
+          for (i=0; i<tb->count(); i++) {
+            if ( tb->tabText(i) == opt->text ) {
+              // compare tab texts to determine tab index as QStyleOptionTab
+              // does not suppy it. Assume that tabs have different names
+              // which is a good heuristic in real apps
+              QWidget *contents = tw->widget(i);
+              if ( contents ) {
+                o.palette = contents->palette();
+                o.styleObject = contents;
+                fg = fgBrush(ps,&o,contents, st);
+              } else {
+                fg.setStyle(Qt::NoBrush);
               }
+              break;
             }
           }
         }
 
         if ( focus )
           setupPainterFromFontSpec(p,ts, "focused");
+
+        r = visualRect(dir, opt->rect, r);
 
         renderLabel(p,fg,
                     dir,
@@ -3539,6 +3550,9 @@ int QSvgThemableStyle::pixelMetric(PixelMetric metric, const QStyleOption * opti
         return getFrameSpec(PE_group(PE_FrameLineEdit)).width;
       else if ( qobject_cast< const QTabWidget* >(widget) )
         return getFrameSpec(PE_group(PE_FrameTabWidget)).width;
+      else if ( qobject_cast< const QComboBox* >(widget) )
+        // Used for combo box view item separator
+        return getThemeTweak("specific.toolbar.separator.width").toInt();
       else
         return getFrameSpec(PE_group(PE_Frame)).width;
 
@@ -3590,8 +3604,7 @@ int QSvgThemableStyle::pixelMetric(PixelMetric metric, const QStyleOption * opti
     // Header sort indicator size
     case PM_HeaderMarkSize :
       return getIndicatorSpec(CE_group(CE_Header)).size;
-    case PM_HeaderGripMargin :
-      return getFrameSpec(CE_group(CE_Header)).width*2;
+    case PM_HeaderGripMargin : return 4;
     case PM_HeaderMargin : return 0;
 
     // Mdi Windows
@@ -3986,7 +3999,10 @@ QSize QSvgThemableStyle::sizeFromContents ( ContentsType type, const QStyleOptio
                              o.icon.isNull() ? 0 : o.iconSize.width());
 
         int variant = getThemeTweak("specific.tab.variant").toInt();
-        int baseextra = getThemeTweak("specific.tab.extrabaseheight").toInt();
+        if ( opt->documentMode && variant == VA_TAB_GROUP_NON_SELECTED ) {
+          // group non selected looks ugly in document mode
+          variant = VA_TAB_GROUP_ALL;
+        }
 
         // NOTE QTabWidget does not recompute tab sizes every time
         // the selected one changes. So we need to unconditionnally add
@@ -3995,13 +4011,12 @@ QSize QSvgThemableStyle::sizeFromContents ( ContentsType type, const QStyleOptio
         //    * extra height for tab base
         //    * selected tab higher than others
         //    * selected tab has side spaces with others
+        // All extra widths/heights will be removed at draw time
 
-        // Base extra height. Will be removed at CE_TabBarTabShape
+        // Close button
         if ( const QTabBar *w = qobject_cast< const QTabBar* >(widget) ) {
             if ( w->tabsClosable() )
               s.rwidth() += ls.tispace+pixelMetric(PM_TabCloseIndicatorWidth);
-            if ( w->documentMode() )
-              s.rheight() += baseextra;
         }
 
         // Active tab extra height. Will be removed at CE_TabBarTabShape if needed
@@ -4011,6 +4026,11 @@ QSize QSvgThemableStyle::sizeFromContents ( ContentsType type, const QStyleOptio
           s.rheight() += pixelMetric(PM_TabBarTabVSpace,opt,widget);
           // separate tabs by spaces
           s.rwidth() += pixelMetric(PM_TabBarTabHSpace,opt,widget);
+        }
+
+        // document mode: add tab base frame
+        if ( opt->documentMode ) {
+          s.rheight() += getFrameSpec(PE_group(PE_FrameTabBarBase)).width*2;
         }
 
         if ( opt->shape == QTabBar::TriangularEast ||
@@ -4364,8 +4384,21 @@ QRect QSvgThemableStyle::subElementRect(SubElement e, const QStyleOption * optio
     }
 
     case SE_TabWidgetTabContents : {
-      // already a visual rect
-      ret = subElementRect(SE_TabWidgetTabPane,option,widget);
+      if ( const QStyleOptionTabWidgetFrame *opt = qstyleoption_cast< const QStyleOptionTabWidgetFrame* >(option) ) {
+        QTabBar::Shape s = opt->shape;
+        if ( s == QTabBar::RoundedNorth || s == QTabBar::TriangularNorth )
+          ret.adjust(0,opt->tabBarSize.height(),0,0);
+        if ( s == QTabBar::RoundedSouth || s == QTabBar::TriangularSouth )
+          ret.adjust(0,0,0,-opt->tabBarSize.height());
+        if ( s == QTabBar::RoundedWest || s == QTabBar::TriangularWest )
+          ret.adjust(opt->tabBarSize.width(),0,0,0);
+        if ( s == QTabBar::RoundedEast || s == QTabBar::TriangularEast )
+          ret.adjust(0,0,0,-opt->tabBarSize.width());
+
+        if ( const QTabWidget *tw = qobject_cast<const QTabWidget *>(widget) )
+          if ( tw->documentMode() )
+            fs.hasFrame = false;
+      }
       return interiorRect(ret,fs,is);
       break;
     }
@@ -4903,7 +4936,7 @@ QRect QSvgThemableStyle::subControlRect(ComplexControl control, const QStyleOpti
           is = getInteriorSpec(g);
           ls = getLabelSpec(g);
 
-          ret = interiorRect(r.adjusted(0,stitle.height(),0,0),fs,is);
+          ret = interiorRect(r,fs,is).adjusted(0,stitle.height(),0,0);
           break;
         }
 

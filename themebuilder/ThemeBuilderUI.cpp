@@ -51,6 +51,7 @@
 #include <QGraphicsScene>
 #include <QFontDatabase>
 #include <QImage>
+#include <QLabel>
 
 // Includes for preview
 #include <QPushButton>
@@ -2384,6 +2385,7 @@ void ThemeBuilderUI::setupPreviewForWidget(const QTreeWidgetItem *current)
     cornerWidget->setText("Corner widget");
 
     widget->setCornerWidget(cornerWidget);
+    widget->tabBar()->setExpanding(true);
 
     switch (currentPreviewVariant % variants) {
       case 0:
@@ -2399,6 +2401,7 @@ void ThemeBuilderUI::setupPreviewForWidget(const QTreeWidgetItem *current)
         break;
       case 4:
         widget->setDocumentMode(true);
+        widget->tabBar()->setExpanding(true);
         break;
     }
 
@@ -2860,6 +2863,8 @@ void ThemeBuilderUI::slot_detachBtnClicked(bool checked)
     detachBtn->setText("Detach");
     detachedPeviewGeometry = tabWidget3->geometry();
     gridLayout->addWidget(tabWidget3, 2, 2, 1, 1);
+    raise();
+    setWindowState(Qt::WindowActive);
   }
 }
 
