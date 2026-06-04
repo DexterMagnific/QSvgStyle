@@ -762,7 +762,7 @@ void QSvgThemableStyle::drawPrimitive(PrimitiveElement e, const QStyleOption * o
       st = (option->state & State_Enabled) ?
           (option->state & State_MouseOver) ? "hovered" : "normal"
         : "disabled";
-      if ( option->state & State_On )
+      if ( !(option->state & State_Off) )
         st = "checked-"+st;
       else if ( option->state & State_NoChange )
         st = "tristate-"+st;
@@ -4092,7 +4092,9 @@ QSize QSvgThemableStyle::sizeFromContents ( ContentsType type, const QStyleOptio
         is = getInteriorSpec(g);
         ls = getLabelSpec(g);
 
-        scontents = QSize(fs.left+fs.right,fs.top+fs.bottom);
+        if ( !(opt->features & QStyleOptionFrame::Flat) ) {
+          scontents = QSize(fs.left+fs.right,fs.top+fs.bottom);
+        }
 
         // unite
         s = QSize(qMax(stitle.width(),scontents.width()),
@@ -4935,6 +4937,13 @@ QRect QSvgThemableStyle::subControlRect(ComplexControl control, const QStyleOpti
           fs = getFrameSpec(g);
           is = getInteriorSpec(g);
           ls = getLabelSpec(g);
+
+          if (const QStyleOptionGroupBox *opt =
+              qstyleoption_cast<const QStyleOptionGroupBox *>(option) ) {
+            if ( opt->features & QStyleOptionFrame::Flat ) {
+              fs.hasFrame = false;
+            }
+          }
 
           ret = interiorRect(r,fs,is).adjusted(0,stitle.height(),0,0);
           break;
