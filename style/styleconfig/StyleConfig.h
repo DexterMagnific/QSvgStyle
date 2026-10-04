@@ -52,26 +52,35 @@ class StyleConfig : public QSvgCachedSettings {
     }
 
     /**
-     * Returns the list of themes. List contains user themes first
+     * Returns the list of themes. List contains themes from all sources
+     * in priority order: Environment -> User -> System -> Builtin
      */
-    static QList<theme_spec_t> getThemeList();
+    Q_INVOKABLE static QList<theme_spec_t> discoverThemes();
 
     /**
-     * Returns the system config dir
+     * Returns the list of themes (alias for discoverThemes for backward compatibility)
      */
-    static QDir getSystemConfigDir();
+    static QList<theme_spec_t> getThemeList() { return discoverThemes(); }
 
     /**
-     * Returns the user config dir
+     * Get search paths for a specific theme origin
+     */
+    static QStringList getThemeSearchPaths(ThemeOrigin origin);
+
+    /**
+     * Returns the user config directory
      */
     static QDir getUserConfigDir();
 
     /**
-     * Returns the user config file
+     * Returns the user config file path
      */
     static QString getUserConfigFile();
 
   private:
+    static QStringList getUserThemeDirs();
+    static QStringList getSystemThemeDirs();
+    static void addThemesFromDir(const QString& dirPath, ThemeOrigin origin, QList<theme_spec_t>& result);
 };
 
 #endif // STYLECONFIG_H

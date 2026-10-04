@@ -123,8 +123,10 @@ class QSvgThemableStyle : public QCommonStyle {
     /**
      * Loads and sets the given theme
      * Theme is searched for in ~/.config/QSvgStyle/theme directory
+     * @param theme Theme name to load
+     * @param skipEnv If true, skips checking QSVGSTYLE_THEME environment variable
      */
-    Q_INVOKABLE void loadTheme(const QString &theme);
+    Q_INVOKABLE void loadTheme(const QString &theme, bool skipEnv = false);
     Q_INVOKABLE QString currentTheme() const { return curTheme; }
 
     /**
@@ -511,6 +513,10 @@ class QSvgThemableStyle : public QCommonStyle {
 
     /* QSvgStyle debugging capabilities */
     bool dbgWireframe, dbgOverdraw;
+
+    // Built-in theme handling
+    void loadBuiltinThemeByName(const QString& theme);
+    void loadThemeFromPath(const QString& theme, const QString& cfgPath);
 };
 
 #endif

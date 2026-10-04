@@ -39,6 +39,7 @@
 #include "ThemeConfig.h"
 #include "StyleConfig.h"
 #include "../style/QSvgThemableStyle.h"
+#include "../styleconfig/specs.h"
 
 ThemeManagerUI::ThemeManagerUI(QWidget* parent)
   : QMainWindow(parent),
@@ -85,22 +86,27 @@ ThemeManagerUI::ThemeManagerUI(QWidget* parent)
 
   setStyleForWidgetAndChildren(style, previewWidget);
 
-  // add themes
-  QList<theme_spec_t> tlist = StyleConfig::getThemeList();
-
-  // add builtin theme
-  QTreeWidgetItem *i = new QTreeWidgetItem(themeList);
-  i->setText(0, "<builtin>");
-  themeList->addTopLevelItem(i);
+  // add themes using new discovery API (priority order: Environment -> User -> System -> Builtin)
+  QList<theme_spec_t> tlist = StyleConfig::discoverThemes();
 
   // add them
   Q_FOREACH(theme_spec_t t, tlist) {
     QTreeWidgetItem *i = new QTreeWidgetItem(themeList);
-    i->setText(0, t.name);
+    
+    // Show theme name with origin indicator
+    QString originStr;
+    switch (t.origin) {
+      case ThemeOrigin_Environment: originStr = "[Environment] "; break;
+      case ThemeOrigin_User: originStr = "[User] "; break;
+      case ThemeOrigin_System: originStr = "[System] "; break;
+      case ThemeOrigin_Builtin: originStr = "[Built-in] "; break;
+    }
+    i->setText(0, originStr + t.name);
     i->setData(0, ThemePathRole, t.path);
+    // Store origin for potential filtering
+    i->setData(0, Qt::UserRole + 11, static_cast<int>(t.origin));
 
     themeList->addTopLevelItem(i);
-    //themeList->addItem(t.name, t.path);
   }
 
   // Create temp cfg file from current qsvgstyle.cfg

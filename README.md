@@ -38,7 +38,7 @@ outstanding support for widget color palettes.
 - Complete support for Right-to-Left layouts
 - Support for capsule grouping in buttons
 - Support for variants for some widgets
-- Built-in default theme
+- Support for Built-in themes and a default theme
 - Cleanest QStyle engine code with regular code patterns
 
 ## QSvgThemeBuilder
@@ -74,16 +74,16 @@ You need the Qt6 development files of the following modules to compile QSvgStyle
 - Qt SVG
 - Qt5 Compatibility module
 
-On Windows, you also need the MSYS2 distribution which you can get using its
-installer [HERE](https://www.msys2.org/)
-
 For debian based systems:
 
 ```bash
 sudo apt install qt6-base-dev qt6-svg-dev qt6-5compat-dev
 ```
 
-For Windows MSYS2, open an UCRT64 terminal:
+On Windows, you need the MSYS2 distribution which you can get using its
+installer [HERE](https://www.msys2.org/)
+
+Open an UCRT64 terminal:
 
 ```bash
 pacman -S \
@@ -103,7 +103,28 @@ qmake6 ../..
 $ make -j
 ```
 
-## Install
+## Minimal build (style plugin only)
+
+If you only want to build the style plugin without the theme builder/manager:
+
+```bash
+mkdir -p build/minimal
+cd build/minimal
+qmake6 CONFIG+=minimal ../..
+$ make -j
+```
+
+
+## Customize the built-in theme list
+
+Themes in the `themes/` can be either installed on the filesystem or built into QSvgStyle.
+To select the built-in themes, edit `style/themes/themes_list.txt` then run the theme resource generation script before the build:
+
+```bash
+./style/generate_theme_resources.sh style/themes/themes_list.txt style style/themes
+```
+
+# Install
 
 Linux:
 
@@ -117,7 +138,7 @@ Windows:
 make install
 ```
 
-## Use
+# Use
 
 You can launch any Qt6 application with QSvgStyle styling by adding a `-style` option:
 
@@ -127,6 +148,42 @@ dolphin -style qsvgstyle
 
 To globally set QSvgStyle as your default style engine, use your favorite
 desktop's configuration tool. For example, use the System Settings in KDE.
+
+## Environment Variables
+
+* QSVGSTYLE_THEME
+
+The `QSVGSTYLE_THEME` environment variable allows you to force a specific theme
+at runtime, overriding any user configuration.onfiguration), not explicit API calls
+
+```bash
+# Force FlatShadowed theme
+QSVGSTYLE_THEME=FlatShadowed dolphin -style qsvgstyle
+```
+
+* QSVGSTYLE_THEME_PATHS
+
+This is a colon separated path list where themes are searched, in addition to standard search path locations (user, system).
+
+# Embed in another project
+
+The `style/` directory is self-contained and can be embedded into another Qt project
+by copying it and including `style.pri` in the external project's `.pro` file.
+
+* Copy the style directory into your project
+
+```bash
+cp -r QSvgStyle/style myproject/thirdparty/QSvgStyle
+```
+
+* Include style.pri in your project's .pro file
+
+```qmake
+# In myproject.pro
+
+# Include QSvgStyle
+include(thirdparty/QSvgStyle/style/style.pri)
+```
 
 # QSvgThemeManager: chose theme and tweak the engine
 

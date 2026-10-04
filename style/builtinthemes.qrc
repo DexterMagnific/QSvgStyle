@@ -1,0 +1,8 @@
+<RCC>
+  <qresource prefix="/qsvgstyle" >
+    <file>themes/FlatShadowed/FlatShadowed.svg</file>
+    <file>themes/FlatShadowed/FlatShadowed.cfg</file>
+    <file>themes/godot2/godot2.svg</file>
+    <file>themes/godot2/godot2.cfg</file>
+  </qresource>
+</RCC>

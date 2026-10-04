@@ -22,7 +22,7 @@
 #include <QMetaEnum>
 
 #include "groups.h"
-#include "style/QSvgThemableStyle.h"
+#include "QSvgThemableStyle.h"
 
 QString PE_group(QStyle::PrimitiveElement element)
 {

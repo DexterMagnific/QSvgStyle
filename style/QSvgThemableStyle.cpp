@@ -67,6 +67,8 @@
 #include "ThemeConfig.h"
 #include "StyleConfig.h"
 #include "groups.h"
+#include "builtin_themes.h"
+#include <QTemporaryFile>
 
 QSvgThemableStyle::QSvgThemableStyle()
   : QCommonStyle(),
@@ -134,63 +136,128 @@ void QSvgThemableStyle::loadCustomStyleConfig(const QString& filename)
   loadTheme(styleSettings->getStyleSpec().theme);
 }
 
-void QSvgThemableStyle::loadBuiltinTheme()
+// Helper: load built-in theme by name from resources
+void QSvgThemableStyle::loadBuiltinThemeByName(const QString& theme)
 {
-  if ( curTheme == "<builtin>" )
+  if (curTheme == theme)
     return;
-
-  delete themeRndr;
-  themeRndr = nullptr;
 
   delete themeSettings;
   themeSettings = nullptr;
 
-  themeSettings = new ThemeConfig(":/default.cfg");
-  themeRndr = new QSvgCachedRenderer();
-  themeRndr->load(QString(":/default.svg"));
+  delete themeRndr;
+  themeRndr = nullptr;
 
-  curTheme = "<builtin>";
-  qWarning() << "[QSvgStyle]" << "Loaded built in theme";
+  // Read config from resource into temp file for ThemeConfig
+  QString cfgResource = QString(":/qsvgstyle/themes/%1/%1.cfg").arg(theme);
+  QFile cfgFile(cfgResource);
+  if (!cfgFile.open(QIODevice::ReadOnly)) {
+    qWarning() << "[QSvgStyle]" << "Failed to open built-in theme config:" << cfgResource;
+    loadBuiltinThemeByName(QLatin1String(QSVGSTYLE_BUILTIN_DEFAULT_THEME));
+    return;
+  }
+  QByteArray cfgData = cfgFile.readAll();
+  cfgFile.close();
+
+  QTemporaryFile tmpCfg;
+  tmpCfg.setAutoRemove(true);
+  if (!tmpCfg.open()) {
+    qWarning() << "[QSvgStyle]" << "Failed to create temp file for theme config";
+    loadBuiltinThemeByName(QLatin1String(QSVGSTYLE_BUILTIN_DEFAULT_THEME));
+    return;
+  }
+  tmpCfg.write(cfgData);
+  tmpCfg.close();
+
+  themeSettings = new ThemeConfig(tmpCfg.fileName());
+  themeSettings->setUseCache(useConfigCache);
+
+  themeRndr = new QSvgCachedRenderer();
+  QString svgResource = QString(":/qsvgstyle/themes/%1/%1.svg").arg(theme);
+  themeRndr->load(svgResource);
+
+  curTheme = theme;
+  qWarning() << "[QSvgStyle]" << "Loaded built-in theme" << theme;
 }
 
-void QSvgThemableStyle::loadTheme(const QString& theme)
+void QSvgThemableStyle::loadBuiltinTheme()
+{
+  loadBuiltinThemeByName(QLatin1String(QSVGSTYLE_BUILTIN_DEFAULT_THEME));
+}
+
+void QSvgThemableStyle::loadTheme(const QString& theme, bool skipEnv)
 {
   if ( !curTheme.isEmpty() && (curTheme == theme) )
     return;
 
-  if ( theme.isNull() || theme.isEmpty() || theme == "<builtin>" ) {
+  // Check environment variable for highest priority theme override (unless skipped)
+  QString envTheme;
+  QString themeToLoad = theme;
+  bool triedEnvVar = false;
+  
+  if (!skipEnv) {
+    envTheme = qgetenv("QSVGSTYLE_THEME");
+    if (!envTheme.isEmpty()) {
+      themeToLoad = envTheme;
+      triedEnvVar = true;
+    }
+  }
+
+  if ( themeToLoad.isNull() || themeToLoad.isEmpty() || themeToLoad == "<builtin>" ) {
     loadBuiltinTheme();
     return;
   }
 
-  QList<theme_spec_t> tlist = StyleConfig::getThemeList();
+  // Search in priority order - first match wins
+  QList<theme_spec_t> tlist = StyleConfig::discoverThemes();
   Q_FOREACH(theme_spec_t t, tlist) {
-    if ( theme == t.name ) {
-      delete themeSettings;
-      themeSettings = nullptr;
-
-      themeSettings = new ThemeConfig(t.path);
-      themeSettings->setUseCache(useConfigCache);
-
-      delete themeRndr;
-      themeRndr = nullptr;
-
-      themeRndr = new QSvgCachedRenderer();
-      themeRndr->load(
-        QFileInfo(t.path).absolutePath().append("/").append(
-        QFileInfo(t.path).completeBaseName().append(".svg")));
-
-      curTheme = theme;
-      qWarning() << "[QSvgStyle]" << "Loaded theme " << theme;
-
+    if ( themeToLoad == t.name ) {
+      if (t.origin == ThemeOrigin_Builtin) {
+        loadBuiltinThemeByName(themeToLoad);
+      } else {
+        loadThemeFromPath(themeToLoad, t.path);
+      }
       return;
     }
   }
 
-  // not found
-  qWarning() << "[QSvgStyle]" << "Theme" << theme << "not found";
+  // Theme not found - handle fallback chain
+  if (triedEnvVar) {
+    // Env var theme not found, log warning
+    qWarning() << "[QSvgStyle] Theme from QSVGSTYLE_THEME not found:" << envTheme;
+    
+    // Fallback to user config theme (original theme parameter)
+    if (!theme.isNull() && !theme.isEmpty() && theme != "<builtin>" && theme != envTheme) {
+      qWarning() << "[QSvgStyle] Falling back to user config theme:" << theme;
+      loadTheme(theme, true);  // Recursive call with skipEnv=true
+      return;
+    }
+  }
+  
+  // Final fallback to builtin default
+  qWarning() << "[QSvgStyle]" << "Theme" << themeToLoad << "not found";
   loadBuiltinTheme();
   return;
+}
+
+void QSvgThemableStyle::loadThemeFromPath(const QString& theme, const QString& cfgPath)
+{
+  delete themeSettings;
+  themeSettings = nullptr;
+
+  delete themeRndr;
+  themeRndr = nullptr;
+
+  themeSettings = new ThemeConfig(cfgPath);
+  themeSettings->setUseCache(useConfigCache);
+
+  themeRndr = new QSvgCachedRenderer();
+  themeRndr->load(
+    QFileInfo(cfgPath).absolutePath().append("/").append(
+    QFileInfo(cfgPath).completeBaseName().append(".svg")));
+
+  curTheme = theme;
+  qWarning() << "[QSvgStyle]" << "Loaded theme " << theme;
 }
 
 void QSvgThemableStyle::loadUserTheme()

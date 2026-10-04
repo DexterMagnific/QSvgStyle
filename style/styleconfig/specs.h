@@ -95,6 +95,13 @@ public:
 #define VA_TAB_GROUP_ALL 1
 #define VA_TAB_GROUP_NON_SELECTED 2
 
+enum ThemeOrigin {
+    ThemeOrigin_Environment = 0,  // QSVGSTYLE_THEME_PATHS
+    ThemeOrigin_User,             // Qt standard user locations
+    ThemeOrigin_System,           // Qt standard system locations
+    ThemeOrigin_Builtin           // :/qsvgstyle/themes/...
+};
+
 /** Generic information about a theme */
 typedef struct {
   value_t<QString> name;
@@ -104,8 +111,8 @@ typedef struct {
   value_t<QString> keywords;
   /* theme path, filled by ThemeConfig::getThemeSpec() */
   value_t<QString> path;
-  /* system theme, filled by ThemeConfig::getThemeSpec() */
-  bool system;
+  /* theme origin, filled by ThemeConfig::getThemeSpec() */
+  ThemeOrigin origin;
 } theme_spec_t;
 
 /** Generic information about a frame */

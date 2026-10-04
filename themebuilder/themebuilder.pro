@@ -9,16 +9,26 @@ TEMPLATE = app
 
 QT += core gui xml widgets core5compat
 
-INCLUDEPATH += . ../styleconfig ../thirdparty/svgcleaner ../thirdparty/quazip
+# Use build directory path for styleconfig lib (built in build dir)
+STYLECONFIG_LIB = $$OUT_PWD/../style/styleconfig/lib/libQSvgStyleConfig.a
+
+# Use absolute paths for include directories
+# $$PWD is the source directory of this .pro file: /home/dexter/QSvgStyle/themebuilder
+# To reach style/styleconfig: ../style/styleconfig (one level up to QSvgStyle)
+STYLECONFIG_INCLUDE = $$PWD/../style/styleconfig
+THIRDPARTY_SVGCLEANER_INCLUDE = $$PWD/../thirdparty/svgcleaner
+THIRDPARTY_QUAZIP_INCLUDE = $$PWD/../thirdparty/quazip
+
+INCLUDEPATH += . $$PWD $$STYLECONFIG_INCLUDE $$THIRDPARTY_SVGCLEANER_INCLUDE $$THIRDPARTY_QUAZIP_INCLUDE
 
 PRE_TARGETDEPS += \
-  ../styleconfig/lib/libQSvgStyleConfig.a \
-  ../thirdparty/svgcleaner/lib/libsvgcleaner-cli.a
+  $$STYLECONFIG_LIB \
+  $$OUT_PWD/../thirdparty/svgcleaner/lib/libsvgcleaner-cli.a
 
 LIBS += \
-  ../styleconfig/lib/libQSvgStyleConfig.a \
-  ../thirdparty/svgcleaner/lib/libsvgcleaner-cli.a \
-  ../thirdparty/quazip/lib/libquazip.a \
+  $$STYLECONFIG_LIB \
+  $$OUT_PWD/../thirdparty/svgcleaner/lib/libsvgcleaner-cli.a \
+  $$OUT_PWD/../thirdparty/quazip/lib/libquazip.a \
   -lz
 
 DEFINES += QUAZIP_STATIC

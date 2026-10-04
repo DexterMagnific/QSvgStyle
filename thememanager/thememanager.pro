@@ -9,13 +9,20 @@ TEMPLATE = app
 
 QT += core gui widgets
 
-INCLUDEPATH += . ../styleconfig
+# Use build directory path for styleconfig lib
+STYLECONFIG_LIB = $$OUT_PWD/../style/styleconfig/lib/libQSvgStyleConfig.a
+
+# Use absolute paths for include directories
+# $$PWD is the source directory: /home/dexter/QSvgStyle/thememanager
+STYLECONFIG_INCLUDE = $$PWD/../style/styleconfig
+
+INCLUDEPATH += . $$PWD $$STYLECONFIG_INCLUDE
 
 PRE_TARGETDEPS += \
-  ../styleconfig/lib/libQSvgStyleConfig.a
+  $$STYLECONFIG_LIB
 
 LIBS += \
-  ../styleconfig/lib/libQSvgStyleConfig.a
+  $$STYLECONFIG_LIB
 
 HEADERS += \
   ThemeManagerUI.h

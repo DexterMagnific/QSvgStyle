@@ -1826,7 +1826,7 @@ void ThemeBuilderUI::setupUiForWidget(const QTreeWidgetItem *current)
     }
 
     if ( raw_es.frame.width.present ) {
-      if ( QString("%1").arg(raw_es.frame.width).isEmpty() ) {
+      if ( QString("%1").arg(static_cast<int>(raw_es.frame.width)).isEmpty() ) {
         frameWidthCb->setCheckState(Qt::Unchecked);
       } else {
         frameWidthCb->setCheckState(Qt::Checked);
@@ -3633,7 +3633,7 @@ void ThemeBuilderUI::slot_frameWidthCbChanged(int state)
     frameWidthSpin->setValue(frameWidthSpin->minimum());
   }
   if ( state == Qt::PartiallyChecked ) {
-    frameWidthSpin->setSpecialValueText(QString("=%1").arg(inherit_es.frame.width));
+    frameWidthSpin->setSpecialValueText(QString("=%1").arg(static_cast<int>(inherit_es.frame.width)));
   }
   if ( state == Qt::Unchecked ) {
     frameWidthSpin->setSpecialValueText("<none>");
@@ -3745,12 +3745,12 @@ void ThemeBuilderUI::slot_interiorRepeatCbChanged(int state)
   }
   if ( state == Qt::PartiallyChecked ) {
     if ( inherit_es.interior.px > 0 )
-      interiorRepeatXSpin->setSpecialValueText(QString("=%1").arg(inherit_es.interior.px));
+      interiorRepeatXSpin->setSpecialValueText(QString("=%1").arg(static_cast<int>(inherit_es.interior.px)));
     else
       interiorRepeatXSpin->setSpecialValueText("=none");
 
     if ( inherit_es.interior.py > 0 )
-      interiorRepeatYSpin->setSpecialValueText(QString("=%1").arg(inherit_es.interior.py));
+      interiorRepeatYSpin->setSpecialValueText(QString("=%1").arg(static_cast<int>(inherit_es.interior.py)));
     else
       interiorRepeatYSpin->setSpecialValueText("=none");
   }
@@ -3792,7 +3792,7 @@ void ThemeBuilderUI::slot_labelSpacingCbChanged(int state)
     labelSpacingSpin->setValue(labelSpacingSpin->minimum());
   }
   if ( state == Qt::PartiallyChecked ) {
-    labelSpacingSpin->setSpecialValueText(QString("=%1").arg(inherit_es.label.tispace));
+    labelSpacingSpin->setSpecialValueText(QString("=%1").arg(static_cast<int>(inherit_es.label.tispace)));
   }
   if ( state == Qt::Unchecked ) {
     labelSpacingSpin->setSpecialValueText("<none>");
@@ -3833,8 +3833,8 @@ void ThemeBuilderUI::slot_labelMarginCbChanged(int state)
     labelMarginVSpin->setValue(labelMarginHSpin->minimum());
   }
   if ( state == Qt::PartiallyChecked ) {
-    labelMarginHSpin->setSpecialValueText(QString("=%1").arg(inherit_es.label.hmargin));
-    labelMarginVSpin->setSpecialValueText(QString("=%1").arg(inherit_es.label.vmargin));
+    labelMarginHSpin->setSpecialValueText(QString("=%1").arg(static_cast<int>(inherit_es.label.hmargin)));
+    labelMarginVSpin->setSpecialValueText(QString("=%1").arg(static_cast<int>(inherit_es.label.vmargin)));
   }
   if ( state == Qt::Unchecked ) {
     labelMarginHSpin->setSpecialValueText("<none>");
@@ -3911,7 +3911,7 @@ void ThemeBuilderUI::slot_indicatorSizeCbChanged(int state)
     indicatorSizeSpin->setValue(indicatorSizeSpin->minimum());
   }
   if ( state == Qt::PartiallyChecked ) {
-    indicatorSizeSpin->setSpecialValueText(QString("=%1").arg(inherit_es.indicator.size));
+    indicatorSizeSpin->setSpecialValueText(QString("=%1").arg(static_cast<int>(inherit_es.indicator.size)));
   }
   if ( state == Qt::Unchecked ) {
     indicatorSizeSpin->setSpecialValueText("<none>");

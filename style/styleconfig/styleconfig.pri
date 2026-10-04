@@ -10,7 +10,8 @@ TEMPLATE = lib
 
 QT      += core gui widgets
 
-INCLUDEPATH += ..
+INCLUDEPATH += $$PWD/..
+INCLUDEPATH += $$OUT_PWD/../generated
 
 SOURCES += \
   groups.cpp \
