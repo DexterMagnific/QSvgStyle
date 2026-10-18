@@ -2,7 +2,9 @@
   <qresource prefix="/qsvgstyle" >
     <file>themes/FlatShadowed/FlatShadowed.svg</file>
     <file>themes/FlatShadowed/FlatShadowed.cfg</file>
-    <file>themes/godot2/godot2.svg</file>
-    <file>themes/godot2/godot2.cfg</file>
+    <file>themes/godot-catppuccin-latte/godot-catppuccin-latte.svg</file>
+    <file>themes/godot-catppuccin-latte/godot-catppuccin-latte.cfg</file>
+    <file>themes/adwaita/adwaita.svg</file>
+    <file>themes/adwaita/adwaita.cfg</file>
   </qresource>
 </RCC>

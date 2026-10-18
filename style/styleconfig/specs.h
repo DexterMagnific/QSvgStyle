@@ -100,7 +100,17 @@ enum ThemeOrigin {
     ThemeOrigin_User,             // Qt standard user locations
     ThemeOrigin_System,           // Qt standard system locations
     ThemeOrigin_Builtin           // :/qsvgstyle/themes/...
-};
+  };
+
+  enum RenderTransform {
+    NoTransform     = 0x0,
+    Rotate90        = 0x1,
+    Rotate180       = 0x2,
+    Rotate270       = 0x3,
+    FlipHorizontal  = 0x4,
+    FlipVertical    = 0x8,
+  };
+  Q_DECLARE_FLAGS(RenderTransforms, RenderTransform)
 
 /** Generic information about a theme */
 typedef struct {

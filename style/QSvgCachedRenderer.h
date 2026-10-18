@@ -16,7 +16,7 @@
  *   along with this program; if not, write to the                         *
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
- ***************************************************************************/
+ *   ***************************************************************************/
 
 #ifndef QSVGCACHEDRENDERER_H
 #define QSVGCACHEDRENDERER_H
@@ -25,6 +25,7 @@
 #include <QPixmap>
 #include <QBitmap>
 #include <QSvgRenderer>
+#include "styleconfig/specs.h"
 
 class QPainter;
 class QRectF;
@@ -52,8 +53,10 @@ class QSvgCachedRenderer
 
     /**
       * Renders the given element id inside the given rect using the given painter
+      * with optional rotation/flip transform (applied at draw time, not cached)
       */
-    void render(QPainter *painter, const QString &elementId, const QRect &bounds = QRect());
+    void render(QPainter *painter, const QString &elementId, const QRect &bounds = QRect(),
+                RenderTransforms transform = NoTransform);
 
     /**
       * Returns whether the given element id exists in SVG file and is renderable

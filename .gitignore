@@ -46,3 +46,7 @@ debian/tmp/
 
 # Theme packages
 themes/*/*.zip
+
+# generated built in themes
+builtin_themes.qrc
+builtin_themes.h

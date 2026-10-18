@@ -66,7 +66,9 @@ style_spec_t StyleConfig::getStyleSpec() const
 
 void StyleConfig::setStyleSpec(const style_spec_t& ss)
 {
-  removeAllWithPrefix("General","");
+  // Only replace the theme entry, the General group may contain other
+  // global settings (e.g. palette) that must be preserved
+  removeAllWithPrefix("General","theme");
 
   setValue("General","theme", ss.theme);
 }

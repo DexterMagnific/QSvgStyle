@@ -12,21 +12,19 @@ Works on Linux and Windows with MSYS2.
 - FlatShadowed: Official QSvgStyle theme and our best light theme with 
 outstanding support for widget color palettes.
 
-![FlatDark](themes/FlatShadowed/FlatShadowed.png)
+![FlatDark](style/themes/FlatShadowed/FlatShadowed.png)
 
+- Adwaita port from Gnome
 
-- Godot2: a port of the Godot2 game engine dark theme
-
-![Godot2](themes/godot2/godot2.png)
-
+![Adwaita](style/themes/adwaita/adwaita.png)
 
 - Godot2 Catppuccin Latte: Godot2 with Catppuccin's Latte color scheme
 
-![Godot2CatppuccinLatte](themes/godot-catppuccin-latte/godot-catppuccin-latte.png)
+![Godot2CatppuccinLatte](style/themes/godot-catppuccin-latte/godot-catppuccin-latte.png)
 
 - Windows11 Light Seafoam
 
-![Win11Seafoam](themes/win11-light-seafoam/win11-light-seafoam.png)
+![Win11Seafoam](style/themes/win11-light-seafoam/win11-light-seafoam.png)
 
 ## QSvgStyle
 - Themeable Qt6 style engine using standard SVG documents as themes
@@ -97,10 +95,10 @@ pacman -S \
 ## Build
 
 ```bash
-mkdir -p build/release
-cd build/release
-qmake6 ../..
-$ make -j
+mkdir build
+cd build
+qmake6 ..
+make -j
 ```
 
 ## Minimal build (style plugin only)
@@ -108,23 +106,25 @@ $ make -j
 If you only want to build the style plugin without the theme builder/manager:
 
 ```bash
-mkdir -p build/minimal
-cd build/minimal
-qmake6 CONFIG+=minimal ../..
-$ make -j
+mkdir build
+cd build
+qmake6 CONFIG+=minimal ..
+make -j
 ```
 
 
 ## Customize the built-in theme list
 
 Themes in the `themes/` can be either installed on the filesystem or built into QSvgStyle.
-To select the built-in themes, edit `style/themes/themes_list.txt` then run the theme resource generation script before the build:
+To select the built-in themes, edit `style/themes/themes_list.txt` before running `qmake6`. There is also manual script:
 
 ```bash
 ./style/generate_theme_resources.sh style/themes/themes_list.txt style style/themes
 ```
 
 # Install
+
+## System wide
 
 Linux:
 
@@ -138,12 +138,24 @@ Windows:
 make install
 ```
 
+## Local
+
+```bash
+make install INSTALL_ROOT=/path/to/prefix
+```
+
 # Use
 
 You can launch any Qt6 application with QSvgStyle styling by adding a `-style` option:
 
 ```
 dolphin -style qsvgstyle
+```
+
+When installed locally, you'll need to adjust Qt plugins paths:
+
+```
+QT_PLUGINS_PATH=/path/to/local/Qt6/plugins dolphin -style qsvgstyle
 ```
 
 To globally set QSvgStyle as your default style engine, use your favorite
@@ -154,7 +166,7 @@ desktop's configuration tool. For example, use the System Settings in KDE.
 * QSVGSTYLE_THEME
 
 The `QSVGSTYLE_THEME` environment variable allows you to force a specific theme
-at runtime, overriding any user configuration.onfiguration), not explicit API calls
+at runtime, overriding any user configuration.
 
 ```bash
 # Force FlatShadowed theme
@@ -163,7 +175,7 @@ QSVGSTYLE_THEME=FlatShadowed dolphin -style qsvgstyle
 
 * QSVGSTYLE_THEME_PATHS
 
-This is a colon separated path list where themes are searched, in addition to standard search path locations (user, system).
+This is a colon separated path list where themes are searched, in addition to standard search path locations (user, system). This is particularly useful when QSvgStyle is installed in a non system location.
 
 # Embed in another project
 

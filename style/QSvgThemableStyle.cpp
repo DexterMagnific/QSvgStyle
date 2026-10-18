@@ -194,7 +194,7 @@ void QSvgThemableStyle::loadTheme(const QString& theme, bool skipEnv)
   QString envTheme;
   QString themeToLoad = theme;
   bool triedEnvVar = false;
-  
+
   if (!skipEnv) {
     envTheme = qgetenv("QSVGSTYLE_THEME");
     if (!envTheme.isEmpty()) {
@@ -225,7 +225,7 @@ void QSvgThemableStyle::loadTheme(const QString& theme, bool skipEnv)
   if (triedEnvVar) {
     // Env var theme not found, log warning
     qWarning() << "[QSvgStyle] Theme from QSVGSTYLE_THEME not found:" << envTheme;
-    
+
     // Fallback to user config theme (original theme parameter)
     if (!theme.isNull() && !theme.isEmpty() && theme != "<builtin>" && theme != envTheme) {
       qWarning() << "[QSvgStyle] Falling back to user config theme:" << theme;
@@ -233,7 +233,7 @@ void QSvgThemableStyle::loadTheme(const QString& theme, bool skipEnv)
       return;
     }
   }
-  
+
   // Final fallback to builtin default
   qWarning() << "[QSvgStyle]" << "Theme" << themeToLoad << "not found";
   loadBuiltinTheme();
@@ -4195,7 +4195,7 @@ QSize QSvgThemableStyle::sizeFromContents ( ContentsType type, const QStyleOptio
         fm = opt->fontMetrics;
         s = sizeFromContents(fm,fs,is,ls,
                              opt->text,
-                             opt->icon.isNull() ? 0 : opt->decorationSize.width(),
+                             opt->features & QStyleOptionViewItem::HasDecoration ? opt->decorationSize.width() : 0,
                              tialign);
 
         if ( opt->features & QStyleOptionViewItem::HasCheckIndicator ) {

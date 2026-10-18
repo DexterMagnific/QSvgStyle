@@ -1,3 +1,4 @@
 # Built-in themes (first line = default theme)
 FlatShadowed
-godot2
+godot-catppuccin-latte
+adwaita

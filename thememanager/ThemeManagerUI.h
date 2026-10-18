@@ -55,6 +55,10 @@ class ThemeManagerUI : public QMainWindow, private Ui::ThemeManagerUIBase {
     // using @ref QTreeViewItem::setData()
     enum {
       ThemePathRole = Qt::UserRole + 10,
+      /* canonical theme name, as stored in the global configuration file */
+      ThemeNameRole,
+      /* theme origin, as a ThemeOrigin value */
+      ThemeOriginRole,
     };
 
     // Sets the given style for the given widget and all its children

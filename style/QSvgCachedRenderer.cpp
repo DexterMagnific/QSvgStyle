@@ -61,15 +61,64 @@ bool QSvgCachedRenderer::load(const QString &file)
   return renderer->load(file);
 }
 
-void QSvgCachedRenderer::render(QPainter *painter, const QString &elementId, const QRect &bounds)
+static void applyTransform(QPainter *painter, const QRect &bounds, RenderTransforms transform)
+{
+  if (transform == NoTransform)
+    return;
+
+  QPoint center = bounds.center();
+  painter->translate(center);
+
+  if (transform & Rotate90)
+    painter->rotate(90);
+  else if (transform & Rotate180)
+    painter->rotate(180);
+  else if (transform & Rotate270)
+    painter->rotate(270);
+
+  if (transform & FlipHorizontal)
+    painter->scale(-1, 1);
+  if (transform & FlipVertical)
+    painter->scale(1, -1);
+
+  painter->translate(-center);
+}
+
+static void restoreTransform(QPainter *painter, const QRect &bounds, RenderTransforms transform)
+{
+  if (transform == NoTransform)
+    return;
+
+  QPoint center = bounds.center();
+  painter->translate(center);
+
+  if (transform & FlipVertical)
+    painter->scale(1, -1);
+  if (transform & FlipHorizontal)
+    painter->scale(-1, 1);
+
+  if (transform & Rotate270)
+    painter->rotate(-270);
+  else if (transform & Rotate180)
+    painter->rotate(-180);
+  else if (transform & Rotate90)
+    painter->rotate(-90);
+
+  painter->translate(-center);
+}
+
+void QSvgCachedRenderer::render(QPainter *painter, const QString &elementId, const QRect &bounds,
+                                RenderTransforms transform)
 {
   if ( (bounds.width() > 250) || (bounds.height() > 250) ) {
     // direct render, don't cache big items
-    renderer->render(painter,elementId,bounds);
+    applyTransform(painter, bounds, transform);
+    renderer->render(painter, elementId, bounds);
+    restoreTransform(painter, bounds, transform);
     return;
   }
 
-  // key = elementId @ width x height
+  // key = elementId @ width x height (no transform in key - cache stores neutral)
   const QString e = QString("%1@%2x%3")
       .arg(elementId)
       .arg(bounds.width())
@@ -81,31 +130,18 @@ void QSvgCachedRenderer::render(QPainter *painter, const QString &elementId, con
   if ( svgCache.contains(e) ) {
     totalCacheHits++;
 
-    // dont use value() as this will return a copy
     svgCacheEntry &entry = svgCache[e];
     entry.hits++;
 
-    // element found in cache
+    // element found in cache - apply transform, draw ONCE
+    applyTransform(painter, bounds, transform);
     t.restart();
-    painter->drawPixmap(bounds,entry.pixmap);
+    painter->drawPixmap(bounds, entry.pixmap);
     elapsed = t.elapsed();
+    restoreTransform(painter, bounds, transform);
 
     entry.cachedRenderTime += elapsed;
     totalCachedRenderTime += elapsed;
-
-    // TESTING remove me !
-    // in order to compare, we will also render from SVG
-    // please enable this if you want to dumpStats()
-//    QPixmap px(bounds.size());
-//    QPainter p(&px);
-
-//    t.restart();
-//    renderer->render(&p,elementId,QRect(QPoint(0,0),bounds.size()));
-//    elapsed = t.elapsed();
-
-//    entry.svgRenderTime += elapsed;
-//    totalSvgRenderTime += elapsed;
-    // END TESTING
   } else {
     totalCacheMisses++;
 
@@ -113,28 +149,25 @@ void QSvgCachedRenderer::render(QPainter *painter, const QString &elementId, con
     svgCacheEntry entry;
     entry.hits = entry.svgRenderTime = entry.cachedRenderTime = 0;
 
-    // Penalty: because the original painter can contain all sorts of
-    // transformations, we must first render to a pixmap using a new
-    // painter in order to get an unaltered element to reuse later
-    // But this happens only on a miss (i.e. once per element@size)
+    // Render to pixmap with NEUTRAL painter (no transform)
     entry.pixmap = QPixmap(bounds.size());
     entry.pixmap.fill(Qt::transparent);
-    // warning: the pixmap must be drawn with a neutral painter
     QPainter p(&entry.pixmap);
 
     t.restart();
-    renderer->render(&p,elementId,QRect(QPoint(0,0),bounds.size()));
+    renderer->render(&p, elementId, QRect(QPoint(0,0), bounds.size()));
     entry.mask = entry.pixmap.mask();
-    // save the mask
     elapsed = t.elapsed();
 
-    // now render the pixmap using the original painter
-    painter->drawPixmap(bounds,entry.pixmap);
+    // now render the pixmap using the original painter WITH transform
+    applyTransform(painter, bounds, transform);
+    painter->drawPixmap(bounds, entry.pixmap);
+    restoreTransform(painter, bounds, transform);
 
     entry.svgRenderTime += elapsed;
     totalSvgRenderTime += elapsed;
 
-    svgCache.insert(e,entry);
+    svgCache.insert(e, entry);
   }
 }
 

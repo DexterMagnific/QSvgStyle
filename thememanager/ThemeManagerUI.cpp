@@ -36,7 +36,6 @@
 #include <xcb/xcb.h>
 #endif
 
-#include "ThemeConfig.h"
 #include "StyleConfig.h"
 #include "../style/QSvgThemableStyle.h"
 #include "../styleconfig/specs.h"
@@ -103,8 +102,9 @@ ThemeManagerUI::ThemeManagerUI(QWidget* parent)
     }
     i->setText(0, originStr + t.name);
     i->setData(0, ThemePathRole, t.path);
-    // Store origin for potential filtering
-    i->setData(0, Qt::UserRole + 11, static_cast<int>(t.origin));
+    // Store the canonical name and origin, the display text is decorated
+    i->setData(0, ThemeNameRole, t.name);
+    i->setData(0, ThemeOriginRole, static_cast<int>(t.origin));
 
     themeList->addTopLevelItem(i);
   }
@@ -196,24 +196,18 @@ void ThemeManagerUI::slot_themeChanged(QTreeWidgetItem *item, QTreeWidgetItem *p
 {
   Q_UNUSED(prev);
 
-  QString theme = item->text(0);
-  QString themePath = item->data(0, ThemePathRole).toString();
+  QString theme = item->data(0, ThemeNameRole).toString();
 
-  if ( theme == "<builtin>" ) {
+  if ( theme.isEmpty() || (theme == "<builtin>") ) {
     /* Default theme */
     QStyle::staticMetaObject.invokeMethod(style,"loadBuiltinTheme",
                                           Qt::DirectConnection);
 
     //themeLbl->setText("Uses the QSvgStyle default theme");
   } else {
-    ThemeConfig t(themePath);
-    theme_spec_t ts = t.getThemeSpec();
-
     QStyle::staticMetaObject.invokeMethod(style,"loadTheme",
                                           Qt::DirectConnection,
                                           Q_ARG(QString,theme));
-
-    //themeLbl->setText(QString("%1 by %2").arg(ts.descr).arg(ts.author));
   }
 
   schedulePreviewUpdate();
@@ -302,6 +296,11 @@ void ThemeManagerUI::resetConfiguration()
 
 void ThemeManagerUI::commitConfiguration()
 {
+  // Flush pending settings changes to the temporary file before copying it
+  // over the user configuration file
+  if ( config )
+    config->commitWriteCache();
+
   // copy tempCfgFile to user config file
   QFile src(tempCfgFile);
   QFile dst(StyleConfig::getUserConfigFile());
@@ -347,8 +346,12 @@ void ThemeManagerUI::setStyleForWidgetAndChildren(QStyle* style, QWidget* w)
 
 void ThemeManagerUI::saveSettingsFromUi()
 {
+  QTreeWidgetItem *current = themeList->currentItem();
+  if ( !current )
+    return;
+
   style_spec_t ss;
-  ss.theme = themeList->currentItem()->text(0);
+  ss.theme = current->data(0, ThemeNameRole).toString();
 
   config->setStyleSpec(ss);
 }
@@ -361,18 +364,37 @@ void ThemeManagerUI::setupUiFromCfg()
   config = new StyleConfig(tempCfgFile);
   config->setUseCache(false);
 
-  // get theme at startup
-  QString startupTheme = config->getStyleSpec().theme;
-
-  const QList<QTreeWidgetItem*> l = themeList->findItems(startupTheme, Qt::MatchExactly);
-  if ( l.size() > 0 )
-    themeList->setCurrentItem(l.at(0));
-  else
-    themeList->setCurrentItem(NULL);
-
+  // Load the theme through the engine first: this resolves the "<builtin>"
+  // placeholder, themes that are no longer installed and the
+  // QSVGSTYLE_THEME override exactly like at runtime.
   QStyle::staticMetaObject.invokeMethod(style,"loadCustomStyleConfig",
                                       Qt::DirectConnection,
                                       Q_ARG(QString,tempCfgFile));
+
+  QString effectiveTheme;
+  if ( style )
+    QStyle::staticMetaObject.invokeMethod(style, "currentTheme",
+                                          Qt::DirectConnection,
+                                          Q_RETURN_ARG(QString, effectiveTheme));
+
+  // Match the canonical theme name, the item text is decorated with its origin
+  QTreeWidgetItem *match = NULL;
+  QTreeWidgetItem *firstBuiltin = NULL;
+
+  for (int i = 0; i < themeList->topLevelItemCount(); ++i) {
+    QTreeWidgetItem *it = themeList->topLevelItem(i);
+    const int origin = it->data(0, ThemeOriginRole).toInt();
+
+    if ( !firstBuiltin && (origin == ThemeOrigin_Builtin) )
+      firstBuiltin = it;
+
+    if ( (it->data(0, ThemeNameRole).toString() == effectiveTheme) &&
+         (!match || (origin != ThemeOrigin_Builtin)) )
+      match = it;
+  }
+
+  // Fall back to a built-in theme if the effective theme is not listed
+  themeList->setCurrentItem(match ? match : firstBuiltin);
 }
 
 void ThemeManagerUI::schedulePreviewUpdate()

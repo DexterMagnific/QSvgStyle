@@ -15,7 +15,7 @@ QT += core gui widgets svg
 include(styleconfig/styleconfig_dependencies.pri)
 
 # Include pre-generated built-in themes resource
-RESOURCES += builtinthemes.qrc
+RESOURCES += builtin_themes.qrc
 
 # Include path for generated header
 INCLUDEPATH += .

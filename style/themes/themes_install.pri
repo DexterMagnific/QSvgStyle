@@ -9,15 +9,30 @@ windows:isEmpty(PREFIX) {
   PREFIX = $$(MSYSTEM_PREFIX)
 }
 
-nonbuiltin_themes.path = $$PREFIX/share/QSvgStyle
-nonbuiltin_themes.files = \
+nonbuiltin_Arrongin.path = $$PREFIX/share/QSvgStyle/Arrongin
+nonbuiltin_Arrongin.files = \
     style/themes/Arrongin/Arrongin.svg \
-    style/themes/Arrongin/Arrongin.cfg \
-    style/themes/godot-catppuccin-latte/godot-catppuccin-latte.svg \
-    style/themes/godot-catppuccin-latte/godot-catppuccin-latte.cfg \
-    style/themes/Telinkrin/Telinkrin.svg \
-    style/themes/Telinkrin/Telinkrin.cfg \
-    style/themes/win11-light-seafoam/win11-light-seafoam.svg \
-    style/themes/win11-light-seafoam/win11-light-seafoam.cfg \
+    style/themes/Arrongin/Arrongin.cfg
 
-INSTALLS += nonbuiltin_themes
+nonbuiltin_godot2.path = $$PREFIX/share/QSvgStyle/godot2
+nonbuiltin_godot2.files = \
+    style/themes/godot2/godot2.svg \
+    style/themes/godot2/godot2.cfg
+
+nonbuiltin_Telinkrin.path = $$PREFIX/share/QSvgStyle/Telinkrin
+nonbuiltin_Telinkrin.files = \
+    style/themes/Telinkrin/Telinkrin.svg \
+    style/themes/Telinkrin/Telinkrin.cfg
+
+nonbuiltin_win11-light-seafoam.path = $$PREFIX/share/QSvgStyle/win11-light-seafoam
+nonbuiltin_win11-light-seafoam.files = \
+    style/themes/win11-light-seafoam/win11-light-seafoam.svg \
+    style/themes/win11-light-seafoam/win11-light-seafoam.cfg
+
+
+INSTALLS += \
+    nonbuiltin_Arrongin \
+    nonbuiltin_godot2 \
+    nonbuiltin_Telinkrin \
+    nonbuiltin_win11-light-seafoam \
+
